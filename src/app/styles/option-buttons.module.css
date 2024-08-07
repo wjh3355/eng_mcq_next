@@ -1,0 +1,30 @@
+.correctAns {
+   border-color: green;
+   color: green;
+   font-weight: bold;
+}
+
+.wrongAns {
+   border-color: rgb(190, 44, 44);
+   color: rgb(190, 44, 44);
+   font-weight: bold;
+}
+
+
+.default {
+   position: relative;
+   height: auto;
+   width: 100%;
+   padding: 12px 15%;
+   font-size: 18px;
+   background-color: white;
+   border-width: 3px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+
+.hover {
+   border-color: rgb(100, 100, 100);
+}

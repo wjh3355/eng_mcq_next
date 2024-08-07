@@ -1,11 +1,12 @@
-import "./ui/globals.css";
-import Navbar from "@/app/ui/navbar";
+import MainNavbar from "@/app/ui/MainNavbar";
+
+import "./styles/global.css";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-         <Navbar/>
+         <MainNavbar/>
          {children}
       </body>
     </html>
