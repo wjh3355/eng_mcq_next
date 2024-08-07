@@ -8,31 +8,31 @@ export default function MainNavbar() {
 
    const gepMcqLinks = [
       {
-         name: "Set 1 (Q1-100)",
+         name: "Set 1",
          href: "/gep_mcq/set1" 
       },
       {
-         name: "Set 2 (Q101-200)",
+         name: "Set 2",
          href: "/gep_mcq/set2" 
       },
       {
-         name: "Set 3 (Q201-300)",
+         name: "Set 3",
          href: "/gep_mcq/set3" 
       },
       {
-         name: "Set 4 (Q301-400)",
+         name: "Set 4",
          href: "/gep_mcq/set4" 
       },
       {
-         name: "Set 5 (Q401-500)",
+         name: "Set 5",
          href: "/gep_mcq/set5" 
       },
       {
-         name: "Set 6 (Q501-600)",
+         name: "Set 6",
          href: "/gep_mcq/set6"
       },
       {
-         name: "Complete (Q1-600)",
+         name: "Complete",
          href: "/gep_mcq/complete"
       },
    ];

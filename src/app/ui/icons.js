@@ -5,7 +5,7 @@ export const tickIcon = (
          position: "absolute",
          right: "4%",
          color: "green",
-         fontSize: "20px",
+         fontSize: "25px",
       }}
    ></i>
 );
@@ -17,7 +17,7 @@ export const crossIcon = (
          position: "absolute",
          right: "4%",
          color: "rgb(190, 44, 44)",
-         fontSize: "20px",
+         fontSize: "25px",
       }}
    ></i>
 );
