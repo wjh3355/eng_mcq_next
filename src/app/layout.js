@@ -1,6 +1,6 @@
 import MainNavbar from "@/app/ui/MainNavbar";
-
-import "./styles/global.css";
+import { inter } from "@/app/ui/fonts";
+import "@/app/styles/global.css";
 
 export const metadata = {
    title: 'English Tutor',
@@ -13,7 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body
+         className={`${inter.className} antialiased`}
+      >
          <MainNavbar/>
          {children}
       </body>

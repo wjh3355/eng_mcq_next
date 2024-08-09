@@ -1,23 +1,19 @@
 export const tickIcon = (
    <i
-      className="bi bi-check-circle-fill"
+      className="bi bi-check2"
       style={{
-         position: "absolute",
-         right: "4%",
          color: "green",
-         fontSize: "25px",
+         fontSize: "20px",
       }}
    ></i>
 );
 
 export const crossIcon = (
    <i
-      className="bi bi-x-circle-fill"
+      className="bi bi-x-lg"
       style={{
-         position: "absolute",
-         right: "4%",
          color: "rgb(190, 44, 44)",
-         fontSize: "25px",
+         fontSize: "20px",
       }}
    ></i>
 );

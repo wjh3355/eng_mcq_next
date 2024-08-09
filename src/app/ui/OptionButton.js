@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { clsx } from "clsx";
-import { tickIcon, crossIcon } from "./icons";
 import styles from "../styles/option-buttons.module.css";
 
 export default function OptionButton({
@@ -31,8 +30,6 @@ export default function OptionButton({
          )}
       >
          <span>{thisOption}</span>
-         {isDisabled && isCorrectOption && tickIcon}
-         {hasBeenSelected && !isCorrectOption && crossIcon}
       </button>
    );
 }

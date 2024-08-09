@@ -10,8 +10,8 @@ const GEPQnContext = createContext();
 
 export const useGEPQnContext = () => useContext(GEPQnContext);
 
-export function GEPQnProvider({ children, rangeOfQns }) {
-   const [qnOrder, setQnOrder] = useState([]);
+export function GEPQnProvider({ children, slug }) {
+   const [qnOrderArr, setQnOrderArr] = useState([]);
    const [qnIdx, setQnIdx] = useState(0);
    const [qnObj, setQnObj] = useState(null);
 
@@ -27,34 +27,53 @@ export function GEPQnProvider({ children, rangeOfQns }) {
    
    useEffect(() => {
       console.log("STARTING UP GEP MCQ TEST");
-      switch (rangeOfQns) {
+      let randArr;
+      switch (slug) {
          case "set1":
-            setQnOrder(shuffle(range(1, 101)));
+            randArr = shuffle(range(1, 101));
+            setQnOrderArr(randArr);
             console.log("SET 1 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "set2":
-            setQnOrder(shuffle(range(101, 201)));
+            randArr = shuffle(range(101, 201));
+            setQnOrderArr(randArr);
             console.log("SET 2 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "set3":
-            setQnOrder(shuffle(range(201, 301)));
+            randArr = shuffle(range(201, 301));
+            setQnOrderArr(randArr);
             console.log("SET 3 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "set4":
-            setQnOrder(shuffle(range(301, 401)));
+            randArr = shuffle(range(301, 401));
+            setQnOrderArr(randArr);
             console.log("SET 4 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "set5":
-            setQnOrder(shuffle(range(401, 501)));
+            randArr = shuffle(range(401, 501));
+            setQnOrderArr(randArr);
             console.log("SET 5 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "set6":
-            setQnOrder(shuffle(range(501, 601)));
+            randArr = shuffle(range(501, 601));
+            setQnOrderArr(randArr);
             console.log("SET 6 CHOSEN");
+            console.log("ORDER:", randArr.join(','));
             break;
          case "complete":
-            setQnOrder(shuffle(range(1, 601)));
+            randArr = shuffle(range(1, 601));
+            setQnOrderArr(randArr);
             console.log("ALL QNS CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 50).join(','),
+               "..."
+            );
             break;
          default:
             alert("Invalid Link!");
@@ -63,8 +82,8 @@ export function GEPQnProvider({ children, rangeOfQns }) {
    }, []);
 
    useEffect(() => {
-      qnOrder.length !== 0 && fetchNewQnObj();
-   }, [qnOrder, qnIdx]);
+      qnOrderArr.length !== 0 && fetchNewQnObj();
+   }, [qnOrderArr, qnIdx]);
       
    async function fetchNewQnObj() {
       setIsFetching(true);
@@ -72,15 +91,18 @@ export function GEPQnProvider({ children, rangeOfQns }) {
 
       await new Promise(resolve => setTimeout(resolve, 500));
       // Fake delay
-      const data = await fetchQnJson(qnOrder[qnIdx]);
-      console.log('NOW DISPLAYING QUESTION', qnOrder[qnIdx]);
+      const data = await fetchQnJson(qnOrderArr[qnIdx]);
+      console.log('NOW DISPLAYING QUESTION', qnOrderArr[qnIdx]);
 
       setQnObj(data);
       setIsFetching(false);
    };
 
    function handleOptionClick(isCorrectOption) {
-      console.log('AN OPTION BUTTON CLICKED:', isCorrectOption ? "CORRECT" : "WRONG");
+      console.log(
+         'AN OPTION BUTTON CLICKED:', 
+         isCorrectOption ? "CORRECT" : "INCORRECT"
+      );
       setIsNextQnBtnDisabled(false);
       setIsExplBtnDisabled(false);
       setIsCorrect(isCorrectOption);
@@ -101,11 +123,12 @@ export function GEPQnProvider({ children, rangeOfQns }) {
       setIsCorrect(null);
       // reset states
       
-      if (qnIdx === qnOrder.length - 1) {
+      if (qnIdx === qnOrderArr.length - 1) {
          setQnIdx(0);
       } else {
          setQnIdx(prev => prev + 1);
       };
+      // get next question
    }
 
    return (

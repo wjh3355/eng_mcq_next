@@ -10,7 +10,10 @@ import { useGEPQnContext } from "../utils/GEPQnProvider";
 
 export default function RightColumn() {
 
-   let { qnObj: { options, correctAns }, handleOptionClick } = useGEPQnContext();
+   let { 
+      qnObj: { options, correctAns }, 
+      handleOptionClick 
+   } = useGEPQnContext();
 
    const [randomisedOptions, setRandomisedOptions] = useState([]);
    const [selectedOption, setSelectedOption] = useState(null);

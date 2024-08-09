@@ -1,23 +1,28 @@
 import { Container, Row } from "react-bootstrap";
 
+import GEPTitle from "@/app/ui/GEPTitle";
 import LeftColumn from "@/app/ui/LeftColumn";
 import RightColumn from "@/app/ui/RightColumn";
-import Score from "@/app/ui/Score";
+import AnswerIndicator from "@/app/ui/AnswerIndicator";
 
 import { GEPQnProvider } from "@/app/utils/GEPQnProvider";
 
 export default function Page({ params }) {
 
    return (
-      <GEPQnProvider rangeOfQns={params.slug}>
-         <Container className="mt-3">
+      <GEPQnProvider slug={params.slug}>
+         <Container>
+
+            <GEPTitle slug={params.slug}/>
+
             <Row>
                <LeftColumn/>
                <RightColumn />
             </Row>
          </Container>
 
-         <Score/>
+         <AnswerIndicator/>
+
       </GEPQnProvider>   
    );
 }

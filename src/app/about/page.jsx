@@ -6,7 +6,7 @@ export default function Page() {
       <Container className="my-3">
          <Row>
             <Col className="text-center">
-               <h2>About this Website</h2>
+               <h3>About this Website</h3>
             </Col>
          </Row>
          <Row>

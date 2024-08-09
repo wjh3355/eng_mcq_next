@@ -3,15 +3,19 @@
 import { Button, Card, Col, Collapse, Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-import Question from "./Question";
-import Explanation from "./Explanation";
 import Review from "./Review";
 
 import { useGEPQnContext } from "../utils/GEPQnProvider";
 
 export default function LeftColumn() {
 
-   const { handleNextQnBtnClick, isNextQnBtnDisabled, isExplBtnDisabled } = useGEPQnContext();
+   const { 
+      handleNextQnBtnClick, 
+      isNextQnBtnDisabled, 
+      isExplBtnDisabled,
+      numQnsAns,
+      numCorrectAns
+   } = useGEPQnContext();
 
    const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -19,6 +23,10 @@ export default function LeftColumn() {
    useEffect(() => {
       isExplBtnDisabled && setIsExplShown(false);
    }, [isExplBtnDisabled])
+
+   let percentCorrect = numQnsAns
+      ? Math.round((numCorrectAns * 100) / numQnsAns)
+      : 0;
 
    return (
       <Col lg={8}>
@@ -43,7 +51,7 @@ export default function LeftColumn() {
                style={{ flex: 1 }}
                onClick={() => setIsReviewShown(!isReviewShown)}
             >
-               Review
+               Score & Review
             </Button>
 
             <Button
@@ -57,7 +65,9 @@ export default function LeftColumn() {
          </div>
 
          <Collapse in={isExplShown}>
-            <div>{!isExplBtnDisabled && <Explanation />}</div>
+            <div>
+               {!isExplBtnDisabled && <Explanation />}
+            </div>
          </Collapse>
 
          <Modal
@@ -67,12 +77,49 @@ export default function LeftColumn() {
             centered
          >
             <Modal.Header closeButton>
-               <Modal.Title>Review of incorrect answers</Modal.Title>
+               <Modal.Title>
+                  Current score:
+                  &nbsp;
+                     {numCorrectAns} / {numQnsAns} ({percentCorrect}%)
+               </Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
+
                <Review />
+
             </Modal.Body>
          </Modal>
       </Col>
    );
-}
+};
+
+function Explanation() {
+   const { qnObj: { rootWord, type, def } } = useGEPQnContext();
+   
+   return (
+      <Card body>
+         <p>
+            <strong className="fs-5 me-1">
+               {rootWord}&nbsp;
+            </strong>
+            <span className="fst-italic">({type})</span>
+         </p>
+         {def}.
+      </Card>
+   );
+};
+
+function Question() {
+   const { qnObj: { sentence, wordToTest } } = useGEPQnContext();
+
+   const idxOfWord = sentence.indexOf(wordToTest);
+
+   return (
+      <div className="fs-5">
+        {sentence.slice(0, idxOfWord)}
+        <strong>{wordToTest}</strong>
+        {sentence.slice(idxOfWord + wordToTest.length)}
+      </div>
+   );
+};
