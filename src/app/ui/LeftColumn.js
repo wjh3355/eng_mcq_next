@@ -1,6 +1,13 @@
 'use client';
 
-import { Button, Card, Col, Collapse, Modal } from "react-bootstrap";
+import {
+   Button,
+   ButtonGroup,
+   Card,
+   Col,
+   Collapse,
+   Modal,
+} from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 import Review from "./Review";
@@ -31,37 +38,43 @@ export default function LeftColumn() {
    return (
       <Col lg={8}>
          <Card body className="mb-3">
-            <Question />
+            <SentenceToBeDisplayed />
          </Card>
 
-         <div className="d-flex gap-3 mb-2">
-            <Button
-               variant="primary"
-               style={{ flex: 1 }}
-               disabled={isExplBtnDisabled}
-               onClick={() => setIsExplShown(!isExplShown)}
-               aria-controls="collapse-text"
-               aria-expanded={isExplShown}
-            >
-               {isExplShown ? "Hide Explanation" : "Show Explanation"}
-            </Button>
+         <div className="mb-2">
+            <ButtonGroup className="w-100">
+               <Button
+                  variant="primary"
+                  className="flex-fill"
+                  style={{ flex: 1 }}
+                  onClick={() => setIsReviewShown(!isReviewShown)}
+               >
+                  Score & Review
+               </Button>
 
-            <Button
-               variant="outline-secondary"
-               style={{ flex: 1 }}
-               onClick={() => setIsReviewShown(!isReviewShown)}
-            >
-               Score & Review
-            </Button>
+               <Button
+                  variant="secondary"
+                  className="flex-fill"
+                  style={{ flex: 1 }}
+                  disabled={isExplBtnDisabled}
+                  onClick={() => setIsExplShown(!isExplShown)}
+                  aria-controls="collapse-text"
+                  aria-expanded={isExplShown}
+               >
+                  Explanation
+               </Button>
 
-            <Button
-               variant="success"
-               style={{ flex: 1 }}
-               onClick={handleNextQnBtnClick}
-               disabled={isNextQnBtnDisabled}
-            >
-               Next Question
-            </Button>
+
+               <Button
+                  variant="success"
+                  className="flex-fill"
+                  style={{ flex: 1 }}
+                  onClick={handleNextQnBtnClick}
+                  disabled={isNextQnBtnDisabled}
+               >
+                  Next Question
+               </Button>
+            </ButtonGroup>
          </div>
 
          <Collapse in={isExplShown}>
@@ -80,7 +93,13 @@ export default function LeftColumn() {
                <Modal.Title>
                   Current score:
                   &nbsp;
-                     {numCorrectAns} / {numQnsAns} ({percentCorrect}%)
+                  <strong
+                     className={percentCorrect >= 50 ? 'text-success' : 'text-danger'}
+                  >
+                     {numCorrectAns} / {numQnsAns}
+                  </strong>
+                  &nbsp;
+                  ({percentCorrect}% correct)
                </Modal.Title>
             </Modal.Header>
 
@@ -103,14 +122,14 @@ function Explanation() {
             <strong className="fs-5 me-1">
                {rootWord}&nbsp;
             </strong>
-            <span className="fst-italic">({type})</span>
+            <span className="fs-5">({type})</span>
          </p>
          {def}.
       </Card>
    );
 };
 
-function Question() {
+function SentenceToBeDisplayed() {
    const { qnObj: { sentence, wordToTest } } = useGEPQnContext();
 
    const idxOfWord = sentence.indexOf(wordToTest);

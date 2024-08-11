@@ -1,11 +1,10 @@
 'use client';
 
 import { Card } from "react-bootstrap";
-import React, { memo } from "react";
 
 import { useGEPQnContext } from "../utils/GEPQnProvider";
 
-const Review = memo(function Review() {
+export default function Review() {
    const { wrongAnsArr } = useGEPQnContext();
 
    function generateWrongAnsCards(obj) {
@@ -20,10 +19,10 @@ const Review = memo(function Review() {
             </p>
             <div className="d-flex justify-content-center">
                <div
-                  className="fst-italic py-2 px-4 rounded-5 border-bottom border-2"
+                  className="py-2 px-4 rounded-5 border-bottom border-2"
                   style={{ backgroundColor: "#ffe484" }}
                >
-                  <strong>{rootWord}</strong>: {def}.
+                  <strong>{rootWord}</strong>: {def}
                </div>
             </div>
          </Card>
@@ -38,7 +37,7 @@ const Review = memo(function Review() {
          }
       </>
    );
-})
+};
 
 function WrongAnsPlaceholder() {
    return (
@@ -48,6 +47,4 @@ function WrongAnsPlaceholder() {
          </p>
       </div>
    );
-}
-
-export default Review;
+};

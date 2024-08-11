@@ -10,7 +10,6 @@
    font-weight: bold;
 }
 
-
 .default {
    position: relative;
    height: auto;
@@ -24,10 +23,6 @@
    justify-content: center;
 }
 
-
 .hover {
    border-color: rgb(100, 100, 100);
-}
-.test {
-   background-color: rgb(78, 134, 78);
 }

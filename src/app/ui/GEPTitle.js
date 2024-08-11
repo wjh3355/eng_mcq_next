@@ -5,7 +5,11 @@ import { Row } from "react-bootstrap";
 export default function GEPTitle({ slug }) {
 
    let word;
-   switch (slug) {
+   const actualSlug = slug?.join('');
+   switch (actualSlug) {
+      case undefined:
+         word = "All Qns";
+         break;
       case "set1":
          word = "Set 1";
          break;
@@ -24,19 +28,15 @@ export default function GEPTitle({ slug }) {
       case "set6":
          word = "Set 6";
          break;
-      case "complete":
-         word = "All Questions";
-         break;
       default:
-         word = "ERROR";
          break;
    };
 
    return (
       <Row className="my-3">
-         <h3 className="text-center m-0">
+         <h4 className="text-center m-0">
             GEP English Vocabulary MCQ: <strong>{word}</strong>
-         </h3>
+         </h4>
       </Row>
    );
 }

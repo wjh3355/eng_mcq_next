@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Row, Col } from "react-bootstrap";
-import { useGEPQnContext } from "../utils/GEPQnProvider";
+import { useGEPQnContext } from "@/app/utils/GEPQnProvider";
 
 export default function AnswerIndicator() {
    const { isCorrect } = useGEPQnContext();
@@ -11,7 +11,7 @@ export default function AnswerIndicator() {
          return (
             <Container>
                <Row>
-                  <Col className="d-flex justify-content-center mt-3">
+                  <Col className="d-flex justify-content-center my-3">
                      <div
                         className="px-3 py-1 rounded-5 border-bottom border-2 d-inline-block"
                         style={{ 
@@ -39,7 +39,7 @@ export default function AnswerIndicator() {
          return (
             <Container>
                <Row>
-                  <Col className="d-flex justify-content-center mt-3">
+                  <Col className="d-flex justify-content-center my-3">
                      <div
                         className="px-3 py-1 rounded-5 border-bottom border-2 d-inline-block"
                         style={{

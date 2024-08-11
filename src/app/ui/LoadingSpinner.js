@@ -4,7 +4,7 @@ export default function LoadingSpinner() {
    return (
       <Container className="mt-3">
          <div className="d-flex justify-content-center">
-            <h3>Loading...</h3>
+            <h4>Loading...</h4>
          </div>
          <div className="d-flex justify-content-center mt-3">
             <Spinner animation="border" variant="dark">

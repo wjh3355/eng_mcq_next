@@ -1,3 +1,5 @@
+// "use client";
+
 import { Container, Row } from "react-bootstrap";
 
 import GEPTitle from "@/app/ui/GEPTitle";
@@ -10,19 +12,21 @@ import { GEPQnProvider } from "@/app/utils/GEPQnProvider";
 export default function Page({ params }) {
 
    return (
+
+
       <GEPQnProvider slug={params.slug}>
          <Container>
-
-            <GEPTitle slug={params.slug}/>
+            <GEPTitle slug={params.slug} />
 
             <Row>
-               <LeftColumn/>
+               <LeftColumn />
                <RightColumn />
             </Row>
          </Container>
 
-         <AnswerIndicator/>
+         <AnswerIndicator />
+      </GEPQnProvider>
 
-      </GEPQnProvider>   
+
    );
 }

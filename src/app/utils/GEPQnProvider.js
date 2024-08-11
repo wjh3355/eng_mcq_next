@@ -3,6 +3,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { fetchQnJson } from "./data";
 import { pick, shuffle, range } from "lodash";
+import { notFound } from "next/navigation";
 
 import LoadingSpinner from "../ui/LoadingSpinner";
 
@@ -28,56 +29,80 @@ export function GEPQnProvider({ children, slug }) {
    useEffect(() => {
       console.log("STARTING UP GEP MCQ TEST");
       let randArr;
-      switch (slug) {
-         case "set1":
-            randArr = shuffle(range(1, 101));
-            setQnOrderArr(randArr);
-            console.log("SET 1 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "set2":
-            randArr = shuffle(range(101, 201));
-            setQnOrderArr(randArr);
-            console.log("SET 2 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "set3":
-            randArr = shuffle(range(201, 301));
-            setQnOrderArr(randArr);
-            console.log("SET 3 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "set4":
-            randArr = shuffle(range(301, 401));
-            setQnOrderArr(randArr);
-            console.log("SET 4 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "set5":
-            randArr = shuffle(range(401, 501));
-            setQnOrderArr(randArr);
-            console.log("SET 5 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "set6":
-            randArr = shuffle(range(501, 601));
-            setQnOrderArr(randArr);
-            console.log("SET 6 CHOSEN");
-            console.log("ORDER:", randArr.join(','));
-            break;
-         case "complete":
+      const actualSlug = slug?.join('');
+      switch (actualSlug) {
+         case undefined:
             randArr = shuffle(range(1, 601));
             setQnOrderArr(randArr);
             console.log("ALL QNS CHOSEN");
             console.log(
                "ORDER:", 
-               randArr.slice(0, 50).join(','),
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set1":
+            randArr = shuffle(range(1, 101));
+            setQnOrderArr(randArr);
+            console.log("SET 1 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set2":
+            randArr = shuffle(range(101, 201));
+            setQnOrderArr(randArr);
+            console.log("SET 2 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set3":
+            randArr = shuffle(range(201, 301));
+            setQnOrderArr(randArr);
+            console.log("SET 3 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set4":
+            randArr = shuffle(range(301, 401));
+            setQnOrderArr(randArr);
+            console.log("SET 4 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set5":
+            randArr = shuffle(range(401, 501));
+            setQnOrderArr(randArr);
+            console.log("SET 5 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
+               "..."
+            );
+            break;
+         case "set6":
+            randArr = shuffle(range(501, 601));
+            setQnOrderArr(randArr);
+            console.log("SET 6 CHOSEN");
+            console.log(
+               "ORDER:", 
+               randArr.slice(0, 25).join(','),
                "..."
             );
             break;
          default:
-            alert("Invalid Link!");
-            break;
+            return notFound();
       }
    }, []);
 
