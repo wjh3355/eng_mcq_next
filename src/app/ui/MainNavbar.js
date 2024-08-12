@@ -1,10 +1,14 @@
 'use client';
 
-import { Navbar, Container, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Navbar, Container, Nav, NavDropdown, Button, Spinner } from "react-bootstrap";
 import Link from "next/link";
 import React from "react";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 export default function MainNavbar() {
+   const { isAuthenticated } = useKindeBrowserClient();
+
    return (
       <Navbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top">
          <Container>
@@ -20,7 +24,7 @@ export default function MainNavbar() {
                      About
                   </Nav.Link>
 
-                  {true && <GepMcqLinks/>}
+                  {isAuthenticated && <GepMcqLinks/>}
                </Nav>
                   <DisplayEmailAndLogInOrLogOut/>
             </Navbar.Collapse>
@@ -78,34 +82,57 @@ function GepMcqLinks() {
 };
 
 function DisplayEmailAndLogInOrLogOut() {
+   const { user, isAuthenticated, isLoading } = useKindeBrowserClient();
 
+   if (isLoading) {
+      return (
+         <div>
+            <Button
+               disabled
+               variant="danger"
+               size="sm"
+               className="btn btn-danger btn-sm ms-2 align-items-center justify-content-center d-flex"
+               style={{
+                  width: '70px',
+                  height: '30px'
+               }}
+            >
+               <Spinner animation="border" size="sm" />
+            </Button>
+         </div>
+      );
+   }
 
-   if (true) {
+   if (isAuthenticated) {
       return (
          <div className="d-flex align-items-center">
             <Navbar.Text>
-               Signed in as:&nbsp;
-               <strong>placeholder@email.com</strong>
+               Welcome,&nbsp;
+               <strong>{user?.email}</strong>
             </Navbar.Text>
-            <Button 
-               variant="danger" 
-               className="fw-bold ms-2"
-               size="sm"
+            <LogoutLink
+               className="btn btn-danger btn-sm ms-2 align-items-center justify-content-center d-flex"
+               style={{
+                  width: '70px',
+                  height: '30px'
+               }}
             >
                Log Out
-            </Button>
+            </LogoutLink>
          </div>
       );
    } else {
       return (
          <div>
-            <Button 
-               variant="danger" 
-               className="fw-bold"
-               size="sm"
+            <LoginLink
+               className="btn btn-danger btn-sm align-items-center justify-content-center d-flex"
+               style={{
+                  width: "70px",
+                  height: "30px",
+               }}
             >
                Log In
-            </Button>
+            </LoginLink>
          </div>
       );
    }

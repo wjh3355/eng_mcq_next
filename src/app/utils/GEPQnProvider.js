@@ -15,6 +15,7 @@ export function GEPQnProvider({ children, slug }) {
    const [qnOrderArr, setQnOrderArr] = useState([]);
    const [qnIdx, setQnIdx] = useState(0);
    const [qnObj, setQnObj] = useState(null);
+   const [qnSet, setQnSet] = useState('');
 
    const [numQnsAns, setNumQnsAns] = useState(0);
    const [numCorrectAns, setNumCorrectAns] = useState(0);
@@ -27,77 +28,86 @@ export function GEPQnProvider({ children, slug }) {
    const [isFetching, setIsFetching] = useState(true);
    
    useEffect(() => {
+      setIsFetching(true);
+
       console.log("STARTING UP GEP MCQ TEST");
       let randArr;
-      const actualSlug = slug?.join('');
-      switch (actualSlug) {
+
+      switch (slug?.join('')) {
          case undefined:
             randArr = shuffle(range(1, 601));
             setQnOrderArr(randArr);
-            console.log("ALL QNS CHOSEN");
+            setQnSet('All Qns');
             console.log(
+               "ALL QNS CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set1":
             randArr = shuffle(range(1, 101));
             setQnOrderArr(randArr);
-            console.log("SET 1 CHOSEN");
+            setQnSet('Set 1');
             console.log(
+               "SET 1 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set2":
             randArr = shuffle(range(101, 201));
             setQnOrderArr(randArr);
-            console.log("SET 2 CHOSEN");
+            setQnSet('Set 2');
             console.log(
+               "SET 2 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set3":
             randArr = shuffle(range(201, 301));
             setQnOrderArr(randArr);
-            console.log("SET 3 CHOSEN");
+            setQnSet('Set 3');
             console.log(
+               "SET 3 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set4":
             randArr = shuffle(range(301, 401));
             setQnOrderArr(randArr);
-            console.log("SET 4 CHOSEN");
+            setQnSet('Set 4');
             console.log(
+               "SET 4 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set5":
             randArr = shuffle(range(401, 501));
             setQnOrderArr(randArr);
-            console.log("SET 5 CHOSEN");
+            setQnSet('Set 5');
             console.log(
+               "SET 5 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
          case "set6":
             randArr = shuffle(range(501, 601));
             setQnOrderArr(randArr);
-            console.log("SET 6 CHOSEN");
+            setQnSet('Set 6');
             console.log(
+               "SET 6 CHOSEN\n",
                "ORDER:", 
-               randArr.slice(0, 25).join(','),
+               randArr.slice(0, 10).join(','),
                "..."
             );
             break;
@@ -160,6 +170,7 @@ export function GEPQnProvider({ children, slug }) {
       <GEPQnContext.Provider
          value={{
             qnObj,
+            qnSet,
             handleOptionClick,
             isCorrect,
             isExplBtnDisabled,
@@ -170,7 +181,14 @@ export function GEPQnProvider({ children, slug }) {
             wrongAnsArr,
          }}
       >
-         {isFetching ? <LoadingSpinner /> : children}
+
+
+         {isFetching 
+            ? <LoadingSpinner /> 
+            : children
+         }
+
+
       </GEPQnContext.Provider>
    );
 };

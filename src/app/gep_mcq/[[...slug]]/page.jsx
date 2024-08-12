@@ -1,32 +1,15 @@
-// "use client";
+import GEPMCQApp from "@/app/ui/GEPMCQApp";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
-import { Container, Row } from "react-bootstrap";
+export default async function Page({params}) {
+   const { isAuthenticated } = getKindeServerSession();
+   const isLoggedIn = await isAuthenticated();
+   if (!isLoggedIn) {
+      redirect('/');
+   };
 
-import GEPTitle from "@/app/ui/GEPTitle";
-import LeftColumn from "@/app/ui/LeftColumn";
-import RightColumn from "@/app/ui/RightColumn";
-import AnswerIndicator from "@/app/ui/AnswerIndicator";
-
-import { GEPQnProvider } from "@/app/utils/GEPQnProvider";
-
-export default function Page({ params }) {
-
-   return (
-
-
-      <GEPQnProvider slug={params.slug}>
-         <Container>
-            <GEPTitle slug={params.slug} />
-
-            <Row>
-               <LeftColumn />
-               <RightColumn />
-            </Row>
-         </Container>
-
-         <AnswerIndicator />
-      </GEPQnProvider>
-
-
+   return(
+      <GEPMCQApp slug={params.slug}/>
    );
 }
