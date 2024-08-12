@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { usePathname } from "next/navigation";
 
 export default function MainNavbar() {
    const { isAuthenticated } = useKindeBrowserClient();
@@ -65,13 +66,20 @@ function GepMcqLinks() {
       },
    ];
 
+   const currPathname = usePathname();
+
    return (
       <NavDropdown title="GEP MCQ">
       {
          gepMcqLinksArr.map(({ name, href }, idx) => 
             <React.Fragment key={name}>
                {idx === 6 && <NavDropdown.Divider />}
-               <NavDropdown.Item as={Link} href={href}>
+               <NavDropdown.Item 
+                  as={Link} 
+                  href={href}
+                  className={currPathname === href ? 'fw-bold' : ''}
+               >
+                  {currPathname === href ? '> ' : ''}
                   {name}
                </NavDropdown.Item>
             </React.Fragment>
