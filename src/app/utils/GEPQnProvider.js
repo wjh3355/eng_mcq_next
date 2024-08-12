@@ -30,86 +30,86 @@ export function GEPQnProvider({ children, slug }) {
    useEffect(() => {
       setIsFetching(true);
 
-      console.log("STARTING UP GEP MCQ TEST");
+      // console.log("STARTING UP GEP MCQ TEST");
       let randArr;
 
-      switch (slug?.join('')) {
+      switch (slug) {
          case undefined:
             randArr = shuffle(range(1, 601));
             setQnOrderArr(randArr);
             setQnSet('All Qns');
-            console.log(
-               "ALL QNS CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "ALL QNS CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set1":
             randArr = shuffle(range(1, 101));
             setQnOrderArr(randArr);
             setQnSet('Set 1');
-            console.log(
-               "SET 1 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 1 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set2":
             randArr = shuffle(range(101, 201));
             setQnOrderArr(randArr);
             setQnSet('Set 2');
-            console.log(
-               "SET 2 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 2 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set3":
             randArr = shuffle(range(201, 301));
             setQnOrderArr(randArr);
             setQnSet('Set 3');
-            console.log(
-               "SET 3 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 3 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set4":
             randArr = shuffle(range(301, 401));
             setQnOrderArr(randArr);
             setQnSet('Set 4');
-            console.log(
-               "SET 4 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 4 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set5":
             randArr = shuffle(range(401, 501));
             setQnOrderArr(randArr);
             setQnSet('Set 5');
-            console.log(
-               "SET 5 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 5 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          case "set6":
             randArr = shuffle(range(501, 601));
             setQnOrderArr(randArr);
             setQnSet('Set 6');
-            console.log(
-               "SET 6 CHOSEN\n",
-               "ORDER:", 
-               randArr.slice(0, 10).join(','),
-               "..."
-            );
+            // console.log(
+            //    "SET 6 CHOSEN\n",
+            //    "ORDER:", 
+            //    randArr.slice(0, 10).join(','),
+            //    "..."
+            // );
             break;
          default:
             return notFound();
@@ -127,17 +127,17 @@ export function GEPQnProvider({ children, slug }) {
       await new Promise(resolve => setTimeout(resolve, 500));
       // Fake delay
       const data = await fetchQnJson(qnOrderArr[qnIdx]);
-      console.log('NOW DISPLAYING QUESTION', qnOrderArr[qnIdx]);
+      // console.log('NOW DISPLAYING QUESTION', qnOrderArr[qnIdx]);
 
       setQnObj(data);
       setIsFetching(false);
    };
 
    function handleOptionClick(isCorrectOption) {
-      console.log(
-         'AN OPTION BUTTON CLICKED:', 
-         isCorrectOption ? "CORRECT" : "INCORRECT"
-      );
+      // console.log(
+      //    'AN OPTION BUTTON CLICKED:', 
+      //    isCorrectOption ? "CORRECT" : "INCORRECT"
+      // );
       setIsNextQnBtnDisabled(false);
       setIsExplBtnDisabled(false);
       setIsCorrect(isCorrectOption);
