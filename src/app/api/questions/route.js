@@ -9,11 +9,25 @@ export async function GET(request) {
 
       const url = new URL(request.url);
       const qnNum = parseInt(url.searchParams.get("qnNum"), 10);
+
+      if (isNaN(qnNum)) {
+         return new Response(
+            JSON.stringify({ error: "Invalid qnNum parameter" }),
+            { status: 400, headers: { "Content-Type": "application/json" } }
+         );
+      }
       
       const qn = await qns.findOne(
          { qnNum }, 
          { projection: { _id: 0 } }
       );
+
+      if (!qn) {
+         return new Response(JSON.stringify({ error: "Question not found" }), {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+         });
+      }
 
       return new Response(JSON.stringify(qn), {
          headers: { "Content-Type": "application/json" },
