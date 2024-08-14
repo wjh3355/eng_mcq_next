@@ -2,7 +2,7 @@
 
 import { Row } from "react-bootstrap";
 
-import { useGEPQnContext } from "../utils/GEPQnProvider";
+import { useGEPQnContext } from "../provider/GEPQnProvider";
 
 export default function GEPTitle() {
 

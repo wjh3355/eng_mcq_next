@@ -1,4 +1,4 @@
-import GEPMCQApp from "@/app/ui/GEPMCQApp";
+import GEPMCQApp from "@/app/gep_mcq/GEPMCQApp";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
 

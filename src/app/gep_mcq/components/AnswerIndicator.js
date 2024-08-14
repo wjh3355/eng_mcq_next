@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Row, Col } from "react-bootstrap";
-import { useGEPQnContext } from "@/app/utils/GEPQnProvider";
+import { useGEPQnContext } from "../provider/GEPQnProvider";
 
 export default function AnswerIndicator() {
    const { isCorrect } = useGEPQnContext();

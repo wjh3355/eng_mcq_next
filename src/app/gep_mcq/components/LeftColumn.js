@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 import Review from "./Review";
 
-import { useGEPQnContext } from "../utils/GEPQnProvider";
+import { useGEPQnContext } from "../provider/GEPQnProvider";
 
 export default function LeftColumn() {
 

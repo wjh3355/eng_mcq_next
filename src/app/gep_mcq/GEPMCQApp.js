@@ -2,12 +2,12 @@
 
 import { Container, Row } from "react-bootstrap";
 
-import GEPTitle from "@/app/ui/GEPTitle";
-import LeftColumn from "@/app/ui/LeftColumn";
-import RightColumn from "@/app/ui/RightColumn";
-import AnswerIndicator from "@/app/ui/AnswerIndicator";
+import GEPTitle from "@/app/gep_mcq/components/GEPTitle";
+import LeftColumn from "@/app/gep_mcq/components/LeftColumn";
+import RightColumn from "@/app/gep_mcq/components/RightColumn";
+import AnswerIndicator from "@/app/gep_mcq/components/AnswerIndicator";
 
-import { GEPQnProvider } from "@/app/utils/GEPQnProvider";
+import { GEPQnProvider } from "@/app/gep_mcq/provider/GEPQnProvider";
 
 export default function GEPMCQApp({ slug }) {
 

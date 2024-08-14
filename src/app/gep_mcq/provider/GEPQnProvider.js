@@ -1,25 +1,33 @@
 'use client';
 
+
 // ############################################################################
+
 
 import { createContext, useState, useEffect, useContext } from "react";
 import { pick, shuffle, range } from "lodash";
 
 import { notFound } from "next/navigation";
 
-import LoadingSpinner from "../ui/LoadingSpinner";
+import LoadingSpinner from "@/app/ui/LoadingSpinner";
 
-import ErrorContainer from "../ui/ErrorContainer";
+import ErrorContainer from "@/app/ui/ErrorContainer";
+
 
 // ############################################################################
+
 
 const GEPQnContext = createContext();
 
 export const useGEPQnContext = () => useContext(GEPQnContext);
 
+
 // ############################################################################
 
+
 export function GEPQnProvider({ children, slug }) {
+
+
    const [orderOfQnsArray, setOrderOfQnsArray] = useState([]);
    const [orderOfQnsArrayIdx, setOrderOfQnsArrayIdx] = useState(0);
    const [qnObj, setQnObj] = useState(null);
@@ -35,6 +43,10 @@ export function GEPQnProvider({ children, slug }) {
 
    const [isFetching, setIsFetching] = useState(true);
    const [error, setError] = useState(null);
+
+
+   // ################################################################
+
    
    useEffect(() => {
       setIsFetching(true);
@@ -125,10 +137,7 @@ export function GEPQnProvider({ children, slug }) {
       }
    }, []);
 
-   useEffect(() => {
-      orderOfQnsArray.length !== 0 && fetchNewQnObj();
-   }, [orderOfQnsArray, orderOfQnsArrayIdx]);
-      
+   
    async function fetchNewQnObj() {
       setIsFetching(true);
       setQnObj(null);
@@ -136,16 +145,16 @@ export function GEPQnProvider({ children, slug }) {
 
       try {
          await new Promise(resolve => setTimeout(resolve, 400));
-         // FAKE DELAY
-
+         // Fake delay
+         
          const res = await fetch(`../api/questions?qnNum=${qnNumToFetch}`);
-
+         
          if (!res.ok) throw new Error("Failed to fetch data, response was not OK");
-
+         
          const data = await res.json();
-
+         
          if (!data) throw new Error(`Question number #${qnNumToFetch} could not be fetched.`);
-
+         
          setQnObj(data);
       } catch (err) {
          console.log(err);
@@ -155,19 +164,27 @@ export function GEPQnProvider({ children, slug }) {
          // console.log("NOW DISPLAYING QUESTION", qnNum);
       }
    };
+   
+   
+   // ################################################################
+   
 
+   useEffect(() => {
+      orderOfQnsArray.length !== 0 && fetchNewQnObj();
+   }, [orderOfQnsArray, orderOfQnsArrayIdx]);
+   
    function handleOptionClick(isCorrect) {
       // console.log(
-      //    'AN OPTION BUTTON CLICKED:', 
-      //    isCorrect ? "CORRECT" : "INCORRECT"
-      // );
-
-      setIsNextQnBtnDisabled(false);
-      setIsExplBtnDisabled(false);
-      setIsCorrect(isCorrect);
-   };
-
-   function handleNextQnBtnClick() {
+         //    'AN OPTION BUTTON CLICKED:', 
+         //    isCorrect ? "CORRECT" : "INCORRECT"
+         // );
+         
+         setIsNextQnBtnDisabled(false);
+         setIsExplBtnDisabled(false);
+         setIsCorrect(isCorrect);
+      };
+      
+      function handleNextQnBtnClick() {
       // console.log('NEXT QN BUTTON CLICKED');
 
       setIsNextQnBtnDisabled(true);
@@ -196,6 +213,9 @@ export function GEPQnProvider({ children, slug }) {
       };
       // update orderOfQnsArrayIdx to get next question
    };
+
+
+   // ################################################################
 
    
    const contextValue = {

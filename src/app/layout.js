@@ -1,10 +1,10 @@
 import MainNavbar from "@/app/ui/MainNavbar";
-import { inter } from "@/app/utils/fonts";
+import { inter } from "@/app/lib/fonts";
 import "@/app/styles/global.css";
 
 export const metadata = {
    title: "English Tutor",
-   description: "My side project",
+   description: "A side project",
    icons: {
       icon: "/favicon.ico",
    },

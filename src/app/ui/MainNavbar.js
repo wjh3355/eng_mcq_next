@@ -1,11 +1,16 @@
 'use client';
 
+import React from "react";
 import { Navbar, Container, Nav, NavDropdown, Button, Spinner } from "react-bootstrap";
 import Link from "next/link";
-import React from "react";
+import { usePathname } from "next/navigation";
+
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { usePathname } from "next/navigation";
+
+
+// #####################################################################
+
 
 export default function MainNavbar() {
    const { isAuthenticated } = useKindeBrowserClient();
@@ -14,20 +19,27 @@ export default function MainNavbar() {
       <Navbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top">
          <Container>
             <Navbar.Brand as={Link} href="/">
-               English Tutor
+               Sunbird English
             </Navbar.Brand>
 
             <Navbar.Toggle/>
 
             <Navbar.Collapse id="basic-navbar-nav">
                <Nav className="me-auto">
+                  <Nav.Link as={Link} href="/">
+                     Home
+                  </Nav.Link>
+
                   <Nav.Link as={Link} href="/about">
                      About
                   </Nav.Link>
 
                   {isAuthenticated && <GepMcqLinks/>}
+                  
                </Nav>
-                  <DisplayEmailAndLogInOrLogOut/>
+
+               <DisplayEmailAndLogInOrLogOut/>
+
             </Navbar.Collapse>
          </Container>
       </Navbar>
@@ -72,17 +84,19 @@ function GepMcqLinks() {
       <NavDropdown title="GEP MCQ">
       {
          gepMcqLinksArr.map(({ name, href }, idx) => 
-            <React.Fragment key={name}>
-               {idx === 6 && <NavDropdown.Divider />}
-               <NavDropdown.Item 
-                  as={Link} 
-                  href={href}
-                  className={currPathname === href ? 'fw-bold' : ''}
-               >
-                  {currPathname === href ? '> ' : ''}
-                  {name}
-               </NavDropdown.Item>
-            </React.Fragment>
+
+         <React.Fragment key={name}>
+            {idx === 6 && <NavDropdown.Divider />}
+            <NavDropdown.Item 
+               as={Link} 
+               href={href}
+               className={currPathname === href ? 'fw-bold' : ''}
+            >
+               {currPathname === href ? '> ' : ''}
+               {name}
+            </NavDropdown.Item>
+         </React.Fragment>
+         
          )
       }
       </NavDropdown>
@@ -144,5 +158,4 @@ function DisplayEmailAndLogInOrLogOut() {
          </div>
       );
    }
-}
-
+};

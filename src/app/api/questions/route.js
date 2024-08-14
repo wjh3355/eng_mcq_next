@@ -12,10 +12,13 @@ export async function GET(request) {
 
       if (isNaN(qnNum)) {
          return new Response(
-            JSON.stringify({ error: "Invalid qnNum parameter" }),
-            { status: 400, headers: { "Content-Type": "application/json" } }
+            JSON.stringify({ error: "qnNum parameter is invalid" }),
+            { 
+               status: 400, 
+               headers: { "Content-Type": "application/json" } 
+            }
          );
-      }
+      };
       
       const qn = await qns.findOne(
          { qnNum }, 
@@ -23,22 +26,31 @@ export async function GET(request) {
       );
 
       if (!qn) {
-         return new Response(JSON.stringify({ error: "Question not found" }), {
-            status: 404,
-            headers: { "Content-Type": "application/json" },
-         });
-      }
+         return new Response(
+            JSON.stringify({ error: `Question ${qnNum} not found` }), 
+            {
+               status: 404,
+               headers: { "Content-Type": "application/json" },
+            }
+         );
+      };
 
-      return new Response(JSON.stringify(qn), {
-         headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+         JSON.stringify(qn), 
+         {
+            headers: { "Content-Type": "application/json" }
+         }
+      );
       
    } catch (error) {
       console.error("Error in GET request:", error);
 
-      return new Response(JSON.stringify({ error: error.message }), {
-         status: 500,
-         headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+         JSON.stringify({ error: error.message }), 
+         {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+         }
+      );
    }
 }
