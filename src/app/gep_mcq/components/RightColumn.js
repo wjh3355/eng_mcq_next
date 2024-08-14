@@ -4,7 +4,7 @@ import { Col } from "react-bootstrap";
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 import { clsx } from "clsx";
-import styles from "../../styles/option-buttons.module.css";
+import styles from "@/styles/option-buttons.module.css";
 
 import { useGEPQnContext } from "../provider/GEPQnProvider";
 
