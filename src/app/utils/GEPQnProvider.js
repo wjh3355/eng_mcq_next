@@ -1,19 +1,27 @@
 'use client';
 
+// ############################################################################
+
 import { createContext, useState, useEffect, useContext } from "react";
-import { fetchQnJson } from "./data";
 import { pick, shuffle, range } from "lodash";
+
 import { notFound } from "next/navigation";
 
 import LoadingSpinner from "../ui/LoadingSpinner";
+
+import ErrorContainer from "../ui/ErrorContainer";
+
+// ############################################################################
 
 const GEPQnContext = createContext();
 
 export const useGEPQnContext = () => useContext(GEPQnContext);
 
+// ############################################################################
+
 export function GEPQnProvider({ children, slug }) {
-   const [qnOrderArr, setQnOrderArr] = useState([]);
-   const [qnIdx, setQnIdx] = useState(0);
+   const [orderOfQnsArray, setOrderOfQnsArray] = useState([]);
+   const [orderOfQnsArrayIdx, setOrderOfQnsArrayIdx] = useState(0);
    const [qnObj, setQnObj] = useState(null);
    const [qnSet, setQnSet] = useState('');
 
@@ -26,6 +34,7 @@ export function GEPQnProvider({ children, slug }) {
    const [isCorrect, setIsCorrect] = useState(null);
 
    const [isFetching, setIsFetching] = useState(true);
+   const [error, setError] = useState(null);
    
    useEffect(() => {
       setIsFetching(true);
@@ -36,7 +45,7 @@ export function GEPQnProvider({ children, slug }) {
       switch (slug) {
          case undefined:
             randArr = shuffle(range(1, 601));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('All Qns');
             // console.log(
             //    "ALL QNS CHOSEN\n",
@@ -47,7 +56,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set1":
             randArr = shuffle(range(1, 101));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 1');
             // console.log(
             //    "SET 1 CHOSEN\n",
@@ -58,7 +67,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set2":
             randArr = shuffle(range(101, 201));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 2');
             // console.log(
             //    "SET 2 CHOSEN\n",
@@ -69,7 +78,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set3":
             randArr = shuffle(range(201, 301));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 3');
             // console.log(
             //    "SET 3 CHOSEN\n",
@@ -80,7 +89,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set4":
             randArr = shuffle(range(301, 401));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 4');
             // console.log(
             //    "SET 4 CHOSEN\n",
@@ -91,7 +100,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set5":
             randArr = shuffle(range(401, 501));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 5');
             // console.log(
             //    "SET 5 CHOSEN\n",
@@ -102,7 +111,7 @@ export function GEPQnProvider({ children, slug }) {
             break;
          case "set6":
             randArr = shuffle(range(501, 601));
-            setQnOrderArr(randArr);
+            setOrderOfQnsArray(randArr);
             setQnSet('Set 6');
             // console.log(
             //    "SET 6 CHOSEN\n",
@@ -117,78 +126,101 @@ export function GEPQnProvider({ children, slug }) {
    }, []);
 
    useEffect(() => {
-      qnOrderArr.length !== 0 && fetchNewQnObj();
-   }, [qnOrderArr, qnIdx]);
+      orderOfQnsArray.length !== 0 && fetchNewQnObj();
+   }, [orderOfQnsArray, orderOfQnsArrayIdx]);
       
    async function fetchNewQnObj() {
       setIsFetching(true);
       setQnObj(null);
+      let qnNumToFetch = orderOfQnsArray[orderOfQnsArrayIdx];
 
-      await new Promise(resolve => setTimeout(resolve, 500));
-      // Fake delay
-      const data = await fetchQnJson(qnOrderArr[qnIdx]);
-      // console.log('NOW DISPLAYING QUESTION', qnOrderArr[qnIdx]);
+      try {
+         await new Promise(resolve => setTimeout(resolve, 400));
+         // FAKE DELAY
 
-      setQnObj(data);
-      setIsFetching(false);
+         const res = await fetch(`../api/questions?qnNum=${qnNumToFetch}`);
+
+         if (!res.ok) throw new Error("Failed to fetch data, response was not OK");
+
+         const data = await res.json();
+
+         if (!data) throw new Error(`Question number #${qnNumToFetch} could not be fetched.`);
+
+         setQnObj(data);
+      } catch (err) {
+         setError(err.message);
+      } finally {
+         setIsFetching(false);
+         // console.log("NOW DISPLAYING QUESTION", qnNum);
+      }
    };
 
-   function handleOptionClick(isCorrectOption) {
+   function handleOptionClick(isCorrect) {
       // console.log(
       //    'AN OPTION BUTTON CLICKED:', 
-      //    isCorrectOption ? "CORRECT" : "INCORRECT"
+      //    isCorrect ? "CORRECT" : "INCORRECT"
       // );
+
       setIsNextQnBtnDisabled(false);
       setIsExplBtnDisabled(false);
-      setIsCorrect(isCorrectOption);
+      setIsCorrect(isCorrect);
    };
 
    function handleNextQnBtnClick() {
-      console.log('NEXT QN BUTTON CLICKED');
-      setNumQnsAns((prevNum) => prevNum + 1);
-      isCorrect
-         ? setNumCorrectAns((prevNum) => prevNum + 1)
-         : setWrongAnsArr((prevArr) => [...prevArr, pick(qnObj, [
-            'sentence', 'wordToTest', 'rootWord', 'def'
-         ])]);
-      // before we update isCorrect back to null, increment numCorrectAns if it is true, if not add some of the values in qnObj to wrongQnsArr
+      // console.log('NEXT QN BUTTON CLICKED');
 
       setIsNextQnBtnDisabled(true);
       setIsExplBtnDisabled(true);
       setIsCorrect(null);
       // reset states
-      
-      if (qnIdx === qnOrderArr.length - 1) {
-         setQnIdx(0);
+
+      setNumQnsAns(prevNum => prevNum + 1);
+
+      if (isCorrect) {
+         setNumCorrectAns(prevNum => prevNum + 1);
       } else {
-         setQnIdx(prev => prev + 1);
+         setWrongAnsArr(prevArr => [...prevArr, pick(qnObj, [
+            'sentence', 'wordToTest', 'rootWord', 'def'
+         ])]);
       };
-      // get next question
-   }
+      // before update isCorrect back to null, 
+      // increment numCorrectAns if it is true,
+      // if not add some of the values in qnObj to wrongQnsArr
+
+      
+      if (orderOfQnsArrayIdx === orderOfQnsArray.length - 1) {
+         setOrderOfQnsArrayIdx(0);
+      } else {
+         setOrderOfQnsArrayIdx(prev => prev + 1);
+      };
+      // update orderOfQnsArrayIdx to get next question
+   };
+
+   
+   const contextValue = {
+      qnObj,
+      qnSet,
+      handleOptionClick,
+      isCorrect,
+      isExplBtnDisabled,
+      isNextQnBtnDisabled,
+      handleNextQnBtnClick,
+      numQnsAns,
+      numCorrectAns,
+      wrongAnsArr
+   };
+   
+   if (isFetching) return <LoadingSpinner/>;
+
+   if (error) return (
+      <ErrorContainer>
+         Error: {error}
+      </ErrorContainer>
+   );
 
    return (
-      <GEPQnContext.Provider
-         value={{
-            qnObj,
-            qnSet,
-            handleOptionClick,
-            isCorrect,
-            isExplBtnDisabled,
-            isNextQnBtnDisabled,
-            handleNextQnBtnClick,
-            numQnsAns,
-            numCorrectAns,
-            wrongAnsArr,
-         }}
-      >
-
-
-         {isFetching 
-            ? <LoadingSpinner /> 
-            : children
-         }
-
-
+      <GEPQnContext.Provider value={contextValue}>
+         {children}
       </GEPQnContext.Provider>
    );
 };
