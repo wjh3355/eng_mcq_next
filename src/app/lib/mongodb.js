@@ -4,11 +4,25 @@ const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri);
 
+let cachedClient = null;
+let cachedDb = null;
+
 export async function connectToDB() {
-   
-   await client.connect();
+   if (cachedClient && cachedDb) {
+      return { db: cachedDb, client: cachedClient };
+   }
+  
+   try {
+      await client.connect();
 
-   const qnDB = client.db("english_questions");
+      const qnDB = client.db("english_questions");
 
-   return { qnDB, client };
+      cachedClient = client;
+      cachedDb = db;
+
+      return { qnDB, client };
+   } catch (err) {
+      console.error("Failed to connect to MongoDB", error);
+      throw error;
+   }
 }
