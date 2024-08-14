@@ -1,6 +1,6 @@
 import MainNavbar from "@/app/ui/MainNavbar";
-import { inter } from "@/app/lib/fonts";
-import "@/app/styles/global.css";
+import { inter } from "@/lib/fonts";
+import "@/styles/global.css";
 
 export const metadata = {
    title: "English Tutor",

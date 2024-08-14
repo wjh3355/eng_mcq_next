@@ -144,8 +144,7 @@ export function GEPQnProvider({ children, slug }) {
       let qnNumToFetch = orderOfQnsArray[orderOfQnsArrayIdx];
 
       try {
-         await new Promise(resolve => setTimeout(resolve, 400));
-         // Fake delay
+         await new Promise(resolve => setTimeout(resolve, 300));
          
          const res = await fetch(`../api/questions?qnNum=${qnNumToFetch}`);
          
@@ -170,27 +169,28 @@ export function GEPQnProvider({ children, slug }) {
    
 
    useEffect(() => {
-      orderOfQnsArray.length !== 0 && fetchNewQnObj();
+      if (orderOfQnsArray.length !== 0) {
+         fetchNewQnObj();
+      }
    }, [orderOfQnsArray, orderOfQnsArrayIdx]);
    
    function handleOptionClick(isCorrect) {
-      // console.log(
-         //    'AN OPTION BUTTON CLICKED:', 
-         //    isCorrect ? "CORRECT" : "INCORRECT"
-         // );
+   // console.log(
+   //    'AN OPTION BUTTON CLICKED:', 
+   //    isCorrect ? "CORRECT" : "INCORRECT"
+   // );
          
-         setIsNextQnBtnDisabled(false);
-         setIsExplBtnDisabled(false);
-         setIsCorrect(isCorrect);
-      };
+      setIsNextQnBtnDisabled(false);
+      setIsExplBtnDisabled(false);
+      setIsCorrect(isCorrect);
+   };
       
-      function handleNextQnBtnClick() {
-      // console.log('NEXT QN BUTTON CLICKED');
+   function handleNextQnBtnClick() {
+   // console.log('NEXT QN BUTTON CLICKED');
 
       setIsNextQnBtnDisabled(true);
       setIsExplBtnDisabled(true);
       setIsCorrect(null);
-      // reset states
 
       setNumQnsAns(prevNum => prevNum + 1);
 
@@ -201,17 +201,12 @@ export function GEPQnProvider({ children, slug }) {
             'sentence', 'wordToTest', 'rootWord', 'def'
          ])]);
       };
-      // before update isCorrect back to null, 
-      // increment numCorrectAns if it is true,
-      // if not add some of the values in qnObj to wrongQnsArr
-
       
       if (orderOfQnsArrayIdx === orderOfQnsArray.length - 1) {
          setOrderOfQnsArrayIdx(0);
       } else {
          setOrderOfQnsArrayIdx(prev => prev + 1);
       };
-      // update orderOfQnsArrayIdx to get next question
    };
 
 
