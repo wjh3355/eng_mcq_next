@@ -148,6 +148,7 @@ export function GEPQnProvider({ children, slug }) {
 
          setQnObj(data);
       } catch (err) {
+         console.log(err);
          setError(err.message);
       } finally {
          setIsFetching(false);
