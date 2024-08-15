@@ -4,8 +4,8 @@ export async function GET(request) {
 
    try {
 
-      const { qnDB } = await connectToDB();
-      const qns = qnDB.collection("questions1");
+      const { db } = await connectToDB("english_questions");
+      const qns = db.collection("questions1");
 
       const url = new URL(request.url);
       const qnNum = parseInt(url.searchParams.get("qnNum"), 10);

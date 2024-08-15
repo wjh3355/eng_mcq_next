@@ -1,10 +1,13 @@
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 export default function Page() {
-
-   return(
-      <Container className="d-flex justify-content-center my-3">
-         <h4>Welcome!</h4>
+   return (
+      <Container className="my-3">
+         <Row>
+            <Col className="text-center">
+               <h4>Welcome to Sunbird English</h4>
+            </Col>
+         </Row>
       </Container>
    );
 }

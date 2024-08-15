@@ -3,7 +3,7 @@ import { inter } from "@/lib/fonts";
 import "@/styles/global.css";
 
 export const metadata = {
-   title: "English Tutor",
+   title: "Sunbird English",
    description: "A side project",
    icons: {
       icon: "/favicon.ico",
