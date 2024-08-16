@@ -21,3 +21,16 @@ export interface QnObjType {
    type: string,
    def: string
 };
+
+export const initialContextValue = {
+   qnObj: null,
+   qnSet: '',
+   handleOptionClick() {},
+   isCorrect: null,
+   isExplBtnDisabled: true,
+   isNextQnBtnDisabled: true,
+   handleNextQnBtnClick() {},
+   numQnsAns: 0,
+   numCorrectAns: 0,
+   wrongAnsArr: []
+}

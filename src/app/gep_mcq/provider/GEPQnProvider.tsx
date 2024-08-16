@@ -6,7 +6,7 @@
 
 import React, { createContext, useState, useEffect, useContext } from "react";
 
-import { pick, shuffle, range } from "lodash";
+import { shuffle, range } from "lodash";
 
 import { notFound } from "next/navigation";
 
@@ -16,14 +16,15 @@ import ErrorContainer from "@/app/ui/ErrorContainer";
 
 import { 
    QuestionContextProviderValueType, 
-   QnObjType
+   QnObjType,
+   initialContextValue
 } from "@/lib/types";
 
 
 // ############################################################################
 
 
-const GEPQnContext = createContext<QuestionContextProviderValueType>();
+const GEPQnContext = createContext<QuestionContextProviderValueType>(initialContextValue);
 
 export const useGEPQnContext = () => useContext(GEPQnContext);
 
