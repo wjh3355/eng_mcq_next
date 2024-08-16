@@ -3,12 +3,13 @@
 import { Card } from "react-bootstrap";
 
 import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { QnObjType } from "@/lib/types";
 
 export default function Review() {
    const { wrongAnsArr } = useGEPQnContext();
 
-   function generateWrongAnsCards(obj) {
-      const { sentence, rootWord, wordToTest, def } = obj;
+   function generateWrongAnsCards(qnObj: QnObjType) {
+      const { sentence, rootWord, wordToTest, def } = qnObj;
       const idxOfWord = sentence.indexOf(wordToTest);
       return (
          <Card body className="w-100 mb-3" key={rootWord}>

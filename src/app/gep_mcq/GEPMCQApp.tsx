@@ -9,7 +9,7 @@ import AnswerIndicator from "@/app/gep_mcq/components/AnswerIndicator";
 
 import { GEPQnProvider } from "@/app/gep_mcq/provider/GEPQnProvider";
 
-export default function GEPMCQApp({ slug }) {
+export default function GEPMCQApp({ slug }: { slug: string }) {
 
    return (
       <GEPQnProvider slug={slug}>

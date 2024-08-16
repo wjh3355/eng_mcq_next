@@ -2,12 +2,12 @@ import GEPMCQApp from "@/app/gep_mcq/GEPMCQApp";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
 
-export default async function Page({params}) {
+export default async function Page({ params }: { params: { slug: string[] } }) {
    const { isAuthenticated } = getKindeServerSession();
    const isLoggedIn = await isAuthenticated();
    if (!isLoggedIn) {
-      redirect('/');
-   };
+      redirect("/");
+   }
 
    const availableRoutes = [
       undefined,
@@ -16,16 +16,14 @@ export default async function Page({params}) {
       "set3",
       "set4",
       "set5",
-      "set6"
+      "set6",
    ];
 
-   const slug = params.slug?.join('');
+   const slug = params.slug?.join("");
 
    if (!availableRoutes.includes(slug)) {
       notFound();
-   };
+   }
 
-   return(
-      <GEPMCQApp slug={slug}/>
-   );
+   return <GEPMCQApp slug={slug} />;
 }

@@ -7,16 +7,18 @@ import { clsx } from "clsx";
 import styles from "@/styles/option-buttons.module.css";
 
 import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { QnObjType } from "@/lib/types";
 
 export default function RightColumn() {
 
    const { 
-      qnObj: { options, correctAns }, 
+      qnObj,
       handleOptionClick 
-   } = useGEPQnContext();
+   } = useGEPQnContext() as {qnObj: QnObjType, handleOptionClick: (isCorrect: boolean) => void};
+   const { options, correctAns } = qnObj;
 
-   const [randomisedOptions, setRandomisedOptions] = useState([]);
-   const [selectedOption, setSelectedOption] = useState(null);
+   const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
+   const [selectedOption, setSelectedOption] = useState<null | string>(null);
 
    useEffect(() => {
       setRandomisedOptions(shuffle(options));
@@ -25,7 +27,7 @@ export default function RightColumn() {
 
    const isDisabled = selectedOption !== null; // disable all buttons once one is clicked
 
-   function renderButton(thisOption) {
+   function renderButton(thisOption: string) {
       let isCorrectOption = (thisOption === correctAns); 
       return (
          <OptionButton
@@ -34,7 +36,7 @@ export default function RightColumn() {
             isCorrectOption={isCorrectOption} 
             hasBeenSelected={thisOption === selectedOption} // all false initially, true for clicked button
             isDisabled={isDisabled} // changes from all false to all true once smth is selected
-            handleOptionClick={() => {
+            onClick={() => {
                setSelectedOption(thisOption);
                handleOptionClick(isCorrectOption);
             }}
@@ -55,15 +57,21 @@ function OptionButton({
    thisOption,
    isCorrectOption,
    hasBeenSelected,
-   handleOptionClick,
+   onClick,
    isDisabled,
+}: {
+   thisOption: string,
+   isCorrectOption: boolean,
+   hasBeenSelected: boolean,
+   onClick: () => void,
+   isDisabled: boolean
 }) {
 
    const [isHovering, setIsHovering] = useState(false);
 
    return (
       <button
-         onClick={handleOptionClick}
+         onClick={onClick}
          onMouseEnter={() => setIsHovering(true)}
          onMouseLeave={() => setIsHovering(false)}
          disabled={isDisabled}

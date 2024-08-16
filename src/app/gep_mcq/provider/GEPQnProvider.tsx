@@ -4,7 +4,8 @@
 // ############################################################################
 
 
-import { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+
 import { pick, shuffle, range } from "lodash";
 
 import { notFound } from "next/navigation";
@@ -13,11 +14,16 @@ import LoadingSpinner from "@/app/ui/LoadingSpinner";
 
 import ErrorContainer from "@/app/ui/ErrorContainer";
 
+import { 
+   QuestionContextProviderValueType, 
+   QnObjType
+} from "@/lib/types";
+
 
 // ############################################################################
 
 
-const GEPQnContext = createContext();
+const GEPQnContext = createContext<QuestionContextProviderValueType>();
 
 export const useGEPQnContext = () => useContext(GEPQnContext);
 
@@ -25,24 +31,24 @@ export const useGEPQnContext = () => useContext(GEPQnContext);
 // ############################################################################
 
 
-export function GEPQnProvider({ children, slug }) {
+export function GEPQnProvider({ children, slug }: { children: React.ReactNode, slug: string } ) {
 
 
-   const [orderOfQnsArray, setOrderOfQnsArray] = useState([]);
-   const [orderOfQnsArrayIdx, setOrderOfQnsArrayIdx] = useState(0);
-   const [qnObj, setQnObj] = useState(null);
-   const [qnSet, setQnSet] = useState('');
+   const [orderOfQnsArray, setOrderOfQnsArray] = useState<number[]>([]);
+   const [orderOfQnsArrayIdx, setOrderOfQnsArrayIdx] = useState<number>(0);
+   const [qnObj, setQnObj] = useState<QnObjType | null>(null);
+   const [qnSet, setQnSet] = useState<string>('');
 
-   const [numQnsAns, setNumQnsAns] = useState(0);
-   const [numCorrectAns, setNumCorrectAns] = useState(0);
-   const [wrongAnsArr, setWrongAnsArr] = useState([]);
+   const [numQnsAns, setNumQnsAns] = useState<number>(0);
+   const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
+   const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
 
-   const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState(true);
-   const [isExplBtnDisabled, setIsExplBtnDisabled] = useState(true);
-   const [isCorrect, setIsCorrect] = useState(null);
+   const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
+   const [isExplBtnDisabled, setIsExplBtnDisabled] = useState<boolean>(true);
+   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-   const [isFetching, setIsFetching] = useState(true);
-   const [error, setError] = useState(null);
+   const [isFetching, setIsFetching] = useState<boolean>(true);
+   const [error, setError] = useState<string | null>(null);
 
 
    // ################################################################
@@ -141,25 +147,35 @@ export function GEPQnProvider({ children, slug }) {
    async function fetchNewQnObj() {
       setIsFetching(true);
       setQnObj(null);
+
       let qnNumToFetch = orderOfQnsArray[orderOfQnsArrayIdx];
 
       try {
-         await new Promise(resolve => setTimeout(resolve, 300));
-         
+         await new Promise((resolve) => setTimeout(resolve, 300));
+
          const res = await fetch(`../api/questions?qnNum=${qnNumToFetch}`);
-         
+
          if (!res.ok) throw new Error("Failed to fetch data, response was not OK");
-         
+
          const data = await res.json();
-         
-         if (!data) throw new Error(`Question number #${qnNumToFetch} could not be fetched.`);
-         
+
+         if (!data) throw new Error(`Question ${qnNumToFetch} could not be fetched.`);
+
          setQnObj(data);
+
       } catch (err) {
-         console.log(err);
-         setError(err.message);
+         if (err instanceof Error) {
+            console.error(err);
+            setError(err.message);
+
+         } else {
+            console.error("An unknown error occurred");
+            setError("An unknown error occurred");
+
+         }
       } finally {
          setIsFetching(false);
+
          // console.log("NOW DISPLAYING QUESTION", qnNum);
       }
    };
@@ -174,7 +190,7 @@ export function GEPQnProvider({ children, slug }) {
       }
    }, [orderOfQnsArray, orderOfQnsArrayIdx]);
    
-   function handleOptionClick(isCorrect) {
+   function handleOptionClick(isCorrect: boolean) {
    // console.log(
    //    'AN OPTION BUTTON CLICKED:', 
    //    isCorrect ? "CORRECT" : "INCORRECT"
@@ -197,9 +213,7 @@ export function GEPQnProvider({ children, slug }) {
       if (isCorrect) {
          setNumCorrectAns(prevNum => prevNum + 1);
       } else {
-         setWrongAnsArr(prevArr => [...prevArr, pick(qnObj, [
-            'sentence', 'wordToTest', 'rootWord', 'def'
-         ])]);
+         qnObj && setWrongAnsArr(prevArr => [...prevArr, qnObj]);
       };
       
       if (orderOfQnsArrayIdx === orderOfQnsArray.length - 1) {
@@ -213,7 +227,7 @@ export function GEPQnProvider({ children, slug }) {
    // ################################################################
 
    
-   const contextValue = {
+   const contextValue: QuestionContextProviderValueType = {
       qnObj,
       qnSet,
       handleOptionClick,

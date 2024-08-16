@@ -14,6 +14,8 @@ import Review from "./Review";
 
 import { useGEPQnContext } from "../provider/GEPQnProvider";
 
+import { QnObjType } from "@/lib/types";
+
 export default function LeftColumn() {
 
    const { 
@@ -114,7 +116,8 @@ export default function LeftColumn() {
 };
 
 function Explanation() {
-   const { qnObj: { rootWord, type, def } } = useGEPQnContext();
+   const { qnObj } = useGEPQnContext() as { qnObj: QnObjType };
+   const { rootWord, type, def } = qnObj;
    
    return (
       <Card body>
@@ -130,7 +133,8 @@ function Explanation() {
 };
 
 function SentenceToBeDisplayed() {
-   const { qnObj: { sentence, wordToTest } } = useGEPQnContext();
+   const { qnObj } = useGEPQnContext() as { qnObj: QnObjType };
+   const { sentence, wordToTest } = qnObj;
 
    const idxOfWord = sentence.indexOf(wordToTest);
 
