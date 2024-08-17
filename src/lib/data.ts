@@ -1,19 +1,19 @@
 // import { sql } from "@vercel/postgres";
 // import fs from "fs/promises";
 
-// export async function fetchQnJson(qnNum) {
+export async function fetchQnJson(qnNum: number) {
 
-//    try {
-//       const result = await fetch('https://gist.githubusercontent.com/wjh3355/0044ee12436ff44915daf15e45622ef2/raw/567e2f20b85ec7eb7a501ac942a9df2387aca2d2/source.json');
-//       const data = await result.json();
-//       const qnObj = data[qnNum-1];
+   try {
+      const result = await fetch('https://gist.githubusercontent.com/wjh3355/0044ee12436ff44915daf15e45622ef2/raw/567e2f20b85ec7eb7a501ac942a9df2387aca2d2/source.json');
+      const data = await result.json();
+      const qnObj = data[qnNum-1];
 
-//       return qnObj;
-//    } catch(error) {
-//       console.log('Error when fetching questions using json:', error);
-//       return;
-//    }
-// }
+      return qnObj;
+   } catch(error) {
+      console.log('Error when fetching questions using json:', error);
+      return;
+   }
+};
 
 
 // export async function fetchQnSql(qnNum) {

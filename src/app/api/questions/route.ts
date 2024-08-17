@@ -1,9 +1,24 @@
 import { connectToDB } from "@/lib/mongodb";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+
+const JSON_HEADERS = { "Content-Type": "application/json" };
 
 export async function GET(request: Request): Promise<Response> {
-   
+
    try {
 
+      const { isAuthenticated } = getKindeServerSession();
+      const isLoggedIn = await isAuthenticated();
+      if (!isLoggedIn) {
+         return new Response(
+            JSON.stringify({ error: "unauthorised API usage" }),
+            { 
+               status: 401,
+               headers: JSON_HEADERS
+            }
+         );
+      }
+      
       const { db } = await connectToDB("english_questions");
       const qns = db.collection("questions1");
 
@@ -15,7 +30,7 @@ export async function GET(request: Request): Promise<Response> {
             JSON.stringify({ error: "Unspecified qnNum parameter" }),
             { 
                status: 400, 
-               headers: { "Content-Type": "application/json" } 
+               headers: JSON_HEADERS
             }
          );
       };
@@ -27,7 +42,7 @@ export async function GET(request: Request): Promise<Response> {
             JSON.stringify({ error: "Invalid qnNum parameter" }),
             { 
                status: 400, 
-               headers: { "Content-Type": "application/json" } 
+               headers: JSON_HEADERS
             }
          );
       };
@@ -42,7 +57,7 @@ export async function GET(request: Request): Promise<Response> {
             JSON.stringify({ error: `Question ${qnNum} not found` }), 
             {
                status: 404,
-               headers: { "Content-Type": "application/json" },
+               headers: JSON_HEADERS
             }
          );
       };
@@ -51,7 +66,7 @@ export async function GET(request: Request): Promise<Response> {
          JSON.stringify(qn),
          {
             status: 200,
-            headers: {"Content-Type": "application/json"}
+            headers: JSON_HEADERS
          }
       );
 
@@ -64,7 +79,7 @@ export async function GET(request: Request): Promise<Response> {
             JSON.stringify({ error: error.message }), 
             {
                status: 500,
-               headers: { "Content-Type": "application/json" },
+               headers: JSON_HEADERS
             }
          );
       } else {
@@ -74,7 +89,7 @@ export async function GET(request: Request): Promise<Response> {
             JSON.stringify({ error: 'An unexpected error occurred.' }), 
             {
                status: 500,
-               headers: { "Content-Type": "application/json" },
+               headers: JSON_HEADERS
             }
          );
       }

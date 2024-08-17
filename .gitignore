@@ -36,4 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-source.json
+question\ json\ files/
+src/app/testing/
