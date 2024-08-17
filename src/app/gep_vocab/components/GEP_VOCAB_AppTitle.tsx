@@ -2,11 +2,11 @@
 
 import { Row } from "react-bootstrap";
 
-import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 
-export default function GEPTitle() {
+export default function GEP_VOCAB_AppTitle() {
 
-   const { qnSet } = useGEPQnContext();
+   const { qnSet } = useGEP_VOCAB_QnContext();
 
    return (
       <Row className="my-3">

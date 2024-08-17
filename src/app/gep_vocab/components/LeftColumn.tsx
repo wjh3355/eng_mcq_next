@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 import Review from "./Review";
 
-import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 
 import { QnObjType } from "@/lib/types";
 
@@ -24,7 +24,7 @@ export default function LeftColumn() {
       isExplBtnDisabled,
       numQnsAns,
       numCorrectAns
-   } = useGEPQnContext();
+   } = useGEP_VOCAB_QnContext();
 
    const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -38,7 +38,7 @@ export default function LeftColumn() {
       : 0;
 
    return (
-      <Col lg={8}>
+      <Col lg={8} md={7}>
          <Card body className="mb-3">
             <SentenceToBeDisplayed />
          </Card>
@@ -116,7 +116,7 @@ export default function LeftColumn() {
 };
 
 function Explanation() {
-   const { qnObj } = useGEPQnContext() as { qnObj: QnObjType };
+   const { qnObj } = useGEP_VOCAB_QnContext() as { qnObj: QnObjType };
    const { rootWord, type, def } = qnObj;
    
    return (
@@ -133,7 +133,7 @@ function Explanation() {
 };
 
 function SentenceToBeDisplayed() {
-   const { qnObj } = useGEPQnContext() as { qnObj: QnObjType };
+   const { qnObj } = useGEP_VOCAB_QnContext() as { qnObj: QnObjType };
    const { sentence, wordToTest } = qnObj;
 
    const idxOfWord = sentence.indexOf(wordToTest);

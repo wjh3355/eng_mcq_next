@@ -34,7 +34,7 @@ export default function MainNavbar() {
                      About
                   </Nav.Link>
 
-                  {isAuthenticated && <GepMcqLinks/>}
+                  {isAuthenticated && <GEP_VOCAB_navLinks/>}
                   
                </Nav>
 
@@ -46,44 +46,44 @@ export default function MainNavbar() {
    );
 };
 
-function GepMcqLinks() {
-   const gepMcqLinksArr = [
+function GEP_VOCAB_navLinks() {
+   const GEP_VOCAB_navLinksArray = [
       {
          name: "Set 1",
-         href: "/gep_mcq/set1" 
+         href: "/gep_vocab/set1" 
       },
       {
          name: "Set 2",
-         href: "/gep_mcq/set2" 
+         href: "/gep_vocab/set2"
       },
       {
          name: "Set 3",
-         href: "/gep_mcq/set3" 
+         href: "/gep_vocab/set3"
       },
       {
          name: "Set 4",
-         href: "/gep_mcq/set4" 
+         href: "/gep_vocab/set4"
       },
       {
          name: "Set 5",
-         href: "/gep_mcq/set5" 
+         href: "/gep_vocab/set5"
       },
       {
          name: "Set 6",
-         href: "/gep_mcq/set6"
+         href: "/gep_vocab/set6"
       },
       {
          name: "Complete",
-         href: "/gep_mcq"
+         href: "/gep_vocab"
       },
    ];
 
    const currPathname = usePathname();
 
    return (
-      <NavDropdown title="GEP MCQ">
+      <NavDropdown title="GEP Vocab">
       {
-         gepMcqLinksArr.map(({ name, href }, idx) => 
+         GEP_VOCAB_navLinksArray.map(({ name, href }, idx) => 
 
          <React.Fragment key={name}>
             {idx === 6 && <NavDropdown.Divider />}

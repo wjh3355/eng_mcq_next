@@ -24,15 +24,15 @@ import {
 // ############################################################################
 
 
-const GEPQnContext = createContext<QuestionContextProviderValueType>(initialContextValue);
+const QnContext = createContext<QuestionContextProviderValueType>(initialContextValue);
 
-export const useGEPQnContext = () => useContext(GEPQnContext);
+export const useGEP_VOCAB_QnContext = () => useContext(QnContext);
 
 
 // ############################################################################
 
 
-export function GEPQnProvider({ children, slug }: { children: React.ReactNode, slug: string } ) {
+export function GEP_VOCAB_QnProvider({ children, slug }: { children: React.ReactNode, slug: string } ) {
 
 
    const [orderOfQnsArray, setOrderOfQnsArray] = useState<number[]>([]);
@@ -58,7 +58,7 @@ export function GEPQnProvider({ children, slug }: { children: React.ReactNode, s
    useEffect(() => {
       setIsFetching(true);
 
-      // console.log("STARTING UP GEP MCQ TEST");
+      // console.log("STARTING UP GEP VOCAB TEST");
       let randArr;
 
       switch (slug) {
@@ -154,13 +154,14 @@ export function GEPQnProvider({ children, slug }: { children: React.ReactNode, s
       try {
          await new Promise((resolve) => setTimeout(resolve, 300));
 
-         const res = await fetch(`../api/questions?qnNum=${qnNumToFetch}`);
+         const res = await fetch(`../api/questions?collection=gep_vocab&qnNum=${qnNumToFetch}`);
 
-         if (!res.ok) throw new Error("Failed to fetch data, response was not OK");
+         if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error);
+         };
 
          const data = await res.json();
-
-         if (!data) throw new Error(`Question ${qnNumToFetch} could not be fetched.`);
 
          setQnObj(data);
 
@@ -250,8 +251,8 @@ export function GEPQnProvider({ children, slug }: { children: React.ReactNode, s
    );
 
    return (
-      <GEPQnContext.Provider value={contextValue}>
+      <QnContext.Provider value={contextValue}>
          {children}
-      </GEPQnContext.Provider>
+      </QnContext.Provider>
    );
 };

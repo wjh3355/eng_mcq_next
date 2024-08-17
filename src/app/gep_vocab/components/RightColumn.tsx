@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import styles from "@/styles/option-buttons.module.css";
 
-import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 import { QnObjType } from "@/lib/types";
 
 export default function RightColumn() {
@@ -14,7 +14,7 @@ export default function RightColumn() {
    const { 
       qnObj,
       handleOptionClick 
-   } = useGEPQnContext() as {qnObj: QnObjType, handleOptionClick: (isCorrect: boolean) => void};
+   } = useGEP_VOCAB_QnContext() as {qnObj: QnObjType, handleOptionClick: (isCorrect: boolean) => void};
    const { options, correctAns } = qnObj;
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
@@ -45,7 +45,7 @@ export default function RightColumn() {
    };
 
    return (
-      <Col lg={4} className="my-2 mt-lg-0">
+      <Col lg={4} md={5} className="my-2 mt-lg-0">
          <div className="vstack gap-3">
             {randomisedOptions.map(renderButton)}
          </div>

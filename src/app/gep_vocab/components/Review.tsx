@@ -2,11 +2,11 @@
 
 import { Card } from "react-bootstrap";
 
-import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 import { QnObjType } from "@/lib/types";
 
 export default function Review() {
-   const { wrongAnsArr } = useGEPQnContext();
+   const { wrongAnsArr } = useGEP_VOCAB_QnContext();
 
    function generateWrongAnsCards(qnObj: QnObjType) {
       const { sentence, rootWord, wordToTest, def } = qnObj;

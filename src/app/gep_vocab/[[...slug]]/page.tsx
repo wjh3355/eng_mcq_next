@@ -1,4 +1,4 @@
-import GEPMCQApp from "@/app/gep_mcq/GEPMCQApp";
+import GEP_VOCAB_App from "../GEP_VOCAB_App";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound, redirect } from "next/navigation";
 
@@ -25,5 +25,5 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
       notFound();
    }
 
-   return <GEPMCQApp slug={slug} />;
+   return <GEP_VOCAB_App slug={slug} />;
 }

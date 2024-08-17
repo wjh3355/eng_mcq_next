@@ -1,10 +1,10 @@
 'use client';
 
 import { Container, Row, Col } from "react-bootstrap";
-import { useGEPQnContext } from "../provider/GEPQnProvider";
+import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 
 export default function AnswerIndicator() {
-   const { isCorrect } = useGEPQnContext();
+   const { isCorrect } = useGEP_VOCAB_QnContext();
 
    switch (isCorrect) {
       case true:
