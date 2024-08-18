@@ -35,6 +35,8 @@ export default function MainNavbar() {
                   </Nav.Link>
 
                   {isAuthenticated && <GEP_VOCAB_navLinks/>}
+
+                  {isAuthenticated && <PHRASAL_VERBS_navLinks/>}
                   
                </Nav>
 
@@ -102,6 +104,14 @@ function GEP_VOCAB_navLinks() {
       </NavDropdown>
    );
 };
+
+function PHRASAL_VERBS_navLinks() {
+   return (
+      <Nav.Link as={Link} href="/phrasal_verbs">
+         Phrasal Verbs
+      </Nav.Link>
+   )
+}
 
 function DisplayEmailAndLogInOrLogOut() {
    const { user, isAuthenticated, isLoading } = useKindeBrowserClient();

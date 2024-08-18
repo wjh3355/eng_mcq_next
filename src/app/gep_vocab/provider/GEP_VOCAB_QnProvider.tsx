@@ -10,9 +10,9 @@ import { shuffle, range } from "lodash";
 
 import { notFound } from "next/navigation";
 
-import LoadingSpinner from "@/app/ui/LoadingSpinner";
+import LoadingSpinner from "@/app/ui/utils/LoadingSpinner";
 
-import ErrorContainer from "@/app/ui/ErrorContainer";
+import ErrorContainer from "@/app/ui/utils/ErrorContainer";
 
 import { 
    QuestionContextProviderValueType, 

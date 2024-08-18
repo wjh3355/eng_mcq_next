@@ -45,7 +45,7 @@ export default function RightColumn() {
    };
 
    return (
-      <Col lg={4} md={5} className="my-2 mt-lg-0">
+      <Col lg={4} md={5} className="my-2 mt-md-0">
          <div className="vstack gap-3">
             {randomisedOptions.map(renderButton)}
          </div>

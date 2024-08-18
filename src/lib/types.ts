@@ -14,7 +14,7 @@ export interface QuestionContextProviderValueType {
 export interface QnObjType {
    qnNum: number,
    sentence: string,
-   wordToTest: string,
+   wordToTest?: string,
    options: string[],
    correctAns: string,
    rootWord: string,

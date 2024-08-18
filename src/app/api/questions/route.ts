@@ -2,12 +2,22 @@ import { connectToDB } from "@/lib/mongodb";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
+const HTTP_STATUS = {
+   OK: 200,
+   BAD_REQUEST: 400,
+   UNAUTHORIZED: 401,
+   NOT_FOUND: 404,
+   INTERNAL_SERVER_ERROR: 500,
+};
+const collectionNames = [
+   'gep_vocab', 'phrasal_verbs'
+];
 
-function createErrorResponse(errorCode: number, description: string) {
+function createResponse(status: number, body: object) {
    return new Response(
-      JSON.stringify({ error: description }),
+      JSON.stringify(body),
       {
-         status: errorCode,
+         status: status,
          headers: JSON_HEADERS
       }
    )
@@ -19,20 +29,21 @@ export async function GET(request: Request): Promise<Response> {
 
       const { isAuthenticated } = getKindeServerSession();
       const isLoggedIn = await isAuthenticated();
-      if (!isLoggedIn) return createErrorResponse(401, "Unauthorised API usage");
+      if (!isLoggedIn) return createResponse(
+         HTTP_STATUS.UNAUTHORIZED, { error: "Unauthorised API usage" });
       
       const { db } = await connectToDB("english_questions");
       
       const { searchParams } = new URL(request.url);
       
       const collectionToFetch = searchParams.get('collection');
-      if (!collectionToFetch) return createErrorResponse(400, "Unspecified db parameter");
-
-      
       const qnNumStr = searchParams.get('qnNum');
-      if (!qnNumStr) return createErrorResponse(400, "Unspecified qnNum parameter");
+      if (!collectionToFetch || !qnNumStr) return createResponse(
+         HTTP_STATUS.BAD_REQUEST, { error: "Unspecified parameter(s)" });
+
       const qnNum = parseInt(qnNumStr, 10);
-      if (isNaN(qnNum)) return createErrorResponse(400, "Invalid qnNum parameter");
+      if (isNaN(qnNum) || !collectionNames.includes(collectionToFetch)) return createResponse(
+         HTTP_STATUS.BAD_REQUEST, { error: "Invalid parameter(s)" });
       
       const qnToFetch = await db
          .collection(collectionToFetch)
@@ -41,28 +52,25 @@ export async function GET(request: Request): Promise<Response> {
          { projection: { _id: 0 } }
       );
 
-      if (!qnToFetch) return createErrorResponse(404, 
-         `Qn ${qnNum} not found in collection '${collectionToFetch}'`);
+      if (!qnToFetch) return createResponse(
+         HTTP_STATUS.NOT_FOUND, { error: 'Question not found' });
 
-      return new Response(
-         JSON.stringify(qnToFetch),
-         {
-            status: 200,
-            headers: JSON_HEADERS
-         }
-      );
+      return createResponse(
+         HTTP_STATUS.OK, qnToFetch);
 
    } catch (error: unknown) {
 
       if (error instanceof Error) {
          console.error("Error in GET request:", error);
 
-         return createErrorResponse(500, error.message);
+         return createResponse(
+            HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: error.message });
          
       } else {
          console.error("Unexpected error in GET request:", error);
          
-         return createErrorResponse(500, 'An unexpected error occurred.');
+         return createResponse(
+            HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: 'An unexpected error occurred.' });
          
       }
    }

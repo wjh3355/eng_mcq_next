@@ -11,10 +11,9 @@
 }
 
 .default {
-   position: relative;
    height: auto;
    width: 100%;
-   padding: 12px 15%;
+   padding: 12px 10%;
    font-size: 18px;
    background-color: white;
    border-width: 3px;
