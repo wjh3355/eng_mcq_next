@@ -4,19 +4,21 @@ import { Card } from "react-bootstrap";
 
 import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 import { QnObjType } from "@/lib/types";
+import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
+import ReviewPlaceholder from "@/app/ui/utils/ReviewPlaceholder";
 
 export default function Review() {
    const { wrongAnsArr } = useGEP_VOCAB_QnContext();
 
    function generateWrongAnsCards(qnObj: QnObjType) {
       const { sentence, rootWord, wordToTest, def } = qnObj;
-      const idxOfWord = sentence.indexOf(wordToTest);
       return (
          <Card body className="w-100 mb-3" key={rootWord}>
             <p>
-               {sentence.slice(0, idxOfWord)}
-               <strong className="text-danger">{wordToTest}</strong>
-               {sentence.slice(idxOfWord + wordToTest.length)}
+               <SentenceFormatter
+                  sentence={sentence}
+                  wordToTest={wordToTest}
+               />
             </p>
             <div className="d-flex justify-content-center">
                <div
@@ -30,22 +32,7 @@ export default function Review() {
       );
    }
 
-   return (
-      <>
-         {wrongAnsArr.length > 0
-            ? wrongAnsArr.map(generateWrongAnsCards)
-            : <WrongAnsPlaceholder/>
-         }
-      </>
-   );
-};
+   if (wrongAnsArr.length === 0) return <ReviewPlaceholder/>;
 
-function WrongAnsPlaceholder() {
-   return (
-      <div className="d-flex justify-content-center">
-         <p className="text-secondary fst-italic my-3">
-            All incorrect answers will be listed here for your review.
-         </p>
-      </div>
-   );
+   return <>{wrongAnsArr.map(generateWrongAnsCards)}</>;
 };

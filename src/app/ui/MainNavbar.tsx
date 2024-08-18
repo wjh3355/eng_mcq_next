@@ -125,7 +125,7 @@ function DisplayEmailAndLogInOrLogOut() {
                size="sm"
                className="btn btn-danger btn-sm ms-2 align-items-center justify-content-center d-flex"
                style={{
-                  width: '70px',
+                  width: '80px',
                   height: '30px'
                }}
             >
@@ -145,7 +145,7 @@ function DisplayEmailAndLogInOrLogOut() {
             <LogoutLink
                className="btn btn-danger btn-sm ms-2 align-items-center justify-content-center d-flex"
                style={{
-                  width: '70px',
+                  width: '80px',
                   height: '30px'
                }}
             >
@@ -159,7 +159,7 @@ function DisplayEmailAndLogInOrLogOut() {
             <LoginLink
                className="btn btn-danger btn-sm align-items-center justify-content-center d-flex"
                style={{
-                  width: "70px",
+                  width: "80px",
                   height: "30px",
                }}
             >

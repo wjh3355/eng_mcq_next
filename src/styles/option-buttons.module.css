@@ -1,3 +1,18 @@
+.default {
+   width: 100%;
+   padding: 12px 10%;
+   font-size: 18px;
+   border-width: 3px;
+   display: flex;
+   justify-content: center;
+   background-color: white;
+}
+
+.default:not(:disabled):hover {
+   /* Applies only when hovering, and not disabled */
+   border-color: rgb(100, 100, 100);
+}
+
 .correctAns {
    border-color: green;
    color: green;
@@ -8,20 +23,4 @@
    border-color: rgb(190, 44, 44);
    color: rgb(190, 44, 44);
    font-weight: bold;
-}
-
-.default {
-   height: auto;
-   width: 100%;
-   padding: 12px 10%;
-   font-size: 18px;
-   background-color: white;
-   border-width: 3px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-}
-
-.hover {
-   border-color: rgb(100, 100, 100);
 }

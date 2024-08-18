@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 
 import Review from "./Review";
+import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
 
 import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 
@@ -136,13 +137,12 @@ function SentenceToBeDisplayed() {
    const { qnObj } = useGEP_VOCAB_QnContext() as { qnObj: QnObjType };
    const { sentence, wordToTest } = qnObj;
 
-   const idxOfWord = sentence.indexOf(wordToTest);
-
    return (
       <div className="fs-5">
-        {sentence.slice(0, idxOfWord)}
-        <strong>{wordToTest}</strong>
-        {sentence.slice(idxOfWord + wordToTest.length)}
+         <SentenceFormatter
+            sentence={sentence}
+            wordToTest={wordToTest}
+         />
       </div>
    );
 };
