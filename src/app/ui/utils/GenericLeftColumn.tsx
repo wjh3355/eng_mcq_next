@@ -10,28 +10,31 @@ import {
 } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-import Review from "./Review";
+import GenericReview from "./GenericReview";
 import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
-
-import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 
 import { QnObjType } from "@/lib/types";
 
-export default function LeftColumn() {
+export default function GenericLeftColumn({QnContextToUse}: any) {
 
    const { 
       handleNextQnBtnClick, 
       isNextQnBtnDisabled, 
       isExplBtnDisabled,
       numQnsAns,
-      numCorrectAns
-   } = useGEP_VOCAB_QnContext();
+      numCorrectAns,
+      qnObj,
+      wrongAnsArr
+   } = QnContextToUse();
+   const { sentence, wordToTest, rootWord, type, def } = qnObj as QnObjType;
 
    const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
 
    useEffect(() => {
-      isExplBtnDisabled && setIsExplShown(false);
+      if (isExplBtnDisabled) {
+         setIsExplShown(false);
+      }
    }, [isExplBtnDisabled])
 
    let percentCorrect = numQnsAns
@@ -41,7 +44,11 @@ export default function LeftColumn() {
    return (
       <Col lg={8} md={7}>
          <Card body className="mb-3">
-            <SentenceToBeDisplayed />
+            <SentenceFormatter
+               fontSize="18px"
+               sentence={sentence}
+               wordToTest={wordToTest}
+            />
          </Card>
 
          <div className="mb-2">
@@ -67,7 +74,6 @@ export default function LeftColumn() {
                   Explanation
                </Button>
 
-
                <Button
                   variant="success"
                   className="flex-fill"
@@ -82,7 +88,15 @@ export default function LeftColumn() {
 
          <Collapse in={isExplShown}>
             <div>
-               {!isExplBtnDisabled && <Explanation />}
+               {!isExplBtnDisabled && (
+                  <Card body>
+                     <p className="fs-5">
+                        <strong className="me-2">{rootWord}</strong>
+                        <span>({type})</span>
+                     </p>
+                     {def}.
+                  </Card>
+               )}
             </div>
          </Collapse>
 
@@ -94,55 +108,22 @@ export default function LeftColumn() {
          >
             <Modal.Header closeButton>
                <Modal.Title>
-                  Current score:
-                  &nbsp;
+                  Current score: &nbsp;
                   <strong
-                     className={percentCorrect >= 50 ? 'text-success' : 'text-danger'}
+                     className={
+                        percentCorrect >= 50 ? "text-success" : "text-danger"
+                     }
                   >
                      {numCorrectAns} / {numQnsAns}
                   </strong>
-                  &nbsp;
-                  ({percentCorrect}% correct)
+                  &nbsp; ({percentCorrect}% correct)
                </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-
-               <Review />
-
+               <GenericReview wrongAnsArr={wrongAnsArr} />
             </Modal.Body>
          </Modal>
       </Col>
-   );
-};
-
-function Explanation() {
-   const { qnObj } = useGEP_VOCAB_QnContext() as { qnObj: QnObjType };
-   const { rootWord, type, def } = qnObj;
-   
-   return (
-      <Card body>
-         <p>
-            <strong className="fs-5 me-1">
-               {rootWord}&nbsp;
-            </strong>
-            <span className="fs-5">({type})</span>
-         </p>
-         {def}.
-      </Card>
-   );
-};
-
-function SentenceToBeDisplayed() {
-   const { qnObj } = useGEP_VOCAB_QnContext() as { qnObj: QnObjType };
-   const { sentence, wordToTest } = qnObj;
-
-   return (
-      <div className="fs-5">
-         <SentenceFormatter
-            sentence={sentence}
-            wordToTest={wordToTest}
-         />
-      </div>
    );
 };

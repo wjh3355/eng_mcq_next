@@ -1,4 +1,4 @@
-export interface QuestionContextProviderValueType {
+export interface GenericMCQContextValueType {
    qnObj: QnObjType | null,
    qnSet: string,
    handleOptionClick: (isCorrect: boolean) => void,
@@ -14,7 +14,7 @@ export interface QuestionContextProviderValueType {
 export interface QnObjType {
    qnNum: number,
    sentence: string,
-   wordToTest: string,
+   wordToTest: string | null,
    options: string[],
    correctAns: string,
    rootWord: string,

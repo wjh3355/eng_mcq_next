@@ -4,18 +4,17 @@ import { Col } from "react-bootstrap";
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 
-import { useGEP_VOCAB_QnContext } from "../provider/GEP_VOCAB_QnProvider";
 import { QnObjType } from "@/lib/types";
 
 import OptionButton from "@/app/ui/utils/OptionButton";
 
-export default function RightColumn() {
+export default function GenericRightColumn({QnContextToUse}: any) {
 
    const { 
       qnObj,
       handleOptionClick
-   } = useGEP_VOCAB_QnContext() as {qnObj: QnObjType, handleOptionClick: (isCorrect: boolean) => void};
-   const { options, correctAns } = qnObj;
+   } = QnContextToUse();
+   const { options, correctAns } = qnObj as QnObjType;
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
    const [isAllDisabled, setIsAllDisabled] = useState<boolean>(false);
@@ -50,7 +49,7 @@ export default function RightColumn() {
    };
 
    return (
-      <Col lg={4} md={5} className="my-2 mt-md-0">
+      <Col lg={4} md={5} className="mt-2 mt-md-0">
          <div className="vstack gap-3">
             {randomisedOptions.map(renderButtonForThisOption)}
          </div>

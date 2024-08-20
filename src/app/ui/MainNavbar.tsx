@@ -106,10 +106,44 @@ function GEP_VOCAB_navLinks() {
 };
 
 function PHRASAL_VERBS_navLinks() {
+
+   const PHRASAL_VERBS_navLinksArray = [
+      {
+         name: "Set 1",
+         href: "/phrasal_verbs/set1" 
+      },
+      {
+         name: "Set 2",
+         href: "/phrasal_verbs/set2"
+      },
+      {
+         name: "Complete",
+         href: "/phrasal_verbs"
+      },
+   ];
+
+   const currPathname = usePathname();
+
    return (
-      <Nav.Link as={Link} href="/phrasal_verbs">
-         Phrasal Verbs
-      </Nav.Link>
+      <NavDropdown title="Phrasal Verbs">
+      {
+         PHRASAL_VERBS_navLinksArray.map(({ name, href }, idx) => 
+
+         <React.Fragment key={name}>
+            {idx === 2 && <NavDropdown.Divider />}
+            <NavDropdown.Item 
+               as={Link} 
+               href={href}
+               className={currPathname === href ? 'fw-bold' : ''}
+            >
+               {currPathname === href ? '> ' : ''}
+               {name}
+            </NavDropdown.Item>
+         </React.Fragment>
+         
+         )
+      }
+      </NavDropdown>
    )
 }
 

@@ -1,72 +1,45 @@
-// import { sql } from "@vercel/postgres";
-// import fs from "fs/promises";
-
-export async function fetchQnJson(qnNum: number) {
-
-   try {
-      const result = await fetch('https://gist.githubusercontent.com/wjh3355/0044ee12436ff44915daf15e45622ef2/raw/567e2f20b85ec7eb7a501ac942a9df2387aca2d2/source.json');
-      const data = await result.json();
-      const qnObj = data[qnNum-1];
-
-      return qnObj;
-   } catch(error) {
-      console.log('Error when fetching questions using json:', error);
-      return;
+export const GEP_VOCAB_AllowedSetConfigs = {
+   undefined: {
+      range: [1, 601],
+      setName: "All Qns",
+   },
+   set1: {
+      range: [1, 101],
+      setName: "Set 1",
+   },
+   set2: {
+      range: [101, 201],
+      setName: "Set 2",
+   },
+   set3: {
+      range: [201, 301],
+      setName: "Set 3",
+   },
+   set4: {
+      range: [301, 401],
+      setName: "Set 4",
+   },
+   set5: {
+      range: [401, 501],
+      setName: "Set 5",
+   },
+   set6: {
+      range: [501, 601],
+      setName: "Set 6",
    }
 };
 
-
-// export async function fetchQnSql(qnNum) {
-
-//    try {
-//       const result = await sql`
-//          SELECT * FROM questions WHERE qnNum = ${qnNum};
-//       `;
-//       const qnObj = result.rows[0];
-
-//       return qnObj;
-//    } catch (error) {
-//       console.error('Error when fetching question using postgres:', error);
-//       return;
-//    }
-// };
-
-// export async function seed() {
-
-//    try {
-
-//       const data = await fs.readFile('source.json', 'utf-8');
-//       const qnArray = JSON.parse(data);
-
-//       /* await sql`
-//          CREATE TABLE questions (
-//             qnNum INTEGER PRIMARY KEY NOT NULL,
-//             sentence TEXT NOT NULL,
-//             wordToTest TEXT NOT NULL,
-//             options TEXT[] NOT NULL,
-//             correctAns TEXT NOT NULL,
-//             rootWord TEXT NOT NULL,
-//             type TEXT NOT NULL,
-//             def TEXT NOT NULL
-//          );
-//       `; */
-
-//       qnArray.map(async qnObj => {
-//          const { qnNum, sentence, wordToTest, options, correctAns, rootWord, type, def } = qnObj;
-//          await sql`
-         
-//             INSERT INTO 
-//                questions (qnNum, sentence, wordToTest, options, correctAns, rootWord, type, def) 
-//             VALUES 
-//                (${qnNum}, ${sentence}, ${wordToTest}, ${options}, ${correctAns}, ${rootWord}, ${type}, ${def});
-         
-//          `;
-//       });
-
-//       console.log('table created and seeded!!!');
-
-//    } catch (error) {
-//       console.error('Error:', error);
-//       return new Response('Error', { status: 500 });
-//    }
-// }
+export const PHRASAL_VERBS_AllowedSetConfigs = {
+   undefined: {
+      range: [1, 101],
+      setName: "All Qns",
+   },
+   set1: {
+      range: [1, 51],
+      setName: "Set 1",
+   },
+   set2: {
+      range: [51, 101],
+      setName: "Set 2",
+   }
+};
