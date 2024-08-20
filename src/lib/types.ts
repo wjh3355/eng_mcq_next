@@ -1,3 +1,6 @@
+// Context value type for:
+// GEP_VOCAB
+// PHRASAL_VERBS
 export interface GenericMCQContextValueType {
    qnObj: QnObjType | null,
    qnSet: string,
@@ -11,6 +14,9 @@ export interface GenericMCQContextValueType {
    wrongAnsArr: QnObjType[]
 };
 
+// Question object type for:
+// GEP_VOCAB (wordToTest is a string)
+// PHRASAL_VERBS (wordToTest is null)
 export interface QnObjType {
    qnNum: number,
    sentence: string,
@@ -21,6 +27,12 @@ export interface QnObjType {
    type: string,
    def: string
 };
+
+// Nav links type for drop down navlinks
+export type NavLinksArrayType = {
+   name: string,
+   href: string
+}[];
 
 export const initialContextValue = {
    qnObj: null,

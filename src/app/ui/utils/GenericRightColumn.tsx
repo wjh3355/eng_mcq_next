@@ -4,11 +4,15 @@ import { Col } from "react-bootstrap";
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 
-import { QnObjType } from "@/lib/types";
+import { GenericMCQContextValueType, QnObjType } from "@/lib/types";
 
 import OptionButton from "@/app/ui/utils/OptionButton";
 
-export default function GenericRightColumn({QnContextToUse}: any) {
+export default function GenericRightColumn({
+   QnContextToUse
+}: {
+   QnContextToUse: () => GenericMCQContextValueType
+}) {
 
    const { 
       qnObj,

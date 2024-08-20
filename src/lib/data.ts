@@ -43,3 +43,49 @@ export const PHRASAL_VERBS_AllowedSetConfigs = {
       setName: "Set 2",
    }
 };
+
+export const GEP_VOCAB_navLinksArray = [
+   {
+      name: "Set 1",
+      href: "/gep_vocab/set1" 
+   },
+   {
+      name: "Set 2",
+      href: "/gep_vocab/set2"
+   },
+   {
+      name: "Set 3",
+      href: "/gep_vocab/set3"
+   },
+   {
+      name: "Set 4",
+      href: "/gep_vocab/set4"
+   },
+   {
+      name: "Set 5",
+      href: "/gep_vocab/set5"
+   },
+   {
+      name: "Set 6",
+      href: "/gep_vocab/set6"
+   },
+   {
+      name: "Complete",
+      href: "/gep_vocab"
+   },
+];
+
+export const PHRASAL_VERBS_navLinksArray = [
+   {
+      name: "Set 1",
+      href: "/phrasal_verbs/set1" 
+   },
+   {
+      name: "Set 2",
+      href: "/phrasal_verbs/set2"
+   },
+   {
+      name: "Complete",
+      href: "/phrasal_verbs"
+   },
+];

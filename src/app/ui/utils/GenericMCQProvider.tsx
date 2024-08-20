@@ -10,10 +10,11 @@ import {
    QnObjType,
    initialContextValue,
 } from "@/lib/types";
+import { GEP_VOCAB_AllowedSetConfigs, PHRASAL_VERBS_AllowedSetConfigs } from "@/lib/data";
 
 export function createGenericMCQProvider(
-   questionCategory: string,
-   qnCategoryAllowedConfigs: any
+   questionCategory: 'gep_vocab' | 'phrasal_verbs',
+   qnCategoryAllowedConfigs: typeof GEP_VOCAB_AllowedSetConfigs | typeof PHRASAL_VERBS_AllowedSetConfigs
 ) {
 
    const QnContext = createContext<GenericMCQContextValueType>(initialContextValue);

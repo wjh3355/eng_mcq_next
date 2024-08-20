@@ -13,9 +13,13 @@ import { useEffect, useState } from "react";
 import GenericReview from "./GenericReview";
 import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
 
-import { QnObjType } from "@/lib/types";
+import { GenericMCQContextValueType, QnObjType } from "@/lib/types";
 
-export default function GenericLeftColumn({QnContextToUse}: any) {
+export default function GenericLeftColumn({
+   QnContextToUse
+}: {
+   QnContextToUse: () => GenericMCQContextValueType
+}) {
 
    const { 
       handleNextQnBtnClick, 
@@ -26,7 +30,6 @@ export default function GenericLeftColumn({QnContextToUse}: any) {
       qnObj,
       wrongAnsArr
    } = QnContextToUse();
-   const { sentence, wordToTest, rootWord, type, def } = qnObj as QnObjType;
 
    const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -35,7 +38,12 @@ export default function GenericLeftColumn({QnContextToUse}: any) {
       if (isExplBtnDisabled) {
          setIsExplShown(false);
       }
-   }, [isExplBtnDisabled])
+   }, [isExplBtnDisabled]);
+
+
+   if (!qnObj) return null;
+   const { sentence, wordToTest, rootWord, type, def } = qnObj;
+
 
    let percentCorrect = numQnsAns
       ? Math.round((numCorrectAns * 100) / numQnsAns)
