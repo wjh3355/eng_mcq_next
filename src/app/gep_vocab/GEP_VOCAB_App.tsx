@@ -2,7 +2,7 @@
 
 import { Container, Row } from "react-bootstrap";
 
-import { createGenericMCQProvider } from "@/app/ui/utils/GenericMCQProvider";
+import { createGenericMCQProvider } from "../ui/components/GenericMCQProvider";
 import { GEP_VOCAB_AllowedSetConfigs } from "@/lib/data";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
@@ -10,9 +10,9 @@ const { GenericMCQProvider, useGenericMCQContext } =
 const GEP_VOCAB_QnProvider = GenericMCQProvider;
 const useGEP_VOCAB_QnContext = useGenericMCQContext;
 
-import GenericLeftColumn from "@/app/ui/utils/GenericLeftColumn";
-import GenericRightColumn from "@/app/ui/utils/GenericRightColumn";
-import GenericAnsIndicator from "@/app/ui/utils/GenericAnsIndicator";
+import GenericLeftColumn from "../ui/components/GenericLeftColumn";
+import GenericRightColumn from "../ui/components/GenericRightColumn";
+import GenericAnsIndicator from "../ui/components/GenericAnsIndicator";
 
 function AppTitle() {
    

@@ -36,6 +36,7 @@ export type NavLinksArrayType = {
    href: string
 }[];
 
+// initial value for createContext() function for Generic MCQs
 export const initialContextValue: GenericMCQContextValueType = {
    qnObj: null,
    qnSet: '',
@@ -49,5 +50,7 @@ export const initialContextValue: GenericMCQContextValueType = {
    wrongAnsArr: []
 }
 
+// type of second argument of createGenericMCQProvider()
+// states how many qn sets are in each category, what name and range of qnNum
 export type AllowedSetConfigsType = 
    typeof GEP_VOCAB_AllowedSetConfigs | typeof PHRASAL_VERBS_AllowedSetConfigs;

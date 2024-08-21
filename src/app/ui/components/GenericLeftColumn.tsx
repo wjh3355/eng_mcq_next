@@ -11,9 +11,9 @@ import {
 import { useEffect, useState } from "react";
 
 import GenericReview from "./GenericReview";
-import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
+import SentenceFormatter from "./SentenceFormatter";
 
-import { GenericMCQContextValueType, QnObjType } from "@/lib/types";
+import { GenericMCQContextValueType } from "@/lib/types";
 
 export default function GenericLeftColumn({
    QnContextToUse

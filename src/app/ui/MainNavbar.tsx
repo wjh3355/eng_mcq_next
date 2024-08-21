@@ -4,9 +4,9 @@ import React from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import Link from "next/link";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import MakeDropDownNavLinks from "./utils/MakeDropDownNavLinks";
+import MakeDropDownNavLinks from "./components/MakeDropDownNavLinks";
 import { GEP_VOCAB_navLinksArray, PHRASAL_VERBS_navLinksArray } from "@/lib/data";
-import DisplayEmailAndLogInOrLogOut from "./utils/DisplayEmailAndLogInOrLogOut";
+import DisplayEmailAndLogInOrLogOut from "./components/DisplayEmailAndLogInOrLogOut";
 
 
 // #####################################################################

@@ -3,7 +3,7 @@
 import { Card } from "react-bootstrap";
 
 import { QnObjType } from "@/lib/types";
-import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
+import SentenceFormatter from "./SentenceFormatter";
 
 export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]}) {
 

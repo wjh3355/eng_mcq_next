@@ -3,8 +3,8 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { shuffle, range } from "lodash";
 import { notFound } from "next/navigation";
-import LoadingSpinner from "@/app/ui/utils/LoadingSpinner";
-import ErrorContainer from "@/app/ui/utils/ErrorContainer";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorContainer from "./ErrorContainer";
 import {
    GenericMCQContextValueType,
    QnObjType,

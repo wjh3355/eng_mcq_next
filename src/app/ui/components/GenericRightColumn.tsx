@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { GenericMCQContextValueType, QnObjType } from "@/lib/types";
 
-import OptionButton from "@/app/ui/utils/OptionButton";
+import OptionButton from "./OptionButton";
 
 export default function GenericRightColumn({
    QnContextToUse
