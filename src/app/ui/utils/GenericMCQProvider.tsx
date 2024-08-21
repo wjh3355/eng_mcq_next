@@ -9,12 +9,12 @@ import {
    GenericMCQContextValueType,
    QnObjType,
    initialContextValue,
+   AllowedSetConfigsType
 } from "@/lib/types";
-import { GEP_VOCAB_AllowedSetConfigs, PHRASAL_VERBS_AllowedSetConfigs } from "@/lib/data";
 
 export function createGenericMCQProvider(
    questionCategory: 'gep_vocab' | 'phrasal_verbs',
-   qnCategoryAllowedConfigs: typeof GEP_VOCAB_AllowedSetConfigs | typeof PHRASAL_VERBS_AllowedSetConfigs
+   qnCategorySets: AllowedSetConfigsType
 ) {
 
    const QnContext = createContext<GenericMCQContextValueType>(initialContextValue);
@@ -42,21 +42,6 @@ export function createGenericMCQProvider(
       const [numQnsAns, setNumQnsAns] = useState<number>(0);
       const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
-
-
-      function setUpQuiz() {
-         const joinedSlug = slug?.join("");
-         const config = qnCategoryAllowedConfigs[
-            joinedSlug as keyof typeof qnCategoryAllowedConfigs];
-
-         if (!config) return notFound();
-
-         const [start, end] = config.range;
-         const randArr = shuffle(range(start, end));
-
-         setQnOrderArray(randArr);
-         setQnSet(config.setName);
-      }
 
       async function fetchNewQnObj() {
          setIsFetching(true);
@@ -118,7 +103,18 @@ export function createGenericMCQProvider(
       }
 
       useEffect(() => {
-         setUpQuiz();
+         const joinedSlug = slug?.join("");
+         const config = qnCategorySets[
+            joinedSlug as keyof typeof qnCategorySets];
+
+         if (!config) return notFound();
+
+         const [start, end] = config.range;
+         const randArr = shuffle(range(start, end));
+         console.log(randArr.slice(0, 10).join(', '));
+
+         setQnOrderArray(randArr);
+         setQnSet(config.setName);
       }, []);
 
       useEffect(() => {

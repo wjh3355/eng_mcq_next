@@ -1,7 +1,9 @@
+import { GEP_VOCAB_AllowedSetConfigs, PHRASAL_VERBS_AllowedSetConfigs } from "./data";
+
 // Context value type for:
 // GEP_VOCAB
 // PHRASAL_VERBS
-export interface GenericMCQContextValueType {
+export type GenericMCQContextValueType = {
    qnObj: QnObjType | null,
    qnSet: string,
    handleOptionClick: (isCorrect: boolean) => void,
@@ -17,7 +19,7 @@ export interface GenericMCQContextValueType {
 // Question object type for:
 // GEP_VOCAB (wordToTest is a string)
 // PHRASAL_VERBS (wordToTest is null)
-export interface QnObjType {
+export type QnObjType = {
    qnNum: number,
    sentence: string,
    wordToTest: string | null,
@@ -34,7 +36,7 @@ export type NavLinksArrayType = {
    href: string
 }[];
 
-export const initialContextValue = {
+export const initialContextValue: GenericMCQContextValueType = {
    qnObj: null,
    qnSet: '',
    handleOptionClick() {},
@@ -46,3 +48,6 @@ export const initialContextValue = {
    numCorrectAns: 0,
    wrongAnsArr: []
 }
+
+export type AllowedSetConfigsType = 
+   typeof GEP_VOCAB_AllowedSetConfigs | typeof PHRASAL_VERBS_AllowedSetConfigs;

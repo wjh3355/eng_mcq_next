@@ -8,12 +8,13 @@ import SentenceFormatter from "@/app/ui/utils/SentenceFormatter";
 export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]}) {
 
    function generateWrongAnsCards(qnObj: QnObjType) {
-      const { sentence, rootWord, wordToTest, def } = qnObj;
+      const { sentence, rootWord, wordToTest, def, correctAns } = qnObj;
       return (
          <Card body className="w-100" key={rootWord}>
             <SentenceFormatter
                sentence={sentence}
                wordToTest={wordToTest}
+               correctAns={correctAns}
             />
             <div className="d-flex justify-content-center mt-3">
                <div

@@ -31,7 +31,7 @@ export const GEP_VOCAB_AllowedSetConfigs = {
 
 export const PHRASAL_VERBS_AllowedSetConfigs = {
    undefined: {
-      range: [1, 101],
+      range: [1, 151],
       setName: "All Qns",
    },
    set1: {
@@ -41,6 +41,10 @@ export const PHRASAL_VERBS_AllowedSetConfigs = {
    set2: {
       range: [51, 101],
       setName: "Set 2",
+   },
+   set3: {
+      range: [101, 151],
+      setName: "Set 3"
    }
 };
 
@@ -83,6 +87,10 @@ export const PHRASAL_VERBS_navLinksArray = [
    {
       name: "Set 2",
       href: "/phrasal_verbs/set2"
+   },
+   {
+      name: "Set 3",
+      href: "/phrasal_verbs/set3"
    },
    {
       name: "Complete",

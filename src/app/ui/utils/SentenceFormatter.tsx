@@ -1,24 +1,43 @@
+import { split } from "lodash";
+
 export default function SentenceFormatter({
    sentence,
    wordToTest,
+   correctAns = null,
    fontSize = '1rem'
 }: {
    sentence: string;
    wordToTest: string | null;
+   correctAns?: string | null;
    fontSize?: string
 }) {
-   if ( wordToTest !== null && sentence.includes(wordToTest)) {
-      const idxOfWord = sentence.indexOf(wordToTest);
+   const fontSizeStyle = {fontSize: fontSize}
+
+   if ( wordToTest !== null && sentence.includes(wordToTest) ) {
+      const [beginning, end] = split(sentence, wordToTest, 2);
       return (
-         <div style={{fontSize: fontSize}}>
-            {sentence.slice(0, idxOfWord)}
+         <div style={fontSizeStyle}>
+
+            {beginning}
             <strong>{wordToTest}</strong>
-            {sentence.slice(idxOfWord + wordToTest.length)}
+            {end}
+
+         </div>
+      );
+   } else if ( correctAns !== null && sentence.includes('_') ) {
+      const [beginning, end] = split(sentence, /_+/g, 2);
+      return (
+         <div style={fontSizeStyle}>
+
+            {beginning}
+            <strong>{correctAns}</strong>
+            {end}
+
          </div>
       );
    } else {
       return (
-         <div style={{fontSize: fontSize}}>
+         <div style={fontSizeStyle}>
             {sentence}
          </div>
       );
