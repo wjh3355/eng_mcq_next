@@ -1,5 +1,5 @@
-import { connectToDB } from "@/lib/mongodb";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+// import { connectToDB } from "@/lib/connectToDB";
+// import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
 const HTTP_STATUS = {
@@ -25,54 +25,59 @@ function createResponse(status: number, body: object) {
 
 export async function GET(request: Request): Promise<Response> {
 
-   try {
+   // this API endpoint isnt necessary right now
+   return createResponse(
+      HTTP_STATUS.UNAUTHORIZED, { error: "Unauthorised" }
+   );
 
-      const { isAuthenticated } = getKindeServerSession();
-      const isLoggedIn = await isAuthenticated();
-      if (!isLoggedIn) return createResponse(
-         HTTP_STATUS.UNAUTHORIZED, { error: "Unauthorised API usage" });
+   // try {
+
+   //    const { isAuthenticated } = getKindeServerSession();
+   //    const isLoggedIn = await isAuthenticated();
+   //    if (!isLoggedIn) return createResponse(
+   //       HTTP_STATUS.UNAUTHORIZED, { error: "Unauthorised" });
       
-      const { db } = await connectToDB("english_questions");
+   //    const { db } = await connectToDB("english_questions");
       
-      const { searchParams } = new URL(request.url);
+   //    const { searchParams } = new URL(request.url);
       
-      const collectionToFetch = searchParams.get('collection');
-      const qnNumStr = searchParams.get('qnNum');
-      if (!collectionToFetch || !qnNumStr) return createResponse(
-         HTTP_STATUS.BAD_REQUEST, { error: "Unspecified parameter(s)" });
+   //    const collectionToFetch = searchParams.get('collection');
+   //    const qnNumStr = searchParams.get('qnNum');
+   //    if (!collectionToFetch || !qnNumStr) return createResponse(
+   //       HTTP_STATUS.BAD_REQUEST, { error: "Unspecified parameter(s)" });
 
-      const qnNum = parseInt(qnNumStr, 10);
-      if (isNaN(qnNum) || !collectionNames.includes(collectionToFetch)) return createResponse(
-         HTTP_STATUS.BAD_REQUEST, { error: "Invalid parameter(s)" });
+   //    const qnNum = parseInt(qnNumStr, 10);
+   //    if (isNaN(qnNum) || !collectionNames.includes(collectionToFetch)) return createResponse(
+   //       HTTP_STATUS.BAD_REQUEST, { error: "Invalid parameter(s)" });
       
-      const qnToFetch = await db
-         .collection(collectionToFetch)
-         .findOne(
-         { qnNum }, 
-         { projection: { _id: 0 } }
-      );
+   //    const qnToFetch = await db
+   //       .collection(collectionToFetch)
+   //       .findOne(
+   //       { qnNum }, 
+   //       { projection: { _id: 0 } }
+   //    );
 
-      if (!qnToFetch) return createResponse(
-         HTTP_STATUS.NOT_FOUND, { error: 'Question not found' });
+   //    if (!qnToFetch) return createResponse(
+   //       HTTP_STATUS.NOT_FOUND, { error: 'Question not found' });
 
-      return createResponse(
-         HTTP_STATUS.OK, qnToFetch);
+   //    return createResponse(
+   //       HTTP_STATUS.OK, qnToFetch);
 
-   } catch (error: unknown) {
+   // } catch (error: unknown) {
 
-      if (error instanceof Error) {
-         console.error("Error in GET request:", error);
+   //    if (error instanceof Error) {
+   //       console.error("Error in GET request:", error.message);
 
-         return createResponse(
-            HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: error.message });
+   //       return createResponse(
+   //          HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: error.message });
          
-      } else {
-         console.error("Unexpected error in GET request:", error);
+   //    } else {
+   //       console.error("Unexpected error in GET request:", error);
          
-         return createResponse(
-            HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: 'An unexpected error occurred.' });
+   //       return createResponse(
+   //          HTTP_STATUS.INTERNAL_SERVER_ERROR, { error: 'An unexpected error occurred.' });
          
-      }
-   }
-
+   //    }
+   // }
+      
 }

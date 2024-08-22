@@ -9,16 +9,16 @@ export default function GenericAnsIndicator({
 }: {
    QnContextToUse: () => GenericMCQContextValueType
 }) {
-  const { isCorrect } = QnContextToUse();
+   const { isCorrect } = QnContextToUse();
 
-  switch (isCorrect) {
-    case true:
-      return <RightAnsIndicator />;
-    case false:
-      return <WrongAnsIndicator />;
-    case null:
-      return null;
-  }
+   switch (isCorrect) {
+      case true:
+         return <RightAnsIndicator />;
+      case false:
+         return <WrongAnsIndicator />;
+      case null:
+         return null;
+   }
 };
 
 function RightAnsIndicator() {

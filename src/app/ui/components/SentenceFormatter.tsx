@@ -13,7 +13,7 @@ export default function SentenceFormatter({
 }) {
    const fontSizeStyle = {fontSize: fontSize}
 
-   if ( wordToTest !== null && sentence.includes(wordToTest) ) {
+   if ( wordToTest && sentence.includes(wordToTest) ) {
       const [beginning, end] = split(sentence, wordToTest, 2);
       return (
          <div style={fontSizeStyle}>
@@ -24,7 +24,7 @@ export default function SentenceFormatter({
 
          </div>
       );
-   } else if ( correctAns !== null && sentence.includes('_') ) {
+   } else if ( correctAns && sentence.includes('_') ) {
       const [beginning, end] = split(sentence, /_+/g, 2);
       return (
          <div style={fontSizeStyle}>

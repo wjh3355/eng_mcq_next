@@ -35,9 +35,7 @@ export default function GenericLeftColumn({
    const [isReviewShown, setIsReviewShown] = useState(false);
 
    useEffect(() => {
-      if (isExplBtnDisabled) {
-         setIsExplShown(false);
-      }
+      if (isExplBtnDisabled) setIsExplShown(false);
    }, [isExplBtnDisabled]);
 
 

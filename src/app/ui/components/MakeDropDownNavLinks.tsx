@@ -24,8 +24,7 @@ export default function MakeDropDownNavLinks({
                href={href}
                className={currPathname === href ? 'fw-bold' : ''}
             >
-               {currPathname === href ? '> ' : ''}
-               {name}
+               {currPathname === href ? '> ' : ''} {name}
             </NavDropdown.Item>
          </React.Fragment>
          )

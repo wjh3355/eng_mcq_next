@@ -11,6 +11,7 @@ import {
    initialContextValue,
    AllowedSetConfigsType
 } from "@/lib/types";
+import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
 export function createGenericMCQProvider(
    questionCategory: 'gep_vocab' | 'phrasal_verbs',
@@ -52,25 +53,17 @@ export function createGenericMCQProvider(
          try {
             await new Promise((resolve) => setTimeout(resolve, 300));
 
-            const res = await fetch(
-               `../api/questions?collection=${questionCategory}&qnNum=${qnNumToFetch}`
-            );
-
-            if (!res.ok) {
-               const errorData = await res.json();
-               throw new Error(errorData.error);
-            }
-
-            const data = await res.json();
+            const data: QnObjType | null 
+               = await fetchQnFromDB(questionCategory, qnNumToFetch);
 
             setQnObj(data);
-         } catch (err) {
-            if (err instanceof Error) {
-               console.error(err);
-               setError(err.message);
+         } catch (error) {
+            if (error instanceof Error) {
+               console.error("Error when fetching new QnObj:", error.message);
+               setError(error.message);
             } else {
-               console.error("An unknown error occurred");
-               setError("An unknown error occurred");
+               console.error("An unexpected error occurred");
+               setError("An unexpected error occurred");
             }
          } finally {
             setIsFetching(false);
@@ -118,9 +111,7 @@ export function createGenericMCQProvider(
       }, []);
 
       useEffect(() => {
-         if (qnOrderArray.length !== 0) {
-            fetchNewQnObj();
-         }
+         if (qnOrderArray.length !== 0) fetchNewQnObj();
       }, [qnOrderArray, qnOrderArrayIdx]);
 
       const contextValue: GenericMCQContextValueType = {

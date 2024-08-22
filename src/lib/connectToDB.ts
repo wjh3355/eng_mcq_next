@@ -30,11 +30,16 @@ export async function connectToDB(databaseName: string, retries = 3) {
       cachedDb = db;
       return { db, client };
    } catch (error) {
-      console.error("Failed to connect to MongoDB:", error);
+      if (error instanceof Error) {
+         console.error("Failed to connect to MongoDB:", error.message);
+      } else {
+         console.error("An unexpected error occured:", error);
+      }
+      
       if (retries > 0) {
          console.log(`Retrying connnection... (${retries} attempts left)`);
          return connectToDB(databaseName, retries - 1);
       };
       throw new Error("Database connection failed after multiple attempts");
-   }
+   }  
 }
