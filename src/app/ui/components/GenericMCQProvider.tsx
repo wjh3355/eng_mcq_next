@@ -3,13 +3,14 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { shuffle, range } from "lodash";
 import { notFound } from "next/navigation";
-import LoadingSpinner from "./LoadingSpinner";
+
 import ErrorContainer from "./ErrorContainer";
 import {
    GenericMCQContextValueType,
    QnObjType,
+   AllowedSetConfigsType,
    initialContextValue,
-   AllowedSetConfigsType
+   emptyQnObj
 } from "@/lib/types";
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
@@ -32,10 +33,10 @@ export function createGenericMCQProvider(
 
       const [qnOrderArray, setQnOrderArray] = useState<number[]>([]);
       const [qnOrderArrayIdx, setQnOrderArrayIdx] = useState<number>(0);
-      const [isFetching, setIsFetching] = useState<boolean>(true);
+
       const [error, setError] = useState<string | null>(null);
 
-      const [qnObj, setQnObj] = useState<QnObjType | null>(null);
+      const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [qnSet, setQnSet] = useState<string>("");
       const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
       const [isExplBtnDisabled, setIsExplBtnDisabled] = useState<boolean>(true);
@@ -45,15 +46,14 @@ export function createGenericMCQProvider(
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
 
       async function fetchNewQnObj() {
-         setIsFetching(true);
-         setQnObj(null);
+         setQnObj(emptyQnObj);
 
          let qnNumToFetch = qnOrderArray[qnOrderArrayIdx];
 
          try {
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 400));
 
-            const data: QnObjType | null 
+            const data: QnObjType 
                = await fetchQnFromDB(questionCategory, qnNumToFetch);
 
             setQnObj(data);
@@ -65,8 +65,6 @@ export function createGenericMCQProvider(
                console.error("An unexpected error occurred");
                setError("An unexpected error occurred");
             }
-         } finally {
-            setIsFetching(false);
          }
       }
 
@@ -126,8 +124,6 @@ export function createGenericMCQProvider(
          numCorrectAns,
          wrongAnsArr,
       };
-
-      if (isFetching) return <LoadingSpinner />;
 
       if (error) return <ErrorContainer>Error: {error}</ErrorContainer>;
 

@@ -8,27 +8,28 @@ import {
    Collapse,
    Modal,
 } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 import GenericReview from "./GenericReview";
 import SentenceFormatter from "./SentenceFormatter";
 
 import { GenericMCQContextValueType } from "@/lib/types";
+import Skeleton from "react-loading-skeleton";
 
 export default function GenericLeftColumn({
-   QnContextToUse
+   QnContextToUse,
 }: {
-   QnContextToUse: () => GenericMCQContextValueType
+   QnContextToUse: () => GenericMCQContextValueType;
 }) {
 
-   const { 
-      handleNextQnBtnClick, 
-      isNextQnBtnDisabled, 
+   const {
+      handleNextQnBtnClick,
+      isNextQnBtnDisabled,
       isExplBtnDisabled,
       numQnsAns,
       numCorrectAns,
-      qnObj,
-      wrongAnsArr
+      wrongAnsArr,
+      qnObj: { sentence, wordToTest, rootWord, type, def }
    } = QnContextToUse();
 
    const [isExplShown, setIsExplShown] = useState(false);
@@ -38,23 +39,22 @@ export default function GenericLeftColumn({
       if (isExplBtnDisabled) setIsExplShown(false);
    }, [isExplBtnDisabled]);
 
-
-   if (!qnObj) return null;
-   const { sentence, wordToTest, rootWord, type, def } = qnObj;
-
-
-   let percentCorrect = numQnsAns
+   const percentCorrect = numQnsAns
       ? Math.round((numCorrectAns * 100) / numQnsAns)
       : 0;
 
    return (
       <Col lg={8} md={7}>
          <Card body className="mb-3">
-            <SentenceFormatter
-               fontSize="18px"
-               sentence={sentence}
-               wordToTest={wordToTest}
-            />
+            {sentence ? (
+               <SentenceFormatter
+                  fontSize="18px"
+                  sentence={sentence}
+                  wordToTest={wordToTest}
+               />
+            ) : (
+               <Skeleton height="24px" />
+            )}
          </Card>
 
          <div className="mb-2">

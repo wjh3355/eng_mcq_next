@@ -4,7 +4,7 @@ import { GEP_VOCAB_AllowedSetConfigs, PHRASAL_VERBS_AllowedSetConfigs } from "./
 // GEP_VOCAB
 // PHRASAL_VERBS
 export type GenericMCQContextValueType = {
-   qnObj: QnObjType | null,
+   qnObj: QnObjType,
    qnSet: string,
    handleOptionClick: (isCorrect: boolean) => void,
    isCorrect: boolean | null,
@@ -36,17 +36,29 @@ export type NavLinksArrayType = {
    href: string
 }[];
 
+// initial value for qnObj state in provider
+export const emptyQnObj: QnObjType = {
+   qnNum: NaN,
+   sentence: '',
+   wordToTest: null,
+   options: [],
+   correctAns: '',
+   rootWord: '',
+   type: '',
+   def: ''
+}
+
 // initial value for createContext() function for Generic MCQs
 export const initialContextValue: GenericMCQContextValueType = {
-   qnObj: null,
+   qnObj: emptyQnObj,
    qnSet: '',
    handleOptionClick() {},
    isCorrect: null,
    isExplBtnDisabled: true,
    isNextQnBtnDisabled: true,
    handleNextQnBtnClick() {},
-   numQnsAns: 0,
-   numCorrectAns: 0,
+   numQnsAns: NaN,
+   numCorrectAns: NaN,
    wrongAnsArr: []
 }
 
