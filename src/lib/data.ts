@@ -31,23 +31,23 @@ export const GEP_VOCAB_AllowedSetConfigs = {
 
 export const PHRASAL_VERBS_AllowedSetConfigs = {
    undefined: {
-      range: [1, 201],
+      range: [1, 241],
       setName: "All Qns",
    },
    set1: {
-      range: [1, 51],
+      range: [1, 61],
       setName: "Set 1",
    },
    set2: {
-      range: [51, 101],
+      range: [61, 121],
       setName: "Set 2",
    },
    set3: {
-      range: [101, 151],
+      range: [121, 181],
       setName: "Set 3"
    },
    set4: {
-      range: [151, 201],
+      range: [181, 241],
       setName: "Set 4"
    }
 };
