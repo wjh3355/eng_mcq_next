@@ -27,7 +27,7 @@ export async function GET(request: Request): Promise<Response> {
 
    // this API endpoint isnt necessary right now
    return createResponse(
-      HTTP_STATUS.UNAUTHORIZED, { error: "Unauthorised" }
+      HTTP_STATUS.UNAUTHORIZED, { error: "This API is deprecated" }
    );
 
    // try {

@@ -4,22 +4,22 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { shuffle, range } from "lodash";
 import { notFound } from "next/navigation";
 
-import ErrorContainer from "./ErrorContainer";
 import {
    GenericMCQContextValueType,
    QnObjType,
+   AllowedQuestionCategories,
    AllowedSetConfigsType,
-   initialContextValue,
+   emptyContextValue,
    emptyQnObj
 } from "@/lib/types";
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
 export function createGenericMCQProvider(
-   questionCategory: 'gep_vocab' | 'phrasal_verbs',
+   questionCategory: AllowedQuestionCategories,
    qnCategorySets: AllowedSetConfigsType
 ) {
 
-   const QnContext = createContext<GenericMCQContextValueType>(initialContextValue);
+   const QnContext = createContext<GenericMCQContextValueType>(emptyContextValue);
 
    const useGenericMCQContext = () => useContext(QnContext);
 
@@ -123,11 +123,14 @@ export function createGenericMCQProvider(
          numQnsAns,
          numCorrectAns,
          wrongAnsArr,
+         error
       };
 
-      if (error) return <ErrorContainer>Error: {error}</ErrorContainer>;
-
-      return <QnContext.Provider value={contextValue}>{children}</QnContext.Provider>;
+      return (
+         <QnContext.Provider value={contextValue}>
+            {children}
+         </QnContext.Provider>
+      );
       
    };
 

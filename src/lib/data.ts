@@ -52,6 +52,21 @@ export const PHRASAL_VERBS_AllowedSetConfigs = {
    }
 };
 
+export const PSLE_CLOZE_AllowedSetConfigs = {
+   undefined: {
+      range: [1, 101],
+      setName: "All Qns",
+   },
+   set1: {
+      range: [1, 51],
+      setName: "Set 1",
+   },
+   set2: {
+      range: [51, 101],
+      setName: "Set 2",
+   }
+}
+
 export const GEP_VOCAB_navLinksArray = [
    {
       name: "Set 1",
@@ -103,5 +118,20 @@ export const PHRASAL_VERBS_navLinksArray = [
    {
       name: "Complete",
       href: "/phrasal_verbs"
+   },
+];
+
+export const PSLE_CLOZE_navLinksArray = [
+   {
+      name: "Set 1",
+      href: "/psle_cloze/set1" 
+   },
+   {
+      name: "Set 2",
+      href: "/psle_cloze/set2"
+   },
+   {
+      name: "Complete",
+      href: "/psle_cloze"
    },
 ];

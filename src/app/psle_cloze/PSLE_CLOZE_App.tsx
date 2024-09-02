@@ -3,12 +3,12 @@
 import { Container, Row } from "react-bootstrap";
 
 import { createGenericMCQProvider } from "../ui/components/GenericMCQProvider";
-import { GEP_VOCAB_AllowedSetConfigs } from "@/lib/data";
+import { PSLE_CLOZE_AllowedSetConfigs } from "@/lib/data";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('gep_vocab', GEP_VOCAB_AllowedSetConfigs);
-const GEP_VOCAB_QnProvider = GenericMCQProvider;
-const useGEP_VOCAB_QnContext = useGenericMCQContext;
+   createGenericMCQProvider('psle_cloze', PSLE_CLOZE_AllowedSetConfigs);
+const PSLE_CLOZE_QnProvider = GenericMCQProvider;
+const usePSLE_CLOZE_QnContext = useGenericMCQContext;
 
 import GenericLeftColumn from "../ui/components/GenericLeftColumn";
 import GenericRightColumn from "../ui/components/GenericRightColumn";
@@ -16,33 +16,33 @@ import GenericAnsIndicator from "../ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "../ui/components/GenericErrorContainer";
 
 function AppTitle() {
-   
-   const { qnSet } = useGEP_VOCAB_QnContext();
-   
+
+   const { qnSet } = usePSLE_CLOZE_QnContext();
+
    return (
       <h4 className="text-center m-0">
-         GEP English Vocabulary MCQ: <strong>{qnSet}</strong>
+         PSLE Words Cloze: <strong>{qnSet}</strong>
       </h4>
    );
 };
 
-export default function GEP_VOCAB_App({ slug }: { slug: string[] | undefined }) {
+export default function PSLE_CLOZE_App({ slug }: { slug: string[] | undefined }) {
 
    return (
-      <GEP_VOCAB_QnProvider slug={slug}>
+      <PSLE_CLOZE_QnProvider slug={slug}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={useGEP_VOCAB_QnContext}/>
+               <GenericErrorContainer QnContextToUse={usePSLE_CLOZE_QnContext}/>
                <AppTitle />
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={useGEP_VOCAB_QnContext}/>
-               <GenericRightColumn QnContextToUse={useGEP_VOCAB_QnContext}/>
+               <GenericLeftColumn QnContextToUse={usePSLE_CLOZE_QnContext}/>
+               <GenericRightColumn QnContextToUse={usePSLE_CLOZE_QnContext}/>
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={useGEP_VOCAB_QnContext}/>
+               <GenericAnsIndicator QnContextToUse={usePSLE_CLOZE_QnContext}/>
             </Row>
          </Container>
-      </GEP_VOCAB_QnProvider>
+      </PSLE_CLOZE_QnProvider>
    );
 }

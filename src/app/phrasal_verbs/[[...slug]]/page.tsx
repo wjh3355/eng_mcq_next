@@ -5,9 +5,8 @@ import { redirect } from "next/navigation";
 export default async function Page({ params }: { params: { slug: string[] | undefined } }) {
    const { isAuthenticated } = getKindeServerSession();
    const isLoggedIn = await isAuthenticated();
-   if (!isLoggedIn) {
-      redirect("/");
-   }
+
+   if (!isLoggedIn) redirect("/");
 
    return <PHRASAL_VERBS_App slug={params.slug}/>;
 

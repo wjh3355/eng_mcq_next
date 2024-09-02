@@ -4,7 +4,7 @@ import Link from "next/link";
 import { NavDropdown } from "react-bootstrap";
 import React from "react";
 
-export default function MakeDropDownNavLinks({
+export default function NavbarDropdownLinks({
    title,
    linksArray
 }: {

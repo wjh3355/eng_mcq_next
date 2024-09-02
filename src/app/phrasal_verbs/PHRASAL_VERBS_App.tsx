@@ -13,6 +13,7 @@ const usePHRASAL_VERBS_QnContext = useGenericMCQContext;
 import GenericLeftColumn from "../ui/components/GenericLeftColumn";
 import GenericRightColumn from "../ui/components/GenericRightColumn";
 import GenericAnsIndicator from "../ui/components/GenericAnsIndicator";
+import GenericErrorContainer from "../ui/components/GenericErrorContainer";
 
 function AppTitle() {
 
@@ -31,6 +32,7 @@ export default function PHRASAL_VERBS_App({ slug }: { slug: string[] | undefined
       <PHRASAL_VERBS_QnProvider slug={slug}>
          <Container>
             <Row className="my-3">
+               <GenericErrorContainer QnContextToUse={usePHRASAL_VERBS_QnContext}/>
                <AppTitle />
             </Row>
             <Row>
