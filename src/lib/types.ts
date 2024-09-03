@@ -1,7 +1,9 @@
 import { 
    GEP_VOCAB_AllowedSetConfigs, 
    PHRASAL_VERBS_AllowedSetConfigs, 
-   PSLE_CLOZE_AllowedSetConfigs } from "./data";
+   PSLE_CLOZE_AllowedSetConfigs, 
+   PSLE_MCQ_AllowedSetConfigs
+} from "./data";
 
 // Context value type for:
 // GEP_VOCAB
@@ -68,10 +70,12 @@ export const emptyContextValue: GenericMCQContextValueType = {
 }
 
 // type of first argument of createGenericMCQProvider()
+// names of collections from mongodb
 export type AllowedQuestionCategories = 
    'gep_vocab' | 
    'phrasal_verbs' | 
-   'psle_cloze'
+   'psle_cloze' |
+   'psle_mcq'
    ;
 
 // type of second argument of createGenericMCQProvider()
@@ -79,5 +83,6 @@ export type AllowedQuestionCategories =
 export type AllowedSetConfigsType = 
    typeof GEP_VOCAB_AllowedSetConfigs | 
    typeof PHRASAL_VERBS_AllowedSetConfigs |
-   typeof PSLE_CLOZE_AllowedSetConfigs
+   typeof PSLE_CLOZE_AllowedSetConfigs | 
+   typeof PSLE_MCQ_AllowedSetConfigs
    ;

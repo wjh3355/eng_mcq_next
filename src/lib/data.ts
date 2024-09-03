@@ -65,7 +65,11 @@ export const PSLE_CLOZE_AllowedSetConfigs = {
       range: [51, 101],
       setName: "Set 2",
    }
-}
+};
+
+export const PSLE_MCQ_AllowedSetConfigs = PSLE_CLOZE_AllowedSetConfigs;
+
+// #######################################################################
 
 export const GEP_VOCAB_navLinksArray = [
    {
@@ -124,14 +128,29 @@ export const PHRASAL_VERBS_navLinksArray = [
 export const PSLE_CLOZE_navLinksArray = [
    {
       name: "Set 1",
-      href: "/psle_cloze/set1" 
+      href: "/psle/cloze/set1" 
    },
    {
       name: "Set 2",
-      href: "/psle_cloze/set2"
+      href: "/psle/cloze/set2"
    },
    {
       name: "Complete",
-      href: "/psle_cloze"
+      href: "/psle/cloze"
+   },
+];
+
+export const PSLE_MCQ_navLinksArray = [
+   {
+      name: "Set 1",
+      href: "/psle/mcq/set1" 
+   },
+   {
+      name: "Set 2",
+      href: "/psle/mcq/set2"
+   },
+   {
+      name: "Complete",
+      href: "/psle/mcq"
    },
 ];

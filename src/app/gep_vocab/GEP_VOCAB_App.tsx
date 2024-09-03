@@ -22,7 +22,7 @@ function AppTitle() {
    
    return (
       <h4 className="text-center m-0">
-         GEP English Vocabulary MCQ: <strong>{qnSet}</strong>
+         GEP Words MCQ: <strong>{qnSet}</strong>
       </h4>
    );
 };

@@ -3,7 +3,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import { createGenericMCQProvider } from "../ui/components/GenericMCQProvider";
+import { createGenericMCQProvider } from "@/app/ui/components/GenericMCQProvider";
 import { PSLE_CLOZE_AllowedSetConfigs } from "@/lib/data";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
@@ -11,10 +11,10 @@ const { GenericMCQProvider, useGenericMCQContext } =
 const PSLE_CLOZE_QnProvider = GenericMCQProvider;
 const usePSLE_CLOZE_QnContext = useGenericMCQContext;
 
-import GenericLeftColumn from "../ui/components/GenericLeftColumn";
-import GenericRightColumn from "../ui/components/GenericRightColumn";
-import GenericAnsIndicator from "../ui/components/GenericAnsIndicator";
-import GenericErrorContainer from "../ui/components/GenericErrorContainer";
+import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
+import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
+import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
+import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
 function AppTitle() {
 
