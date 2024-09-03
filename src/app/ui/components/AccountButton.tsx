@@ -1,6 +1,8 @@
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { Button, Spinner, Navbar } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
+import Navbar from "react-bootstrap/Navbar";
 
 export default function AccountButton() {
    const { user, isAuthenticated, isLoading } = useKindeBrowserClient();

@@ -1,7 +1,7 @@
 import { NavLinksArrayType } from "@/lib/types";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { NavDropdown } from "react-bootstrap";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import React from "react";
 
 export default function NavbarDropdownLinks({

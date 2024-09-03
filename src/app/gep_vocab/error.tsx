@@ -1,6 +1,8 @@
 "use client";
 
-import { Container, Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+
 import { useEffect } from "react";
 
 export default function Error({

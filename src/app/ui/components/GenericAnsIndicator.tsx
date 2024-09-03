@@ -2,7 +2,7 @@
 
 import { GenericMCQContextValueType } from '@/lib/types';
 import React from 'react';
-import { Col } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
 
 export default function GenericAnsIndicator({ 
    QnContextToUse 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
 
 import { QnObjType } from "@/lib/types";
 import SentenceFormatter from "./SentenceFormatter";

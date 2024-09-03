@@ -1,7 +1,9 @@
 'use client';
 
 import React from "react";
-import { Navbar, Container, Nav } from "react-bootstrap";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Container from "react-bootstrap/Container";
 import Link from "next/link";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import NavbarDropdownLinks from "./components/NavbarDropdownLinks";
@@ -25,11 +27,27 @@ export default function MainNavbar() {
             <Navbar.Collapse id="basic-navbar-nav">
                <Nav className="me-auto">
 
-                  <Nav.Link as={Link} href="/">
-                     Home
-                  </Nav.Link>
-
                   <ShowQnLinks_IfAuthenticated/>
+
+                  {/* <NavDropdown title="outer dropdown">
+                     <NavDropdown title="inner dropdown 1">
+                        <NavDropdown.Item>
+                           aaa
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                           bbb
+                        </NavDropdown.Item>
+                     </NavDropdown>
+                     <NavDropdown.Divider/>
+                     <NavDropdown title="inner dropdown 2">
+                        <NavDropdown.Item>
+                           ccc
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                           ddd
+                        </NavDropdown.Item>
+                     </NavDropdown>
+                  </NavDropdown> */}
 
                </Nav>
 

@@ -1,7 +1,8 @@
 'use client';
 
 import { GenericMCQContextValueType } from '@/lib/types';
-import { Col, Alert } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
 
 export default function GenericErrorContainer({ 
    QnContextToUse 

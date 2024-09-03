@@ -1,13 +1,12 @@
 'use client';
 
-import {
-   Button,
-   ButtonGroup,
-   Card,
-   Col,
-   Collapse,
-   Modal,
-} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Collapse from "react-bootstrap/Collapse";
+import Modal from "react-bootstrap/Modal";
+
 import { useState, useEffect } from "react";
 
 import GenericReview from "./GenericReview";

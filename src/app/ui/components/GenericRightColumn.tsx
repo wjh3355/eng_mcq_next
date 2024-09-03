@@ -1,6 +1,7 @@
 'use client';
 
-import { Col } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+
 import { shuffle } from "lodash";
 import { useEffect, useState } from "react";
 
