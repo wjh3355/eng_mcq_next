@@ -11,10 +11,10 @@ const { GenericMCQProvider, useGenericMCQContext } =
 const PHRASAL_VERBS_QnProvider = GenericMCQProvider;
 const usePHRASAL_VERBS_QnContext = useGenericMCQContext;
 
-import GenericLeftColumn from "../ui/components/GenericLeftColumn";
-import GenericRightColumn from "../ui/components/GenericRightColumn";
-import GenericAnsIndicator from "../ui/components/GenericAnsIndicator";
-import GenericErrorContainer from "../ui/components/GenericErrorContainer";
+import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
+import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
+import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
+import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
 function AppTitle() {
 

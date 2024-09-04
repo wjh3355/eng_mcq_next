@@ -6,15 +6,17 @@ import React from "react";
 
 export default function DropdownLinksWithIndicator({
    title,
-   linksArray
+   linksArray,
+   dropEnd
 }: {
    title: string,
    linksArray: NavLinksArrayType
+   dropEnd?: boolean
 }) {
    
    const currPathname = usePathname();
    return (
-      <NavDropdown title={title}>
+      <NavDropdown title={title} drop={dropEnd ? 'end' : 'down'}>
       {
          linksArray.map(({ name, href }, idx) =>
          <React.Fragment key={name}>

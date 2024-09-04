@@ -6,6 +6,7 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
 import Link from "next/link";
+
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import DropdownLinksWithIndicator from "./components/DropdownLinksWithIndicator";
 import { 
@@ -64,6 +65,7 @@ function ShowQnLinks_IfAuthenticated() {
             <DropdownLinksWithIndicator
                title="Cloze"
                linksArray={PSLE_CLOZE_navLinksArray}
+               dropEnd
             />
 
             <NavDropdown.Divider/>
@@ -71,6 +73,7 @@ function ShowQnLinks_IfAuthenticated() {
             <DropdownLinksWithIndicator
                title="MCQ"
                linksArray={PSLE_MCQ_navLinksArray}
+               dropEnd
             />
             
          </NavDropdown>
