@@ -2,17 +2,23 @@
 
 import { connectToDB } from "@/lib/connectToDB";
 import { QnObjType } from "./types";
+import { AllowedQuestionCategories } from "./types";
 
-export async function fetchQnFromDB(collection: string, qnNum: number) {
+export async function fetchQnFromDB(
+   collection: AllowedQuestionCategories, 
+   qnNum: number
+) {
    try {
       const { db } = await connectToDB("english_questions");
-      const qn = await db
+      const data = await db
          .collection(collection)
          .findOne({ qnNum }, { projection: { _id: 0 } });
 
-      if (!qn) throw new Error("Question not found");
+      if (!data) throw new Error("Question not found");
 
-      return qn as any as QnObjType;
+      if (!isQuestionType(data)) throw new Error("Unable to display question");
+
+      return data;
 
    } catch (error: unknown) {
 
@@ -24,4 +30,12 @@ export async function fetchQnFromDB(collection: string, qnNum: number) {
          throw new Error("An unexpected error occured");
       }
    }
-}
+};
+
+function isQuestionType(data: any): data is QnObjType {
+   return typeof data === 'object'
+      && data !== null
+      && typeof data.qnNum === 'number'
+      && typeof data.sentence === 'string'
+      && typeof data.correctAns === 'string'
+};

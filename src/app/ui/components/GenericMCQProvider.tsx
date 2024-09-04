@@ -32,10 +32,9 @@ export function createGenericMCQProvider(
    }) {
 
       const [qnOrderArray, setQnOrderArray] = useState<number[]>([]);
-      const [qnOrderArrayIdx, setQnOrderArrayIdx] = useState<number>(0);
+      const [qnOrderArrayPtr, setQnOrderArrayPtr] = useState<number>(0);
 
-      const [error, setError] = useState<string | null>(null);
-
+      
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [qnSet, setQnSet] = useState<string>("");
       const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
@@ -44,26 +43,27 @@ export function createGenericMCQProvider(
       const [numQnsAns, setNumQnsAns] = useState<number>(0);
       const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
+      const [error, setError] = useState<string | null>(null);
 
       async function fetchNewQnObj() {
          setQnObj(emptyQnObj);
 
-         let qnNumToFetch = qnOrderArray[qnOrderArrayIdx];
+         let qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
 
          try {
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await new Promise((resolve) => setTimeout(resolve, 200));
 
-            const data: QnObjType 
-               = await fetchQnFromDB(questionCategory, qnNumToFetch);
+            setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
 
-            setQnObj(data);
          } catch (error) {
             if (error instanceof Error) {
                console.error("Error when fetching new QnObj:", error.message);
                setError(error.message);
+               
             } else {
                console.error("An unexpected error occurred");
                setError("An unexpected error occurred");
+
             }
          }
       }
@@ -86,10 +86,10 @@ export function createGenericMCQProvider(
          setIsExplBtnDisabled(true);
          setIsCorrect(null);
 
-         if (qnOrderArrayIdx === qnOrderArray.length - 1) {
-            setQnOrderArrayIdx(0);
+         if (qnOrderArrayPtr === qnOrderArray.length - 1) {
+            setQnOrderArrayPtr(0);
          } else {
-            setQnOrderArrayIdx(prev => prev + 1);
+            setQnOrderArrayPtr(prev => prev + 1);
          }
       }
 
@@ -110,7 +110,7 @@ export function createGenericMCQProvider(
 
       useEffect(() => {
          if (qnOrderArray.length !== 0) fetchNewQnObj();
-      }, [qnOrderArray, qnOrderArrayIdx]);
+      }, [qnOrderArray, qnOrderArrayPtr]);
 
       const contextValue: GenericMCQContextValueType = {
          qnObj,
