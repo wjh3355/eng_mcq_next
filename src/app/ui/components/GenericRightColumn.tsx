@@ -23,29 +23,33 @@ export default function GenericRightColumn({
    const [selectedOption, setSelectedOption] = useState<null | string>(null);
 
    useEffect(() => {
-      setRandomisedOptions(shuffle(options));
-      setIsAllDisabled(false);
-      setSelectedOption(null);
+      if (options.length !== 0) {
+         setRandomisedOptions(shuffle(options));
+         setIsAllDisabled(false);
+         setSelectedOption(null);
+      }
    }, [options]);
 
    function renderButtonForThisOption(thisOption: string) {
-      let isCorrectOption = (thisOption === correctAns);
-      let isSelected = (thisOption === selectedOption);
+      let isThisCorrectOption = (thisOption === correctAns);
+      let isThisSelected = (thisOption === selectedOption);
 
       return (
          <OptionButton
             key={thisOption}
-            thisOption={thisOption}
 
-            isCorrectOption={isCorrectOption} 
-            isDisabled={isAllDisabled}
-            isSelected={isSelected}
-            onSelectAction={() => {
+            isCorrectOption={isThisCorrectOption} 
+            isSelected={isThisSelected}
+
+            disabled={isAllDisabled}
+            onClick={() => {
                setSelectedOption(thisOption);
                setIsAllDisabled(true);
-               handleOptionClick(isCorrectOption);
+               handleOptionClick(isThisCorrectOption);
             }}
-         />
+         >
+            {thisOption}
+         </OptionButton>
       );
    };
 
@@ -55,14 +59,20 @@ export default function GenericRightColumn({
             {
                correctAns
                   ? randomisedOptions.map(renderButtonForThisOption)
-                  : <>
-                     <Skeleton height={54}/>
-                     <Skeleton height={54}/>
-                     <Skeleton height={54}/>
-                     <Skeleton height={54}/>
-                  </>
+                  : <ButtonSkeletons/>
             }
          </div>
       </Col>
    );
 };
+
+function ButtonSkeletons() {
+   return (
+      <>
+         <Skeleton height={54}/>
+         <Skeleton height={54}/>
+         <Skeleton height={54}/>
+         <Skeleton height={54}/>
+      </>
+   )
+}

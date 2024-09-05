@@ -1,33 +1,29 @@
-import clsx from "clsx";
-import styles from "@/styles/option-buttons.module.css";
+import styled from "styled-components";
 
-export default function OptionButton({
-   thisOption,
-   isCorrectOption,
-   isDisabled,
-   isSelected,
-   onSelectAction,
-}: {
-   thisOption: string,
-   isCorrectOption: boolean,
-   isDisabled: boolean,
-   isSelected: boolean,
-   onSelectAction: () => void
-}) {
+const OptionButton = styled.button<{
+   isCorrectOption: boolean;
+   isSelected: boolean;
+}>`
+   width: 100%;
+   padding: 12px 10%;
+   font-size: 18px;
+   border-width: 3px;
+   display: flex;
+   justify-content: center;
+   background-color: white;
 
-   return (
-      <button
-         onClick={onSelectAction}
-         disabled={isDisabled}
-         className={clsx(
-            styles.default, 
-            {
-               [styles.correctAns]: isDisabled && isCorrectOption,
-               [styles.wrongAns]: isDisabled && !isCorrectOption && isSelected
-            }
-         )}
-      >
-         <span>{thisOption}</span>
-      </button>
-   );
-};
+   &:not(:disabled):hover {
+      border-color: rgb(100, 100, 100);
+   }
+
+   &:disabled {
+      border-color: ${({ isCorrectOption, isSelected }) => 
+         isCorrectOption ? "green" : (isSelected ? "rgb(190, 44, 44)" : "default")};
+      color: ${({ isCorrectOption, isSelected }) => 
+         isCorrectOption ? "green" : (isSelected ? "rgb(190, 44, 44)" : "default")};
+      font-weight: ${({ isCorrectOption, isSelected }) => 
+         (isSelected || isCorrectOption) ? "bold" : "default"};
+   }
+`
+
+export default OptionButton;
