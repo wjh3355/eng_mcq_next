@@ -31,7 +31,7 @@ export default function MainNavbar() {
 
             <Navbar.Toggle />
 
-            <Navbar.Collapse id="basic-navbar-nav">
+            <Navbar.Collapse>
 
                <Nav className="me-auto">
 

@@ -10,7 +10,8 @@ export default function Notice() {
 
    return (
       <Card
-         border={'primary'}
+         border="primary"
+         className="mb-3"
       >
          <Card.Header>
             Notice

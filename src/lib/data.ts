@@ -1,3 +1,10 @@
+export const DEMO_AllowedSetConfigs = {
+   undefined: {
+      range: [1, 41],
+      setName: "Demo Qns"
+   }
+};
+
 export const GEP_VOCAB_AllowedSetConfigs = {
    undefined: {
       range: [1, 601],

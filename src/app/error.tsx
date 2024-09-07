@@ -19,10 +19,16 @@ export default function Error({
 
    return (
       <Container className="mt-3 text-center">
-         <h4>Something went wrong.</h4>
-         <Button variant="primary" onClick={() => reset()}>
-            Try again
+         <h4>Something went wrong!</h4>
+         <Button 
+            variant="primary" 
+            className="my-3"
+            size="lg"
+            onClick={() => reset()}
+         >
+            Reload website
          </Button>
+         <p>If this error persists, contact the administrator.</p>
       </Container>
    );
 }

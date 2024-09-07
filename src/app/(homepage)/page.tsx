@@ -2,6 +2,7 @@ import Notice from "./Notice";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Link from "next/link";
 
 export default function Page() {
    return (
@@ -18,6 +19,13 @@ export default function Page() {
             </Col>
          </Row>
 
+         <Row>
+            <Col className="d-flex justify-content-center">
+               <Link href="/demo" className="btn btn-lg btn-primary">
+                  View Demo
+               </Link>
+            </Col>
+         </Row>
       </Container>
    );
 };

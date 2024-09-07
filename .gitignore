@@ -36,6 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-qns/
-src/app/test/
-questions/
+qn-jsons/
+questions\ api\ (UNUSED)/

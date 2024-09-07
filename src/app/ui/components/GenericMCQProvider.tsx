@@ -1,8 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { shuffle, range } from "lodash";
-import { notFound } from "next/navigation";
+import { shuffle, range, isEqual } from "lodash";
 
 import {
    GenericMCQContextValueType,
@@ -51,7 +50,7 @@ export function createGenericMCQProvider(
          let qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
 
          try {
-            await new Promise((resolve) => setTimeout(resolve, 200));
+            await new Promise((resolve) => setTimeout(resolve, 300));
 
             setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
 
@@ -72,12 +71,11 @@ export function createGenericMCQProvider(
          setIsNextQnBtnDisabled(false);
          setIsExplBtnDisabled(false);
          setIsCorrect(isCorrect);
-
          setNumQnsAns(prevNum => prevNum + 1);
          if (isCorrect) {
             setNumCorrectAns(prevNum => prevNum + 1);
-         } else {
-            qnObj && setWrongAnsArr(prevArr => [...prevArr, qnObj]);
+         } else if (!wrongAnsArr.some(existingQnObj => isEqual(existingQnObj, qnObj))) {
+            setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
          }
       }
 
@@ -85,12 +83,7 @@ export function createGenericMCQProvider(
          setIsNextQnBtnDisabled(true);
          setIsExplBtnDisabled(true);
          setIsCorrect(null);
-
-         if (qnOrderArrayPtr === qnOrderArray.length - 1) {
-            setQnOrderArrayPtr(0);
-         } else {
-            setQnOrderArrayPtr(prev => prev + 1);
-         }
+         setQnOrderArrayPtr(prev => (prev === qnOrderArray.length - 1) ? 0 : prev + 1);
       }
 
       useEffect(() => {
@@ -98,14 +91,15 @@ export function createGenericMCQProvider(
          const config = qnCategorySets[
             joinedSlug as keyof typeof qnCategorySets];
 
-         if (!config) return notFound();
+         if (config) {
+            const [start, end] = config.range;
+            setQnSet(config.setName);
+            setQnOrderArray(shuffle(range(start, end)));  
+         } else {
+            setQnSet("Not Found");
+            setError("Please choose a valid question set from the dropdown menu");
+         }
 
-         const [start, end] = config.range;
-         const randArr = shuffle(range(start, end));
-         console.log(randArr.slice(0, 10).join(', '));
-
-         setQnOrderArray(randArr);
-         setQnSet(config.setName);
       }, []);
 
       useEffect(() => {

@@ -1,4 +1,5 @@
-import { 
+import {
+   DEMO_AllowedSetConfigs,
    GEP_VOCAB_AllowedSetConfigs, 
    PHRASAL_VERBS_AllowedSetConfigs, 
    PSLE_CLOZE_AllowedSetConfigs, 
@@ -72,6 +73,7 @@ export const emptyContextValue: GenericMCQContextValueType = {
 // type of first argument of createGenericMCQProvider()
 // names of collections from mongodb
 export type AllowedQuestionCategories = 
+   'demo' |
    'gep_vocab' | 
    'phrasal_verbs' | 
    'psle_cloze' |
@@ -81,6 +83,7 @@ export type AllowedQuestionCategories =
 // type of second argument of createGenericMCQProvider()
 // states how many qn sets are in each category, what name and range of qnNum
 export type AllowedSetConfigsType = 
+   typeof DEMO_AllowedSetConfigs | 
    typeof GEP_VOCAB_AllowedSetConfigs | 
    typeof PHRASAL_VERBS_AllowedSetConfigs |
    typeof PSLE_CLOZE_AllowedSetConfigs | 

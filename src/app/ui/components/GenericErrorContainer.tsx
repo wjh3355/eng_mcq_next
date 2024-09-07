@@ -16,8 +16,8 @@ export default function GenericErrorContainer({
 
    return (
       <Col>
-         <Alert variant="danger">
-            🚫 Error: {error}. Please reload the page
+         <Alert variant="danger" dismissible>
+            🚫 <strong>Error: </strong>{error}.
          </Alert>
       </Col>
    );
