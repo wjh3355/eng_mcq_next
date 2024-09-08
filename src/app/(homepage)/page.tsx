@@ -22,7 +22,7 @@ export default function Page() {
          <Row>
             <Col className="d-flex justify-content-center">
                <Link href="/demo" className="btn btn-lg btn-primary">
-                  View Demo
+                  Demo Questions
                </Link>
             </Col>
          </Row>
