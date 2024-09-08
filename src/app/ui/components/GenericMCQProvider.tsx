@@ -50,7 +50,7 @@ export function createGenericMCQProvider(
          let qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
 
          try {
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 150));
 
             setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
 
