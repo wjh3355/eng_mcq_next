@@ -3,7 +3,7 @@
 import Card from "react-bootstrap/Card";
 
 import { QnObjType } from "@/lib/types";
-import SentenceFormatter from "./SentenceFormatter";
+import ReviewSentenceFormatter from "./ReviewSentenceFormatter";
 
 export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]}) {
 
@@ -11,7 +11,7 @@ export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]})
       const { sentence, rootWord, wordToTest, def, correctAns } = qnObj;
       return (
          <Card body className="w-100" key={rootWord}>
-            <SentenceFormatter
+            <ReviewSentenceFormatter
                sentence={sentence}
                wordToTest={wordToTest}
                correctAns={correctAns}

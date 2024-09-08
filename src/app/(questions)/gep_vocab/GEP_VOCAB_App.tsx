@@ -3,7 +3,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import { createGenericMCQProvider } from "../ui/components/GenericMCQProvider";
+import { createGenericMCQProvider } from "@/app/ui/components/GenericMCQProvider";
 import { GEP_VOCAB_AllowedSetConfigs } from "@/lib/data";
 
 const { GenericMCQProvider, useGenericMCQContext } = 

@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import { useState, useEffect } from "react";
 
 import GenericReview from "./GenericReview";
-import SentenceFormatter from "./SentenceFormatter";
+import QnSentenceFormatter from "./QnSentenceFormatter";
 
 import { GenericMCQContextValueType } from "@/lib/types";
 import Skeleton from "react-loading-skeleton";
@@ -46,8 +46,7 @@ export default function GenericLeftColumn({
       <Col lg={8} md={7}>
          <Card body className="mb-3">
             {sentence ? (
-               <SentenceFormatter
-                  fontSize="18px"
+               <QnSentenceFormatter
                   sentence={sentence}
                   wordToTest={wordToTest}
                />
