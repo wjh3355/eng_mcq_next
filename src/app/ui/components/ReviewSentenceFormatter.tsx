@@ -1,5 +1,3 @@
-import { split } from "lodash";
-
 export default function ReviewSentenceFormatter({
    sentence,
    wordToTest,
@@ -11,7 +9,7 @@ export default function ReviewSentenceFormatter({
 }) {
 
    if ( wordToTest && sentence.includes(wordToTest) ) {
-      const [beginning, end] = split(sentence, wordToTest, 2);
+      const [beginning, end] = sentence.split(wordToTest);
       return (
          <>
             {beginning}
@@ -20,7 +18,7 @@ export default function ReviewSentenceFormatter({
          </>
       );
    } else if (sentence.includes('_')) {
-      const [beginning, end] = split(sentence, /_+/g, 2);
+      const [beginning, end] = sentence.split(/_+/g);
       return (
          <>
             {beginning}

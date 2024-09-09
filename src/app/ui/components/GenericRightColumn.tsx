@@ -2,7 +2,7 @@
 
 import Col from "react-bootstrap/Col";
 
-import { shuffle } from "lodash";
+import shuffle from "lodash/shuffle";
 import { useEffect, useState } from "react";
 
 import { GenericMCQContextValueType } from "@/lib/types";

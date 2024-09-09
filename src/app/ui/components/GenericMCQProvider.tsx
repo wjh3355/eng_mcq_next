@@ -1,7 +1,9 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { shuffle, range, isEqual } from "lodash";
+import shuffle from "lodash/shuffle";
+import range from "lodash/range";
+import isEqual from "lodash/isEqual";
 
 import {
    GenericMCQContextValueType,
