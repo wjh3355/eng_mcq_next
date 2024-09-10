@@ -1,8 +1,19 @@
 'use server';
 
 import { connectToDB } from "@/lib/connectToDB";
-import { QnObjType } from "./types";
-import { AllowedQuestionCategories } from "./types";
+import { AllowedQuestionCategories, QnObjType } from "@/lib/types";
+import { z, ZodError } from "zod";
+
+const QnObjSchema = z.object({
+   qnNum: z.number(),
+   sentence: z.string(),
+   wordToTest: z.string().nullable(),
+   options: z.array(z.string()),
+   correctAns: z.string(),
+   rootWord: z.string(),
+   type: z.string(),
+   def: z.string(),
+});
 
 export async function fetchQnFromDB(
    collection: AllowedQuestionCategories, 
@@ -16,12 +27,18 @@ export async function fetchQnFromDB(
 
       if (!data) throw new Error("Question not found");
 
-      if (!isQuestionType(data)) throw new Error("Unable to display question");
-
-      return data;
+      try {
+         const validatedData = QnObjSchema.parse(data);
+         return validatedData as QnObjType;
+      } catch (error) {
+         if (error instanceof ZodError) {
+            console.error("Data not of correct type:", error.errors);
+            throw new Error("Data validation error");
+         }
+         throw error;
+      }
 
    } catch (error: unknown) {
-
       if (error instanceof Error) {
          console.error("Unable to fetch question from database:", error.message);
          throw new Error(error.message);
@@ -30,12 +47,4 @@ export async function fetchQnFromDB(
          throw new Error("An unexpected error occured");
       }
    }
-};
-
-function isQuestionType(data: any): data is QnObjType {
-   return typeof data === 'object'
-      && data !== null
-      && typeof data.qnNum === 'number'
-      && typeof data.sentence === 'string'
-      && typeof data.correctAns === 'string'
 };

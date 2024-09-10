@@ -20,7 +20,7 @@ export type GenericMCQContextValueType = {
    numQnsAns: number,
    numCorrectAns: number,
    wrongAnsArr: QnObjType[],
-   error: string | null
+   error: string
 };
 
 // Question object type for:
@@ -67,7 +67,7 @@ export const emptyContextValue: GenericMCQContextValueType = {
    numQnsAns: NaN,
    numCorrectAns: NaN,
    wrongAnsArr: [],
-   error: null
+   error: ''
 }
 
 // type of first argument of createGenericMCQProvider()

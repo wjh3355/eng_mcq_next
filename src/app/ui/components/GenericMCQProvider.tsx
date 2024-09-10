@@ -44,30 +44,7 @@ export function createGenericMCQProvider(
       const [numQnsAns, setNumQnsAns] = useState<number>(0);
       const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
-      const [error, setError] = useState<string | null>(null);
-
-      async function fetchNewQnObj() {
-         setQnObj(emptyQnObj);
-
-         let qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
-
-         try {
-            await new Promise((resolve) => setTimeout(resolve, 150));
-
-            setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
-
-         } catch (error) {
-            if (error instanceof Error) {
-               console.error("Error when fetching new QnObj:", error.message);
-               setError(error.message);
-               
-            } else {
-               console.error("An unexpected error occurred");
-               setError("An unexpected error occurred");
-
-            }
-         }
-      }
+      const [error, setError] = useState<string>('');
 
       function handleOptionClick(isCorrect: boolean) {
          setIsNextQnBtnDisabled(false);
@@ -102,9 +79,32 @@ export function createGenericMCQProvider(
             setError("Please choose a valid question set from the dropdown menu");
          }
 
-      }, []);
+      }, [slug]);
 
       useEffect(() => {
+         async function fetchNewQnObj() {
+            setQnObj(emptyQnObj);
+   
+            let qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
+   
+            try {
+               await new Promise((resolve) => setTimeout(resolve, 150));
+   
+               setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
+   
+            } catch (error) {
+               if (error instanceof Error) {
+                  console.error("Error when fetching new QnObj:", error.message);
+                  setError(error.message);
+                  
+               } else {
+                  console.error("An unexpected error occurred");
+                  setError("An unexpected error occurred");
+   
+               }
+            }
+         };
+
          if (qnOrderArray.length !== 0) fetchNewQnObj();
       }, [qnOrderArray, qnOrderArrayPtr]);
 
