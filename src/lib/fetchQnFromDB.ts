@@ -2,18 +2,8 @@
 
 import { connectToDB } from "@/lib/connectToDB";
 import { AllowedQuestionCategories, QnObjType } from "@/lib/types";
-import { z, ZodError } from "zod";
-
-const QnObjSchema = z.object({
-   qnNum: z.number(),
-   sentence: z.string(),
-   wordToTest: z.string().nullable(),
-   options: z.array(z.string()),
-   correctAns: z.string(),
-   rootWord: z.string(),
-   type: z.string(),
-   def: z.string(),
-});
+import { ZodError } from "zod";
+import QnObjSchema from "@/lib/zod";
 
 export async function fetchQnFromDB(
    collection: AllowedQuestionCategories, 

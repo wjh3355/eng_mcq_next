@@ -60,7 +60,7 @@ function ShowQnLinks_IfAuthenticated() {
             linksArray={GEP_VOCAB_navLinksArray}
          />
 
-         <NavDropdown title="PSLE">
+         <NavDropdown title="PSLE Words">
 
             <DropdownLinksWithIndicator
                title="Cloze"

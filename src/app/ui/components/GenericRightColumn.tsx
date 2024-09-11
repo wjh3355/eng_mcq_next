@@ -31,8 +31,8 @@ export default function GenericRightColumn({
    }, [options]);
 
    function renderButtonForThisOption(thisOption: string) {
-      let isThisCorrectOption = (thisOption === correctAns);
-      let isThisSelected = (thisOption === selectedOption);
+      const isThisCorrectOption = (thisOption === correctAns);
+      const isThisSelected = (thisOption === selectedOption);
 
       return (
          <OptionButton
