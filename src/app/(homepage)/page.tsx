@@ -3,21 +3,29 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { connectToDB } from "@/lib/connectToDB";
+import { unstable_cache } from "next/cache";
 
-export default async function Page() {
-
-   let noticeHtml: string = "";
-
+async function getNotice() {
    try {
       const { db } = await connectToDB("notices");
       const data = await db
          .collection("notice")
          .findOne({}, { projection: { _id: 0, html: 1 } });
-
-      noticeHtml = data?.html || "";
+      return data?.html || "";
    } catch (error) {
       console.error("Could not fetch notice for homepage:", error);
+      return "";
    }
+};
+
+const cachedGetNotice = unstable_cache(
+   getNotice,
+   ["notice"],
+   { revalidate: 60 }
+);
+
+export default async function Page() {
+   const noticeHtml = await cachedGetNotice();
 
    return (
       <Container>
@@ -34,7 +42,7 @@ export default async function Page() {
                   <div className="card-body">
                      <div
                         className="card-text"
-                        dangerouslySetInnerHTML={{__html: noticeHtml}}
+                        dangerouslySetInnerHTML={{ __html: noticeHtml }}
                      />
                   </div>
                </div>
