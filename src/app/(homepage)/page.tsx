@@ -3,7 +3,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { connectToDB } from "@/lib/connectToDB";
-import { unstable_cache } from "next/cache";
 
 async function getNotice() {
    try {
@@ -18,14 +17,8 @@ async function getNotice() {
    }
 };
 
-const cachedGetNotice = unstable_cache(
-   getNotice,
-   ["notice"],
-   { revalidate: 60 }
-);
-
 export default async function Page() {
-   const noticeHtml = await cachedGetNotice();
+   const noticeHtml = await getNotice();
 
    return (
       <Container>
