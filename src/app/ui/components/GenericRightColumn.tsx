@@ -16,7 +16,10 @@ export default function GenericRightColumn({
    QnContextToUse: () => GenericMCQContextValueType
 }) {
 
-   const { qnObj: { options, correctAns }, handleOptionClick } = QnContextToUse();
+   const {
+      isLoading,
+      qnObj: { options, correctAns }, 
+      handleOptionClick } = QnContextToUse();
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
    const [isAllDisabled, setIsAllDisabled] = useState<boolean>(false);
@@ -25,6 +28,9 @@ export default function GenericRightColumn({
    useEffect(() => {
       if (options.length !== 0) {
          setRandomisedOptions(shuffle(options));
+      }
+
+      return () => {
          setIsAllDisabled(false);
          setSelectedOption(null);
       }
@@ -57,9 +63,9 @@ export default function GenericRightColumn({
       <Col lg={4} md={5} className="mt-2 mt-md-0">
          <div className="vstack gap-3">
             {
-               correctAns
-                  ? randomisedOptions.map(renderButtonForThisOption)
-                  : <ButtonSkeletons/>
+               isLoading
+                  ? <ButtonSkeletons/>
+                  : randomisedOptions.map(renderButtonForThisOption)
             }
          </div>
       </Col>

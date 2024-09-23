@@ -28,7 +28,8 @@ export default function GenericLeftColumn({
       numQnsAns,
       numCorrectAns,
       wrongAnsArr,
-      qnObj: { sentence, wordToTest, rootWord, type, def }
+      qnObj: { sentence, wordToTest, rootWord, type, def },
+      isLoading
    } = QnContextToUse();
 
    const [isExplShown, setIsExplShown] = useState(false);
@@ -45,14 +46,13 @@ export default function GenericLeftColumn({
    return (
       <Col lg={8} md={7}>
          <Card body className="mb-3">
-            {sentence ? (
-               <QnSentenceFormatter
-                  sentence={sentence}
-                  wordToTest={wordToTest}
-               />
-            ) : (
-               <Skeleton height="24px" />
-            )}
+            {isLoading 
+               ? <Skeleton height="24px" />
+               : <QnSentenceFormatter
+                     sentence={sentence}
+                     wordToTest={wordToTest}
+                  />
+            }
          </Card>
 
          <div className="mb-2">

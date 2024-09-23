@@ -2,6 +2,7 @@
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import { createGenericMCQProvider } from "@/app/ui/components/GenericMCQProvider";
 import { DEMO_AllowedSetConfigs } from "@/lib/data";
@@ -15,6 +16,7 @@ import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
 import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
+import GenericQnStopwatch from "@/app/ui/components/GenericQnStopwatch";
 
 export default function Page() {
    return (
@@ -32,6 +34,11 @@ export default function Page() {
             </Row>
             <Row className="my-3">
                <GenericAnsIndicator QnContextToUse={useDEMO_QnContext} />
+            </Row>
+            <Row className="my-3">
+               <Col className="d-flex justify-content-end">
+                  <GenericQnStopwatch QnContextToUse={useDEMO_QnContext}/>
+               </Col>
             </Row>
          </Container>
       </DEMO_QnProvider>

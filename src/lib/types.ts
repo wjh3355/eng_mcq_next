@@ -11,6 +11,7 @@ import {
 // PHRASAL_VERBS
 export type GenericMCQContextValueType = {
    qnObj: QnObjType,
+   isLoading: boolean,
    qnSet: string,
    handleOptionClick: (isCorrect: boolean) => void,
    isCorrect: boolean | null,
@@ -58,6 +59,7 @@ export const emptyQnObj: QnObjType = {
 // initial value for createContext() function for Generic MCQs
 export const emptyContextValue: GenericMCQContextValueType = {
    qnObj: emptyQnObj,
+   isLoading: true,
    qnSet: '',
    handleOptionClick() {},
    isCorrect: null,

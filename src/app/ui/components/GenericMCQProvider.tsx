@@ -37,6 +37,7 @@ export function createGenericMCQProvider(
 
       
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
+      const [isLoading, setIsLoading] = useState<boolean>(true);
       const [qnSet, setQnSet] = useState<string>("");
       const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
       const [isExplBtnDisabled, setIsExplBtnDisabled] = useState<boolean>(true);
@@ -44,7 +45,7 @@ export function createGenericMCQProvider(
       const [numQnsAns, setNumQnsAns] = useState<number>(0);
       const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
-      const [error, setError] = useState<string>('');
+      const [error, setError] = useState<string>("");
 
       function handleOptionClick(isCorrect: boolean) {
          setIsNextQnBtnDisabled(false);
@@ -63,6 +64,7 @@ export function createGenericMCQProvider(
          setIsExplBtnDisabled(true);
          setIsCorrect(null);
          setQnOrderArrayPtr(prev => (prev === qnOrderArray.length - 1) ? 0 : prev + 1);
+         setIsLoading(true);
       }
 
       useEffect(() => {
@@ -79,7 +81,7 @@ export function createGenericMCQProvider(
             setError("Please choose a valid question set from the dropdown menu");
          }
 
-      }, [slug]);
+      }, [slug])
 
       useEffect(() => {
          async function fetchNewQnObj() {
@@ -98,18 +100,23 @@ export function createGenericMCQProvider(
                   setError(error.message);
                   
                } else {
-                  console.error("An unexpected error occurred");
+                  console.error("An unexpected error occurred:", error);
                   setError("An unexpected error occurred");
    
                }
             }
-         };
+         }
 
          if (qnOrderArray.length !== 0) fetchNewQnObj();
-      }, [qnOrderArray, qnOrderArrayPtr]);
+      }, [qnOrderArray, qnOrderArrayPtr])
+
+      useEffect(() => {
+         if (!isEqual(qnObj, emptyQnObj)) setIsLoading(false);
+      }, [qnObj])
 
       const contextValue: GenericMCQContextValueType = {
          qnObj,
+         isLoading,
          qnSet,
          handleOptionClick,
          isCorrect,
@@ -120,7 +127,7 @@ export function createGenericMCQProvider(
          numCorrectAns,
          wrongAnsArr,
          error
-      };
+      }
 
       return (
          <QnContext.Provider value={contextValue}>
@@ -128,7 +135,7 @@ export function createGenericMCQProvider(
          </QnContext.Provider>
       );
       
-   };
+   }
 
    return { GenericMCQProvider, useGenericMCQContext };
 }
