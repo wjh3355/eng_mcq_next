@@ -8,21 +8,23 @@ import isEqual from "lodash/isEqual";
 import {
    GenericMCQContextValueType,
    QnObjType,
-   AllowedQuestionCategories,
-   AllowedSetConfigsType,
+   QnSetIntervalsType,
+   MongoCollectionNames,
    emptyContextValue,
    emptyQnObj
 } from "@/lib/types";
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
-export function createGenericMCQProvider(
-   questionCategory: AllowedQuestionCategories,
-   qnCategorySets: AllowedSetConfigsType
+export default function createGenericMCQProvider(
+   collection: MongoCollectionNames,
+   qnSetNameIntervals: QnSetIntervalsType
 ) {
 
    const QnContext = createContext<GenericMCQContextValueType>(emptyContextValue);
 
-   const useGenericMCQContext = () => useContext(QnContext);
+   function useGenericMCQContext() { 
+      return useContext(QnContext);
+   }
 
    function GenericMCQProvider({
       children,
@@ -38,7 +40,7 @@ export function createGenericMCQProvider(
       
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [isLoading, setIsLoading] = useState<boolean>(true);
-      const [qnSet, setQnSet] = useState<string>("");
+      const [qnSetName, setQnSetName] = useState<string>("");
       const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
       const [isExplBtnDisabled, setIsExplBtnDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -69,15 +71,14 @@ export function createGenericMCQProvider(
 
       useEffect(() => {
          const joinedSlug = slug?.join("");
-         const config = qnCategorySets[
-            joinedSlug as keyof typeof qnCategorySets];
+         const qnSetNameInterval = qnSetNameIntervals.find(set => set.slug === joinedSlug);
 
-         if (config) {
-            const [start, end] = config.range;
-            setQnSet(config.setName);
+         if (qnSetNameInterval) {
+            const [start, end] = qnSetNameInterval.range;
+            setQnSetName(qnSetNameInterval.displayedName);
             setQnOrderArray(shuffle(range(start, end)));  
          } else {
-            setQnSet("Not Found");
+            setQnSetName("Not Found");
             setError("Please choose a valid question set from the dropdown menu");
          }
 
@@ -92,7 +93,7 @@ export function createGenericMCQProvider(
             try {
                await new Promise((resolve) => setTimeout(resolve, 150));
    
-               setQnObj(await fetchQnFromDB(questionCategory, qnNumToFetch));
+               setQnObj(await fetchQnFromDB(collection, qnNumToFetch));
    
             } catch (error) {
                if (error instanceof Error) {
@@ -117,7 +118,7 @@ export function createGenericMCQProvider(
       const contextValue: GenericMCQContextValueType = {
          qnObj,
          isLoading,
-         qnSet,
+         qnSetName,
          handleOptionClick,
          isCorrect,
          isExplBtnDisabled,

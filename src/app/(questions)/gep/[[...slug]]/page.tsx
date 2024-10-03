@@ -1,4 +1,4 @@
-import GEP_VOCAB_App from "../GEP_VOCAB_App";
+import GEP_App from "../GEP_App";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -8,6 +8,6 @@ export default async function Page({ params }: { params: { slug: string[] | unde
 
    if (!isLoggedIn) redirect("/");
 
-   return <GEP_VOCAB_App slug={params.slug} />;
+   return <GEP_App slug={params.slug} />;
    
 }

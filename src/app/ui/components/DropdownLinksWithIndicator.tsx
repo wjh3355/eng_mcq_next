@@ -18,17 +18,20 @@ export default function DropdownLinksWithIndicator({
    return (
       <NavDropdown title={title} drop={dropEnd ? 'end' : 'down'}>
       {
-         linksArray.map(({ name, href }, idx) =>
-         <React.Fragment key={name}>
-            {(idx === linksArray.length - 1) && <NavDropdown.Divider />}
-            <NavDropdown.Item
-               as={Link}
-               href={href}
-               className={currPathname === href ? 'fw-bold' : ''}
-            >
-               {currPathname === href ? '> ' : ''} {name}
-            </NavDropdown.Item>
-         </React.Fragment>
+         linksArray.map(({ displayedName, linksTo }) =>
+            <React.Fragment key={displayedName}>
+
+               <NavDropdown.Item
+                  as={Link}
+                  href={linksTo}
+                  className={currPathname === linksTo ? 'fw-bold' : ''}
+               >
+
+                  {currPathname === linksTo ? '> ' : ''} {displayedName}
+                  
+               </NavDropdown.Item>
+
+            </React.Fragment>
          )
       }
       </NavDropdown>

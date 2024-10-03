@@ -3,12 +3,12 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { createGenericMCQProvider } from "@/app/ui/components/GenericMCQProvider";
-import { DEMO_AllowedSetConfigs } from "@/lib/data";
+import { DEMO_qnSetIntervals } from "@/lib/questionSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('demo', DEMO_AllowedSetConfigs);
+   createGenericMCQProvider('demo', DEMO_qnSetIntervals);
 const DEMO_QnProvider = GenericMCQProvider;
 const useDEMO_QnContext = useGenericMCQContext;
 

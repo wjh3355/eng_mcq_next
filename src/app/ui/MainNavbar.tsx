@@ -11,10 +11,13 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import DropdownLinksWithIndicator from "./components/DropdownLinksWithIndicator";
 import { 
    GEP_VOCAB_navLinksArray, 
-   PHRASAL_VERBS_navLinksArray, 
-   PSLE_CLOZE_navLinksArray, 
-   PSLE_MCQ_navLinksArray 
-} from "@/lib/data";
+   PHRASAL_VERBS_navLinksArray,
+
+   PSLE_WORDS_MCQ_navLinksArray,
+   PSLE_WORDS_CLOZE_navLinksArray,
+   
+   PSLE_PHRASES_CLOZE_navLinksArray
+} from "@/lib/navLinksArrays";
 import AccountButton from "./components/AccountButton";
 
 
@@ -54,35 +57,39 @@ function ShowQnLinks_IfAuthenticated() {
 
    return (
       <>
-
          <DropdownLinksWithIndicator
             title="GEP Vocab"
             linksArray={GEP_VOCAB_navLinksArray}
          />
-
-         <NavDropdown title="PSLE Words">
-
-            <DropdownLinksWithIndicator
-               title="Cloze"
-               linksArray={PSLE_CLOZE_navLinksArray}
-               dropEnd
-            />
-
-            <NavDropdown.Divider/>
-
-            <DropdownLinksWithIndicator
-               title="MCQ"
-               linksArray={PSLE_MCQ_navLinksArray}
-               dropEnd
-            />
-            
-         </NavDropdown>
 
          <DropdownLinksWithIndicator
             title="Phrasal Verbs"
             linksArray={PHRASAL_VERBS_navLinksArray}
          />
 
+         <NavDropdown title="PSLE Words">
+            <DropdownLinksWithIndicator
+               title="Cloze"
+               linksArray={PSLE_WORDS_CLOZE_navLinksArray}
+               dropEnd
+            />
+
+            <NavDropdown.Divider />
+
+            <DropdownLinksWithIndicator
+               title="MCQ"
+               linksArray={PSLE_WORDS_MCQ_navLinksArray}
+               dropEnd
+            />
+         </NavDropdown>
+
+         <NavDropdown title="PSLE Phrases">
+            <DropdownLinksWithIndicator
+               title="Cloze"
+               linksArray={PSLE_PHRASES_CLOZE_navLinksArray}
+               dropEnd
+            />
+         </NavDropdown>
       </>
    );
 }

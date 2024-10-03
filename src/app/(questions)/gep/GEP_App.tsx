@@ -4,12 +4,12 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { PHRASAL_VERBS_qnSetIntervals } from "@/lib/questionSetIntervals";
+import { GEP_qnSetIntervals } from "@/lib/questionSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('phrasal_verbs', PHRASAL_VERBS_qnSetIntervals);
-const PHRASAL_VERBS_QnProvider = GenericMCQProvider;
-const usePHRASAL_VERBS_QnContext = useGenericMCQContext;
+   createGenericMCQProvider('gep_vocab', GEP_qnSetIntervals);
+const GEP_QnProvider = GenericMCQProvider;
+const useGEP_QnContext = useGenericMCQContext;
 
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
@@ -17,33 +17,33 @@ import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
 function AppTitle() {
-
-   const { qnSetName } = usePHRASAL_VERBS_QnContext();
-
+   
+   const { qnSetName } = useGEP_QnContext();
+   
    return (
       <h4 className="text-center m-0">
-         Phrasal Verbs Cloze: <strong>{qnSetName}</strong>
+         GEP Vocab MCQ: <strong>{qnSetName}</strong>
       </h4>
    );
 };
 
-export default function PHRASAL_VERBS_App({ slug }: { slug: string[] | undefined }) {
+export default function GEP_App({ slug }: { slug: string[] | undefined }) {
 
    return (
-      <PHRASAL_VERBS_QnProvider slug={slug}>
+      <GEP_QnProvider slug={slug}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={usePHRASAL_VERBS_QnContext}/>
+               <GenericErrorContainer QnContextToUse={useGEP_QnContext}/>
                <AppTitle />
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={usePHRASAL_VERBS_QnContext}/>
-               <GenericRightColumn QnContextToUse={usePHRASAL_VERBS_QnContext}/>
+               <GenericLeftColumn QnContextToUse={useGEP_QnContext}/>
+               <GenericRightColumn QnContextToUse={useGEP_QnContext}/>
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={usePHRASAL_VERBS_QnContext}/>
+               <GenericAnsIndicator QnContextToUse={useGEP_QnContext}/>
             </Row>
          </Container>
-      </PHRASAL_VERBS_QnProvider>
+      </GEP_QnProvider>
    );
 }

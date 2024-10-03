@@ -45,7 +45,7 @@ export default async function Page() {
          <Row className="mt-3">
             <Col className="d-flex justify-content-center">
                <Link href="/demo" className="btn btn-lg btn-primary">
-                  Demo Questions
+                  📝 Demo Questions
                </Link>
             </Col>
          </Row>

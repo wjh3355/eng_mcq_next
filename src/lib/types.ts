@@ -1,18 +1,7 @@
-import {
-   DEMO_AllowedSetConfigs,
-   GEP_VOCAB_AllowedSetConfigs, 
-   PHRASAL_VERBS_AllowedSetConfigs, 
-   PSLE_CLOZE_AllowedSetConfigs, 
-   PSLE_MCQ_AllowedSetConfigs
-} from "./data";
-
-// Context value type for:
-// GEP_VOCAB
-// PHRASAL_VERBS
 export type GenericMCQContextValueType = {
    qnObj: QnObjType,
    isLoading: boolean,
-   qnSet: string,
+   qnSetName: string,
    handleOptionClick: (isCorrect: boolean) => void,
    isCorrect: boolean | null,
    isExplBtnDisabled: boolean,
@@ -22,11 +11,8 @@ export type GenericMCQContextValueType = {
    numCorrectAns: number,
    wrongAnsArr: QnObjType[],
    error: string
-};
+}
 
-// Question object type for:
-// GEP_VOCAB (wordToTest is a string)
-// PHRASAL_VERBS (wordToTest is null)
 export type QnObjType = {
    qnNum: number,
    sentence: string,
@@ -36,15 +22,8 @@ export type QnObjType = {
    rootWord: string,
    type: string,
    def: string
-};
+}
 
-// Nav links type for drop down navlinks
-export type NavLinksArrayType = {
-   name: string,
-   href: string
-}[];
-
-// initial value for qnObj state in provider
 export const emptyQnObj: QnObjType = {
    qnNum: NaN,
    sentence: '',
@@ -56,11 +35,10 @@ export const emptyQnObj: QnObjType = {
    def: ''
 }
 
-// initial value for createContext() function for Generic MCQs
 export const emptyContextValue: GenericMCQContextValueType = {
    qnObj: emptyQnObj,
    isLoading: true,
-   qnSet: '',
+   qnSetName: '',
    handleOptionClick() {},
    isCorrect: null,
    isExplBtnDisabled: true,
@@ -72,22 +50,24 @@ export const emptyContextValue: GenericMCQContextValueType = {
    error: ''
 }
 
-// type of first argument of createGenericMCQProvider()
-// names of collections from mongodb
-export type AllowedQuestionCategories = 
+export type MongoCollectionNames = 
    'demo' |
+
    'gep_vocab' | 
    'phrasal_verbs' | 
-   'psle_cloze' |
-   'psle_mcq'
-   ;
 
-// type of second argument of createGenericMCQProvider()
-// states how many qn sets are in each category, what name and range of qnNum
-export type AllowedSetConfigsType = 
-   typeof DEMO_AllowedSetConfigs | 
-   typeof GEP_VOCAB_AllowedSetConfigs | 
-   typeof PHRASAL_VERBS_AllowedSetConfigs |
-   typeof PSLE_CLOZE_AllowedSetConfigs | 
-   typeof PSLE_MCQ_AllowedSetConfigs
-   ;
+   'psle_words_cloze' |
+   'psle_words_mcq' |
+   
+   'psle_phrases_cloze'
+
+export type QnSetIntervalsType = {
+   slug: undefined | string,
+   displayedName: string,
+   range: [number, number]
+}[]
+
+export type NavLinksArrayType = {
+   displayedName: string,
+   linksTo: string
+}[]

@@ -1,5 +1,6 @@
 "use server";
 
+import chalk from "chalk";
 import { Db, MongoClient, MongoClientOptions } from "mongodb";
 
 const uri: string = process.env.MONGODB_URI ?? "";
@@ -15,7 +16,10 @@ const options: MongoClientOptions = {
 };
 
 export async function connectToDB(databaseName: string, retries = 3) {
+   console.log(chalk.bgYellow("Invoking connectToDB function"))
+
    if (cachedClient && cachedDb) {
+   console.log(chalk.green("Using previous connection"))
       return {
          db: cachedDb,
          client: cachedClient,
@@ -30,6 +34,7 @@ export async function connectToDB(databaseName: string, retries = 3) {
       const db = client.db(databaseName);
       cachedClient = client;
       cachedDb = db;
+      console.log(chalk.red("Creating new connection"))
       return { db, client };
    } catch (error) {
       if (error instanceof Error) {
