@@ -6,21 +6,8 @@ import { connectToDB } from "@/lib/connectToDB";
 
 export const dynamic = 'force-dynamic'
 
-async function getNotice() {
-   try {
-      const { db } = await connectToDB("notices");
-      const data = await db
-         .collection("notice")
-         .findOne({}, { projection: { _id: 0, html: 1 } });
-      return data?.html || "";
-   } catch (error) {
-      console.error("Could not fetch notice for homepage:", error);
-      return "";
-   }
-};
-
 export default async function Page() {
-   const noticeHtml = await getNotice();
+   const noticeHtml = await getNoticeHtmlStr();
 
    return (
       <Container>
@@ -37,7 +24,7 @@ export default async function Page() {
                   <div className="card-body">
                      <div
                         className="card-text"
-                        dangerouslySetInnerHTML={{ __html: noticeHtml }}
+                        dangerouslySetInnerHTML={noticeHtml}
                      />
                   </div>
                </div>
@@ -53,4 +40,21 @@ export default async function Page() {
          </Row>
       </Container>
    );
+};
+
+async function getNoticeHtmlStr() {
+   try {
+      const { db } = await connectToDB("notices");
+      const data = await db
+         .collection("notice")
+         .findOne({}, { projection: { _id: 0, html: 1 } });
+
+      const __html = data?.html;
+      if (typeof __html !== "string") throw new Error;
+
+      return { __html };
+   } catch (error) {
+      console.error("Could not fetch notice for homepage:", error);
+      return { __html: "" };
+   }
 };

@@ -4,10 +4,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { GEP_qnSetIntervals } from "@/lib/questionSetIntervals";
+import qnSetIntervals from "@/lib/qnSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('gep_vocab', GEP_qnSetIntervals);
+   createGenericMCQProvider('gep', qnSetIntervals.gep);
 const GEP_QnProvider = GenericMCQProvider;
 const useGEP_QnContext = useGenericMCQContext;
 

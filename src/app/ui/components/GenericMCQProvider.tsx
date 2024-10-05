@@ -9,14 +9,14 @@ import {
    GenericMCQContextValueType,
    QnObjType,
    QnSetIntervalsType,
-   MongoCollectionNames,
+   QnCategoriesType,
    emptyContextValue,
    emptyQnObj
 } from "@/lib/types";
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
 export default function createGenericMCQProvider(
-   collection: MongoCollectionNames,
+   collection: QnCategoriesType,
    qnSetNameIntervals: QnSetIntervalsType
 ) {
 
@@ -74,7 +74,7 @@ export default function createGenericMCQProvider(
          const qnSetNameInterval = qnSetNameIntervals.find(set => set.slug === joinedSlug);
 
          if (qnSetNameInterval) {
-            const [start, end] = qnSetNameInterval.range;
+            const [start, end] = qnSetNameInterval.qnNumRange;
             setQnSetName(qnSetNameInterval.displayedName);
             setQnOrderArray(shuffle(range(start, end)));  
          } else {

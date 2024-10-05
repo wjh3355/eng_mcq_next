@@ -50,10 +50,11 @@ export const emptyContextValue: GenericMCQContextValueType = {
    error: ''
 }
 
-export type MongoCollectionNames = 
+export type QnCategoriesType = 
    'demo' |
 
-   'gep_vocab' | 
+   'gep' | 
+
    'phrasal_verbs' | 
 
    'psle_words_cloze' |
@@ -64,7 +65,7 @@ export type MongoCollectionNames =
 export type QnSetIntervalsType = {
    slug: undefined | string,
    displayedName: string,
-   range: [number, number]
+   qnNumRange: [number, number]
 }[]
 
 export type NavLinksArrayType = {

@@ -16,10 +16,10 @@ const options: MongoClientOptions = {
 };
 
 export async function connectToDB(databaseName: string, retries = 3) {
-   console.log(chalk.bgYellow("🥬 Invoking connectToDB function"))
+   console.log(chalk.inverse("Calling connectToDB function"))
 
    if (cachedClient && cachedDb) {
-   console.log(chalk.green("🥬 Using previous connection"))
+   console.log(chalk.green("Using prev connection"))
       return {
          db: cachedDb,
          client: cachedClient,
@@ -34,7 +34,7 @@ export async function connectToDB(databaseName: string, retries = 3) {
       const db = client.db(databaseName);
       cachedClient = client;
       cachedDb = db;
-      console.log(chalk.red("🥬 Creating new connection"))
+      console.log(chalk.red("Creating new connection"))
       return { db, client };
    } catch (error) {
       if (error instanceof Error) {

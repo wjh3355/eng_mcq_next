@@ -5,10 +5,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { DEMO_qnSetIntervals } from "@/lib/questionSetIntervals";
+import qnSetIntervals from "@/lib/qnSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('demo', DEMO_qnSetIntervals);
+   createGenericMCQProvider('demo', qnSetIntervals.demo);
 const DEMO_QnProvider = GenericMCQProvider;
 const useDEMO_QnContext = useGenericMCQContext;
 

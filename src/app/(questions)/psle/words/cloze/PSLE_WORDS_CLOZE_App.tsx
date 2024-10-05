@@ -4,10 +4,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { PSLE_WORDS_CLOZE_qnSetIntervals } from "@/lib/questionSetIntervals";
+import qnSetIntervals from "@/lib/qnSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider("psle_words_cloze", PSLE_WORDS_CLOZE_qnSetIntervals);
+   createGenericMCQProvider("psle_words_cloze", qnSetIntervals.psle_words_cloze);
 const PSLE_WORDS_CLOZE_QnProvider = GenericMCQProvider;
 const usePSLE_WORDS_CLOZE_QnContext = useGenericMCQContext;
 

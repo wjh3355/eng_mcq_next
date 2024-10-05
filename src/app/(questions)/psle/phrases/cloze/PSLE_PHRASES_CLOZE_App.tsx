@@ -4,12 +4,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { PSLE_PHRASES_CLOZE_qnSetIntervals } from "@/lib/questionSetIntervals";
+import qnSetIntervals from "@/lib/qnSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider("psle_phrases_cloze", PSLE_PHRASES_CLOZE_qnSetIntervals);
-const PSLE_PHRASES_CLOZE_QnProvider = GenericMCQProvider;
-const usePSLE_PHRASES_CLOZE_QnContext = useGenericMCQContext;
+   createGenericMCQProvider("psle_phrases_cloze", qnSetIntervals.psle_phrases_cloze);
 
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
@@ -18,7 +16,7 @@ import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
 function AppTitle() {
 
-   const { qnSetName } = usePSLE_PHRASES_CLOZE_QnContext();
+   const { qnSetName } = useGenericMCQContext();
 
    return (
       <h4 className="text-center m-0">
@@ -30,20 +28,20 @@ function AppTitle() {
 export default function PSLE_CLOZE_App({ slug }: { slug: string[] | undefined }) {
 
    return (
-      <PSLE_PHRASES_CLOZE_QnProvider slug={slug}>
+      <GenericMCQProvider slug={slug}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={usePSLE_PHRASES_CLOZE_QnContext}/>
+               <GenericErrorContainer QnContextToUse={useGenericMCQContext}/>
                <AppTitle />
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={usePSLE_PHRASES_CLOZE_QnContext}/>
-               <GenericRightColumn QnContextToUse={usePSLE_PHRASES_CLOZE_QnContext}/>
+               <GenericLeftColumn QnContextToUse={useGenericMCQContext}/>
+               <GenericRightColumn QnContextToUse={useGenericMCQContext}/>
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={usePSLE_PHRASES_CLOZE_QnContext}/>
+               <GenericAnsIndicator QnContextToUse={useGenericMCQContext}/>
             </Row>
          </Container>
-      </PSLE_PHRASES_CLOZE_QnProvider>
+      </GenericMCQProvider>
    );
 }

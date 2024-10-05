@@ -4,10 +4,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import { PHRASAL_VERBS_qnSetIntervals } from "@/lib/questionSetIntervals";
+import qnSetIntervals from "@/lib/qnSetIntervals";
 
 const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('phrasal_verbs', PHRASAL_VERBS_qnSetIntervals);
+   createGenericMCQProvider('phrasal_verbs', qnSetIntervals.phrasal_verbs);
 const PHRASAL_VERBS_QnProvider = GenericMCQProvider;
 const usePHRASAL_VERBS_QnContext = useGenericMCQContext;
 
