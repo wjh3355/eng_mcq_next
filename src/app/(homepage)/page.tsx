@@ -4,6 +4,8 @@ import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { connectToDB } from "@/lib/connectToDB";
 
+export const dynamic = 'force-dynamic'
+
 async function getNotice() {
    try {
       const { db } = await connectToDB("notices");

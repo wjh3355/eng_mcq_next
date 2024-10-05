@@ -44,8 +44,8 @@ export default function GenericRightColumn({
          <OptionButton
             key={thisOption}
 
-            isCorrectOption={isThisCorrectOption} 
-            isSelected={isThisSelected}
+            $isCorrectOption={isThisCorrectOption} 
+            $isSelected={isThisSelected}
 
             disabled={isAllDisabled}
             onClick={() => {

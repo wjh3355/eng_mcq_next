@@ -34,8 +34,8 @@ function TypingAnim({
          {sentence.split('').map((char, idx) => (
             <TypingAnimChar 
                key={idx} 
-               index={idx}
-               isBold={boldRange
+               $index={idx}
+               $isBold={boldRange
                   ? (idx >= boldRange[0]) && (idx < boldRange[1])
                   : false
                }
@@ -61,11 +61,11 @@ const TypingAnimContainer = styled.div`
 `;
 
 const TypingAnimChar = styled.span<{
-   index: number;
-   isBold: boolean
+   $index: number;
+   $isBold: boolean
 }>`
    opacity: 0;
    animation: ${fadeIn} 10ms linear forwards;
-   animation-delay: ${({index}) => index * 10 }ms;
-   font-weight: ${({isBold}) => isBold ? 'bold' : 'normal' }
+   animation-delay: ${({$index}) => $index * 10 }ms;
+   font-weight: ${({$isBold}) => $isBold ? 'bold' : 'normal' }
 `;

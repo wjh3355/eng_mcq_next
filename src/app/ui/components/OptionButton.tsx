@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 const OptionButton = styled.button<{
-   isCorrectOption: boolean;
-   isSelected: boolean;
+   $isCorrectOption: boolean;
+   $isSelected: boolean;
 }>`
    width: 100%;
    padding: 12px 10%;
@@ -17,12 +17,12 @@ const OptionButton = styled.button<{
    }
 
    &:disabled {
-      border-color: ${({ isCorrectOption, isSelected }) => 
-         isCorrectOption ? "green" : (isSelected ? "rgb(190, 44, 44)" : "default")};
-      color: ${({ isCorrectOption, isSelected }) => 
-         isCorrectOption ? "green" : (isSelected ? "rgb(190, 44, 44)" : "default")};
-      font-weight: ${({ isCorrectOption, isSelected }) => 
-         (isSelected || isCorrectOption) ? "bold" : "default"};
+      border-color: ${({ $isCorrectOption, $isSelected }) => 
+         $isCorrectOption ? "green" : ($isSelected ? "rgb(190, 44, 44)" : "default")};
+      color: ${({ $isCorrectOption, $isSelected }) => 
+         $isCorrectOption ? "green" : ($isSelected ? "rgb(190, 44, 44)" : "default")};
+      font-weight: ${({ $isCorrectOption, $isSelected }) => 
+         ($isSelected || $isCorrectOption) ? "bold" : "default"};
    }
 `
 

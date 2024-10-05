@@ -4,7 +4,7 @@ export const DEMO_qnSetIntervals: QnSetIntervalsType = [
    {
       slug: undefined,
       displayedName: "Demo Qns",
-      range: [1, 41]
+      range: [1, 51]
    }
 ]
 
