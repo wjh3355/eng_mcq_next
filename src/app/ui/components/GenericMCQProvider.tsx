@@ -8,16 +8,15 @@ import isEqual from "lodash/isEqual";
 import {
    GenericMCQContextValueType,
    QnObjType,
-   QnSetIntervalsType,
-   QnCategoriesType,
+   QnCategoryDataType,
    emptyContextValue,
    emptyQnObj
-} from "@/lib/types";
+} from "@/lib/data";
+
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
 export default function createGenericMCQProvider(
-   collection: QnCategoriesType,
-   qnSetNameIntervals: QnSetIntervalsType
+   qnCategoryData: QnCategoryDataType
 ) {
 
    const QnContext = createContext<GenericMCQContextValueType>(emptyContextValue);
@@ -37,7 +36,6 @@ export default function createGenericMCQProvider(
       const [qnOrderArray, setQnOrderArray] = useState<number[]>([]);
       const [qnOrderArrayPtr, setQnOrderArrayPtr] = useState<number>(0);
 
-      
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [qnSetName, setQnSetName] = useState<string>("");
@@ -71,12 +69,11 @@ export default function createGenericMCQProvider(
 
       useEffect(() => {
          const joinedSlug = slug?.join("");
-         const qnSetNameInterval = qnSetNameIntervals.find(set => set.slug === joinedSlug);
+         const qnSetNameInterval = qnCategoryData.sets.find(set => set.slug === joinedSlug);
 
          if (qnSetNameInterval) {
-            const [start, end] = qnSetNameInterval.qnNumRange;
-            setQnSetName(qnSetNameInterval.displayedName);
-            setQnOrderArray(shuffle(range(start, end)));  
+            setQnSetName(qnSetNameInterval.name);
+            setQnOrderArray(shuffle(range(...qnSetNameInterval.qnNumRange)));  
          } else {
             setQnSetName("Not Found");
             setError("Please choose a valid question set from the dropdown menu");
@@ -93,7 +90,7 @@ export default function createGenericMCQProvider(
             try {
                await new Promise((resolve) => setTimeout(resolve, 100));
    
-               setQnObj(await fetchQnFromDB(collection, qnNumToFetch));
+               setQnObj(await fetchQnFromDB(qnCategoryData.mongoCollection, qnNumToFetch));
    
             } catch (error) {
                if (error instanceof Error) {
@@ -116,6 +113,7 @@ export default function createGenericMCQProvider(
       }, [qnObj])
 
       const contextValue: GenericMCQContextValueType = {
+         qnCategoryTitleName: qnCategoryData.titleName,
          qnObj,
          isLoading,
          qnSetName,

@@ -42,19 +42,18 @@ export default async function Page() {
    );
 };
 
-async function getNoticeHtmlStr() {
+async function getNoticeHtmlStr(): Promise<{ __html: string }> {
    try {
       const { db } = await connectToDB("notices");
       const data = await db
          .collection("notice")
          .findOne({}, { projection: { _id: 0, html: 1 } });
 
-      const __html = data?.html;
-      if (typeof __html !== "string") throw new Error;
+      const __html = data?.html as string;
 
       return { __html };
    } catch (error) {
       console.error("Could not fetch notice for homepage:", error);
-      return { __html: "" };
+      return { __html: "<p>An error occured, try again later.</p>" };
    }
 };

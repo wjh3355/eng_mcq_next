@@ -13,7 +13,7 @@ export default function ReviewSentenceFormatter({
       return (
          <>
             {beginning}
-            <strong>{wordToTest}</strong>
+            <strong className="text-danger">{wordToTest}</strong>
             {end}
          </>
       );
@@ -22,7 +22,7 @@ export default function ReviewSentenceFormatter({
       return (
          <>
             {beginning}
-            <strong>{correctAns}</strong>
+            <strong className="text-danger">{correctAns}</strong>
             {end}
          </>
       );

@@ -4,46 +4,36 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import qnSetIntervals from "@/lib/qnSetIntervals";
+import qnCategoriesData from "@/lib/data";
 
-const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider("psle_words_mcq", qnSetIntervals.psle_words_mcq);
-const PSLE_WORDS_MCQ_QnProvider = GenericMCQProvider;
-const usePSLE_WORDS_MCQ_QnContext = useGenericMCQContext;
+const { 
+   GenericMCQProvider: PSLEWordsMCQProvider,
+   useGenericMCQContext: usePSLEWordsMCQQnContext
+} = createGenericMCQProvider(qnCategoriesData.psleWordsMcq);
 
+import GenericQnTitle from "@/app/ui/components/GenericQnTitle";
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
 import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
-function AppTitle() {
-
-   const { qnSetName } = usePSLE_WORDS_MCQ_QnContext();
-
-   return (
-      <h4 className="text-center m-0">
-         PSLE Words MCQ: <strong>{qnSetName}</strong>
-      </h4>
-   );
-};
-
 export default function PSLE_WORDS_MCQ_App({ slug }: { slug: string[] | undefined }) {
 
    return (
-      <PSLE_WORDS_MCQ_QnProvider slug={slug}>
+      <PSLEWordsMCQProvider slug={slug}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={usePSLE_WORDS_MCQ_QnContext}/>
-               <AppTitle />
+               <GenericErrorContainer QnContextToUse={usePSLEWordsMCQQnContext}/>
+               <GenericQnTitle QnContextToUse={usePSLEWordsMCQQnContext} />
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={usePSLE_WORDS_MCQ_QnContext}/>
-               <GenericRightColumn QnContextToUse={usePSLE_WORDS_MCQ_QnContext}/>
+               <GenericLeftColumn QnContextToUse={usePSLEWordsMCQQnContext}/>
+               <GenericRightColumn QnContextToUse={usePSLEWordsMCQQnContext}/>
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={usePSLE_WORDS_MCQ_QnContext}/>
+               <GenericAnsIndicator QnContextToUse={usePSLEWordsMCQQnContext}/>
             </Row>
          </Container>
-      </PSLE_WORDS_MCQ_QnProvider>
+      </PSLEWordsMCQProvider>
    );
 }

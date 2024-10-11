@@ -1,12 +1,12 @@
 'use server';
 
 import { connectToDB } from "@/lib/connectToDB";
-import { QnCategoriesType, QnObjType } from "@/lib/types";
+import { QnObjType } from "@/lib/data";
 import { ZodError } from "zod";
 import QnObjSchema from "@/lib/zod";
 
 export async function fetchQnFromDB(
-   collection: QnCategoriesType, 
+   collection: string, 
    qnNum: number
 ) {
    try {

@@ -4,46 +4,36 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import qnSetIntervals from "@/lib/qnSetIntervals";
+import qnCategoriesData from "@/lib/data";
 
-const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('phrasal_verbs', qnSetIntervals.phrasal_verbs);
-const PHRASAL_VERBS_QnProvider = GenericMCQProvider;
-const usePHRASAL_VERBS_QnContext = useGenericMCQContext;
+const { 
+   GenericMCQProvider: PhrasalVerbsProvider,
+   useGenericMCQContext: usePhrasalVerbsQnContext
+} = createGenericMCQProvider(qnCategoriesData.phrasalVerbs);
 
+import GenericQnTitle from "@/app/ui/components/GenericQnTitle";
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
 import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
-function AppTitle() {
-
-   const { qnSetName } = usePHRASAL_VERBS_QnContext();
-
-   return (
-      <h4 className="text-center m-0">
-         Phrasal Verbs Cloze: <strong>{qnSetName}</strong>
-      </h4>
-   );
-};
-
 export default function PHRASAL_VERBS_App({ slug }: { slug: string[] | undefined }) {
 
    return (
-      <PHRASAL_VERBS_QnProvider slug={slug}>
+      <PhrasalVerbsProvider slug={slug}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={usePHRASAL_VERBS_QnContext}/>
-               <AppTitle />
+               <GenericErrorContainer QnContextToUse={usePhrasalVerbsQnContext}/>
+               <GenericQnTitle QnContextToUse={usePhrasalVerbsQnContext}/>
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={usePHRASAL_VERBS_QnContext}/>
-               <GenericRightColumn QnContextToUse={usePHRASAL_VERBS_QnContext}/>
+               <GenericLeftColumn QnContextToUse={usePhrasalVerbsQnContext}/>
+               <GenericRightColumn QnContextToUse={usePhrasalVerbsQnContext}/>
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={usePHRASAL_VERBS_QnContext}/>
+               <GenericAnsIndicator QnContextToUse={usePhrasalVerbsQnContext}/>
             </Row>
          </Container>
-      </PHRASAL_VERBS_QnProvider>
+      </PhrasalVerbsProvider>
    );
 }

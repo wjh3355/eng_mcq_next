@@ -1,6 +1,6 @@
 'use client';
 
-import { GenericMCQContextValueType } from '@/lib/types';
+import { GenericMCQContextValueType } from '@/lib/data';
 import React from 'react';
 import Col from "react-bootstrap/Col";
 

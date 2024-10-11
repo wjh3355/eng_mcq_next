@@ -5,12 +5,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
 
-import qnSetIntervals from "@/lib/qnSetIntervals";
+import qnCategoriesData from "@/lib/data";
 
-const { GenericMCQProvider, useGenericMCQContext } = 
-   createGenericMCQProvider('demo', qnSetIntervals.demo);
-const DEMO_QnProvider = GenericMCQProvider;
-const useDEMO_QnContext = useGenericMCQContext;
+const { 
+   GenericMCQProvider: DemoProvider,
+   useGenericMCQContext: useDemoQnContext
+} = createGenericMCQProvider(qnCategoriesData.demo);
 
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
@@ -20,27 +20,27 @@ import GenericQnStopwatch from "@/app/ui/components/GenericQnStopwatch";
 
 export default function Page() {
    return (
-      <DEMO_QnProvider slug={undefined}>
+      <DemoProvider slug={undefined}>
          <Container>
             <Row className="my-3">
-               <GenericErrorContainer QnContextToUse={useDEMO_QnContext} />
+               <GenericErrorContainer QnContextToUse={useDemoQnContext} />
                <h4 className="text-center m-0">
                   Demo Questions
                </h4>
             </Row>
             <Row>
-               <GenericLeftColumn QnContextToUse={useDEMO_QnContext} />
-               <GenericRightColumn QnContextToUse={useDEMO_QnContext} />
+               <GenericLeftColumn QnContextToUse={useDemoQnContext} />
+               <GenericRightColumn QnContextToUse={useDemoQnContext} />
             </Row>
             <Row className="my-3">
-               <GenericAnsIndicator QnContextToUse={useDEMO_QnContext} />
+               <GenericAnsIndicator QnContextToUse={useDemoQnContext} />
             </Row>
             <Row className="my-3">
                <Col className="d-flex justify-content-end">
-                  <GenericQnStopwatch QnContextToUse={useDEMO_QnContext}/>
+                  <GenericQnStopwatch QnContextToUse={useDemoQnContext}/>
                </Col>
             </Row>
          </Container>
-      </DEMO_QnProvider>
+      </DemoProvider>
    );
 }

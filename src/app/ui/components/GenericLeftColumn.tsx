@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import GenericReview from "./GenericReview";
 import QnSentenceFormatter from "./QnSentenceFormatter";
 
-import { GenericMCQContextValueType } from "@/lib/types";
+import { GenericMCQContextValueType } from "@/lib/data";
 import Skeleton from "react-loading-skeleton";
 
 export default function GenericLeftColumn({
@@ -46,13 +46,14 @@ export default function GenericLeftColumn({
    return (
       <Col lg={8} md={7}>
          <Card body className="mb-3">
-            {isLoading 
-               ? <Skeleton height="24px" />
-               : <QnSentenceFormatter
-                     sentence={sentence}
-                     wordToTest={wordToTest}
-                  />
-            }
+            {isLoading ? (
+               <Skeleton height="24px" />
+            ) : (
+               <QnSentenceFormatter
+                  sentence={sentence}
+                  wordToTest={wordToTest}
+               />
+            )}
          </Card>
 
          <div className="mb-2">
@@ -92,15 +93,18 @@ export default function GenericLeftColumn({
 
          <Collapse in={isExplShown}>
             <div>
-               {!isExplBtnDisabled && (
-                  <Card body>
-                     <p className="fs-5">
-                        <strong className="me-2">{rootWord}</strong>
-                        <span>({type})</span>
-                     </p>
-                     {def}.
-                  </Card>
-               )}
+               {isExplBtnDisabled 
+                  ? null 
+                  : (
+                     <Card body>
+                        <p>
+                           <strong className="me-2 fs-5">{rootWord}</strong>
+                           <i className="text-secondary">{type}</i>
+                        </p>
+                        {def}.
+                     </Card>
+                  )
+               }
             </div>
          </Collapse>
 

@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import DropdownLinksWithIndicator from "./components/DropdownLinksWithIndicator";
-import navLinksArrays from "@/lib/navLinksArrays";
+import qnCategoriesData from "@/lib/data";
 import AccountButton from "./components/AccountButton";
 
 
@@ -51,18 +51,18 @@ function ShowQnLinks_IfAuthenticated() {
       <>
          <DropdownLinksWithIndicator
             title="GEP Vocab"
-            linksArray={navLinksArrays.gep}
+            sets={qnCategoriesData.gep.sets}
          />
 
          <DropdownLinksWithIndicator
             title="Phrasal Verbs"
-            linksArray={navLinksArrays.phrasal_verbs}
+            sets={qnCategoriesData.phrasalVerbs.sets}
          />
 
          <NavDropdown title="PSLE Words">
             <DropdownLinksWithIndicator
                title="Cloze"
-               linksArray={navLinksArrays.psle_words_cloze}
+               sets={qnCategoriesData.psleWordsCloze.sets}
                dropEnd
             />
 
@@ -70,7 +70,7 @@ function ShowQnLinks_IfAuthenticated() {
 
             <DropdownLinksWithIndicator
                title="MCQ"
-               linksArray={navLinksArrays.psle_words_mcq}
+               sets={qnCategoriesData.psleWordsMcq.sets}
                dropEnd
             />
          </NavDropdown>
@@ -78,7 +78,7 @@ function ShowQnLinks_IfAuthenticated() {
          <NavDropdown title="PSLE Phrases">
             <DropdownLinksWithIndicator
                title="Cloze"
-               linksArray={navLinksArrays.psle_phrases_cloze}
+               sets={qnCategoriesData.pslePhrasesCloze.sets}
                dropEnd
             />
          </NavDropdown>

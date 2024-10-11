@@ -2,7 +2,7 @@
 
 import Card from "react-bootstrap/Card";
 
-import { QnObjType } from "@/lib/types";
+import { QnObjType } from "@/lib/data";
 import ReviewSentenceFormatter from "./ReviewSentenceFormatter";
 
 export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]}) {
@@ -21,7 +21,7 @@ export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]})
                   className="py-2 px-4 rounded-5 border-bottom border-2"
                   style={{ backgroundColor: "#ffe484" }}
                >
-                  <strong>{rootWord}</strong>: {def}
+                  <strong>{rootWord}</strong>: {def}.
                </div>
             </div>
          </Card>

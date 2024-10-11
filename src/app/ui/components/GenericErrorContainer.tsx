@@ -1,6 +1,6 @@
 'use client';
 
-import { GenericMCQContextValueType } from '@/lib/types';
+import { GenericMCQContextValueType } from '@/lib/data';
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 

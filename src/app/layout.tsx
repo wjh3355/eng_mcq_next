@@ -3,8 +3,8 @@ import React from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import "@/styles/global.css";
-import { inter } from "@/lib/fonts";
+import "@/lib/global.css";
+import { Inter } from 'next/font/google';
 
 import MainNavbar from "@/app/ui/MainNavbar";
 
@@ -15,6 +15,8 @@ export const metadata = {
       icon: "/favicon.ico",
    },
 };
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ 
    children 
