@@ -9,6 +9,6 @@ const QnObjSchema = z.object({
    rootWord: z.string(),
    type: z.string(),
    def: z.string(),
-});
+}).strict();
 
 export default QnObjSchema;

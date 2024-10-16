@@ -1,3 +1,8 @@
 {
-   "extends": ["next/core-web-vitals", "next/typescript"]
+   "extends": "next",
+   "overrides": [
+      {
+         "files": ["*.js", "*.jsx", "*.ts", "*.tsx"]
+      }
+   ]
 }
