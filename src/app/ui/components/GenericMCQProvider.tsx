@@ -39,8 +39,7 @@ export default function createGenericMCQProvider(
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [qnSetName, setQnSetName] = useState<string>("");
-      const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
-      const [isExplBtnDisabled, setIsExplBtnDisabled] = useState<boolean>(true);
+      const [areBtnsDisabled, setAreBtnsDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [numQnsAns, setNumQnsAns] = useState<number>(0);
       const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
@@ -48,8 +47,7 @@ export default function createGenericMCQProvider(
       const [error, setError] = useState<string>("");
 
       function handleOptionClick(isCorrect: boolean) {
-         setIsNextQnBtnDisabled(false);
-         setIsExplBtnDisabled(false);
+         setAreBtnsDisabled(false);
          setIsCorrect(isCorrect);
          setNumQnsAns(prevNum => prevNum + 1);
          if (isCorrect) {
@@ -60,8 +58,7 @@ export default function createGenericMCQProvider(
       }
 
       function handleNextQnBtnClick() {
-         setIsNextQnBtnDisabled(true);
-         setIsExplBtnDisabled(true);
+         setAreBtnsDisabled(true);
          setIsCorrect(null);
          setQnOrderArrayPtr(prev => (prev === qnOrderArray.length - 1) ? 0 : prev + 1);
          setIsLoading(true);
@@ -119,8 +116,7 @@ export default function createGenericMCQProvider(
          qnSetName,
          handleOptionClick,
          isCorrect,
-         isExplBtnDisabled,
-         isNextQnBtnDisabled,
+         areBtnsDisabled,
          handleNextQnBtnClick,
          numQnsAns,
          numCorrectAns,

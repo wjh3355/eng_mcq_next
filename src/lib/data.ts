@@ -5,8 +5,7 @@ export type GenericMCQContextValueType = {
    qnSetName: string,
    handleOptionClick: (isCorrect: boolean) => void,
    isCorrect: boolean | null,
-   isExplBtnDisabled: boolean,
-   isNextQnBtnDisabled: boolean,
+   areBtnsDisabled: boolean,
    handleNextQnBtnClick: () => void,
    numQnsAns: number,
    numCorrectAns: number,
@@ -43,8 +42,7 @@ export const emptyContextValue: GenericMCQContextValueType = {
    qnSetName: '',
    handleOptionClick() {},
    isCorrect: null,
-   isExplBtnDisabled: true,
-   isNextQnBtnDisabled: true,
+   areBtnsDisabled: true,
    handleNextQnBtnClick() {},
    numQnsAns: NaN,
    numCorrectAns: NaN,
@@ -250,8 +248,14 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
             href: "/psle/phrases/cloze/set3"
          },
          {
+            slug: "set4",
+            qnNumRange: [151, 201],
+            name: "Set 4",
+            href: "/psle/phrases/cloze/set4"
+         },
+         {
             slug: undefined,
-            qnNumRange: [1, 151],
+            qnNumRange: [1, 201],
             name: "All Questions",
             href: "/psle/phrases/cloze"
          }

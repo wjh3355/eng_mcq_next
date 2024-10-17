@@ -23,8 +23,7 @@ export default function GenericLeftColumn({
 
    const {
       handleNextQnBtnClick,
-      isNextQnBtnDisabled,
-      isExplBtnDisabled,
+      areBtnsDisabled,
       numQnsAns,
       numCorrectAns,
       wrongAnsArr,
@@ -36,8 +35,8 @@ export default function GenericLeftColumn({
    const [isReviewShown, setIsReviewShown] = useState(false);
 
    useEffect(() => {
-      if (isExplBtnDisabled) setIsExplShown(false);
-   }, [isExplBtnDisabled]);
+      if (areBtnsDisabled) setIsExplShown(false);
+   }, [areBtnsDisabled]);
 
    const percentCorrect = numQnsAns
       ? Math.round((numCorrectAns * 100) / numQnsAns)
@@ -71,7 +70,7 @@ export default function GenericLeftColumn({
                   variant="secondary"
                   className="flex-fill"
                   style={{ flex: 1 }}
-                  disabled={isExplBtnDisabled}
+                  disabled={areBtnsDisabled}
                   onClick={() => setIsExplShown(!isExplShown)}
                   aria-controls="collapse-text"
                   aria-expanded={isExplShown}
@@ -84,7 +83,7 @@ export default function GenericLeftColumn({
                   className="flex-fill"
                   style={{ flex: 1 }}
                   onClick={handleNextQnBtnClick}
-                  disabled={isNextQnBtnDisabled}
+                  disabled={areBtnsDisabled}
                >
                   Next Question
                </Button>
@@ -93,7 +92,7 @@ export default function GenericLeftColumn({
 
          <Collapse in={isExplShown}>
             <div>
-               {isExplBtnDisabled 
+               {areBtnsDisabled 
                   ? null 
                   : (
                      <Card body>

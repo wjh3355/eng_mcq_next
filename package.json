@@ -7,9 +7,9 @@
       "build": "next build",
       "start": "next start",
       "lint": "next lint",
-      "checkqn": "npx tsx private/qn/checkQn.ts",
-      "updateqn": "npx tsx private/qn/updateQn.ts",
-      "updatenotice": "npx tsx private/notice/updateNotice.ts"
+      "checkqn": "npx tsx private/checkQn.ts",
+      "updateqn": "npx tsx private/updateQn.ts",
+      "updatenotice": "npx tsx private/updateNotice.ts"
    },
    "dependencies": {
       "@babel/core": "^7.25.2",
