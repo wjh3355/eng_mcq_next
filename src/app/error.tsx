@@ -29,6 +29,7 @@ export default function Error({
             Reload website
          </Button>
          <p>If this error persists, contact the administrator.</p>
+         <p>Code: {error.digest || "none"}</p>
       </Container>
    );
 }

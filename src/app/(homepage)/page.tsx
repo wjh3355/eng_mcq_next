@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { connectToDB } from "@/lib/connectToDB";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
    const noticeHtml = await getNoticeHtmlStr();
@@ -50,7 +50,7 @@ async function getNoticeHtmlStr(): Promise<{ __html: string }> {
          .findOne({}, { projection: { _id: 0, html: 1 } });
 
       const __html = data?.html as string;
-
+      
       return { __html };
    } catch (error) {
       console.error("Could not fetch notice for homepage:", error);

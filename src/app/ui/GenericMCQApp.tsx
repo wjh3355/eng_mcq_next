@@ -2,7 +2,7 @@
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import createGenericMCQProvider from "@/app/ui/components/GenericMCQProvider";
+import createGenericMCQProvider from "@/app/ui/GenericMCQProvider";
 
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
@@ -19,7 +19,7 @@ export default function GenericMCQApp({
 }: { 
    qnCategory: QnCategoryDataType, 
    slug: string | undefined ,
-   headerOverride? : string
+   headerOverride?: string
 }) {
 
    const qnSet = qnCategory.sets.find(set => set.slug === slug);

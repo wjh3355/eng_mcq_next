@@ -25,7 +25,7 @@ export default function GenericLeftColumn({
       handleNextQnBtnClick,
       showWrongQnsAgain,
       areBtnsDisabled,
-      score: [numCorrect, numTotalAnswered],
+      score: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj: { sentence, wordToTest, rootWord, type, def },
       isLoading
@@ -38,9 +38,9 @@ export default function GenericLeftColumn({
       if (areBtnsDisabled) setIsExplShown(false);
    }, [areBtnsDisabled]);
 
-   const percentCorrect = numTotalAnswered === 0
+   const percentCorrect = numTotal === 0
       ? 0
-      : Math.round((numCorrect * 100) / numTotalAnswered);
+      : Math.round((numCorrect * 100) / numTotal);
 
    return (
       <Col lg={8} md={7}>
@@ -121,24 +121,30 @@ export default function GenericLeftColumn({
                         percentCorrect >= 50 ? "text-success" : "text-danger"
                      }
                   >
-                     {numCorrect} / {numTotalAnswered}
+                     {numCorrect} / {numTotal}
                   </strong>
                   &nbsp; ({percentCorrect}% correct)
                </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
+
                <GenericReview wrongAnsArr={wrongAnsArr} />
+
                <div className="d-flex justify-content-center mt-3">
                   <Button
                      disabled={wrongAnsArr.length === 0}
-                     onClick={showWrongQnsAgain}
+                     onClick={() => {
+                        setIsReviewShown(!isReviewShown);
+                        showWrongQnsAgain();
+                     }}
                      variant="secondary"
                      className=""
                   >
                      Redo Incorrect Questions
                   </Button>
                </div>
+
             </Modal.Body>
          </Modal>
       </Col>
