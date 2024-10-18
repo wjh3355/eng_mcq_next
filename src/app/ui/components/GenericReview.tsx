@@ -28,21 +28,20 @@ export default function GenericReview({wrongAnsArr}: {wrongAnsArr: QnObjType[]})
       );
    }
 
-   if (wrongAnsArr.length === 0) return <ReviewPlaceholder/>;
+   if (wrongAnsArr.length === 0) {
+      return (
+         <div className="d-flex justify-content-center">
+            <p className="text-secondary fst-italic my-3">
+               No incorrect questions yet.
+            </p>
+         </div>
+      );
+   } else {
+      return (
+         <div className="vstack gap-3">
+            {wrongAnsArr.map(generateWrongAnsCards)}
+         </div>
+      );
+   }
 
-   return (
-      <div className="vstack gap-3">
-         {wrongAnsArr.map(generateWrongAnsCards)}
-      </div>
-   );
-};
-
-function ReviewPlaceholder() {
-   return (
-      <div className="d-flex justify-content-center">
-         <p className="text-secondary fst-italic my-3">
-            All incorrect answers will be listed here for your review.
-         </p>
-      </div>
-   );
 };

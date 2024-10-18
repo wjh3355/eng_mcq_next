@@ -8,86 +8,76 @@ import isEqual from "lodash/isEqual";
 import {
    GenericMCQContextValueType,
    QnObjType,
-   QnCategoryDataType,
    emptyContextValue,
    emptyQnObj
 } from "@/lib/data";
 
 import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
 
-export default function createGenericMCQProvider(
-   qnCategoryData: QnCategoryDataType
-) {
+export default function createGenericMCQProvider( mongoCol: string, qnNumRange: [number, number] ) {
 
    const QnContext = createContext<GenericMCQContextValueType>(emptyContextValue);
 
-   function useGenericMCQContext() { 
+   function useMCQContext() { 
       return useContext(QnContext);
    }
 
-   function GenericMCQProvider({
-      children,
-      slug,
-   }: {
-      children: React.ReactNode;
-      slug: string[] | undefined;
-   }) {
+   function MCQProvider({ children }: { children: React.ReactNode }) {
 
-      const [qnOrderArray, setQnOrderArray] = useState<number[]>([]);
-      const [qnOrderArrayPtr, setQnOrderArrayPtr] = useState<number>(0);
+      const [qnSequence, setQnSequence] = useState<number[]>([]);
 
       const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
       const [isLoading, setIsLoading] = useState<boolean>(true);
-      const [qnSetName, setQnSetName] = useState<string>("");
       const [areBtnsDisabled, setAreBtnsDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-      const [numQnsAns, setNumQnsAns] = useState<number>(0);
-      const [numCorrectAns, setNumCorrectAns] = useState<number>(0);
+      const [score, setScore] = useState<[number, number]>([0, 0]);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
       const [error, setError] = useState<string>("");
 
-      function handleOptionClick(isCorrect: boolean) {
-         setAreBtnsDisabled(false);
-         setIsCorrect(isCorrect);
-         setNumQnsAns(prevNum => prevNum + 1);
-         if (isCorrect) {
-            setNumCorrectAns(prevNum => prevNum + 1);
-         } else if (!wrongAnsArr.some(existingQnObj => isEqual(existingQnObj, qnObj))) {
-            setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
-         }
-      }
-
-      function handleNextQnBtnClick() {
+      function showWrongQnsAgain() {
+         const wrongQnNums = wrongAnsArr.map(obj => obj.qnNum);
+         setWrongAnsArr([]);
+         setScore([0, 0]);
          setAreBtnsDisabled(true);
          setIsCorrect(null);
-         setQnOrderArrayPtr(prev => (prev === qnOrderArray.length - 1) ? 0 : prev + 1);
          setIsLoading(true);
+         setQnSequence(prev => [...wrongQnNums, ...prev]);
+      }
+
+      function handleOptionClick(isCorr: boolean) {
+         setAreBtnsDisabled(false);
+         setIsCorrect(isCorr);
+      }
+      
+      function handleNextQnBtnClick() {
+         setScore(([right, tot]) => isCorrect ? [right+1, tot+1] : [right, tot+1]);
+         if (!isCorrect && !wrongAnsArr.some(existingQnObj => isEqual(existingQnObj, qnObj))) {
+            setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
+         }
+
+         setAreBtnsDisabled(true);
+         setIsCorrect(null);
+         setIsLoading(true);
+         setQnSequence(prev => prev.slice(1));
       }
 
       useEffect(() => {
-         const joinedSlug = slug?.join("");
-         const qnSetNameInterval = qnCategoryData.sets.find(set => set.slug === joinedSlug);
-
-         if (qnSetNameInterval) {
-            setQnSetName(qnSetNameInterval.name);
-            setQnOrderArray(shuffle(range(...qnSetNameInterval.qnNumRange)));  
-         } else {
-            setQnSetName("Not Found");
-            setError("Please choose a valid question set from the dropdown menu");
-         }
-
-      }, [slug])
+         const randSeq = shuffle(range(...qnNumRange));
+         setQnSequence(randSeq);
+      }, [])
 
       useEffect(() => {
          async function fetchNewQnObj() {
+            if (qnSequence.length === 0) return;
+
             setQnObj(emptyQnObj);
    
-            const qnNumToFetch = qnOrderArray[qnOrderArrayPtr];
+            const qnNumToFetch = qnSequence[0];
    
             try {
                await new Promise((resolve) => setTimeout(resolve, 100));
    
-               setQnObj(await fetchQnFromDB(qnCategoryData.mongoCollection, qnNumToFetch));
+               setQnObj(await fetchQnFromDB(mongoCol, qnNumToFetch));
    
             } catch (error) {
                if (error instanceof Error) {
@@ -102,26 +92,25 @@ export default function createGenericMCQProvider(
             }
          }
 
-         if (qnOrderArray.length !== 0) fetchNewQnObj();
-      }, [qnOrderArray, qnOrderArrayPtr])
+         fetchNewQnObj();
+      }, [qnSequence])
 
       useEffect(() => {
          if (!isEqual(qnObj, emptyQnObj)) setIsLoading(false);
       }, [qnObj])
 
       const contextValue: GenericMCQContextValueType = {
-         qnCategoryTitleName: qnCategoryData.titleName,
          qnObj,
          isLoading,
-         qnSetName,
-         handleOptionClick,
          isCorrect,
          areBtnsDisabled,
-         handleNextQnBtnClick,
-         numQnsAns,
-         numCorrectAns,
+         score,
          wrongAnsArr,
-         error
+         error,
+
+         handleOptionClick,
+         handleNextQnBtnClick,
+         showWrongQnsAgain
       }
 
       return (
@@ -132,5 +121,5 @@ export default function createGenericMCQProvider(
       
    }
 
-   return { GenericMCQProvider, useGenericMCQContext };
+   return { MCQProvider, useMCQContext };
 }

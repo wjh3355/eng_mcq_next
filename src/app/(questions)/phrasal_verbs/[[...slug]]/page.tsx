@@ -1,6 +1,7 @@
-import PHRASAL_VERBS_App from "../PHRASAL_VERBS_App";
+import GenericMCQApp from "@/app/ui/GenericMCQApp";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
+import qnCategoriesData from "@/lib/data";
 
 export default async function Page({ params }: { params: { slug: string[] | undefined } }) {
    const { isAuthenticated } = getKindeServerSession();
@@ -8,6 +9,8 @@ export default async function Page({ params }: { params: { slug: string[] | unde
 
    if (!isLoggedIn) redirect("/");
 
-   return <PHRASAL_VERBS_App slug={params.slug}/>;
-
+   return <GenericMCQApp 
+      slug={params.slug?.join("")}
+      qnCategory={qnCategoriesData.phrasalVerbs}
+   />;
 }

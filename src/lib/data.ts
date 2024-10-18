@@ -1,16 +1,14 @@
 export type GenericMCQContextValueType = {
-   qnCategoryTitleName: string,
    qnObj: QnObjType,
+   wrongAnsArr: QnObjType[],
+   error: string,
    isLoading: boolean,
-   qnSetName: string,
-   handleOptionClick: (isCorrect: boolean) => void,
    isCorrect: boolean | null,
    areBtnsDisabled: boolean,
+   score: [number, number], 
+   handleOptionClick: (param: boolean) => void,
    handleNextQnBtnClick: () => void,
-   numQnsAns: number,
-   numCorrectAns: number,
-   wrongAnsArr: QnObjType[],
-   error: string
+   showWrongQnsAgain: () => void
 }
 
 export type QnObjType = {
@@ -36,22 +34,20 @@ export const emptyQnObj: QnObjType = {
 }
 
 export const emptyContextValue: GenericMCQContextValueType = {
-   qnCategoryTitleName: '',
    qnObj: emptyQnObj,
    isLoading: true,
-   qnSetName: '',
    handleOptionClick() {},
    isCorrect: null,
    areBtnsDisabled: true,
    handleNextQnBtnClick() {},
-   numQnsAns: NaN,
-   numCorrectAns: NaN,
+   score: [0, 0],
    wrongAnsArr: [],
-   error: ''
+   error: "",
+   showWrongQnsAgain() {}
 }
 
 export type QnCategoryDataType = {
-   titleName: string;
+   name: string;
    mongoCollection: string;
    sets: Array<{
       slug: undefined | string;
@@ -77,7 +73,7 @@ export type CurrentQnCategories =
 const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
 
    demo: {
-      titleName: "Demo Questions",
+      name: "",
       mongoCollection: "demo",
       sets: [
          {
@@ -90,7 +86,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    gep: {
-      titleName: "GEP Vocab MCQ",
+      name: "GEP Vocab MCQ",
       mongoCollection: "gep",
       sets: [
          {
@@ -139,7 +135,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    phrasalVerbs: {
-      titleName: "Phrasal Verbs Cloze",
+      name: "Phrasal Verbs Cloze",
       mongoCollection: "phrasal_verbs",
       sets: [
          {
@@ -176,7 +172,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    psleWordsCloze: {
-      titleName: "PSLE Words Cloze",
+      name: "PSLE Words Cloze",
       mongoCollection: "psle_words_cloze",
       sets: [
          {
@@ -201,7 +197,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    psleWordsMcq: {
-      titleName: "PSLE Words MCQ",
+      name: "PSLE Words MCQ",
       mongoCollection: "psle_words_mcq",
       sets: [
          {
@@ -226,7 +222,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    pslePhrasesCloze: {
-      titleName: "PSLE Phrases Cloze",
+      name: "PSLE Phrases Cloze",
       mongoCollection: "psle_phrases_cloze",
       sets: [
          {
@@ -263,7 +259,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
    },
 
    test: {
-      titleName: "test",
+      name: "test",
       mongoCollection: "test",
       sets: [
          {
