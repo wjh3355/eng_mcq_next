@@ -12,7 +12,7 @@ import {
    emptyQnObj
 } from "@/lib/data";
 
-import { fetchQnFromDB } from "@/lib/fetchQnFromDB";
+import fetchQnFromDB from "@/lib/fetchQnFromDB";
 
 export default function createGenericMCQProvider( mongoCol: string, qnNumRange: [number, number] ) {
 
@@ -58,12 +58,11 @@ export default function createGenericMCQProvider( mongoCol: string, qnNumRange: 
          setAreBtnsDisabled(true);
          setIsCorrect(null);
          setIsLoading(true);
-         setQnSequence(prev => prev.slice(1));
+         setQnSequence(prev => prev.length > 1 ?  prev.slice(1) : shuffle(range(...qnNumRange)));
       }
 
       useEffect(() => {
-         const randSeq = shuffle(range(...qnNumRange));
-         setQnSequence(randSeq);
+         setQnSequence(shuffle(range(...qnNumRange)));
       }, [])
 
       useEffect(() => {
@@ -71,13 +70,10 @@ export default function createGenericMCQProvider( mongoCol: string, qnNumRange: 
             if (qnSequence.length === 0) return;
 
             setQnObj(emptyQnObj);
-   
-            const qnNumToFetch = qnSequence[0];
-   
+      
             try {
-               await new Promise((resolve) => setTimeout(resolve, 100));
    
-               setQnObj(await fetchQnFromDB(mongoCol, qnNumToFetch));
+               setQnObj(await fetchQnFromDB(mongoCol, qnSequence[0]));
    
             } catch (error) {
                if (error instanceof Error) {
@@ -110,7 +106,7 @@ export default function createGenericMCQProvider( mongoCol: string, qnNumRange: 
 
          handleOptionClick,
          handleNextQnBtnClick,
-         showWrongQnsAgain
+         showWrongQnsAgain,
       }
 
       return (

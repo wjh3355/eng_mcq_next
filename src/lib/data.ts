@@ -49,12 +49,14 @@ export const emptyContextValue: GenericMCQContextValueType = {
 export type QnCategoryDataType = {
    name: string;
    mongoCollection: string;
-   sets: Array<{
-      slug: undefined | string;
-      qnNumRange: [number, number];
-      name: string;
-      href: string;
-   }>;
+   sets: QnSetType[];
+}
+
+type QnSetType = {
+   slug: undefined | string;
+   qnNumRange: [number, number];
+   name: string;
+   href: string;
 }
 
 export type CurrentQnCategories = 
@@ -76,7 +78,7 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
       name: "",
       mongoCollection: "demo",
       sets: [
-         {
+         {  
             slug: undefined,
             qnNumRange: [1, 51],
             name: "",

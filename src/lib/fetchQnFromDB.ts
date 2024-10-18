@@ -5,7 +5,7 @@ import { QnObjType } from "@/lib/data";
 import { ZodError } from "zod";
 import QnObjSchema from "@/lib/zod";
 
-export async function fetchQnFromDB(
+export default async function fetchQnFromDB(
    collection: string, 
    qnNum: number
 ) {
