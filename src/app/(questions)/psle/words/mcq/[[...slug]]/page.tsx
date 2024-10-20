@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { slug: string[] | unde
    return <GenericMCQApp 
       slug={params.slug?.join("")}
       qnCategory={qnCategoriesData.psleWordsMcq}
-      userName={userName || "unknown"}
+      userName={userName || "unknown user (no firstName)"}
       trackQns={true}
    />;
 }
