@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
+import { QnSetType } from "@/lib/data";
 import Link from "next/link";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import React from "react";
 
 export default function DropdownLinksWithIndicator({
    title,
@@ -9,10 +9,7 @@ export default function DropdownLinksWithIndicator({
    dropEnd
 }: {
    title: string,
-   sets: Array<{
-      name: string;
-      href: string;
-   }>,
+   sets: QnSetType[],
    dropEnd?: boolean
 }) {
    
@@ -22,19 +19,14 @@ export default function DropdownLinksWithIndicator({
       <NavDropdown title={title} drop={dropEnd ? 'end' : 'down'}>
       {
          sets.map(({ name, href }) =>
-            <React.Fragment key={name}>
-
-               <NavDropdown.Item
-                  as={Link}
-                  href={href}
-                  className={currPathname === href ? 'fw-bold' : ''}
-               >
-
-                  {name}
-                  
-               </NavDropdown.Item>
-
-            </React.Fragment>
+            <NavDropdown.Item
+               as={Link}
+               href={href}
+               key={name}
+               className={currPathname === href ? 'fw-bold' : ''}
+            >
+               {name}
+            </NavDropdown.Item>
          )
       }
       </NavDropdown>

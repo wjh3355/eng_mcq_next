@@ -12,3 +12,8 @@ const QnObjSchema = z.object({
 }).strict();
 
 export default QnObjSchema;
+
+export const UserDataSchema = z.record(z.string(), z.object({
+   numQnsAttempted: z.number(),
+   wrongQnNums: z.array(z.number())
+}).strict());

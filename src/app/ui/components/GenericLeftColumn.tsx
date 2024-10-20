@@ -82,7 +82,7 @@ export default function GenericLeftColumn({
                   variant="success"
                   className="flex-fill"
                   style={{ flex: 1 }}
-                  onClick={handleNextQnBtnClick}
+                  onClick={async () => await handleNextQnBtnClick()}
                   disabled={areBtnsDisabled}
                >
                   Next Question

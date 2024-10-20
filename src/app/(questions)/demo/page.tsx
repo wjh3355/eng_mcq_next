@@ -5,6 +5,8 @@ export default function Page({ params }: { params: { slug: string[] | undefined 
    return <GenericMCQApp 
       slug={params.slug?.join("")}
       qnCategory={qnCategoriesData.demo}
+      userName=""
+      trackQns={false}
       headerOverride="Demo Questions"
    />;
 }

@@ -7,7 +7,7 @@ export type GenericMCQContextValueType = {
    areBtnsDisabled: boolean,
    score: [number, number], 
    handleOptionClick: (param: boolean) => void,
-   handleNextQnBtnClick: () => void,
+   handleNextQnBtnClick: () => Promise<void>,
    showWrongQnsAgain: () => void
 }
 
@@ -39,43 +39,46 @@ export const emptyContextValue: GenericMCQContextValueType = {
    handleOptionClick() {},
    isCorrect: null,
    areBtnsDisabled: true,
-   handleNextQnBtnClick() {},
+   async handleNextQnBtnClick() {},
    score: [0, 0],
    wrongAnsArr: [],
    error: "",
    showWrongQnsAgain() {}
 }
 
+export type CurrentQnCategories = 
+   'demo' | 
+   'gep' | 
+   'phrasalVerbs' | 
+   'psleWordsCloze' | 
+   'psleWordsMcq' | 
+   'pslePhrasesCloze';
+
+export type CurrentQnCategoriesDisplayedName = 
+   "Demo Questions" |
+   "GEP Vocab MCQ" |
+   "Phrasal Verbs Cloze" |
+   "PSLE Words Cloze" |
+   "PSLE Words MCQ" |
+   "PSLE Phrases Cloze";
+
 export type QnCategoryDataType = {
-   name: string;
+   name: CurrentQnCategoriesDisplayedName;
    mongoCollection: string;
    sets: QnSetType[];
 }
 
-type QnSetType = {
+export type QnSetType = {
    slug: undefined | string;
    qnNumRange: [number, number];
    name: string;
    href: string;
 }
 
-export type CurrentQnCategories = 
-   'demo' | 
-
-   'gep' | 
-
-   'phrasalVerbs' | 
-
-   'psleWordsCloze' | 
-   'psleWordsMcq' | 
-   'pslePhrasesCloze' | 
-
-   'test';
-
 const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
 
    demo: {
-      name: "",
+      name: "Demo Questions",
       mongoCollection: "demo",
       sets: [
          {  
@@ -258,20 +261,14 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
             href: "/psle/phrases/cloze"
          }
       ]
-   },
-
-   test: {
-      name: "test",
-      mongoCollection: "test",
-      sets: [
-         {
-            slug: "test",
-            qnNumRange: [999, 99999],
-            name: "test",
-            href: "test"
-         }
-      ]
    }
 }
 
-export default qnCategoriesData;
+export default qnCategoriesData
+
+export type UserDataType = {
+   [qnCategory: string]: {
+      numQnsAttempted: number;
+      wrongQnNums: number[];
+   };
+}

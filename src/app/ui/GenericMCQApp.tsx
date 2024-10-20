@@ -15,20 +15,27 @@ import { notFound } from "next/navigation";
 export default function GenericMCQApp({ 
    qnCategory,
    slug,
-   headerOverride
+   headerOverride,
+   userName,
+   trackQns
 }: { 
    qnCategory: QnCategoryDataType, 
    slug: string | undefined ,
-   headerOverride?: string
+   userName: string
+   headerOverride?: string,
+   trackQns: boolean
 }) {
 
    const qnSet = qnCategory.sets.find(set => set.slug === slug);
    if (!qnSet) notFound();
 
-   const { MCQProvider, useMCQContext } = createGenericMCQProvider(
-      qnCategory.mongoCollection,
-      qnSet.qnNumRange
-   );
+   const { MCQProvider, useMCQContext } = createGenericMCQProvider({
+      qnCategoryName: qnCategory.name, 
+      qnMongoCollection: qnCategory.mongoCollection,
+      qnNumRange: qnSet.qnNumRange,
+      userName,
+      trackQns
+   });
 
    return (
       <MCQProvider>

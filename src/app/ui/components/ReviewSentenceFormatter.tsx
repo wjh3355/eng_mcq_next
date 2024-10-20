@@ -12,18 +12,14 @@ export default function ReviewSentenceFormatter({
       const [beginning, end] = sentence.split(wordToTest);
       return (
          <>
-            {beginning}
-            <strong className="text-danger">{wordToTest}</strong>
-            {end}
+            {beginning}<strong className="text-danger">{wordToTest}</strong>{end}
          </>
       );
    } else if (sentence.includes('_')) {
       const [beginning, end] = sentence.split(/_+/g);
       return (
          <>
-            {beginning}
-            <strong className="text-danger">{correctAns}</strong>
-            {end}
+            {beginning}<strong className="text-danger">{correctAns}</strong>{end}
          </>
       );
    } else {

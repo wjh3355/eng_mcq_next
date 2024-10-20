@@ -8,13 +8,9 @@ import Container from "react-bootstrap/Container";
 import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import DropdownLinksWithIndicator from "./components/DropdownLinksWithIndicator";
+import DropdownLinksWithIndicator from "@/app/ui/components/DropdownLinksWithIndicator";
 import qnCategoriesData from "@/lib/data";
-import AccountButton from "./components/AccountButton";
-
-
-// #####################################################################
-
+import AccountButton from "@/app/ui/components/AccountButton";
 
 export default function MainNavbar() {
    return (
@@ -45,10 +41,12 @@ export default function MainNavbar() {
 function ShowQnLinks_IfAuthenticated() {
    const { isAuthenticated } = useKindeBrowserClient();
 
-   if (!isAuthenticated) return null;
-
-   return (
+   return isAuthenticated ? (
       <>
+         <Nav.Link as={Link} href="/profile">
+            Profile
+         </Nav.Link>
+         
          <DropdownLinksWithIndicator
             title="GEP Vocab"
             sets={qnCategoriesData.gep.sets}
@@ -83,5 +81,5 @@ function ShowQnLinks_IfAuthenticated() {
             />
          </NavDropdown>
       </>
-   );
+   ) : null;
 }
