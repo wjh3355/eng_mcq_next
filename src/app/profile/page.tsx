@@ -9,7 +9,6 @@ import Col from "react-bootstrap/Col";
 // import ReviewSentenceFormatter from "../ui/components/ReviewSentenceFormatter";
 import { UserDataType } from "@/lib/data";
 import { UserDataSchema } from "@/lib/zod";
-import { ZodError } from "zod";
 
 export default async function Page() {
    const { isAuthenticated, getUser } = getKindeServerSession();
@@ -22,7 +21,7 @@ export default async function Page() {
    return (
       <Container>
          <Row className="my-3">
-            <h4 className="text-center m-0">Your Profile</h4>
+            <h5 className="text-center m-0">Your Profile</h5>
          </Row>
 
          <Row>
@@ -46,7 +45,7 @@ export default async function Page() {
                         <th>Question Category</th>
                         <th>No. Attempted</th>
                         <th>No. Incorrect</th>
-                        <th>Incorrect Questions</th>
+                        {/* <th>Incorrect Questions</th> */}
                      </tr>
                   </thead>
                   <tbody>
@@ -56,7 +55,7 @@ export default async function Page() {
                                  <td>{cat}</td>
                                  <td>{dat.numQnsAttempted}</td>
                                  <td>{dat.wrongQnNums.length}</td>
-                                 <td>{dat.wrongQnNums.sort((a, b) => a - b).join(", ")}</td>
+                                 {/* <td>{dat.wrongQnNums.sort((a, b) => a - b).join(", ")}</td> */}
                               </tr>
                            )
                         )}
@@ -78,17 +77,15 @@ async function fetchWrongQns(name: string) {
 
    if (!data) throw new Error("User data not found");
 
-   try {
-      const validatedData = UserDataSchema.parse(data);
-      return validatedData as UserDataType;
-   } catch (error) {
-      if (error instanceof ZodError) {
-         console.error("Data not of correct type:", error.errors);
-         throw new Error("Data validation error");
-      }
-      throw error;
+   const zodResult = UserDataSchema.safeParse(data);
+
+   if (!zodResult.success) {
+      console.error("Data not of correct type:", zodResult.error.issues);
+      throw new Error("Type validation error");
    }
-}
+
+   return zodResult.data as UserDataType;
+} 
 
 // async function displayIncorrectQnCategory(category: string, qnNums: number[]) {
 //    const col = Object

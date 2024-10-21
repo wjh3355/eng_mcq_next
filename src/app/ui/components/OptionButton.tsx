@@ -5,8 +5,8 @@ const OptionButton = styled.button<{
    $isSelected: boolean;
 }>`
    width: 100%;
-   padding: 12px 10%;
-   font-size: 18px;
+   padding: 10px 10%;
+   font-size: 17px;
    border-width: 3px;
    display: flex;
    justify-content: center;

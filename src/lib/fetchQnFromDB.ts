@@ -2,7 +2,6 @@
 
 import { connectToDB } from "@/lib/connectToDB";
 import { QnObjType } from "@/lib/data";
-import { ZodError } from "zod";
 import QnObjSchema from "@/lib/zod";
 
 export default async function fetchQnFromDB(
@@ -17,16 +16,14 @@ export default async function fetchQnFromDB(
 
       if (!data) throw new Error("Question not found");
 
-      try {
-         const validatedData = QnObjSchema.parse(data);
-         return validatedData as QnObjType;
-      } catch (error) {
-         if (error instanceof ZodError) {
-            console.error("Data not of correct type:", error.errors);
-            throw new Error("Data validation error");
-         }
-         throw error;
+      const zodResult = QnObjSchema.safeParse(data);
+
+      if (!zodResult.success) {
+         console.error("Data not of correct type:", zodResult.error.issues);
+         throw new Error("Type validation error");
       }
+
+      return zodResult.data as QnObjType;
 
    } catch (error: unknown) {
       if (error instanceof Error) {

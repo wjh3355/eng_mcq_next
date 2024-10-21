@@ -42,9 +42,9 @@ export default function GenericMCQApp({
          <Container>
             <Row className="my-3">
                <GenericErrorContainer QnContextToUse={useMCQContext}/>
-               <h4 className="text-center m-0">
+               <h5 className="text-center m-0">
                   {headerOverride || qnCategory.name + " - " + qnSet.name}
-               </h4>
+               </h5>
             </Row>
             <Row>
                <GenericLeftColumn QnContextToUse={useMCQContext}/>
