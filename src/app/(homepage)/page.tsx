@@ -4,19 +4,20 @@ import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { connectToDB } from "@/lib/connectToDB";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { Suspense } from "react";
+import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-   const noticeHtml = await getNoticeHtmlStr();
    const { isAuthenticated } = getKindeServerSession();
    const isLoggedIn = await isAuthenticated();
 
    return (
       <Container>
          <Row className="my-3">
-            <Col className="text-center">
-               <h5>Welcome to Sunbird English</h5>
+            <Col>
+               <h5 className="m-0 text-center">Welcome to Sunbird English</h5>
             </Col>
          </Row>
 
@@ -25,10 +26,9 @@ export default async function Page() {
                <div className="card">
                   <div className="card-header">Notice</div>
                   <div className="card-body">
-                     <div
-                        className="card-text"
-                        dangerouslySetInnerHTML={noticeHtml}
-                     />
+                     <Suspense fallback={<><Skeleton height={22.5} className="mb-1"/><Skeleton height={22.5}/></>}>
+                        <Notice/>
+                     </Suspense>
                   </div>
                </div>
             </Col>
@@ -60,4 +60,9 @@ async function getNoticeHtmlStr() {
       console.error("Could not fetch notice for homepage:", error);
       return { __html: "<p>An error occured, try again later.</p>" };
    }
+}
+
+async function Notice() {
+   const noticeHtml = await getNoticeHtmlStr();
+   return <div className="card-text" dangerouslySetInnerHTML={noticeHtml} />;
 }

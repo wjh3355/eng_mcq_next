@@ -73,9 +73,5 @@ export default function GenericRightColumn({
 };
 
 function ButtonSkeletons() {
-   return (
-      <>
-         {Array(4).fill(<Skeleton height={47}/>)}
-      </>
-   )
+   return <>{Array(4).fill(<Skeleton height={47} />)}</>;
 }

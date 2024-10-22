@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 // import ReviewSentenceFormatter from "../ui/components/ReviewSentenceFormatter";
 import { UserDataType } from "@/lib/data";
 import { UserDataSchema } from "@/lib/zod";
+import { Suspense } from "react";
 
 export default async function Page() {
    const { isAuthenticated, getUser } = getKindeServerSession();
@@ -16,7 +17,6 @@ export default async function Page() {
    if (!isLoggedIn) redirect("/");
 
    const currUser = await getUser();
-   const userData = await fetchWrongQns(currUser.given_name!);
 
    return (
       <Container>
@@ -39,28 +39,9 @@ export default async function Page() {
 
          <Row>
             <Col>
-               <table className="table table-striped">
-                  <thead>
-                     <tr>
-                        <th>Question Category</th>
-                        <th>No. Attempted</th>
-                        <th>No. Incorrect</th>
-                        {/* <th>Incorrect Questions</th> */}
-                     </tr>
-                  </thead>
-                  <tbody>
-                        {Object.entries(userData).map(
-                           ([cat, dat]) => (
-                              <tr key={cat}>
-                                 <td>{cat}</td>
-                                 <td>{dat.numQnsAttempted}</td>
-                                 <td>{dat.wrongQnNums.length}</td>
-                                 {/* <td>{dat.wrongQnNums.sort((a, b) => a - b).join(", ")}</td> */}
-                              </tr>
-                           )
-                        )}
-                  </tbody>
-               </table>
+               <Suspense fallback={<p>Loading your data...</p>}>
+                  <UserQnStatsTable name={currUser.given_name!}/>
+               </Suspense>
             </Col>
          </Row>
 
@@ -76,16 +57,40 @@ async function fetchWrongQns(name: string) {
    );
 
    if (!data) throw new Error("User data not found");
-
    const zodResult = UserDataSchema.safeParse(data);
-
    if (!zodResult.success) {
       console.error("Data not of correct type:", zodResult.error.issues);
       throw new Error("Type validation error");
    }
-
    return zodResult.data as UserDataType;
 } 
+
+async function UserQnStatsTable({ name }: { name: string }) {
+   const userData = await fetchWrongQns(name);
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+   return (
+      <table className="table table-striped">
+         <thead>
+            <tr>
+               <th>Question Category</th>
+               <th>No. Attempted</th>
+               <th>No. Incorrect</th>
+               {/* <th>Incorrect Questions</th> */}
+            </tr>
+         </thead>
+         <tbody>
+            {Object.entries(userData).map(([cat, dat]) => (
+               <tr key={cat}>
+                  <td>{cat}</td>
+                  <td>{dat.numQnsAttempted}</td>
+                  <td>{dat.wrongQnNums.length}</td>
+                  {/* <td>{dat.wrongQnNums.sort((a, b) => a - b).join(", ")}</td> */}
+               </tr>
+            ))}
+         </tbody>
+      </table>
+   );
+}
 
 // async function displayIncorrectQnCategory(category: string, qnNums: number[]) {
 //    const col = Object
