@@ -255,8 +255,14 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
             href: "/psle/phrases/cloze/set4"
          },
          {
+            slug: "set5",
+            qnNumRange: [201, 251],
+            name: "Set 5",
+            href: "/psle/phrases/cloze/set5"
+         },
+         {
             slug: undefined,
-            qnNumRange: [1, 201],
+            qnNumRange: [1, 251],
             name: "All Questions",
             href: "/psle/phrases/cloze"
          }
