@@ -6,17 +6,15 @@ import { redirect } from "next/navigation";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Table from "react-bootstrap/Table";
 // import ReviewSentenceFormatter from "../ui/components/ReviewSentenceFormatter";
 import { UserDataType } from "@/lib/data";
 import { UserDataSchema } from "@/lib/zod";
 import { Suspense } from "react";
 
 export default async function Page() {
-   const { isAuthenticated, getUser } = getKindeServerSession();
-   const isLoggedIn = await isAuthenticated();
-   if (!isLoggedIn) redirect("/");
 
-   const currUser = await getUser();
+   await checkAuth();
 
    return (
       <Container>
@@ -24,6 +22,27 @@ export default async function Page() {
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
 
+         <Suspense fallback={
+            <Row>
+               <Col>
+                  <p>Loading your profile...</p>
+               </Col>
+            </Row>
+         }>
+            <UserProfile/>
+         </Suspense>
+
+      </Container>
+   );
+}
+
+async function UserProfile() {
+   const { getUser } = getKindeServerSession();
+
+   const currUser = await getUser();
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+   return (
+      <>
          <Row>
             <Col>
                <p>
@@ -40,16 +59,15 @@ export default async function Page() {
          <Row>
             <Col>
                <Suspense fallback={<p>Loading your data...</p>}>
-                  <UserQnStatsTable name={currUser.given_name!}/>
+                  <UserQnStatsTable name={currUser.given_name!} />
                </Suspense>
             </Col>
          </Row>
-
-      </Container>
+      </>
    );
 }
 
-async function fetchWrongQns(name: string) {
+async function fetchUserWrongQns(name: string) {
    const { db } = await connectToDB("userDatas");
    const data = await db.collection("userQnData").findOne(
       { name },
@@ -66,10 +84,10 @@ async function fetchWrongQns(name: string) {
 } 
 
 async function UserQnStatsTable({ name }: { name: string }) {
-   const userData = await fetchWrongQns(name);
+   const userData = await fetchUserWrongQns(name);
    await new Promise((resolve) => setTimeout(resolve, 1000));
    return (
-      <table className="table table-striped">
+      <Table striped>
          <thead>
             <tr>
                <th>Question Category</th>
@@ -88,8 +106,17 @@ async function UserQnStatsTable({ name }: { name: string }) {
                </tr>
             ))}
          </tbody>
-      </table>
+      </Table>
    );
+}
+
+async function checkAuth() {
+   const { isAuthenticated } = getKindeServerSession();
+   const isLoggedIn = await isAuthenticated();
+   
+   if (!isLoggedIn) {
+     redirect("/");
+   }
 }
 
 // async function displayIncorrectQnCategory(category: string, qnNums: number[]) {
