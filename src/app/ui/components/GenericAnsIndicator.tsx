@@ -1,13 +1,13 @@
 'use client';
 
-import { GenericMCQContextValueType } from '@/lib/data';
+import { MCQContextValue } from '@/types';
 import React from 'react';
 import Col from "react-bootstrap/Col";
 
 export default function GenericAnsIndicator({ 
    QnContextToUse 
 }: {
-   QnContextToUse: () => GenericMCQContextValueType
+   QnContextToUse: () => MCQContextValue
 }) {
    const { isCorrect } = QnContextToUse();
 

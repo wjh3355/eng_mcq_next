@@ -9,32 +9,34 @@ import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
 import GenericAnsIndicator from "@/app/ui/components/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
-import { QnCategoryDataType } from "@/lib/data";
+import { QN_CATEGORIES_DATA, CurrentQnCategories } from "@/types";
+
 import { notFound } from "next/navigation";
 
-export default function GenericMCQApp({ 
+export default function GenericMCQApp({
    qnCategory,
    slug,
    headerOverride,
    userName,
-   trackQns
-}: { 
-   qnCategory: QnCategoryDataType, 
+}: {
+   qnCategory: CurrentQnCategories
    slug: string | undefined ,
    userName: string
    headerOverride?: string,
-   trackQns: boolean
 }) {
 
-   const qnSet = qnCategory.sets.find(set => set.slug === slug);
+   const qnCategoryData = QN_CATEGORIES_DATA[qnCategory];
+
+   const qnSet = qnCategoryData.sets.find(set => set.slug === slug);
+   
    if (!qnSet) notFound();
 
    const { MCQProvider, useMCQContext } = createGenericMCQProvider({
-      qnCategoryName: qnCategory.name, 
-      qnMongoCollection: qnCategory.mongoCollection,
+      qnCategory,
+      qnMongoCollection: qnCategoryData.mongoCollection,
       qnNumRange: qnSet.qnNumRange,
       userName,
-      trackQns
+      trackQns: qnCategory !== "demo" && qnCategory !== "debug"
    });
 
    return (
@@ -43,7 +45,7 @@ export default function GenericMCQApp({
             <Row className="my-3">
                <GenericErrorContainer QnContextToUse={useMCQContext}/>
                <h5 className="text-center m-0">
-                  {headerOverride || qnCategory.name + " - " + qnSet.name}
+                  {headerOverride || qnCategoryData.name + " - " + qnSet.name}
                </h5>
             </Row>
             <Row>

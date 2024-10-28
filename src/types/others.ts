@@ -1,58 +1,11 @@
-export type GenericMCQContextValueType = {
-   qnObj: QnObjType,
-   wrongAnsArr: QnObjType[],
-   error: string,
-   isLoading: boolean,
-   isCorrect: boolean | null,
-   areBtnsDisabled: boolean,
-   score: [number, number], 
-   handleOptionClick: (param: boolean) => void,
-   handleNextQnBtnClick: () => Promise<void>,
-   showWrongQnsAgain: () => void
-}
-
-export type QnObjType = {
-   qnNum: number,
-   sentence: string,
-   wordToTest: string | null,
-   options: string[],
-   correctAns: string,
-   rootWord: string,
-   type: string,
-   def: string
-}
-
-export const emptyQnObj: QnObjType = {
-   qnNum: NaN,
-   sentence: '',
-   wordToTest: null,
-   options: [],
-   correctAns: '',
-   rootWord: '',
-   type: '',
-   def: ''
-}
-
-export const emptyContextValue: GenericMCQContextValueType = {
-   qnObj: emptyQnObj,
-   isLoading: true,
-   handleOptionClick() {},
-   isCorrect: null,
-   areBtnsDisabled: true,
-   async handleNextQnBtnClick() {},
-   score: [0, 0],
-   wrongAnsArr: [],
-   error: "",
-   showWrongQnsAgain() {}
-}
-
 export type CurrentQnCategories = 
    'demo' | 
    'gep' | 
    'phrasalVerbs' | 
    'psleWordsCloze' | 
    'psleWordsMcq' | 
-   'pslePhrasesCloze';
+   'pslePhrasesCloze' |
+   'debug';
 
 export type CurrentQnCategoriesDisplayedName = 
    "Demo Questions" |
@@ -60,22 +13,41 @@ export type CurrentQnCategoriesDisplayedName =
    "Phrasal Verbs Cloze" |
    "PSLE Words Cloze" |
    "PSLE Words MCQ" |
-   "PSLE Phrases Cloze";
+   "PSLE Phrases Cloze" |
+   "Debug";
 
-export type QnCategoryDataType = {
+export type QnCategoryData = {
    name: CurrentQnCategoriesDisplayedName;
    mongoCollection: string;
-   sets: QnSetType[];
+   sets: QnSet[];
 }
 
-export type QnSetType = {
+export type QnSet = {
    slug: undefined | string;
    qnNumRange: [number, number];
    name: string;
    href: string;
 }
 
-const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
+export type UserData = {
+   [qnCategory in CurrentQnCategories]: {
+      numQnsAttempted: number;
+      wrongQnNums: number[];
+   };
+}
+
+export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
+
+   debug: {
+      name: "Debug",
+      mongoCollection: "debug",
+      sets: [{
+         slug: undefined,
+         qnNumRange: [1, 6],
+         name: "",
+         href: "",
+      }]
+   },
 
    demo: {
       name: "Demo Questions",
@@ -268,13 +240,4 @@ const qnCategoriesData: Record<CurrentQnCategories, QnCategoryDataType> = {
          }
       ]
    }
-}
-
-export default qnCategoriesData
-
-export type UserDataType = {
-   [qnCategory: string]: {
-      numQnsAttempted: number;
-      wrongQnNums: number[];
-   };
 }

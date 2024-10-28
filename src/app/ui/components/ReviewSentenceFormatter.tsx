@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function ReviewSentenceFormatter({
    sentence,
    wordToTest,
@@ -8,21 +10,20 @@ export default function ReviewSentenceFormatter({
    correctAns: string;
 }) {
 
-   if ( wordToTest && sentence.includes(wordToTest) ) {
-      const [beginning, end] = sentence.split(wordToTest);
-      return (
-         <>
-            {beginning}<strong className="text-danger">{wordToTest}</strong>{end}
-         </>
-      );
-   } else if (sentence.includes('_')) {
-      const [beginning, end] = sentence.split(/_+/g);
-      return (
-         <>
-            {beginning}<strong className="text-danger">{correctAns}</strong>{end}
-         </>
-      );
-   } else {
-      return <>{sentence}</>;
-   };
+   const matcher = wordToTest || /_+/g;
+
+   const parts = sentence.split(matcher);
+
+   const formattedSentence = parts.reduce<(string | React.JSX.Element)[]>(
+      (acc, part, idx) => {
+         if (idx === parts.length - 1) {
+            return [...acc, part];
+         } else {
+            return [...acc, part, <strong key={idx}>{wordToTest || correctAns}</strong>];
+         }
+      },
+      []
+   );
+
+   return <div>{formattedSentence}</div>;
 };

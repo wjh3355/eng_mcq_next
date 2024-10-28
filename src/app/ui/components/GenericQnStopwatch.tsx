@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GenericMCQContextValueType } from "@/lib/data";
+import { MCQContextValue } from '@/types';
 
 export default function GenericQnStopwatch({ 
    QnContextToUse 
 }: {
-   QnContextToUse: () => GenericMCQContextValueType
+   QnContextToUse: () => MCQContextValue
 }) {
    const { isLoading, isCorrect } = QnContextToUse();
 

@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation";
-import { QnSetType } from "@/lib/data";
+import { QnSet } from "@/types";
 import Link from "next/link";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
@@ -9,7 +9,7 @@ export default function DropdownLinksWithIndicator({
    dropEnd
 }: {
    title: string,
-   sets: QnSetType[],
+   sets: QnSet[],
    dropEnd?: boolean
 }) {
    

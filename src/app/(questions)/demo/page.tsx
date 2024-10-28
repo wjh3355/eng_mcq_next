@@ -1,12 +1,10 @@
 import GenericMCQApp from "@/app/ui/GenericMCQApp";
-import qnCategoriesData from "@/lib/data";
 
-export default function Page({ params }: { params: { slug: string[] | undefined } }) {
+export default function Page() {
    return <GenericMCQApp 
-      slug={params.slug?.join("")}
-      qnCategory={qnCategoriesData.demo}
+      slug={undefined}
+      qnCategory={"demo"}
       userName=""
-      trackQns={false}
       headerOverride="Demo Questions"
    />;
 }

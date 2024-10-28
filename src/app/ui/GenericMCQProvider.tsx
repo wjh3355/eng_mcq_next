@@ -4,31 +4,26 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 
-import {
-   GenericMCQContextValueType,
-   QnObjType,
-   emptyContextValue,
-   emptyQnObj
-} from "@/lib/data";
+import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
 
 import fetchQnFromDB from "@/lib/fetchQnFromDB";
-import updateUserData from "@/lib/updateUserData";
+import updateUserStats from "@/lib/updateUserStats";
 
 export default function createGenericMCQProvider({
-   qnCategoryName, 
+   qnCategory,
    qnMongoCollection, 
    qnNumRange, 
    userName,
    trackQns
 }: {
-   qnCategoryName: string, 
+   qnCategory: CurrentQnCategories
    qnMongoCollection: string, 
    qnNumRange: [number, number], 
    userName: string,
    trackQns: boolean
 }) {
 
-   const QnContext = createContext<GenericMCQContextValueType>(emptyContextValue);
+   const QnContext = createContext<MCQContextValue>(EMPTY_CONTEXT_VALUE);
 
    function useMCQContext() { 
       return useContext(QnContext);
@@ -37,12 +32,12 @@ export default function createGenericMCQProvider({
    function MCQProvider({ children }: { children: React.ReactNode }) {
 
       const [qnSequence, setQnSequence] = useState<number[]>(shuffle(range(...qnNumRange)));
-      const [qnObj, setQnObj] = useState<QnObjType>(emptyQnObj);
+      const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [areBtnsDisabled, setAreBtnsDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [score, setScore] = useState<[number, number]>([0, 0]);
-      const [wrongAnsArr, setWrongAnsArr] = useState<QnObjType[]>([]);
+      const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
       const [error, setError] = useState<string>("");
 
       function showWrongQnsAgain() {
@@ -76,14 +71,19 @@ export default function createGenericMCQProvider({
          }
 
          if (trackQns) {
-            await updateUserData(qnCategoryName, userName, qnObj.qnNum, isCorrect);
+            await updateUserStats({
+               qnCategory, 
+               userName, 
+               qnNum: qnObj.qnNum, 
+               isCorrect
+            });
          }
 
          setQnSequence(prev => prev.length > 1 ?  prev.slice(1) : shuffle(range(...qnNumRange)));
       }
 
       const fetchNewQnObj = useCallback(async () => {
-         setQnObj(emptyQnObj);
+         setQnObj(EMPTY_QN_OBJ);
          try {
             setQnObj(await fetchQnFromDB(qnMongoCollection, qnSequence[0]));
          } catch (error) {

@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import shuffle from "lodash/shuffle";
 import { useEffect, useState } from "react";
 
-import { GenericMCQContextValueType } from "@/lib/data";
+import { MCQContextValue } from '@/types';
 
 import OptionButton from "./OptionButton";
 import Skeleton from "react-loading-skeleton";
@@ -13,7 +13,7 @@ import Skeleton from "react-loading-skeleton";
 export default function GenericRightColumn({
    QnContextToUse
 }: {
-   QnContextToUse: () => GenericMCQContextValueType
+   QnContextToUse: () => MCQContextValue
 }) {
 
    const {
@@ -64,14 +64,10 @@ export default function GenericRightColumn({
          <div className="vstack gap-3">
             {
                isLoading
-                  ? <ButtonSkeletons/>
+                  ? <>{Array(4).fill(<Skeleton height={47} />)}</>
                   : randomisedOptions.map(renderButtonForThisOption)
             }
          </div>
       </Col>
    );
 };
-
-function ButtonSkeletons() {
-   return <>{Array(4).fill(<Skeleton height={47} />)}</>;
-}

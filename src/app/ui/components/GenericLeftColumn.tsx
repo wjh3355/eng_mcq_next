@@ -1,5 +1,7 @@
 'use client';
 
+import React, { useState, useEffect } from "react";
+
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
@@ -7,18 +9,16 @@ import Col from "react-bootstrap/Col";
 import Collapse from "react-bootstrap/Collapse";
 import Modal from "react-bootstrap/Modal";
 
-import { useState, useEffect } from "react";
-
-import GenericReview from "./GenericReview";
+import DictionaryEntry from "./DictionaryEntry";
 import QnSentenceFormatter from "./QnSentenceFormatter";
 
-import { GenericMCQContextValueType } from "@/lib/data";
+import { MCQContextValue } from '@/types';
 import Skeleton from "react-loading-skeleton";
 
 export default function GenericLeftColumn({
    QnContextToUse,
 }: {
-   QnContextToUse: () => GenericMCQContextValueType;
+   QnContextToUse: () => MCQContextValue;
 }) {
 
    const {
@@ -27,9 +27,11 @@ export default function GenericLeftColumn({
       areBtnsDisabled,
       score: [numCorrect, numTotal],
       wrongAnsArr,
-      qnObj: { sentence, wordToTest, rootWord, type, def },
+      qnObj,
       isLoading
    } = QnContextToUse();
+
+   const {sentence, wordToTest} = qnObj;
 
    const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -55,63 +57,35 @@ export default function GenericLeftColumn({
             )}
          </Card>
 
-         <div className="mb-2">
-            <ButtonGroup className="w-100">
-               <Button
-                  variant="primary"
-                  className="flex-fill"
-                  style={{ flex: 1 }}
-                  onClick={() => setIsReviewShown(!isReviewShown)}
-               >
-                  Score & Review
-               </Button>
+         <ButtonGroup className="w-100 mb-3">
+            <Button variant="primary" className="flex-fill" style={{ flex: 1 }}
+               onClick={() => setIsReviewShown(!isReviewShown)}
+            >
+               Score & Review
+            </Button>
 
-               <Button
-                  variant="secondary"
-                  className="flex-fill"
-                  style={{ flex: 1 }}
-                  disabled={areBtnsDisabled}
-                  onClick={() => setIsExplShown(!isExplShown)}
-                  aria-controls="collapse-text"
-                  aria-expanded={isExplShown}
-               >
-                  Explanation
-               </Button>
+            <Button variant="secondary" className="flex-fill" style={{ flex: 1 }}
+               disabled={areBtnsDisabled}
+               onClick={() => setIsExplShown(!isExplShown)}
+            >
+               Explanation
+            </Button>
 
-               <Button
-                  variant="success"
-                  className="flex-fill"
-                  style={{ flex: 1 }}
-                  onClick={async () => await handleNextQnBtnClick()}
-                  disabled={areBtnsDisabled}
-               >
-                  Next Question
-               </Button>
-            </ButtonGroup>
-         </div>
+            <Button variant="success" className="flex-fill" style={{ flex: 1 }}
+               disabled={areBtnsDisabled}
+               onClick={async () => await handleNextQnBtnClick()}
+            >
+               Next Question
+            </Button>
+         </ButtonGroup>
 
          <Collapse in={isExplShown}>
-            <div>
-               {areBtnsDisabled 
-                  ? null 
-                  : (
-                     <Card body>
-                        <p>
-                           <strong className="me-2 fs-5">{rootWord}</strong>
-                           <i className="text-secondary">{type}</i>
-                        </p>
-                        {def}.
-                     </Card>
-                  )
-               }
-            </div>
+            <div>{!areBtnsDisabled && <DictionaryEntry qnObj={qnObj} />}</div>
          </Collapse>
 
-         <Modal
+         <Modal size="lg" centered
             show={isReviewShown}
             onHide={() => setIsReviewShown(!isReviewShown)}
-            size="lg"
-            centered
          >
             <Modal.Header closeButton>
                <Modal.Title>
@@ -126,26 +100,28 @@ export default function GenericLeftColumn({
                   &nbsp; ({percentCorrect}% correct)
                </Modal.Title>
             </Modal.Header>
+            
+            {
+               wrongAnsArr.length !== 0 &&
+               <Modal.Body className="vstack gap-5 p-2">
+                  {wrongAnsArr
+                     .map((qn, i) => <DictionaryEntry key={i} qnObj={qn} num={i + 1} />)
+                  }
+               </Modal.Body>
+            }
 
-            <Modal.Body>
+            <Modal.Footer className="d-flex justify-content-center">
+               <Button variant="secondary"
+                  disabled={wrongAnsArr.length === 0}
+                  onClick={() => {
+                     setIsReviewShown(!isReviewShown);
+                     showWrongQnsAgain();
+                  }}
+               >
+                  Redo Incorrect Questions
+               </Button>
+            </Modal.Footer>
 
-               <GenericReview wrongAnsArr={wrongAnsArr} />
-
-               <div className="d-flex justify-content-center mt-3">
-                  <Button
-                     disabled={wrongAnsArr.length === 0}
-                     onClick={() => {
-                        setIsReviewShown(!isReviewShown);
-                        showWrongQnsAgain();
-                     }}
-                     variant="secondary"
-                     className=""
-                  >
-                     Redo Incorrect Questions
-                  </Button>
-               </div>
-
-            </Modal.Body>
          </Modal>
       </Col>
    );

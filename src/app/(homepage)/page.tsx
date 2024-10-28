@@ -2,10 +2,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
-import { connectToDB } from "@/lib/connectToDB";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
+import fetchHomepageNotice from "@/lib/fetchHomepageNotice";
 
 export const dynamic = 'force-dynamic';
 
@@ -48,21 +48,7 @@ export default async function Page() {
    );
 }
 
-async function getNoticeHtmlStr() {
-   try {
-      const { db } = await connectToDB("notices");
-      const data = await db
-         .collection("notice")
-         .findOne({}, { projection: { _id: 0, html: 1 } });
-      
-      return { __html: data?.html! as string };
-   } catch (error) {
-      console.error("Could not fetch notice for homepage:", error);
-      return { __html: "<p>An error occured, try again later.</p>" };
-   }
-}
-
 async function Notice() {
-   const noticeHtml = await getNoticeHtmlStr();
+   const noticeHtml = await fetchHomepageNotice();
    return <div className="card-text" dangerouslySetInnerHTML={noticeHtml} />;
 }

@@ -1,21 +1,26 @@
-'use server';
+"use server";
 
 import { connectToDB } from "@/lib/connectToDB";
 
-export default async function updateUserData(
-   qnCategoryName: string,
+export default async function updateUserStats({
+   qnCategory,
+   userName,
+   qnNum,
+   isCorrect
+}: {
+   qnCategory: string,
    userName: string,
    qnNum: number,
    isCorrect: boolean | null
-) {
+}) {
 
    const incrementAndUpdateWrong = { 
-      $inc: { [ qnCategoryName + ".numQnsAttempted" ]: 1 },
-      $addToSet: { [ qnCategoryName + ".wrongQnNums" ]: qnNum }
+      $inc: { [ qnCategory + ".numQnsAttempted" ]: 1 },
+      $addToSet: { [ qnCategory + ".wrongQnNums" ]: qnNum }
    };
 
    const incrementOnly = { 
-      $inc: { [ qnCategoryName + ".numQnsAttempted" ]: 1 }
+      $inc: { [ qnCategory + ".numQnsAttempted" ]: 1 }
    };
 
    try {

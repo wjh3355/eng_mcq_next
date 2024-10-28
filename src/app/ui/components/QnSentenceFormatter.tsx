@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import range from "lodash/range";
 
 export default function QnSentenceFormatter({
    sentence,
@@ -8,17 +9,19 @@ export default function QnSentenceFormatter({
    wordToTest: string | null;
 }) {
    if ( wordToTest && sentence.includes(wordToTest) ) {
-      const beginning = sentence.indexOf(wordToTest);
-      const end = beginning + wordToTest.length;
+      const idxsToBeBolded = [...sentence.matchAll(new RegExp(wordToTest, 'g'))]
+         .map(match => match.index)
+         .reduce<number[]>((acc, curr) => [...acc, ...range(curr, curr + wordToTest.length)], []);
 
       return (
          <TypingAnim 
             sentence={sentence}
-            boldRange={[beginning, end]}
+            boldRange={idxsToBeBolded}
          />
       );
+
    } else {
-      return <TypingAnim sentence={sentence} />;
+      return <TypingAnim sentence={sentence} boldRange={[]}/>;
    }
 };
 
@@ -27,7 +30,7 @@ function TypingAnim({
    boldRange
 }: { 
    sentence: string
-   boldRange?: [number, number]
+   boldRange: number[]
 }){
    return (
       <TypingAnimContainer>
@@ -35,10 +38,7 @@ function TypingAnim({
             <TypingAnimChar 
                key={idx} 
                $index={idx}
-               $isBold={boldRange
-                  ? (idx >= boldRange[0]) && (idx < boldRange[1])
-                  : false
-               }
+               $isBold={boldRange.includes(idx)}
             >
                {char}
             </TypingAnimChar>

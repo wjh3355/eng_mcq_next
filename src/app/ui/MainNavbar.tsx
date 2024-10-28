@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import DropdownLinksWithIndicator from "@/app/ui/components/DropdownLinksWithIndicator";
-import qnCategoriesData from "@/lib/data";
+import { QN_CATEGORIES_DATA } from "@/types";
 import AccountButton from "@/app/ui/components/AccountButton";
 
 export default function MainNavbar() {
@@ -49,18 +49,18 @@ function ShowQnLinks_IfAuthenticated() {
          
          <DropdownLinksWithIndicator
             title="GEP Vocab"
-            sets={qnCategoriesData.gep.sets}
+            sets={QN_CATEGORIES_DATA.gep.sets}
          />
 
          <DropdownLinksWithIndicator
             title="Phrasal Verbs"
-            sets={qnCategoriesData.phrasalVerbs.sets}
+            sets={QN_CATEGORIES_DATA.phrasalVerbs.sets}
          />
 
          <NavDropdown title="PSLE Words">
             <DropdownLinksWithIndicator
                title="Cloze"
-               sets={qnCategoriesData.psleWordsCloze.sets}
+               sets={QN_CATEGORIES_DATA.psleWordsCloze.sets}
                dropEnd
             />
 
@@ -68,7 +68,7 @@ function ShowQnLinks_IfAuthenticated() {
 
             <DropdownLinksWithIndicator
                title="MCQ"
-               sets={qnCategoriesData.psleWordsMcq.sets}
+               sets={QN_CATEGORIES_DATA.psleWordsMcq.sets}
                dropEnd
             />
          </NavDropdown>
@@ -76,7 +76,7 @@ function ShowQnLinks_IfAuthenticated() {
          <NavDropdown title="PSLE Phrases">
             <DropdownLinksWithIndicator
                title="Cloze"
-               sets={qnCategoriesData.pslePhrasesCloze.sets}
+               sets={QN_CATEGORIES_DATA.pslePhrasesCloze.sets}
                dropEnd
             />
          </NavDropdown>
