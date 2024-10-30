@@ -1,4 +1,4 @@
-import checkUserAuth from "@/lib/checkUserAuth";
+import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import fetchQnArrFromDB from "@/lib/fetchQnArrFromDB";
 import fetchUserStats from "@/lib/fetchUserStats";
 import { notFound } from "next/navigation";
@@ -9,23 +9,23 @@ import Col from "react-bootstrap/Col";
 import { Suspense } from "react";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 
-export default async function Page({ params }: { params: { slug: CurrentQnCategories } }) {
+export default async function Page({ params }: { params: { cat: CurrentQnCategories } }) {
 
-   const currUser = await checkUserAuth();
+   const currUser = await checkNormalUserAuth();
    const userData = await fetchUserStats(currUser.given_name!);
 
-   if (!(params.slug in userData)) notFound();
+   if (!(params.cat in userData)) notFound();
 
    return ( 
       <Container>
          <Row className="my-3">
             <Col>
-               <h5 className="text-center m-0">{QN_CATEGORIES_DATA[params.slug].name}: Incorrect Questions</h5>
+               <h5 className="text-center m-0">{QN_CATEGORIES_DATA[params.cat].name}: Incorrect Questions</h5>
             </Col>
          </Row>
 
          <Suspense fallback={<Row><p>Loading all incorrect questions...</p></Row>}>
-            <ShowEntriesWithPagination userData={userData} qnCat={params.slug}/>
+            <ShowEntriesWithPagination userData={userData} qnCat={params.cat}/>
          </Suspense>
       </Container>
    );
@@ -36,9 +36,8 @@ async function ShowEntriesWithPagination({ userData, qnCat }: { userData: UserDa
    try {
       wrongQnObjArr = await fetchQnArrFromDB(
          QN_CATEGORIES_DATA[qnCat].mongoCollection, 
-         userData[qnCat].wrongQnNums
+         userData[qnCat]!.wrongQnNums
       );
-      if (wrongQnObjArr.length === 0) throw new Error;
       return <PaginatedDictEntries qnObjArr={wrongQnObjArr}/>
    } catch (error) {
       return <p>Error loading incorrect questions.</p>;

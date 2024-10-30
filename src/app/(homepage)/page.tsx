@@ -6,6 +6,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import fetchHomepageNotice from "@/lib/fetchHomepageNotice";
+import { NotebookPen } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -34,11 +35,11 @@ export default async function Page() {
             </Col>
          </Row>
 
-         {isLoggedIn ? null : (
+         {!isLoggedIn && (
             <Row className="mt-3">
                <Col className="d-flex justify-content-center">
-                  <Link href="/demo" className="btn btn-lg btn-primary">
-                     📝 Demo Questions
+                  <Link href="/demo" className="btn btn-lg btn-primary d-flex align-items-center">
+                     <NotebookPen />&nbsp;Demo Questions
                   </Link>
                </Col>
             </Row>

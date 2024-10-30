@@ -19,7 +19,7 @@ export default function createGenericMCQProvider({
    qnCategory: CurrentQnCategories
    qnMongoCollection: string, 
    qnNumRange: [number, number], 
-   userName: string,
+   userName: string | null,
    trackQns: boolean
 }) {
 
@@ -70,7 +70,7 @@ export default function createGenericMCQProvider({
             }
          }
 
-         if (trackQns) {
+         if (trackQns && userName) {
             await updateUserStats({
                qnCategory, 
                userName, 

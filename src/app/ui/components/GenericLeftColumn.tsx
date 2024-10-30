@@ -14,12 +14,9 @@ import QnSentenceFormatter from "./QnSentenceFormatter";
 
 import { MCQContextValue } from '@/types';
 import Skeleton from "react-loading-skeleton";
+import { RotateCcw } from "lucide-react";
 
-export default function GenericLeftColumn({
-   QnContextToUse,
-}: {
-   QnContextToUse: () => MCQContextValue;
-}) {
+export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       handleNextQnBtnClick,
@@ -47,14 +44,13 @@ export default function GenericLeftColumn({
    return (
       <Col lg={8} md={7}>
          <Card body className="mb-3">
-            {isLoading ? (
-               <Skeleton height="24px" />
-            ) : (
-               <QnSentenceFormatter
-                  sentence={sentence}
-                  wordToTest={wordToTest}
-               />
-            )}
+            {isLoading 
+               ?  <Skeleton height="24px" />
+               :  <QnSentenceFormatter
+                     sentence={sentence}
+                     wordToTest={wordToTest}
+                  />
+            }
          </Card>
 
          <ButtonGroup className="w-100 mb-3">
@@ -90,38 +86,37 @@ export default function GenericLeftColumn({
             <Modal.Header closeButton>
                <Modal.Title>
                   Current score: &nbsp;
-                  <strong
-                     className={
-                        percentCorrect >= 50 ? "text-success" : "text-danger"
-                     }
-                  >
+                  <strong className={percentCorrect >= 50 ? "text-success" : "text-danger"}>
                      {numCorrect} / {numTotal}
                   </strong>
                   &nbsp; ({percentCorrect}% correct)
                </Modal.Title>
             </Modal.Header>
-            
-            {
-               wrongAnsArr.length !== 0 &&
-               <Modal.Body className="vstack gap-5 p-2">
-                  {wrongAnsArr
-                     .map((qn, i) => <DictionaryEntry key={i} qnObj={qn} num={i + 1} />)
-                  }
-               </Modal.Body>
-            }
 
-            <Modal.Footer className="d-flex justify-content-center">
-               <Button variant="secondary"
-                  disabled={wrongAnsArr.length === 0}
-                  onClick={() => {
-                     setIsReviewShown(!isReviewShown);
-                     showWrongQnsAgain();
-                  }}
-               >
-                  Redo Incorrect Questions
-               </Button>
-            </Modal.Footer>
+            <Modal.Body>
+               {wrongAnsArr.length !== 0 ? (
+                  <>
+                     <div className="vstack gap-5 p-3">
+                        {wrongAnsArr.map((qn, i) => <DictionaryEntry key={i} qnObj={qn} num={i + 1} />)}
+                     </div>
 
+                     <div className="mt-4 d-flex justify-content-center">
+                        <Button
+                           className="d-flex align-items-center"
+                           variant="danger"
+                           onClick={() => {
+                              setIsReviewShown(!isReviewShown);
+                              showWrongQnsAgain();
+                           }}
+                        ><RotateCcw size={20}/>&nbsp;Redo These Questions</Button>
+                     </div>
+                  </>
+               ) : (
+                  <div className="my-4 d-flex justify-content-center fst-italic text-secondary">
+                     No incorrect questions yet
+                  </div>
+               )}
+            </Modal.Body>
          </Modal>
       </Col>
    );

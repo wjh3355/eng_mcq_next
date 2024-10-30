@@ -30,8 +30,7 @@ export default function AccountButton() {
       return (
          <div className="d-flex align-items-center">
             <Navbar.Text>
-               Welcome,&nbsp;
-               <strong>{user?.given_name}</strong>
+               Welcome,&nbsp;<strong>{user?.given_name || "User"}</strong>
             </Navbar.Text>
             <LogoutLink
                className="btn btn-danger btn-sm ms-2 align-items-center justify-content-center d-flex"

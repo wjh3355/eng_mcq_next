@@ -7,6 +7,7 @@ import "@/styles/global.css";
 import { Inter } from 'next/font/google';
 
 import MainNavbar from "@/app/ui/MainNavbar";
+import MaintenancePage from "./ui/MaintenancePage";
 
 export const metadata = {
    title: "Sunbird English",
@@ -17,15 +18,21 @@ export const metadata = {
 };
 
 const inter = Inter({ subsets: ['latin'] });
+const isUnderMaintenance: boolean = process.env.IS_UNDER_MAINTENANCE === '1';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
    return (
       <html lang="en">
          <body className={`${inter.className} antialiased`}>
-            <MainNavbar />
-            {children}
-            <Analytics />
-            <SpeedInsights />
+            {isUnderMaintenance
+               ? <MaintenancePage/>
+               : <>
+                  <MainNavbar />
+                  {children}
+                  <Analytics />
+                  <SpeedInsights />
+               </>
+            }
          </body>
       </html>
    );

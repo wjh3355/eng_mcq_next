@@ -21,7 +21,7 @@ export default function GenericMCQApp({
 }: {
    qnCategory: CurrentQnCategories
    slug: string | undefined ,
-   userName: string
+   userName?: string,
    headerOverride?: string,
 }) {
 
@@ -35,7 +35,7 @@ export default function GenericMCQApp({
       qnCategory,
       qnMongoCollection: qnCategoryData.mongoCollection,
       qnNumRange: qnSet.qnNumRange,
-      userName,
+      userName: userName || null,
       trackQns: qnCategory !== "demo" && qnCategory !== "debug"
    });
 

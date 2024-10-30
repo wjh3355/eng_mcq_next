@@ -17,18 +17,16 @@ export default function DropdownLinksWithIndicator({
 
    return (
       <NavDropdown title={title} drop={dropEnd ? 'end' : 'down'}>
-      {
-         sets.map(({ name, href }) =>
-            <NavDropdown.Item
-               as={Link}
-               href={href}
-               key={name}
-               className={currPathname === href ? 'fw-bold' : ''}
-            >
-               {name}
-            </NavDropdown.Item>
-         )
-      }
+      {sets.map(({ name, href }) =>
+         <NavDropdown.Item
+            as={Link}
+            href={href}
+            key={name}
+            className={currPathname === href ? 'fw-bold' : ''}
+         >
+            {name}
+         </NavDropdown.Item>
+      )}
       </NavDropdown>
    );
 }

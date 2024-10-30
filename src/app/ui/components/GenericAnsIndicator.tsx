@@ -3,6 +3,7 @@
 import { MCQContextValue } from '@/types';
 import React from 'react';
 import Col from "react-bootstrap/Col";
+import { Check, X } from 'lucide-react';
 
 export default function GenericAnsIndicator({ 
    QnContextToUse 
@@ -29,7 +30,7 @@ function RightAnsIndicator() {
             style={{backgroundColor: "rgb(220, 255, 220)"}}
          >
             <div className="d-flex align-items-center" style={{color: "green"}}>
-               ✔&nbsp;&nbsp;<strong>Correct</strong>
+               <Check />&nbsp;<strong>Correct</strong>
             </div>
          </div>
       </Col>
@@ -44,7 +45,7 @@ function WrongAnsIndicator() {
             style={{backgroundColor: "rgb(255, 220, 220)",}}
          >
             <div className="d-flex align-items-center" style={{ color: "rgb(190, 44, 44)" }}>
-               ✖&nbsp;&nbsp;<strong>Incorrect</strong>
+               <X />&nbsp;<strong>Incorrect</strong>
             </div>
          </div>
       </Col>

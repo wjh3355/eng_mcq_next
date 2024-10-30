@@ -1,6 +1,7 @@
 "use server";
 
 import { connectToDB } from "@/lib/connectToDB";
+import { CurrentQnCategories } from "@/types";
 
 export default async function updateUserStats({
    qnCategory,
@@ -8,7 +9,7 @@ export default async function updateUserStats({
    qnNum,
    isCorrect
 }: {
-   qnCategory: string,
+   qnCategory: CurrentQnCategories,
    userName: string,
    qnNum: number,
    isCorrect: boolean | null

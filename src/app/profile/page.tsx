@@ -1,4 +1,4 @@
-import checkUserAuth from "@/lib/checkUserAuth";
+import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -11,7 +11,7 @@ import { QN_CATEGORIES_DATA, CurrentQnCategories } from "@/types";
 
 export default async function Page() {
 
-   const user = await checkUserAuth();
+   const user = await checkNormalUserAuth();
    
    return (
       <Container>
@@ -65,11 +65,11 @@ async function UserStatsTable({ name }: { name: string }) {
    }
 
    return (
-      <Container style={{ overflowX: "auto" }}>
+      <section style={{ overflowX: "auto" }}>
          <Table striped>
             <thead>
                <tr>
-                  <th>Question Category</th>
+                  <th>Category</th>
                   <th>No. Attempted</th>
                   <th>No. Incorrect</th>
                   <th>Incorrect Questions</th>
@@ -87,9 +87,7 @@ async function UserStatsTable({ name }: { name: string }) {
                      <td>{dat.numQnsAttempted}</td>
                      <td>{dat.wrongQnNums.length}</td>
                      <td>
-                        <Link 
-                           href={`/profile/${cat}`}
-                        >
+                        <Link href={`/profile/${cat}`}>
                            View
                         </Link>
                      </td>
@@ -97,6 +95,6 @@ async function UserStatsTable({ name }: { name: string }) {
                ))}
             </tbody>
          </Table>
-      </Container>
+      </section>
    );
 }

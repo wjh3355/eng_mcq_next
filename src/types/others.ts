@@ -29,12 +29,12 @@ export type QnSet = {
    href: string;
 }
 
-export type UserData = {
+export type UserData = Partial<{
    [qnCategory in CurrentQnCategories]: {
       numQnsAttempted: number;
       wrongQnNums: number[];
    };
-}
+}>
 
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
@@ -233,8 +233,14 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
             href: "/psle/phrases/cloze/set5"
          },
          {
+            slug: "set6",
+            qnNumRange: [251, 301],
+            name: "Set 6",
+            href: "/psle/phrases/cloze/set6"
+         },
+         {
             slug: undefined,
-            qnNumRange: [1, 251],
+            qnNumRange: [1, 301],
             name: "All Questions",
             href: "/psle/phrases/cloze"
          }

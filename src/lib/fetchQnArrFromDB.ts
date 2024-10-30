@@ -23,7 +23,11 @@ export default async function fetchQnArrFromDB(
          throw new Error("Type validation error");
       }
 
-      return zodResult.data as QnObj[];
+      const qnObjArrInOriginalOrder: QnObj[] = qnNums
+         .map(num => zodResult.data.find(qn => qn.qnNum === num))
+         .filter(ent => ent !== undefined);
+
+      return qnObjArrInOriginalOrder;
 
    } catch (error: unknown) {
       if (error instanceof Error) {
