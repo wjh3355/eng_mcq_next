@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 export default async function checkNormalUserAuth() {
    const { getUser } = getKindeServerSession();
    const userIfAny = await getUser();
+
+   console.log(userIfAny);
    
    if (!userIfAny) redirect("/");
 
