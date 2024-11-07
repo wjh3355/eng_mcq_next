@@ -11,8 +11,6 @@ import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
 
 export default async function Page() {
 
-   console.log("This should appear!??")
-
    const user = await checkNormalUserAuth();
    
    return (
