@@ -7,7 +7,6 @@ import createGenericMCQProvider from "@/app/ui/GenericMCQProvider";
 
 import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
 import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
-import GenericAnsIndicator from "../../../private/GenericAnsIndicator";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 
 import { QN_CATEGORIES_DATA, CurrentQnCategories } from "@/types";
