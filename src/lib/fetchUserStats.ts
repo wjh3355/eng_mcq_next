@@ -8,7 +8,7 @@ export default async function fetchUserStats(name: string) {
    const { db } = await connectToDB("userDatas");
    const data = await db.collection("userQnData").findOne(
       { name },
-      { projection: { _id: 0, name: 0 } }
+      { projection: { _id: 0 } }
    );
 
    if (!data) throw new Error("User data not found");

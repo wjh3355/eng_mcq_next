@@ -7,14 +7,14 @@ import fetchUserStats from "@/lib/fetchUserStats";
 import { Suspense } from "react";
 import Link from "next/link";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
-import { QN_CATEGORIES_DATA, CurrentQnCategories } from "@/types";
+import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
 
 export default async function Page() {
 
    const user = await checkNormalUserAuth();
    
    return (
-      <Container>
+      <Container className="mb-4">
          <Row className="my-3">
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
@@ -29,30 +29,21 @@ export default async function Page() {
 
 async function UserProfile({ user }: { user: KindeUser<Record<string, any>> }) {
 
-   return (
-      <>
-         <Row>
-            <Col>
-               <p>
-                  <strong>Username: </strong>
-                  {user.given_name}
-               </p>
-               <p>
-                  <strong>Email address: </strong>
-                  {user.email}
-               </p>
-            </Col>
-         </Row>
-
-         <Row>
-            <Col>
-               <Suspense fallback={<p>Loading your data...</p>}>
-                  <UserStatsTable name={user.given_name!} />
-               </Suspense>
-            </Col>
-         </Row>
-      </>
-   );
+   return <Row>
+      <Col>
+         <p>
+            <strong>Username: </strong>
+            {user.given_name}
+         </p>
+         <p>
+            <strong>Email address: </strong>
+            {user.email}
+         </p>
+         <Suspense fallback={<p>Loading your data...</p>}>
+            <UserStatsTable name={user.given_name!} />
+         </Suspense>
+      </Col>
+   </Row>
 }
 
 async function UserStatsTable({ name }: { name: string }) {
@@ -61,40 +52,46 @@ async function UserStatsTable({ name }: { name: string }) {
    try {
       userData = await fetchUserStats(name);
    } catch (error) {
-      return <p>Error loading user stats.</p>;
+      return <p>Error loading user stats. If you have not done any questions yet, attempting one will create your user profile.</p>;
    }
 
    return (
-      <section style={{ overflowX: "auto" }}>
-         <Table striped>
-            <thead>
-               <tr>
-                  <th>Category</th>
-                  <th>No. Attempted</th>
-                  <th>No. Incorrect</th>
-                  <th>Incorrect Questions</th>
-               </tr>
-            </thead>
-            <tbody>
-               {(
-                  Object.entries(userData) as [
-                     CurrentQnCategories,
-                     { numQnsAttempted: number; wrongQnNums: number[] }
-                  ][]
-               ).map(([cat, dat]) => (
-                  <tr key={cat}>
-                     <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                     <td>{dat.numQnsAttempted}</td>
-                     <td>{dat.wrongQnNums.length}</td>
-                     <td>
-                        <Link href={`/profile/${cat}`}>
-                           View
-                        </Link>
-                     </td>
+      <>
+         <p>
+            <strong>Date created: </strong>
+            {userData.dateCreated.toDateString()}
+         </p>
+         <section style={{ overflowX: "auto" }}>
+            <Table striped>
+               <thead>
+                  <tr>
+                     <th>Category</th>
+                     <th>No. Attempted</th>
+                     <th>No. Incorrect</th>
+                     <th>Incorrect Questions</th>
                   </tr>
-               ))}
-            </tbody>
-         </Table>
-      </section>
+               </thead>
+               <tbody>
+                  {(
+                     Object.entries(userData.qnData) as [
+                        CurrentQnCategoriesTracked,
+                        { numQnsAttempted: number; wrongQnNums: number[] }
+                     ][]
+                  ).map(([cat, dat]) => {
+                     if (dat.numQnsAttempted > 0) return <tr key={cat}>
+                        <td>{QN_CATEGORIES_DATA[cat].name}</td>
+                        <td>{dat.numQnsAttempted}</td>
+                        <td>{dat.wrongQnNums.length}</td>
+                        <td>
+                           <Link href={`/profile/${cat}`}>
+                              View
+                           </Link>
+                        </td>
+                     </tr>
+                  })}
+               </tbody>
+            </Table>
+         </section>
+      </>
    );
 }

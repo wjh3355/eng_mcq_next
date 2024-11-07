@@ -1,45 +1,37 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
-import Collapse from "react-bootstrap/Collapse";
 import Modal from "react-bootstrap/Modal";
 
 import DictionaryEntry from "./DictionaryEntry";
 import QnSentenceFormatter from "./QnSentenceFormatter";
-
+import PaginatedDictEntries from "./PaginatedDictEntries";
 import { MCQContextValue } from '@/types';
+
 import Skeleton from "react-loading-skeleton";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
 export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       handleNextQnBtnClick,
       showWrongQnsAgain,
-      areBtnsDisabled,
+      isNextQnBtnDisabled,
       score: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj,
-      isLoading
+      isLoading,
+      isCorrect
    } = QnContextToUse();
 
    const {sentence, wordToTest} = qnObj;
 
-   const [isExplShown, setIsExplShown] = useState(false);
    const [isReviewShown, setIsReviewShown] = useState(false);
-
-   useEffect(() => {
-      if (areBtnsDisabled) setIsExplShown(false);
-   }, [areBtnsDisabled]);
-
-   const percentCorrect = numTotal === 0
-      ? 0
-      : Math.round((numCorrect * 100) / numTotal);
+   const [isExplShown, setIsExplShown] = useState(false);
 
    return (
       <Col lg={8} md={7}>
@@ -53,70 +45,66 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
             }
          </Card>
 
-         <ButtonGroup className="w-100 mb-3">
-            <Button variant="primary" className="flex-fill" style={{ flex: 1 }}
-               onClick={() => setIsReviewShown(!isReviewShown)}
-            >
-               Score & Review
-            </Button>
+         <section className="hstack gap-3 mb-3">
 
-            <Button variant="secondary" className="flex-fill" style={{ flex: 1 }}
-               disabled={areBtnsDisabled}
+            <div className="border-0 rounded p-2 bg-primary-subtle">
+               Score:&nbsp;
+               <strong className="text-primary">
+                  {numCorrect} / {numTotal}
+               </strong>
+            </div>
+
+            <button 
+               className="border-0 bg-transparent p-0 ms-auto"
+               disabled={isCorrect === null}
                onClick={() => setIsExplShown(!isExplShown)}
             >
-               Explanation
-            </Button>
+               <BadgeInfo size={25} strokeWidth={2}/>
+            </button>
 
-            <Button variant="success" className="flex-fill" style={{ flex: 1 }}
-               disabled={areBtnsDisabled}
-               onClick={async () => await handleNextQnBtnClick()}
+            <button 
+               className="border-0 bg-transparent p-0"
+               disabled={wrongAnsArr.length === 0}
+               onClick={() => setIsReviewShown(!isReviewShown)}
             >
-               Next Question
-            </Button>
-         </ButtonGroup>
+               <BookText size={25} strokeWidth={2}/>
+            </button>
 
-         <Collapse in={isExplShown}>
-            <div>{!areBtnsDisabled && <DictionaryEntry qnObj={qnObj} />}</div>
-         </Collapse>
+            <Button 
+               variant="primary" 
+               className="d-flex align-items-center justify-content-center"
+               disabled={isNextQnBtnDisabled}
+               onClick={() => handleNextQnBtnClick()}
+            >
+               <strong>Next&nbsp;</strong><CircleArrowRight size={22} strokeWidth={2}/>
+            </Button>
+
+         </section>
 
          <Modal size="lg" centered
             show={isReviewShown}
             onHide={() => setIsReviewShown(!isReviewShown)}
          >
-            <Modal.Header closeButton>
-               <Modal.Title>
-                  Current score: &nbsp;
-                  <strong className={percentCorrect >= 50 ? "text-success" : "text-danger"}>
-                     {numCorrect} / {numTotal}
-                  </strong>
-                  &nbsp; ({percentCorrect}% correct)
-               </Modal.Title>
-            </Modal.Header>
+            <Modal.Header closeButton><Modal.Title>Review Incorrect Questions</Modal.Title></Modal.Header>
 
             <Modal.Body>
-               {wrongAnsArr.length !== 0 ? (
-                  <>
-                     <div className="vstack gap-5 p-3">
-                        {wrongAnsArr.map((qn, i) => <DictionaryEntry key={i} qnObj={qn} num={i + 1} />)}
-                     </div>
-
-                     <div className="mt-4 d-flex justify-content-center">
-                        <Button
-                           className="d-flex align-items-center"
-                           variant="danger"
-                           onClick={() => {
-                              setIsReviewShown(!isReviewShown);
-                              showWrongQnsAgain();
-                           }}
-                        ><RotateCcw size={20}/>&nbsp;Redo These Questions</Button>
-                     </div>
-                  </>
-               ) : (
-                  <div className="my-4 d-flex justify-content-center fst-italic text-secondary">
-                     No incorrect questions yet
-                  </div>
-               )}
+               <PaginatedDictEntries qnObjArr={wrongAnsArr}/>
+               <footer className="mt-4 d-flex justify-content-center">
+                  <Button
+                     className="d-flex align-items-center"
+                     variant="danger"
+                     onClick={() => {
+                        setIsReviewShown(!isReviewShown);
+                        showWrongQnsAgain();
+                     }}
+                  ><RotateCcw size={22} strokeWidth={2}/>&nbsp;Redo These Questions</Button>
+               </footer>
             </Modal.Body>
+         </Modal>
+
+         <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(!isExplShown)}>
+            <Modal.Header closeButton><Modal.Title>Definition</Modal.Title></Modal.Header>
+            <Modal.Body><DictionaryEntry qnObj={qnObj}/></Modal.Body>
          </Modal>
       </Col>
    );

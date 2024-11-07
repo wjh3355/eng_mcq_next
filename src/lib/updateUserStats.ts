@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDB } from "@/lib/connectToDB";
-import { CurrentQnCategories } from "@/types";
+import { CurrentQnCategories, createNewUserDate } from "@/types";
 
 export default async function updateUserStats({
    qnCategory,
@@ -16,23 +16,26 @@ export default async function updateUserStats({
 }) {
 
    const incrementAndUpdateWrong = { 
-      $inc: { [ qnCategory + ".numQnsAttempted" ]: 1 },
-      $addToSet: { [ qnCategory + ".wrongQnNums" ]: qnNum }
+      $inc: { [ `qnData.${qnCategory}.numQnsAttempted` ]: 1 },
+      $addToSet: { [ `qnData.${qnCategory}.wrongQnNums` ]: qnNum }
    };
 
    const incrementOnly = { 
-      $inc: { [ qnCategory + ".numQnsAttempted" ]: 1 }
+      $inc: { [ `qnData.${qnCategory}.numQnsAttempted` ]: 1 }
    };
 
    try {
       const { db } = await connectToDB("userDatas");
-      await db
-         .collection("userQnData")
-         .findOneAndUpdate(
-            { name: userName },
-            isCorrect === false ? incrementAndUpdateWrong : incrementOnly,
-            { upsert: true }
-         );
+      const userQnDataCollection = db.collection("userQnData");
+
+      const userStatsDoc = await userQnDataCollection.findOne({ name: userName });
+
+      if (!userStatsDoc) await userQnDataCollection.insertOne(createNewUserDate(userName));
+
+      await userQnDataCollection.findOneAndUpdate(
+         { name: userName },
+         isCorrect === false ? incrementAndUpdateWrong : incrementOnly,
+      );
 
    } catch (error: unknown) {
       if (error instanceof Error) {

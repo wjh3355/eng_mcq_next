@@ -20,7 +20,7 @@ export async function connectToDB(databaseName: string, retries = 3) {
       return connectionCache.get(databaseName)!;
    }
 
-   if (!uri) throw new Error("Missing database connection URI");
+   if (!uri) throw new Error("The database connection URI is missing");
    
    try {
       const newClient = new MongoClient(uri, options);

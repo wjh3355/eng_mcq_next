@@ -15,7 +15,7 @@ export default async function Page() {
    const isLoggedIn = await isAuthenticated();
 
    return (
-      <Container>
+      <Container className="mb-4">
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">Welcome to Sunbird English</h5>

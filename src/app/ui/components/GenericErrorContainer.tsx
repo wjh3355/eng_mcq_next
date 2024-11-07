@@ -1,8 +1,8 @@
 'use client';
 
 import { MCQContextValue } from '@/types';
-import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
+import { TriangleAlert } from 'lucide-react';
 
 export default function GenericErrorContainer({ 
    QnContextToUse 
@@ -15,10 +15,8 @@ export default function GenericErrorContainer({
    if (!error) return;
 
    return (
-      <Col>
-         <Alert variant="danger" dismissible>
-            🚫 <strong>An error occured. Please try again later.</strong>
-         </Alert>
-      </Col>
+      <Alert variant="danger" dismissible className="d-flex align-items-center">
+         <TriangleAlert />&nbsp;<strong>Error: {error}</strong>
+      </Alert>
    );
 }

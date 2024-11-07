@@ -19,7 +19,7 @@ export default function createGenericMCQProvider({
    qnCategory: CurrentQnCategories
    qnMongoCollection: string, 
    qnNumRange: [number, number], 
-   userName: string | null,
+   userName: string | null | undefined,
    trackQns: boolean
 }) {
 
@@ -34,7 +34,7 @@ export default function createGenericMCQProvider({
       const [qnSequence, setQnSequence] = useState<number[]>(shuffle(range(...qnNumRange)));
       const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
-      const [areBtnsDisabled, setAreBtnsDisabled] = useState<boolean>(true);
+      const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [score, setScore] = useState<[number, number]>([0, 0]);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
@@ -44,23 +44,17 @@ export default function createGenericMCQProvider({
          const wrongQnNums = wrongAnsArr.map(obj => obj.qnNum).toReversed();
          setWrongAnsArr([]);
          setScore([0, 0]);
-         setAreBtnsDisabled(true);
+         setIsNextQnBtnDisabled(true);
          setIsCorrect(null);
          setIsLoading(true);
          setQnSequence(prev => [...wrongQnNums, ...prev]);
       }
 
-      function handleOptionClick(isCorr: boolean) {
-         setAreBtnsDisabled(false);
+      async function handleOptionClick(isCorr: boolean) {
+         setIsNextQnBtnDisabled(false);
          setIsCorrect(isCorr);
-      }
-      
-      async function handleNextQnBtnClick() {
-         setAreBtnsDisabled(true);
-         setIsLoading(true);
-         setIsCorrect(null);
 
-         if (isCorrect) {
+         if (isCorr) {
             setScore(([right, tot]) => [right+1, tot+1]);
          } else {
             setScore(([right, tot]) => [right, tot+1]);
@@ -75,11 +69,16 @@ export default function createGenericMCQProvider({
                qnCategory, 
                userName, 
                qnNum: qnObj.qnNum, 
-               isCorrect
+               isCorrect: isCorr
             });
          }
-
-         setQnSequence(prev => prev.length > 1 ?  prev.slice(1) : shuffle(range(...qnNumRange)));
+      }
+      
+      function handleNextQnBtnClick() {
+         setIsNextQnBtnDisabled(true);
+         setIsLoading(true);
+         setIsCorrect(null);
+         setQnSequence(prev => prev.length > 1 ? prev.slice(1) : shuffle(range(...qnNumRange)));
       }
 
       const fetchNewQnObj = useCallback(async () => {
@@ -110,7 +109,7 @@ export default function createGenericMCQProvider({
             qnObj,
             isLoading,
             isCorrect,
-            areBtnsDisabled,
+            isNextQnBtnDisabled,
             score,
             wrongAnsArr,
             error,

@@ -13,19 +13,20 @@ export const QnObjSchema = z.object({
 
 export const QnObjArrSchema = z.array(QnObjSchema);
 
-export const UserDataSchema = z.record(
-   z.enum([
-      "demo",
-      "gep",
-      "phrasalVerbs",
-      "psleWordsCloze",
-      "psleWordsMcq",
-      "pslePhrasesCloze"
-   ]),
-   z
-      .object({
+export const UserDataSchema = z.object({
+   name: z.string(),
+   dateCreated: z.date(),
+   qnData: z.record(
+      z.enum([
+         "gep",
+         "phrasalVerbs",
+         "psleWordsCloze",
+         "psleWordsMcq",
+         "pslePhrasesCloze"
+      ]),
+      z.object({
          numQnsAttempted: z.number(),
          wrongQnNums: z.array(z.number()),
-      })
-      .strict()
-);
+      }).strict()
+   )
+}).strict();

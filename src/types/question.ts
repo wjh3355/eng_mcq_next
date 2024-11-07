@@ -4,10 +4,10 @@ export type MCQContextValue = {
    error: string,
    isLoading: boolean,
    isCorrect: boolean | null,
-   areBtnsDisabled: boolean,
+   isNextQnBtnDisabled: boolean,
    score: [number, number], 
-   handleOptionClick: (param: boolean) => void,
-   handleNextQnBtnClick: () => Promise<void>,
+   handleOptionClick: (param: boolean) => Promise<void>,
+   handleNextQnBtnClick: () => void,
    showWrongQnsAgain: () => void
 }
 
@@ -36,10 +36,10 @@ export const EMPTY_QN_OBJ: QnObj = {
 export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
    qnObj: EMPTY_QN_OBJ,
    isLoading: true,
-   handleOptionClick() {},
+   async handleOptionClick() {},
    isCorrect: null,
-   areBtnsDisabled: true,
-   async handleNextQnBtnClick() {},
+   isNextQnBtnDisabled: true,
+   handleNextQnBtnClick() {},
    score: [0, 0],
    wrongAnsArr: [],
    error: "",

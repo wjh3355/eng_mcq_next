@@ -9,6 +9,8 @@ import { Inter } from 'next/font/google';
 import MainNavbar from "@/app/ui/MainNavbar";
 import MaintenancePage from "./ui/MaintenancePage";
 
+import AuthProvider from "./ui/AuthProvider";
+
 export const metadata = {
    title: "Sunbird English",
    description: "Simple english vocabulary MCQ quiz app. For Singaporean students.",
@@ -22,18 +24,20 @@ const isUnderMaintenance: boolean = process.env.IS_UNDER_MAINTENANCE === '1';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
    return (
-      <html lang="en">
-         <body className={`${inter.className} antialiased`}>
-            {isUnderMaintenance
-               ? <MaintenancePage/>
-               : <>
-                  <MainNavbar />
-                  {children}
-                  <Analytics />
-                  <SpeedInsights />
-               </>
-            }
-         </body>
-      </html>
+      <AuthProvider>
+         <html lang="en">
+            <body className={`${inter.className} antialiased`}>
+               {isUnderMaintenance
+                  ? <MaintenancePage/>
+                  : <>
+                     <MainNavbar />
+                     {children}
+                     <Analytics />
+                     <SpeedInsights />
+                  </>
+               }
+            </body>
+         </html>
+      </AuthProvider>
    );
 }

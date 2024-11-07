@@ -1,2 +1,7 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'react-loading-skeleton/dist/skeleton.css';
+@import url('https://fonts.googleapis.com/css2?family=Cantata+One&family=Sriracha&display=swap');
+
+.customFont {
+   font-family: "Cantata One", sans-serif;
+}

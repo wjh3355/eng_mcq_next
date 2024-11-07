@@ -6,8 +6,7 @@ export default async function Page() {
    await checkAdminUserAuth();
 
    return <GenericMCQApp
-      slug={undefined}
-      qnCategory={"debug"}
-      headerOverride="debug"
+      slug="foo"
+      qnCategory="debug"
    />;
 }

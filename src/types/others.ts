@@ -1,11 +1,11 @@
-export type CurrentQnCategories = 
-   'demo' | 
+export type CurrentQnCategoriesTracked = 
    'gep' | 
    'phrasalVerbs' | 
    'psleWordsCloze' | 
    'psleWordsMcq' | 
-   'pslePhrasesCloze' |
-   'debug';
+   'pslePhrasesCloze';
+
+export type CurrentQnCategories = CurrentQnCategoriesTracked | 'demo' | 'debug';
 
 export type CurrentQnCategoriesDisplayedName = 
    "Demo Questions" |
@@ -29,12 +29,45 @@ export type QnSet = {
    href: string;
 }
 
-export type UserData = Partial<{
-   [qnCategory in CurrentQnCategories]: {
-      numQnsAttempted: number;
-      wrongQnNums: number[];
+export type UserData = {
+   name: string;
+   dateCreated: Date;
+   qnData: {
+      [cat in CurrentQnCategoriesTracked]: {
+         numQnsAttempted: number;
+         wrongQnNums: number[];
+      };
    };
-}>
+};
+
+export function createNewUserDate(name: string): UserData {
+   return {
+      name,
+      dateCreated: new Date(),
+      qnData: {
+         gep: {
+            numQnsAttempted: 0,
+            wrongQnNums: [],
+         },
+         phrasalVerbs: {
+            numQnsAttempted: 0,
+            wrongQnNums: [],
+         },
+         psleWordsCloze: {
+            numQnsAttempted: 0,
+            wrongQnNums: [],
+         },
+         psleWordsMcq: {
+            numQnsAttempted: 0,
+            wrongQnNums: [],
+         },
+         pslePhrasesCloze: {
+            numQnsAttempted: 0,
+            wrongQnNums: [],
+         },
+      },
+   };
+};
 
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
@@ -42,7 +75,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       name: "Debug",
       mongoCollection: "debug",
       sets: [{
-         slug: undefined,
+         slug: "foo",
          qnNumRange: [1, 6],
          name: "",
          href: "",
@@ -54,7 +87,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       mongoCollection: "demo",
       sets: [
          {  
-            slug: undefined,
+            slug: "foo",
             qnNumRange: [1, 51],
             name: "",
             href: "",

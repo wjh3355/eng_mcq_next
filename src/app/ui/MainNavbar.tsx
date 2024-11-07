@@ -1,10 +1,12 @@
 'use client';
 
 import React from "react";
+
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
+
 import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
@@ -14,9 +16,9 @@ import AccountButton from "@/app/ui/components/AccountButton";
 
 export default function MainNavbar() {
    return (
-      <Navbar expand="lg" bg="dark" data-bs-theme="dark" sticky="top">
-         <Container>
-            <Navbar.Brand as={Link} href="/">
+      <Navbar expand="lg" bg="dark" data-bs-theme="dark">
+         <Container fluid>
+            <Navbar.Brand as={Link} href="/" className="customFont">
                Sunbird English
             </Navbar.Brand>
 
