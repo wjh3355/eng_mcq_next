@@ -6,8 +6,9 @@ import Table from "react-bootstrap/Table";
 import fetchUserStats from "@/lib/fetchUserStats";
 import { Suspense } from "react";
 import Link from "next/link";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
+
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
@@ -19,31 +20,24 @@ export default async function Page() {
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
 
-         <Suspense fallback={<Row><Col><p>Loading your profile...</p></Col></Row>}>
-            <UserProfile user={user}/>
-         </Suspense>
+         <Row>
+            <Col>
+               <p>
+                  <strong>Username: </strong>
+                  {user.given_name}
+               </p>
+               <p>
+                  <strong>Email address: </strong>
+                  {user.email}
+               </p>
+               <Suspense fallback={<p>Fetching data...</p>}>
+                  <UserStatsTable name={user.given_name!} />
+               </Suspense>
+            </Col>
+         </Row>
 
       </Container>
    );
-}
-
-async function UserProfile({ user }: { user: KindeUser<Record<string, any>> }) {
-
-   return <Row>
-      <Col>
-         <p>
-            <strong>Username: </strong>
-            {user.given_name}
-         </p>
-         <p>
-            <strong>Email address: </strong>
-            {user.email}
-         </p>
-         <Suspense fallback={<p>Loading your data...</p>}>
-            <UserStatsTable name={user.given_name!} />
-         </Suspense>
-      </Col>
-   </Row>
 }
 
 async function UserStatsTable({ name }: { name: string }) {

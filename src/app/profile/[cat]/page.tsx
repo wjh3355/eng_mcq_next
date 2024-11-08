@@ -1,42 +1,53 @@
 import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import fetchQnArrFromDB from "@/lib/fetchQnArrFromDB";
 import fetchUserStats from "@/lib/fetchUserStats";
-import { notFound } from "next/navigation";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 import { Suspense } from "react";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
+import { TriangleAlert } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
 
    const currUser = await checkNormalUserAuth();
    const userData = await fetchUserStats(currUser.given_name!);
    const { cat } = await params;
-   if (!(cat in userData.qnData)) notFound();
+   const wrongQnNumsArr = userData.qnData[cat].wrongQnNums;
 
    return ( 
       <Container className="mb-4">
          <Row className="my-3">
-            <Col>
-               <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].name}: Incorrect Questions</h5>
-            </Col>
+            <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].name}: Incorrect Questions</h5>
          </Row>
 
-         <Suspense fallback={<Row><p>Loading all incorrect questions...</p></Row>}>
-            <ShowEntriesWithPagination wrongQnNumsArr={userData.qnData[cat].wrongQnNums} qnCat={cat}/>
-         </Suspense>
+         {
+            wrongQnNumsArr.length === 0
+            ?  <Row>
+                  <Col>
+                     <Alert variant="info" className="d-flex align-items-center">
+                        <TriangleAlert/>&nbsp;<strong>You have no incorrect questions for this category</strong>
+                     </Alert>
+                  </Col>
+               </Row>
+            :  <Suspense fallback={<div className="d-flex justify-content-center">Fetching data...</div>}>
+                  <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
+               </Suspense>
+         }
       </Container>
    );
 }
 
-async function ShowEntriesWithPagination({ wrongQnNumsArr, qnCat }: { wrongQnNumsArr: number[], qnCat: CurrentQnCategoriesTracked }) {
-   if (wrongQnNumsArr.length === 0) return <p>No incorrect questions for this category.</p>;
+async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: CurrentQnCategoriesTracked }) {
    let wrongQnObjArr;
    try {
       wrongQnObjArr = await fetchQnArrFromDB(
-         QN_CATEGORIES_DATA[qnCat].mongoCollection, 
+         QN_CATEGORIES_DATA[cat].mongoCollection, 
          wrongQnNumsArr
       );
       return <PaginatedDictEntries qnObjArr={wrongQnObjArr}/>
