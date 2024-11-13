@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
-import fetchUserStats from "@/lib/fetchUserStats";
+import fetchUserData from "@/lib/fetchUserData";
 import { Suspense } from "react";
 import Link from "next/link";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
@@ -44,7 +44,7 @@ async function UserStatsTable({ name }: { name: string }) {
 
    let userData;
    try {
-      userData = await fetchUserStats(name);
+      userData = await fetchUserData(name);
    } catch (error) {
       return <p>Error loading user stats. If you have not done any questions yet, attempting one will create your user profile.</p>;
    }
@@ -71,8 +71,8 @@ async function UserStatsTable({ name }: { name: string }) {
                         CurrentQnCategoriesTracked,
                         { numQnsAttempted: number; wrongQnNums: number[] }
                      ][]
-                  ).map(([cat, dat]) => {
-                     if (dat.numQnsAttempted > 0) return <tr key={cat}>
+                  ).map(([cat, dat]) => 
+                     <tr key={cat}>
                         <td>{QN_CATEGORIES_DATA[cat].name}</td>
                         <td>{dat.numQnsAttempted}</td>
                         <td>{dat.wrongQnNums.length}</td>
@@ -82,7 +82,7 @@ async function UserStatsTable({ name }: { name: string }) {
                            </Link>
                         </td>
                      </tr>
-                  })}
+                  )}
                </tbody>
             </Table>
          </section>

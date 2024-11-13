@@ -7,7 +7,7 @@ import range from "lodash/range";
 import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
 
 import fetchQnFromDB from "@/lib/fetchQnFromDB";
-import updateUserStats from "@/lib/updateUserStats";
+import updateUserData from "@/lib/updateUserData";
 
 export default function createGenericMCQProvider({
    qnCategory,
@@ -65,8 +65,8 @@ export default function createGenericMCQProvider({
          }
 
          if (trackQns && userName) {
-            await updateUserStats({
-               qnCategory, 
+            await updateUserData({
+               cat: qnCategory, 
                userName, 
                qnNum: qnObj.qnNum, 
                isCorrect: isCorr

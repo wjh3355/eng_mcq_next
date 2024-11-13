@@ -1,12 +1,11 @@
 import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import fetchQnArrFromDB from "@/lib/fetchQnArrFromDB";
-import fetchUserStats from "@/lib/fetchUserStats";
+import fetchUserData from "@/lib/fetchUserData";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
-import Spinner from "react-bootstrap/Spinner";
 import { Suspense } from "react";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 import { TriangleAlert } from 'lucide-react';
@@ -16,9 +15,10 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
 
    const currUser = await checkNormalUserAuth();
-   const userData = await fetchUserStats(currUser.given_name!);
+   const userData = await fetchUserData(currUser.given_name!);
    const { cat } = await params;
-   const wrongQnNumsArr = userData.qnData[cat].wrongQnNums;
+
+   const wrongQnNumsArr = userData.qnData[cat]?.wrongQnNums ?? [];
 
    return ( 
       <Container className="mb-4">

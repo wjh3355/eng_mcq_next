@@ -7,17 +7,8 @@ export type CurrentQnCategoriesTracked =
 
 export type CurrentQnCategories = CurrentQnCategoriesTracked | 'demo' | 'debug';
 
-export type CurrentQnCategoriesDisplayedName = 
-   "Demo Questions" |
-   "GEP Vocab MCQ" |
-   "Phrasal Verbs Cloze" |
-   "PSLE Words Cloze" |
-   "PSLE Words MCQ" |
-   "PSLE Phrases Cloze" |
-   "Debug";
-
 export type QnCategoryData = {
-   name: CurrentQnCategoriesDisplayedName;
+   name: string;
    mongoCollection: string;
    sets: QnSet[];
 }
@@ -32,65 +23,45 @@ export type QnSet = {
 export type UserData = {
    name: string;
    dateCreated: Date;
-   qnData: {
-      [cat in CurrentQnCategoriesTracked]: {
+   qnData: Partial<Record<
+      CurrentQnCategoriesTracked,
+      {
          numQnsAttempted: number;
          wrongQnNums: number[];
-      };
-   };
+      }
+   >>;
 };
 
 export function createNewUserDate(name: string): UserData {
    return {
       name,
       dateCreated: new Date(),
-      qnData: {
-         gep: {
-            numQnsAttempted: 0,
-            wrongQnNums: [],
-         },
-         phrasalVerbs: {
-            numQnsAttempted: 0,
-            wrongQnNums: [],
-         },
-         psleWordsCloze: {
-            numQnsAttempted: 0,
-            wrongQnNums: [],
-         },
-         psleWordsMcq: {
-            numQnsAttempted: 0,
-            wrongQnNums: [],
-         },
-         pslePhrasesCloze: {
-            numQnsAttempted: 0,
-            wrongQnNums: [],
-         },
-      },
+      qnData: {}
    };
 };
 
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    debug: {
-      name: "Debug",
+      name: "qaz",
       mongoCollection: "debug",
       sets: [{
          slug: "foo",
          qnNumRange: [1, 6],
-         name: "",
-         href: "",
+         name: "qux",
+         href: "baz",
       }]
    },
 
    demo: {
-      name: "Demo Questions",
+      name: "spam",
       mongoCollection: "demo",
       sets: [
          {  
             slug: "foo",
             qnNumRange: [1, 51],
-            name: "",
-            href: "",
+            name: "eggs",
+            href: "ham",
          }
       ]
    },

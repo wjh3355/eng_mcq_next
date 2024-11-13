@@ -10,5 +10,6 @@ export default async function Page() {
    return <GenericMCQApp
       slug="foo"
       qnCategory="debug"
+      header="DEBUG"
    />;
 }
