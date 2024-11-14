@@ -12,31 +12,31 @@ import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 import { QN_CATEGORIES_DATA, CurrentQnCategories } from "@/types";
 
 import { notFound } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function GenericMCQApp({
    qnCategory,
-   slug,
    userName,
    header
 }: {
    qnCategory: CurrentQnCategories
-   slug: string | undefined ,
    userName?: string | null,
    header?: string
 }) {
 
-   const qnCategoryData = QN_CATEGORIES_DATA[qnCategory];
+   const path = usePathname();
 
-   const qnSet = qnCategoryData.sets.find(set => set.slug === slug);
+   const cat = QN_CATEGORIES_DATA[qnCategory];
+
+   const set = cat.sets.find(set => set.href === path);
    
-   if (!qnSet) notFound();
+   if (!set) notFound();
 
    const { MCQProvider, useMCQContext } = createGenericMCQProvider({
       qnCategory,
-      qnMongoCollection: qnCategoryData.mongoCollection,
-      qnNumRange: qnSet.qnNumRange,
+      qnNumRange: set.qnNumRange,
       userName,
-      trackQns: qnCategory !== "demo" && qnCategory !== "debug"
+      trackQns: cat.isTracked
    });
 
    return (
@@ -46,7 +46,7 @@ export default function GenericMCQApp({
                <Col>
                   <GenericErrorContainer QnContextToUse={useMCQContext}/>
                   <h5 className="text-center m-0">
-                     {header || qnCategoryData.name + " - " + qnSet.name}
+                     {header || cat.name + " - " + set.name}
                   </h5>
                </Col>
             </Row>

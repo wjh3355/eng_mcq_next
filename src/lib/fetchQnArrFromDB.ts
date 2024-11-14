@@ -1,10 +1,10 @@
 'use server';
 
 import { connectToDB } from "@/lib/connectToDB";
-import { QnObj, QnObjArrSchema } from "@/types";
+import { CurrentQnCategories, QnObj, QnObjArrSchema } from "@/types";
 
 export default async function fetchQnArrFromDB(
-   collection: string, 
+   collection: CurrentQnCategories, 
    qnNums: number[]
 ) {
    try {

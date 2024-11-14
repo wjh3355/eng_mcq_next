@@ -47,7 +47,7 @@ async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsA
    let wrongQnObjArr;
    try {
       wrongQnObjArr = await fetchQnArrFromDB(
-         QN_CATEGORIES_DATA[cat].mongoCollection, 
+         cat,
          wrongQnNumsArr
       );
       return <PaginatedDictEntries qnObjArr={wrongQnObjArr}/>

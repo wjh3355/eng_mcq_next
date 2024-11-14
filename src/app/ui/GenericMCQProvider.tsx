@@ -11,13 +11,11 @@ import updateUserData from "@/lib/updateUserData";
 
 export default function createGenericMCQProvider({
    qnCategory,
-   qnMongoCollection, 
    qnNumRange, 
    userName,
    trackQns
 }: {
    qnCategory: CurrentQnCategories
-   qnMongoCollection: string, 
    qnNumRange: [number, number], 
    userName: string | null | undefined,
    trackQns: boolean
@@ -84,7 +82,7 @@ export default function createGenericMCQProvider({
       const fetchNewQnObj = useCallback(async () => {
          setQnObj(EMPTY_QN_OBJ);
          try {
-            setQnObj(await fetchQnFromDB(qnMongoCollection, qnSequence[0]));
+            setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
          } catch (error) {
             if (error instanceof Error) {
                console.error("Error when fetching new QnObj:", error.message);
