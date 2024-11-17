@@ -15,7 +15,7 @@ export default async function Page() {
    const { getUser } = getKindeServerSession();
    const user = await getUser();
 
-   await ensureUserDataDoc(user.given_name!);
+   if (user) await ensureUserDataDoc(user.given_name!);
 
    return (
       <Container className="mb-4">
