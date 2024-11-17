@@ -41,7 +41,7 @@ export default async function Page() {
          {!user && (
             <Row className="mt-3">
                <Col className="d-flex justify-content-center">
-                  <Link href="/demo" className="btn btn-lg btn-primary d-flex align-items-center">
+                  <Link href="/questions/demo" className="btn btn-lg btn-primary d-flex align-items-center">
                      <NotebookPen />&nbsp;Demo Questions
                   </Link>
                </Col>
