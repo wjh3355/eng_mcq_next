@@ -1,14 +1,19 @@
+import { Suspense } from "react";
+
+import Link from "next/link";
+
 import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import fetchQnArrFromDB from "@/lib/fetchQnArrFromDB";
 import fetchUserData from "@/lib/fetchUserData";
+import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
-import { Suspense } from "react";
-import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
-import { TriangleAlert } from 'lucide-react';
+
+import { TriangleAlert, RotateCcw } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,18 +44,26 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
                   <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
                </Suspense>
          }
+
       </Container>
    );
 }
 
 async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: CurrentQnCategoriesTracked }) {
-   let wrongQnObjArr;
    try {
-      wrongQnObjArr = await fetchQnArrFromDB(
-         cat,
-         wrongQnNumsArr
-      );
-      return <PaginatedDictEntries qnObjArr={wrongQnObjArr}/>
+      return <>
+            <PaginatedDictEntries qnObjArr={await fetchQnArrFromDB(cat, wrongQnNumsArr)}/>
+            <Row className="my-4">
+               <Col className="d-flex justify-content-end">
+                  <Link
+                     href={`/redoWrong/${cat}`}
+                     className="btn btn-warning d-flex align-items-center"
+                  >
+                     <RotateCcw size={22} strokeWidth={2}/>&nbsp;<strong>Attempt Questions Again</strong>
+                  </Link>
+               </Col>
+            </Row>
+         </>
    } catch (error) {
       return <p>Error loading incorrect questions.</p>;
    }

@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Skeleton from "react-loading-skeleton";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
 export default function MCQLoadingUI() {
@@ -16,10 +17,12 @@ export default function MCQLoadingUI() {
                   <Skeleton height="24px" />
                </div>
                <div className="hstack gap-3 mb-3">
-                  <div className="border-0 rounded p-2 bg-primary-subtle">
-                     Score:&nbsp;
-                     <strong className="text-primary">0 / 0</strong>
-                  </div>
+                  <DropdownButton 
+                     variant="warning" 
+                     disabled={true}
+                     title="Score"
+                     drop="end"
+                  ><div/></DropdownButton>
                   <button 
                      className="border-0 bg-transparent p-0 ms-auto"
                      disabled={true}

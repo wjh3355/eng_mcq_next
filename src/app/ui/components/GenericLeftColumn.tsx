@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 import DictionaryEntry from "./DictionaryEntry";
 import QnSentenceFormatter from "./QnSentenceFormatter";
@@ -13,25 +14,27 @@ import PaginatedDictEntries from "./PaginatedDictEntries";
 import { MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";
-import { RotateCcw, BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
+import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
 export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       handleNextQnBtnClick,
-      showWrongQnsAgain,
       isNextQnBtnDisabled,
       score: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj,
       isLoading,
-      isCorrect
+      isCorrect,
+      hasReachedEnd
    } = QnContextToUse();
 
-   const {sentence, wordToTest} = qnObj;
+   const { sentence, wordToTest } = qnObj;
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
+
+   if (hasReachedEnd) return null;
 
    return (
       <Col lg={8} md={7}>
@@ -47,12 +50,33 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
 
          <section className="hstack gap-3 mb-3">
 
-            <div className="border-0 rounded p-2 bg-primary-subtle">
-               Score:&nbsp;
-               <strong className="text-primary">
-                  {numCorrect} / {numTotal}
-               </strong>
-            </div>
+            <DropdownButton 
+               variant="warning"
+               title="Score"
+               drop="end"
+            >
+               <div className="hstack gap-3 py-1 px-3">
+                  <div className="text-center">
+                     Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
+                  </div>
+
+                  <div className="vr"/>
+
+                  <div className="text-center">
+                     Total<br/><span className="fs-5 text-primary">{numTotal}</span>
+                  </div>
+
+                  <div className="vr"/>
+
+                  <div className="text-center">
+                     Result<br/><span className="fs-5 text-danger">{
+                        numTotal === 0
+                        ? 0
+                        : Math.round(100*numCorrect/numTotal)
+                     }%</span>
+                  </div>
+               </div>
+            </DropdownButton>
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"
@@ -85,25 +109,12 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
             show={isReviewShown}
             onHide={() => setIsReviewShown(!isReviewShown)}
          >
-            <Modal.Header closeButton><Modal.Title>Review Incorrect Questions</Modal.Title></Modal.Header>
-
-            <Modal.Body>
-               <PaginatedDictEntries qnObjArr={wrongAnsArr}/>
-               <footer className="mt-4 d-flex justify-content-center">
-                  <Button
-                     className="d-flex align-items-center"
-                     variant="danger"
-                     onClick={() => {
-                        setIsReviewShown(!isReviewShown);
-                        showWrongQnsAgain();
-                     }}
-                  ><RotateCcw size={22} strokeWidth={2}/>&nbsp;Redo These Questions</Button>
-               </footer>
-            </Modal.Body>
+            <Modal.Header closeButton><Modal.Title className="fs-5">Review Incorrect Questions</Modal.Title></Modal.Header>
+            <Modal.Body><PaginatedDictEntries qnObjArr={wrongAnsArr}/></Modal.Body>
          </Modal>
 
          <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(!isExplShown)}>
-            <Modal.Header closeButton><Modal.Title>Definition</Modal.Title></Modal.Header>
+            <Modal.Header closeButton><Modal.Title className="fs-5">Definition</Modal.Title></Modal.Header>
             <Modal.Body><DictionaryEntry qnObj={qnObj}/></Modal.Body>
          </Modal>
       </Col>

@@ -21,7 +21,9 @@ export default function GenericRightColumn({
    const {
       isLoading,
       qnObj: { options, correctAns }, 
-      handleOptionClick } = QnContextToUse();
+      handleOptionClick,
+      hasReachedEnd
+   } = QnContextToUse();
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
    const [isAllDisabled, setIsAllDisabled] = useState<boolean>(false);
@@ -47,8 +49,7 @@ export default function GenericRightColumn({
       const isGreen = isAllDisabled && isThisCorrectOption;
       const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
 
-      return (
-         <OptionButton
+      return <OptionButton
             key={thisOption}
             disabled={isAllDisabled}
             onClick={async () => {
@@ -72,9 +73,10 @@ export default function GenericRightColumn({
                   strokeWidth={3}
                   style={{position: "absolute", right: "3%"}}
                /> }
-         </OptionButton>
-      );
+      </OptionButton>
    };
+
+   if (hasReachedEnd) return null;
 
    return (
       <Col lg={4} md={5}>

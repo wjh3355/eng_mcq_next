@@ -46,7 +46,7 @@ async function UserStatsTable({ name }: { name: string }) {
    try {
       userData = await fetchUserData(name);
    } catch (error) {
-      return <p>Error loading user stats. If you have not done any questions yet, attempting one will create your user profile.</p>;
+      return <p>Error loading user stats.</p>;
    }
 
    return (
@@ -55,37 +55,42 @@ async function UserStatsTable({ name }: { name: string }) {
             <strong>Date created: </strong>
             {userData.dateCreated.toDateString()}
          </p>
-         <section style={{ overflowX: "auto" }}>
-            <Table striped>
-               <thead>
-                  <tr>
-                     <th>Category</th>
-                     <th>No. Attempted</th>
-                     <th>No. Incorrect</th>
-                     <th>Incorrect Questions</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {(
-                     Object.entries(userData.qnData) as [
-                        CurrentQnCategoriesTracked,
-                        { numQnsAttempted: number; wrongQnNums: number[] }
-                     ][]
-                  ).map(([cat, dat]) => 
-                     <tr key={cat}>
-                        <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                        <td>{dat.numQnsAttempted}</td>
-                        <td>{dat.wrongQnNums.length}</td>
-                        <td>
-                           <Link href={`/profile/${cat}`}>
-                              View
-                           </Link>
-                        </td>
-                     </tr>
-                  )}
-               </tbody>
-            </Table>
-         </section>
+         {
+            JSON.stringify(userData.qnData) === "{}" 
+
+               ? <p><strong className="text-danger">You have not done any questions yet!</strong></p>
+
+               : <section style={{ overflowX: "auto" }}>
+                  <Table striped>
+                     <thead>
+                        <tr>
+                           <th>Category</th>
+                           <th>No. Attempted</th>
+                           <th>No. Incorrect</th>
+                           <th>Incorrect Questions</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {
+                           (Object.entries(userData.qnData) as [
+                              CurrentQnCategoriesTracked,
+                              { numQnsAttempted: number; wrongQnNums: number[] }
+                           ][]).map(([cat, dat]) => 
+                           <tr key={cat}>
+                              <td>{QN_CATEGORIES_DATA[cat].name}</td>
+                              <td>{dat.numQnsAttempted}</td>
+                              <td>{dat.wrongQnNums.length}</td>
+                              <td>
+                                 <Link href={`/profile/${cat}`}>
+                                    View
+                                 </Link>
+                              </td>
+                           </tr>)
+                        }
+                     </tbody>
+                  </Table>
+               </section>
+         }
       </>
    );
 }

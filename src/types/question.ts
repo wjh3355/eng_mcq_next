@@ -5,10 +5,11 @@ export type MCQContextValue = {
    isLoading: boolean,
    isCorrect: boolean | null,
    isNextQnBtnDisabled: boolean,
-   score: [number, number], 
+   score: [number, number],
+   hasReachedEnd: boolean,
    handleOptionClick: (param: boolean) => Promise<void>,
    handleNextQnBtnClick: () => void,
-   showWrongQnsAgain: () => void
+   redoSet: () => void
 }
 
 export type QnObj = {
@@ -43,5 +44,6 @@ export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
    score: [0, 0],
    wrongAnsArr: [],
    error: "",
-   showWrongQnsAgain() {}
+   redoSet() {},
+   hasReachedEnd: false
 }

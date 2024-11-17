@@ -1,8 +1,6 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
-import shuffle from "lodash/shuffle";
-import range from "lodash/range";
 
 import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
 
@@ -11,14 +9,14 @@ import updateUserData from "@/lib/updateUserData";
 
 export default function createGenericMCQProvider({
    qnCategory,
-   qnNumRange, 
+   qnNumArray,
    userName,
-   trackQns
+   trackQns,
 }: {
    qnCategory: CurrentQnCategories
-   qnNumRange: [number, number], 
-   userName: string | null | undefined,
-   trackQns: boolean
+   qnNumArray: number[],
+   userName: string,
+   trackQns: boolean,
 }) {
 
    const QnContext = createContext<MCQContextValue>(EMPTY_CONTEXT_VALUE);
@@ -29,7 +27,7 @@ export default function createGenericMCQProvider({
 
    function MCQProvider({ children }: { children: React.ReactNode }) {
 
-      const [qnSequence, setQnSequence] = useState<number[]>(shuffle(range(...qnNumRange)));
+      const [qnSequence, setQnSequence] = useState<number[]>(qnNumArray);
       const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
@@ -37,16 +35,7 @@ export default function createGenericMCQProvider({
       const [score, setScore] = useState<[number, number]>([0, 0]);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
       const [error, setError] = useState<string>("");
-
-      function showWrongQnsAgain() {
-         const wrongQnNums = wrongAnsArr.map(obj => obj.qnNum).toReversed();
-         setWrongAnsArr([]);
-         setScore([0, 0]);
-         setIsNextQnBtnDisabled(true);
-         setIsCorrect(null);
-         setIsLoading(true);
-         setQnSequence(prev => [...wrongQnNums, ...prev]);
-      }
+      const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
       async function handleOptionClick(isCorr: boolean) {
          setIsNextQnBtnDisabled(false);
@@ -62,36 +51,57 @@ export default function createGenericMCQProvider({
             }
          }
 
-         if (trackQns && userName) {
-            await updateUserData({
-               cat: qnCategory, 
-               userName, 
-               qnNum: qnObj.qnNum, 
-               isCorrect: isCorr
-            });
+         if (trackQns && userName !== "") {
+            try {
+               await updateUserData({
+                  cat: qnCategory, 
+                  userName, 
+                  qnNum: qnObj.qnNum, 
+                  isCorrect: isCorr
+               });
+            } catch (error) {
+               console.error("Error updating user data:", error);
+               setError("Error updating user data");
+            }
          }
+      }
+
+      function redoSet() {
+         setWrongAnsArr([]);
+         setScore([0, 0]);
+         setIsNextQnBtnDisabled(true);
+         setIsCorrect(null);
+         setIsLoading(true);
+         setHasReachedEnd(false);
+         setQnSequence(qnNumArray);
       }
       
       function handleNextQnBtnClick() {
          setIsNextQnBtnDisabled(true);
          setIsLoading(true);
          setIsCorrect(null);
-         setQnSequence(prev => prev.length > 1 ? prev.slice(1) : shuffle(range(...qnNumRange)));
+         setQnSequence(prev => prev.slice(1));
       }
 
       const fetchNewQnObj = useCallback(async () => {
          setQnObj(EMPTY_QN_OBJ);
-         try {
-            setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
-         } catch (error) {
-            if (error instanceof Error) {
-               console.error("Error when fetching new QnObj:", error.message);
-               setError(error.message);
-            } else {
-               console.error("An unexpected error occurred:", error);
-               setError("An unexpected error occurred");
+
+         if (qnSequence.length === 0) {
+            setHasReachedEnd(true);
+         } else {
+            try {
+               setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
+            } catch (error) {
+               if (error instanceof Error) {
+                  console.error("Error when fetching new QnObj:", error.message);
+                  setError(error.message);
+               } else {
+                  console.error("An unexpected error occurred:", error);
+                  setError("An unexpected error occurred");
+               }
             }
          }
+
       }, [qnSequence]);
 
       useEffect(() => {
@@ -111,9 +121,10 @@ export default function createGenericMCQProvider({
             score,
             wrongAnsArr,
             error,
+            hasReachedEnd,
             handleOptionClick,
             handleNextQnBtnClick,
-            showWrongQnsAgain,
+            redoSet
          }}>
             {children}
          </QnContext.Provider>

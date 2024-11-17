@@ -7,12 +7,15 @@ import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import fetchHomepageNotice from "@/lib/fetchHomepageNotice";
 import { NotebookPen } from "lucide-react";
+import ensureUserDataDoc from "@/lib/ensureUserDataDoc";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-   const { isAuthenticated } = getKindeServerSession();
-   const isLoggedIn = await isAuthenticated();
+   const { getUser } = getKindeServerSession();
+   const user = await getUser();
+
+   await ensureUserDataDoc(user.given_name!);
 
    return (
       <Container className="mb-4">
@@ -35,7 +38,7 @@ export default async function Page() {
             </Col>
          </Row>
 
-         {!isLoggedIn && (
+         {!user && (
             <Row className="mt-3">
                <Col className="d-flex justify-content-center">
                   <Link href="/demo" className="btn btn-lg btn-primary d-flex align-items-center">

@@ -5,7 +5,7 @@ export default async function checkNormalUserAuth() {
    const { getUser } = getKindeServerSession();
    const userIfAny = await getUser();
    
-   if (!userIfAny) redirect("/");
+   if (!userIfAny) redirect("/api/auth/login");
 
    return userIfAny;
 }
