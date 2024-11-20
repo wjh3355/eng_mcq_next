@@ -1,8 +1,8 @@
 import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import fetchUserData from "@/lib/fetchUserData";
-import { CurrentQnCategoriesTracked } from "@/types";
+import { CurrentQnCategoriesTracked, QN_CATEGORIES_DATA } from "@/types";
 import { notFound } from "next/navigation";
-import RedoWrongApp from "@/app/ui/RedoWrongApp";
+import QuestionsApp from "@/app/ui/QuestionsApp";
 
 export default async function RedoWrongQnsPage({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
 
@@ -13,5 +13,11 @@ export default async function RedoWrongQnsPage({ params }: { params: Promise<{ c
 
    if (wrongQnNums.length === 0) notFound();
 
-   return <RedoWrongApp cat={cat} wrongQnNums={wrongQnNums}/>
+   return <QuestionsApp
+      qnCategory={cat}
+      qnNumArray={wrongQnNums}
+      userName=""
+      trackQns={false}
+      title={QN_CATEGORIES_DATA[cat].name + " - Incorrect Questions"}
+   />
 }

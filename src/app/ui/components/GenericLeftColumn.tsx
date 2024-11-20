@@ -53,7 +53,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
             <DropdownButton 
                variant="warning"
                title="Score"
-               drop="end"
+               drop="down"
             >
                <div className="hstack gap-3 py-1 px-3">
                   <div className="text-center">

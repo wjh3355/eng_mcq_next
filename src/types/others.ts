@@ -122,27 +122,27 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          {
             qnNumRange: [1, 61],
             name: "Set 1",
-            href: "/questions/phrasal_verbs/set1"
+            href: "/questions/phrasalVerbs/set1"
          },
          {
             qnNumRange: [61, 121],
             name: "Set 2",
-            href: "/questions/phrasal_verbs/set2"
+            href: "/questions/phrasalVerbs/set2"
          },
          {
             qnNumRange: [121, 181],
             name: "Set 3",
-            href: "/questions/phrasal_verbs/set3"
+            href: "/questions/phrasalVerbs/set3"
          },
          {
             qnNumRange: [181, 241],
             name: "Set 4",
-            href: "/questions/phrasal_verbs/set4"
+            href: "/questions/phrasalVerbs/set4"
          },
          {
             qnNumRange: [1, 241],
             name: "All Questions",
-            href: "/questions/phrasal_verbs"
+            href: "/questions/phrasalVerbs"
          }
       ]
    },
@@ -156,17 +156,17 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          {
             qnNumRange: [1, 51],
             name: "Set 1",
-            href: "/questions/psle/words/cloze/set1"
+            href: "/questions/psleWordsCloze/set1"
          },
          {
             qnNumRange: [51, 101],
             name: "Set 2",
-            href: "/questions/psle/words/cloze/set2"
+            href: "/questions/psleWordsCloze/set2"
          },
          {
             qnNumRange: [1, 101],
             name: "All Questions",
-            href: "/questions/psle/words/cloze"
+            href: "/questions/psleWordsCloze"
          }
       ]
    },
@@ -180,17 +180,17 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          {
             qnNumRange: [1, 51],
             name: "Set 1",
-            href: "/questions/psle/words/mcq/set1"
+            href: "/questions/psleWordsMcq/set1"
          },
          {
             qnNumRange: [51, 101],
             name: "Set 2",
-            href: "/questions/psle/words/mcq/set2"
+            href: "/questions/psleWordsMcq/set2"
          },
          {
             qnNumRange: [1, 101],
             name: "All Questions",
-            href: "/questions/psle/words/mcq"
+            href: "/questions/psleWordsMcq"
          }
       ]
    },
@@ -204,42 +204,42 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          {
             qnNumRange: [1, 51],
             name: "Set 1",
-            href: "/questions/psle/phrases/cloze/set1"
+            href: "/questions/pslePhrasesCloze/set1"
          },
          {
             qnNumRange: [51, 101],
             name: "Set 2",
-            href: "/questions/psle/phrases/cloze/set2"
+            href: "/questions/pslePhrasesCloze/set2"
          },
          {
             qnNumRange: [101, 151],
             name: "Set 3",
-            href: "/questions/psle/phrases/cloze/set3"
+            href: "/questions/pslePhrasesCloze/set3"
          },
          {
             qnNumRange: [151, 201],
             name: "Set 4",
-            href: "/questions/psle/phrases/cloze/set4"
+            href: "/questions/pslePhrasesCloze/set4"
          },
          {
             qnNumRange: [201, 251],
             name: "Set 5",
-            href: "/questions/psle/phrases/cloze/set5"
+            href: "/questions/pslePhrasesCloze/set5"
          },
          {
             qnNumRange: [251, 301],
             name: "Set 6",
-            href: "/questions/psle/phrases/cloze/set6"
+            href: "/questions/pslePhrasesCloze/set6"
          },
          {
             qnNumRange: [301, 351],
             name: "Set 7",
-            href: "/questions/psle/phrases/cloze/set7"
+            href: "/questions/pslePhrasesCloze/set7"
          },
          {
             qnNumRange: [1, 351],
             name: "All Questions",
-            href: "/questions/psle/phrases/cloze"
+            href: "/questions/pslePhrasesCloze"
          }
       ]
    }

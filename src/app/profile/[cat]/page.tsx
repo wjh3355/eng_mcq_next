@@ -14,6 +14,7 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 
 import { TriangleAlert, RotateCcw } from 'lucide-react';
+import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,25 +26,17 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
 
    const wrongQnNumsArr = userData.qnData[cat]?.wrongQnNums ?? [];
 
+   if (wrongQnNumsArr.length === 0) notFound();
+
    return ( 
       <Container className="mb-4">
          <Row className="my-3">
             <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].name}: Incorrect Questions</h5>
          </Row>
 
-         {
-            wrongQnNumsArr.length === 0
-            ?  <Row>
-                  <Col>
-                     <Alert variant="info" className="d-flex align-items-center">
-                        <TriangleAlert/>&nbsp;<strong>You have no incorrect questions for this category</strong>
-                     </Alert>
-                  </Col>
-               </Row>
-            :  <Suspense fallback={<div className="d-flex justify-content-center">Fetching data...</div>}>
-                  <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
-               </Suspense>
-         }
+         <Suspense fallback={<div className="d-flex justify-content-center">Fetching data...</div>}>
+            <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
+         </Suspense>
 
       </Container>
    );

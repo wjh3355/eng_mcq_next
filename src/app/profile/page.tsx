@@ -60,14 +60,14 @@ async function UserStatsTable({ name }: { name: string }) {
 
                ? <p><strong className="text-danger">You have not done any questions yet!</strong></p>
 
-               : <section style={{ overflowX: "auto" }}>
+               : <section style={{ overflowX: "auto" }} >
                   <Table striped>
                      <thead>
                         <tr>
                            <th>Category</th>
-                           <th>No. Attempted</th>
+                           <th>No. Done</th>
                            <th>No. Incorrect</th>
-                           <th>Incorrect Questions</th>
+                           <th></th>
                         </tr>
                      </thead>
                      <tbody>
@@ -75,16 +75,29 @@ async function UserStatsTable({ name }: { name: string }) {
                            (Object.entries(userData.qnData) as [
                               CurrentQnCategoriesTracked,
                               { numQnsAttempted: number; wrongQnNums: number[] }
-                           ][]).map(([cat, dat]) => 
-                           <tr key={cat}>
+                           ][]).map(([cat, {numQnsAttempted, wrongQnNums}]) => 
+                           <tr key={cat} >
                               <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                              <td>{dat.numQnsAttempted}</td>
-                              <td>{dat.wrongQnNums.length}</td>
-                              <td>
-                                 <Link href={`/profile/${cat}`}>
-                                    View
-                                 </Link>
-                              </td>
+                              <td>{numQnsAttempted}</td>
+                              {wrongQnNums.length === 0
+                                 ? <><td>0</td><td></td></>
+                                 : <>
+                                    <td>
+                                       {wrongQnNums.length}&nbsp;
+                                       <Link href={`/profile/${cat}`}>
+                                          (View)
+                                       </Link>
+                                    </td>
+                                    <td>
+                                       <Link 
+                                          href={`/redoWrong/${cat}`}
+                                          className="btn btn-warning btn-sm"
+                                       >
+                                          <strong>Redo</strong>
+                                       </Link>
+                                    </td>
+                                 </>
+                              }
                            </tr>)
                         }
                      </tbody>
