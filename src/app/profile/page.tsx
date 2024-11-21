@@ -65,7 +65,7 @@ async function UserStatsTable({ name }: { name: string }) {
                      <thead>
                         <tr>
                            <th>Category</th>
-                           <th>No. Done</th>
+                           <th>No. Attempted</th>
                            <th>No. Incorrect</th>
                            <th></th>
                         </tr>
@@ -81,14 +81,19 @@ async function UserStatsTable({ name }: { name: string }) {
                               <td>{numQnsAttempted}</td>
                               {wrongQnNums.length === 0
                                  ? <><td>0</td><td></td></>
+               
                                  : <>
                                     <td>
-                                       {wrongQnNums.length}&nbsp;
-                                       <Link href={`/profile/${cat}`}>
-                                          (View)
-                                       </Link>
+                                       {wrongQnNums.length}
                                     </td>
                                     <td>
+                                       <Link 
+                                          href={`/profile/${cat}`}
+                                          className="btn btn-primary btn-sm"
+                                       >
+                                          <strong>View</strong>
+                                       </Link>
+                                       &ensp;
                                        <Link 
                                           href={`/redoWrong/${cat}`}
                                           className="btn btn-warning btn-sm"
