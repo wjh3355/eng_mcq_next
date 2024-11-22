@@ -5,6 +5,8 @@ import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
 import { CurrentQnCategories, QN_CATEGORIES_DATA, QnSet } from "@/types";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
    await checkNormalUserAuth();
 
@@ -22,20 +24,25 @@ export default async function Page() {
                ][]
             ).filter(([cat]) => cat !== "debug" && cat !== "demo")
                .map(([cat, {name, sets}]) => (
-                  <Col key={cat} lg={3} md={5} sm={7} 
-                  className="rounded border border-1 mx-3 mb-3 p-3">
-                     {name}
-                     <ul>
-                        {sets.map(({name, href, qnNumRange}) => (
-                           <li key={name}>
-                              <Link
-                                 href={href}
-                              >
-                                 {name}&ensp;({qnNumRange[0]}&nbsp;to&nbsp;{qnNumRange[1]-1})
-                              </Link>
-                           </li>
-                        ))}
-                     </ul>
+                  <Col key={cat} lg={3} md={5} sm={6} className="mb-4">
+                     <div className="card">
+                        <div className="card-header">
+                           {name}
+                        </div>
+                        <div className="card-body">
+                           <ul>
+                              {sets.map(({name, href, qnNumRange}) => (
+                                 <li key={name}>
+                                    <Link
+                                       href={href}
+                                    >
+                                       {name}&ensp;({qnNumRange[0]}&nbsp;to&nbsp;{qnNumRange[1]-1})
+                                    </Link>
+                                 </li>
+                              ))}
+                           </ul>
+                        </div>
+                     </div>
                   </Col>
                )
             )}

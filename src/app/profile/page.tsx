@@ -76,34 +76,29 @@ async function UserStatsTable({ name }: { name: string }) {
                               CurrentQnCategoriesTracked,
                               { numQnsAttempted: number; wrongQnNums: number[] }
                            ][]).map(([cat, {numQnsAttempted, wrongQnNums}]) => 
-                           <tr key={cat} >
-                              <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                              <td>{numQnsAttempted}</td>
-                              {wrongQnNums.length === 0
-                                 ? <><td>0</td><td></td></>
-               
-                                 : <>
-                                    <td>
-                                       {wrongQnNums.length}
+                              <tr key={cat} >
+                                 <td>{QN_CATEGORIES_DATA[cat].name}</td>
+                                 <td>{numQnsAttempted}</td>
+                                 <td>{wrongQnNums.length}</td>
+                                 {wrongQnNums.length === 0
+                                    ? <td/>
+                                    : <td>
+                                          <Link 
+                                             href={`/profile/${cat}`}
+                                             className="btn btn-primary btn-sm"
+                                          >
+                                             <strong>View</strong>
+                                          </Link>
+                                          &ensp;
+                                          <Link 
+                                             href={`/redoWrong/${cat}`}
+                                             className="btn btn-warning btn-sm"
+                                          >
+                                             <strong>Redo</strong>
+                                          </Link>
                                     </td>
-                                    <td>
-                                       <Link 
-                                          href={`/profile/${cat}`}
-                                          className="btn btn-primary btn-sm"
-                                       >
-                                          <strong>View</strong>
-                                       </Link>
-                                       &ensp;
-                                       <Link 
-                                          href={`/redoWrong/${cat}`}
-                                          className="btn btn-warning btn-sm"
-                                       >
-                                          <strong>Redo</strong>
-                                       </Link>
-                                    </td>
-                                 </>
-                              }
-                           </tr>)
+                                 }
+                              </tr>)
                         }
                      </tbody>
                   </Table>

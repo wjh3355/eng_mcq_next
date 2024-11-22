@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import fetchHomepageNotice from "@/lib/fetchHomepageNotice";
 import { NotebookPen } from "lucide-react";
-import ensureUserDataDoc from "@/lib/ensureUserDataDoc";
+import ensureUserDataDocExists from "@/lib/ensureUserDataDocExists";
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +15,7 @@ export default async function Page() {
    const { getUser } = getKindeServerSession();
    const user = await getUser();
 
-   if (user) await ensureUserDataDoc(user.given_name!);
+   if (user) await ensureUserDataDocExists(user.given_name!);
 
    return (
       <Container className="mb-4">

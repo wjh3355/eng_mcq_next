@@ -3,7 +3,7 @@
 import { connectToDB } from "@/lib/connectToDB";
 import { makeNewUserDoc } from "@/types";
 
-export default async function ensureUserDataDoc(name: string) {
+export default async function ensureUserDataDocExists(name: string) {
 
    if (typeof name !== "string" || name.length === 0) return;
 
