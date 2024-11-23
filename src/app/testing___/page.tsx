@@ -1,61 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-const paragraph = `The Great Wall of China is one of the most famous landmarks in the world. It was built
-over two thousand {years} ago to protect China from invaders. The wall
-stretches about 21,000 kilometers and goes {through/across/along} northern China.||
-The construction of the wall {took/required} a long time and involved millions of
-workers. It was made from {various/many/numerous} materials, including earth, wood, and
-stone. In some areas, the wall was built on {steep/rugged/treacherous/sloping} hills and mountains,
-which made the work even harder. The Great Wall was not a single continuous wall but a
-series of {walls/fortifications/structures} connected together.
-Many parts of the Great Wall have {deteriorated/eroded/worn/decayed} over the centuries due to weather
-and erosion. Some sections have been {restored/rebuilt/repaired/refurbished/reconstructed} to preserve them for future
-generations. The wall also served as a symbol of China's {strength/power/fortitude/resilience/might} and
-determination.||
-Today, the Great Wall is a popular travel destination. Millions of {tourists/travellers/sightseers} visit
-each year to see its impressive structure and learn about its history. It is {considered/deemed}
-one of the greatest architectural achievements in human history.||
-The wall also {played/served} a key role in supporting the Silk Road, an ancient trade
-route that connected China with other parts of Asia and Europe. Merchants used the route
-to {trade/exchange} goods such as silk, spices, and precious metals.||
-In addition to its historical significance, the Great Wall is an {example} of
-architectural innovation. Engineers and builders used their skills and knowledge to create
-a structure that could withstand the test of time.|| The Great Wall remains an
-{important/vital/crucial/significant} reminder of China's rich history and cultural heritage. || Efforts to
-protect and restore the wall continue, ensuring that future generations can appreciate its
-grandeur.`;
+type FormData = Record<number, {
+   value: string,
+   correctAnswers: string[],
+   isCorrect: boolean | null
+}>;
+
+const paragraph = `For the elderly in Singapore, Covid-19 has caused them to be detached from their normal lives. As they are a vulnerable group, the circuit breaker {rules} were particularly strict. Frequently visited public spaces {like} community clubs, markets and hawker centres were shut. Their leisure options at home are {limited} to watching the television and listening to the radio, or chatting with their friends on the phone.||The Senior Go Digital training programme was launched to help the elderly {cope} with the challenge. The digital training {consists} of communication skills like video calls, connecting to WiFi, and basic cyber security tips. The workshops are run on in environments the elderly are {familiar} with such as community clubs and libraries. They are supported by volunteers who work as digital ambassadors to {teach} the elderly one-on-one or in small groups. The elderly often feel assured {as} it was safe and conducive.||Madam Farah is a 60-year-old full-time homemaker. Although she only picked up basic computer skills recently, juggling household chores {with/and} social media platforms such as Zoom and Instagram has {become} second nature. She admits that seniors like herself may often feel reluctant to step out of their {comfort} zone. However, she embraced the challenge as she was {motivated} by curiosity and a desire to learn more. She was also encouraged by the government's efforts to support {senior} citizens like her.||Madam Farah uses Instagram {frequently} to update her posts for her followers and volunteers at the community club, who look forward to her updates everyday. They were unable to meet during the circuit breaker, but social media {helped} them remain connected on a digital level. Digital technology is indeed empowering.`;
 
 
 export default function Page() {
 
-   const wordsToTestArr: string[][] = paragraph
-      .match(/\{[^}]*\}/g)!
-      .map(match => [...match
-         .slice(1, -1)
-         .split("/")
-         .filter(word => word !== "")
-      ]) ?? [];
-   
-   const numWordsToTest = wordsToTestArr.length;
-
-   const correctAnsObj: Record<number, string[]> = Object.fromEntries(
-      Array.from({ length: numWordsToTest }, (_, i) => [i, wordsToTestArr[i]])
+   const wordsToTestArr: string[][] = useMemo(() => 
+      paragraph.match(/\{[^}]*\}/g)!.map((match) => 
+         [...match.slice(1, -1).split("/").filter((word) => word !== "")])
+      , []
    );
-   
-   const textArr = paragraph.split(/\{[^}]*\}/g);
 
-   const formDataAllEmptyInputs = Object.fromEntries(Array.from({ length: numWordsToTest }, (_, i) => [i, ""]));
+   const textArr = useMemo(() => paragraph.split(/\{[^}]*\}/g), []);
+
+   const initialFormData: FormData = useMemo(() => Object.fromEntries(
+      Array.from(
+         { length: wordsToTestArr.length }, 
+         (_, i) => [
+            i, 
+            { 
+               value: "", 
+               isCorrect: null, 
+               correctAnswers: wordsToTestArr[i] 
+            }
+         ]
+      )
+   ), [wordsToTestArr]);
 
    ///////////
    
-   const [formData, setFormData] = useState<Record<number, string>>(formDataAllEmptyInputs);
-   const [formStatus, setFormStatus] = useState<Record<number, boolean | null>>(
-      Object.fromEntries(Array.from({ length: numWordsToTest }, (_, i) => [i, null]))
-   );
+   const [formData, setFormData] = useState<FormData>(initialFormData);
    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
    ///////////
@@ -63,135 +49,152 @@ export default function Page() {
    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
 
-      const newStatus = { ...formStatus };
+      const newData = { ...formData };
 
-      Object.entries(formData).forEach(([idx, input]) => {
+      Object.entries(formData).forEach(([idx, { value, correctAnswers }]) => {
+         const trimmedValue = value.trim();
          const i = Number(idx);
-         newStatus[i] = correctAnsObj[i]?.includes(input.trim());
+         newData[i].isCorrect = correctAnswers.includes(trimmedValue);
+         newData[i].value = trimmedValue;
       });
       
-      setFormStatus(newStatus);
+      setFormData(newData);
       setIsSubmitted(true);
    };
 
    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
       const { name, value } = event.target;
-      setFormData(prv => ({...prv, [name]: value }))
-   }
+      const i = Number(name);
+      setFormData(prv => ({
+         ...prv,
+         [i]: { ...prv[i], value }
+      }))
+   };
 
    function handleKeyDown(event: React.KeyboardEvent) {
       if (event.key === 'Enter') event.preventDefault();
    };
 
-   const pWithInputs = textArr.reduce<(string | React.JSX.Element)[]>(
-      (acc, part, idx) => {
-
-         const splitPart = part.split(/(\|\|)/);
-
-         if (idx === textArr.length - 1) {
-            return [...acc, ...splitPart];
-         } 
-
-         let inputTextClass = "border border-2 rounded ";
-         let thisInputStatus = formStatus[idx];
-         if (thisInputStatus === true) {
-            inputTextClass += "border-success text-success fw-bold";
-         } else if (thisInputStatus === false) {
-            inputTextClass += "border-danger text-danger fw-bold";
+   function renderParagraph(): (string | React.JSX.Element)[][] {
+      const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
+         (acc, part, idx) => {
+   
+            const splitPart = part.split(/(\|\|)/);
+   
+            if (idx === textArr.length - 1) {
+               return [...acc, ...splitPart];
+            } 
+   
+            let inputTextClass = "border border-2 ";
+            let { value, isCorrect } = formData[idx];
+            if (isCorrect === true) {
+               inputTextClass += "border-success text-success fw-bold";
+            } else if (isCorrect === false) {
+               inputTextClass += "border-danger text-danger fw-bold";
+            }
+   
+            return [
+               ...acc,
+               ...splitPart,
+               <React.Fragment key={idx}>
+                  <strong>({idx + 1})</strong>&nbsp;
+                  <input
+                     autoFocus={idx === 0}
+                     style={{
+                        width: "150px",
+                        height: "32px",
+                        textAlign: "center",
+                     }}
+                     className={inputTextClass}
+                     disabled={isCorrect !== null}
+                     type="text"
+                     name={idx.toString()}
+                     value={value}
+                     onChange={handleInputChange}
+                     onKeyDown={handleKeyDown}
+                  />
+               </React.Fragment>,
+            ]; 
+         }, []
+      );
+   
+      let formattedParagraphs: (string | React.JSX.Element)[][] = [];
+      let currentArray: (string | React.JSX.Element)[] = [];
+      for (let item of paragraphsWithInput) {
+         if (item === "||") {
+            formattedParagraphs.push(currentArray);
+            currentArray = [];
+         } else {
+            currentArray.push(item);
          }
-
-         return [
-            ...acc,
-            ...splitPart,
-            <React.Fragment key={idx}>
-               <strong>({idx + 1})</strong>&nbsp;
-               <input
-                  autoFocus={idx === 0}
-                  style={{
-                     width: "140px",
-                     height: "30px",
-                     textAlign: "center",
-                     position: "relative",
-                  }}
-                  className={inputTextClass}
-                  disabled={thisInputStatus !== null}
-                  type="text"
-                  name={idx.toString()}
-                  value={formData[idx]}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-               />
-            </React.Fragment>,
-         ]; 
-      }, []
-   );
-
-   let pWithInputsAndParagraphing: (string | React.JSX.Element)[][] = [];
-   let currentArray: (string | React.JSX.Element)[] = [];
-   for (let item of pWithInputs) {
-      if (item === "||") {
-         pWithInputsAndParagraphing.push(currentArray);
-         currentArray = [];
-      } else {
-         currentArray.push(item);
       }
+      if (currentArray.length > 0) formattedParagraphs.push(currentArray);
+
+      return formattedParagraphs;
    }
-   if (currentArray.length > 0) pWithInputsAndParagraphing.push(currentArray);
+
 
    return (
-      <Container>
-         <form onSubmit={handleSubmit} style={{lineHeight: "40px", fontSize: "18px"}}>
+      <Container className="mb-5">
+         <Row className="my-3">
+            <h5 className="text-center m-0">Vocabulary Cloze</h5>
+         </Row>
+         <form onSubmit={handleSubmit} style={{lineHeight: "45px", fontSize: "18px"}}>
 
             {
-               pWithInputsAndParagraphing.map((stuff, idx) => 
-                  <p key={idx}>{stuff}</p>
+               renderParagraph().map((para, idx) => 
+                  <p key={idx}>{para}</p>
                )
             }
-
-            <Button 
-               type="submit"
-               size="lg"
-               disabled={isSubmitted}
-            >
-               Submit
-            </Button>
-
-            &ensp;
-
-            <Button 
-               onClick={() => setFormData(formDataAllEmptyInputs)}
-               size="lg"
-               variant="warning"
-               disabled={isSubmitted}
-            >
-               Reset
-            </Button>
-
-            &ensp;
-
-            {
-               isSubmitted && <span className="border border-2 p-2 rounded border-primary">
-                  Score:
-                  &nbsp;
-                  {Object.values(formStatus).filter(stat => stat === true).length}
-                  &nbsp;/&nbsp;
-                  {numWordsToTest}
-                  </span>
-            }
-
+            <div className="hstack gap-3 d-flex justify-content-center">
+               <Button 
+                  type="submit"
+                  size="lg"
+                  disabled={isSubmitted}
+               >
+                  Submit
+               </Button>
+               <Button 
+                  onClick={() => setFormData(initialFormData)}
+                  size="lg"
+                  variant="warning"
+                  disabled={isSubmitted}
+               >
+                  Reset
+               </Button>
+            </div>
          </form>
 
-         <br/>
-
          {
-            isSubmitted && Object.entries(correctAnsObj).map(([idx, ansArr]) => 
-            <div key={idx}>
-               {Number(idx)+1})&nbsp;{ansArr.join(" / ")}
-            </div>)
+            isSubmitted && <div className="d-flex justify-content-center mt-3">
+               <span className="border border-2 p-2 rounded border-info">
+                  Score:
+                  &nbsp;
+                  {
+                     Object
+                        .values(formData)
+                        .map(dat => dat.isCorrect)
+                        .filter(stat => stat === true)
+                        .length
+                  }
+                  &nbsp;/&nbsp;
+                  {Object.keys(formData).length}
+               </span>
+            </div>
          }
-
-         <br/>
-         <br/>
+         {
+            isSubmitted &&
+            <div>
+               Answers:
+               {
+                  Object.values(formData).map(({ correctAnswers }, idx) => 
+                     <div key={idx}>
+                        {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
+                     </div>
+                  )
+               }
+            </div>
+         }
       </Container>
    );
 }
