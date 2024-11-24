@@ -47,3 +47,37 @@ export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
    redoSet() {},
    hasReachedEnd: false
 }
+
+////////////////////////////////////////////// 
+
+export type ClozeObj = {
+   qnNum: number,
+   passage: string
+}
+
+export type ClozeContextValue = {
+   clozeObj: ClozeObj,
+   isLoading: boolean,
+   error: string,
+   hasReachedEnd: boolean,
+   handleNextQnBtnClick: () => void
+}
+
+export const EMPTY_CLOZE_OBJ: ClozeObj = {
+   qnNum: NaN,
+   passage: ""
+}
+
+export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
+   clozeObj: EMPTY_CLOZE_OBJ,
+   isLoading: true,
+   error: "",
+   hasReachedEnd: false,
+   handleNextQnBtnClick() {}
+}
+
+export type ClozeFormData = Record<number, {
+   value: string,
+   correctAnswers: string[],
+   isCorrect: boolean | null
+}>;
