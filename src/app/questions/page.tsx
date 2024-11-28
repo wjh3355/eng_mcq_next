@@ -36,7 +36,11 @@ export default async function Page() {
                                     <Link
                                        href={href}
                                     >
-                                       {name}&ensp;({qnNumRange[0]}&nbsp;to&nbsp;{qnNumRange[1]-1})
+                                       {
+                                          name === "Random"
+                                          ?  `50 Random questions`
+                                          :  `${name} (${qnNumRange[0]} to ${qnNumRange[1]})`
+                                       }
                                     </Link>
                                  </li>
                               ))}

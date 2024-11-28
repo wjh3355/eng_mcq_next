@@ -5,6 +5,7 @@ import { HREF_LOOKUP_MAP } from "@/types";
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
+import sampleSize from "lodash/sampleSize";
 
 export default async function QuestionsPage({
    params
@@ -18,6 +19,7 @@ export default async function QuestionsPage({
    if (!match) return notFound();
 
    const { cat, titleName, set, requiresAuth, requiresAdminAuth, isTracked } = match;
+   const { qnNumRange, name } = set;
 
    let userName = "";
 
@@ -29,14 +31,16 @@ export default async function QuestionsPage({
 
    return <QuestionsApp
       qnCategory={cat}
-      qnNumArray={shuffle(range(...set.qnNumRange))}
+      qnNumArray={
+         name === "Random" ? sampleSize(range(...qnNumRange), 50) : shuffle(range(...qnNumRange))
+      }
       userName={userName}
       title={
          cat === "debug" 
          ? "DEBUG" 
          : (cat === "demo" 
             ? "Demo Questions" 
-            : titleName + " - " + set.name) 
+            : titleName + " - " + name) 
       }
       trackQns={isTracked}
    />

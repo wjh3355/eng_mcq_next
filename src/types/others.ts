@@ -107,7 +107,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          },
          {
             qnNumRange: [1, 601],
-            name: "All Questions",
+            name: "Random",
             href: "/questions/gep"
          }
       ]
@@ -141,7 +141,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          },
          {
             qnNumRange: [1, 241],
-            name: "All Questions",
+            name: "Random",
             href: "/questions/phrasalVerbs"
          }
       ]
@@ -165,7 +165,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          },
          {
             qnNumRange: [1, 101],
-            name: "All Questions",
+            name: "Random",
             href: "/questions/psleWordsCloze"
          }
       ]
@@ -189,7 +189,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          },
          {
             qnNumRange: [1, 101],
-            name: "All Questions",
+            name: "Random",
             href: "/questions/psleWordsMcq"
          }
       ]
@@ -238,7 +238,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
          },
          {
             qnNumRange: [1, 351],
-            name: "All Questions",
+            name: "Random",
             href: "/questions/pslePhrasesCloze"
          }
       ]
