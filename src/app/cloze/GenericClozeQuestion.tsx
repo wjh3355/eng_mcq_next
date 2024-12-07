@@ -1,24 +1,23 @@
 "use client";
 
 import { ClozeContextValue, ClozeFormData } from "@/types";
-import { RotateCcw, CircleArrowRight, TriangleAlert } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
-import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import styled, { keyframes, css } from "styled-components";
 import Skeleton from "react-loading-skeleton";
 
 export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
-   const { clozeObj: { passage }, handleNextQnBtnClick, isLoading, hasReachedEnd } = QnContextToUse();
+   const { clozeObj: { passage, qnNum }, isLoading } = QnContextToUse();
 
    const [formData, setFormData] = useState<ClozeFormData>({});
    const [textArr, setTextArr] = useState<string[]>([]);
-   const [hasSubmittedBefore, setHasSubmittedBefore] = useState<boolean>(false);
    const [score, setScore] = useState<number>(0);
-   const [maxScore, setMaxScore] = useState<number>(0);
-   const [is12orMoreCorrect, setIs12orMoreCorrect] = useState<boolean>(false);
+   const [numWordsTested, setNumWordsTested] = useState<number>(0);
+   const [numTriesLeft, setNumTriesLeft] = useState<number>(3);
+   const [showAns, setShowAns] = useState<boolean>(false);
    const [animateWrong, setAnimateWrong] = useState<boolean>(false);
 
    useEffect(() => {
@@ -47,15 +46,15 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
       setFormData(initialFormData);
       setTextArr(textArr);
-      setMaxScore(wordsToTestArr.length);
+      setNumWordsTested(wordsToTestArr.length);
 
       return () => {
          setFormData({});
          setTextArr([]);
-         setIs12orMoreCorrect(false);
          setScore(0);
-         setMaxScore(0);
-         setHasSubmittedBefore(false);
+         setNumWordsTested(0);
+         setNumTriesLeft(3);
+         setShowAns(false);
       }
    }, [passage, isLoading])
 
@@ -78,14 +77,16 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          .length;
       
       setScore(newScore);
-      if (newScore >= 12) setIs12orMoreCorrect(true);
-      
-      if (!hasSubmittedBefore) setHasSubmittedBefore(true);
 
       setFormData(newData);
-      
-      setAnimateWrong(true);
-      setTimeout(() => setAnimateWrong(false), 400);
+
+      if (numTriesLeft === 1 || newScore >= 8) {
+         setShowAns(true);
+      } else {
+         setNumTriesLeft(prev => prev - 1);
+         setAnimateWrong(true);
+         setTimeout(() => setAnimateWrong(false), 400);
+      }
    };
 
    function handleInputUpdate(event: React.ChangeEvent<HTMLInputElement>) {
@@ -99,14 +100,12 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
    function handleReset() {
       const resettedData = { ...formData };
-
       for (let i in resettedData) {
          const { isCorrect } = resettedData[i];
          if (isCorrect !== true) {
             resettedData[i].value = ""
          }
       }
-
       setFormData(resettedData);
    }
 
@@ -133,7 +132,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                   <strong>({idx + 1})</strong>&nbsp;
                   <ClozeInput
                      autoFocus={idx === 0}
-                     disabled={isCorrect === true || is12orMoreCorrect}
+                     disabled={isCorrect === true || showAns}
                      autoComplete="off"
                      
                      type="text"
@@ -165,18 +164,9 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
       return formattedParagraphs;
    })();
-   
-   if (hasReachedEnd) return null;
 
    return (
       <>
-         {
-            hasSubmittedBefore && !is12orMoreCorrect &&
-            <Alert variant="info" className="d-flex align-items-center">
-               <TriangleAlert />&nbsp;<strong>You need to get at least 12 words correct!</strong>
-            </Alert>
-         }
-
          <form 
             onSubmit={handleFormSubmit} 
             style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
@@ -184,6 +174,9 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
             {
                !isLoading
                ?  <div>
+                     <div>
+                        <strong><u>Cloze #{qnNum}</u></strong>
+                     </div>
                      {paragraphToRender.map((paraArr, idx) => 
                         <p key={idx}>{paraArr}</p>)
                      }
@@ -194,12 +187,12 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
             <div className="mt-3 hstack gap-3 d-flex justify-content-center">
 
                <div className="border border-2 rounded border-info px-2">
-                  Score: {score} / {maxScore}
+                  Score: {score} / {numWordsTested}
                </div>
 
                <Button 
                   type="submit"
-                  disabled={is12orMoreCorrect || isLoading}
+                  disabled={showAns || isLoading}
                   variant="danger"
                >
                   Submit Answer
@@ -208,42 +201,35 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                <Button 
                   onClick={() => handleReset()}
                   variant="secondary"
-                  disabled={is12orMoreCorrect || isLoading}
+                  disabled={showAns || isLoading}
                   className="d-flex align-items-center"
                >
                   <RotateCcw size={22} strokeWidth={2}/>&nbsp;Reset
                </Button>
-
-               <Button 
-                  onClick={() => handleNextQnBtnClick()}
-                  variant="primary"
-                  disabled={!is12orMoreCorrect || isLoading}
-                  className="d-flex align-items-center"
-               >
-                  Next&nbsp;<CircleArrowRight size={22} strokeWidth={2}/>
-               </Button>
-
             </div>
          </form>
 
          {
-            is12orMoreCorrect &&
-               <Card border="success" className="mt-3">
-                  <Card.Header>
-                     Solution:
-                  </Card.Header>
-                  <Card.Body>
-                     <AnswersListWrapper>
-                        {
-                           Object.values(formData).map(({ correctAnswers }, idx) => 
-                              <div key={idx}>
-                                 {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
-                              </div>
-                           )
-                        }
-                     </AnswersListWrapper>
-                  </Card.Body>
-               </Card>
+            showAns 
+               ?  <Card border="success" className="mt-3">
+                     <Card.Header>
+                        Solution:
+                     </Card.Header>
+                     <Card.Body>
+                        <AnswersListWrapper>
+                           {
+                              Object.values(formData).map(({ correctAnswers }, idx) => 
+                                 <div key={idx}>
+                                    {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
+                                 </div>
+                              )
+                           }
+                        </AnswersListWrapper>
+                     </Card.Body>
+                  </Card>
+               :  <div className="text-center fw-bold my-3">
+                     You need to get at least 8 blanks correct ({numTriesLeft} tries left)
+                  </div>
          }
       </>
    );
@@ -270,7 +256,7 @@ const ClozeInput = styled.input<{
    text-align: center;
    border: 2px solid;
 
-   border-color: ${({$isCorrect}) => $isCorrect === true ? "green" : ($isCorrect === false ? "rgb(190, 44, 44)" : "default")};
+   border-color: ${({$isCorrect}) => $isCorrect === true ? "green" : ($isCorrect === false ? "rgb(190, 44, 44)" : "lightGray")};
    color: ${({$isCorrect}) => $isCorrect ? "green" : "default"};
    font-weight: ${({$isCorrect}) => $isCorrect ? "bold" : "default"};
 
