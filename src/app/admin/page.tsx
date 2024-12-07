@@ -1,4 +1,4 @@
-import checkAdminUserAuth from "@/lib/checkAdminUserAuth";
+import checkAdminUserAuth from "@/serverFuncs/checkAdminUserAuth";
 
 export const dynamic = 'force-dynamic';
 

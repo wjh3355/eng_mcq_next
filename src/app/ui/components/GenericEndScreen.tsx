@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import PaginatedDictEntries from "./PaginatedDictEntries";
-import { RotateCcw, BookText, CircleCheckBig } from "lucide-react";
+import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
 
 export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
@@ -19,7 +19,8 @@ export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: (
       hasReachedEnd,
       score: [numCorrect, numTotal],
       wrongAnsArr,
-      redoSet
+      redoSet,
+      isSetRandom
    } = QnContextToUse();
 
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -38,15 +39,26 @@ export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: (
 
                   <h4>You reached the end of this set</h4>
 
-                  <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center hstack gap-3">
                      <Button
                         size="lg"
                         variant="danger"
                         className="d-flex align-items-center"
                         onClick={() => redoSet()}
                      >
-                        <RotateCcw/>&nbsp;Redo Set
+                        <RotateCcw/>&nbsp;Redo This Set
                      </Button>
+                     {
+                        isSetRandom && 
+                        <Button
+                           size="lg"
+                           variant="secondary"
+                           className="d-flex align-items-center"
+                           onClick={() => window.location.reload()}
+                        >
+                           <Lightbulb/>&nbsp;New Random Set
+                        </Button>
+                     }
                   </div>
 
                   <Container>
@@ -85,6 +97,7 @@ export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: (
                         </Col>
                      </Row>
                   </Container>
+
                </div>
             </Card>
          </Col>

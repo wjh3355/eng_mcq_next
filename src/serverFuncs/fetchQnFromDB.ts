@@ -1,33 +1,28 @@
 'use server';
 
-import { connectToDB } from "@/lib/connectToDB";
-import { CurrentQnCategories, QnObj, QnObjArrSchema } from "@/types";
+import { connectToDB } from "@/serverFuncs/connectToDB";
+import { CurrentQnCategories, QnObj, QnObjSchema } from "@/types";
 
-export default async function fetchQnArrFromDB(
+export default async function fetchQnFromDB(
    collection: CurrentQnCategories, 
-   qnNums: number[]
+   qnNum: number
 ) {
    try {
       const { db } = await connectToDB("english_questions");
       const data = await db
          .collection(collection)
-         .find({ qnNum: { $in: qnNums } }, { projection: { _id: 0 } })
-         .toArray();
+         .findOne({ qnNum }, { projection: { _id: 0 } });
 
-      if (data.length === 0) throw new Error("Questions not found");
+      if (!data) throw new Error("Question not found");
 
-      const zodResult = QnObjArrSchema.safeParse(data);
+      const zodResult = QnObjSchema.safeParse(data);
 
       if (!zodResult.success) {
          console.error("Data not of correct type:", zodResult.error.issues);
          throw new Error("Type validation error");
       }
 
-      const qnObjArrInOriginalOrder: QnObj[] = qnNums
-         .map(num => zodResult.data.find(qn => qn.qnNum === num))
-         .filter(ent => ent !== undefined);
-
-      return qnObjArrInOriginalOrder;
+      return zodResult.data as QnObj;
 
    } catch (error: unknown) {
       if (error instanceof Error) {

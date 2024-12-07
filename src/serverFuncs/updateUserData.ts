@@ -1,6 +1,6 @@
 "use server";
 
-import { connectToDB } from "@/lib/connectToDB";
+import { connectToDB } from "@/serverFuncs/connectToDB";
 import { CurrentQnCategories } from "@/types";
 
 export default async function updateUserData({

@@ -16,20 +16,23 @@ export default function QuestionsApp({
    qnNumArray,
    userName,
    trackQns,
-   title
+   title,
+   isSetRandom
 }: {
    qnCategory: CurrentQnCategories,
    qnNumArray: number[],
    userName: string,
    trackQns: boolean,
-   title: string
+   title: string,
+   isSetRandom: boolean
 }) {
 
    const { MCQProvider, useMCQContext } = createGenericMCQProvider({
       qnCategory,
       qnNumArray,
       userName,
-      trackQns
+      trackQns,
+      isSetRandom
    });
 
    return <MCQProvider>

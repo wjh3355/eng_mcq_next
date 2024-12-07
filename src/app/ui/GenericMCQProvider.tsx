@@ -4,19 +4,21 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 
 import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
 
-import fetchQnFromDB from "@/lib/fetchQnFromDB";
-import updateUserData from "@/lib/updateUserData";
+import fetchQnFromDB from "@/serverFuncs/fetchQnFromDB";
+import updateUserData from "@/serverFuncs/updateUserData";
 
 export default function createGenericMCQProvider({
    qnCategory,
    qnNumArray,
    userName,
    trackQns,
+   isSetRandom
 }: {
    qnCategory: CurrentQnCategories
    qnNumArray: number[],
    userName: string,
    trackQns: boolean,
+   isSetRandom: boolean
 }) {
 
    const QnContext = createContext<MCQContextValue>(EMPTY_CONTEXT_VALUE);
@@ -30,7 +32,6 @@ export default function createGenericMCQProvider({
       const [qnSequence, setQnSequence] = useState<number[]>(qnNumArray);
       const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
-      const [isNextQnBtnDisabled, setIsNextQnBtnDisabled] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [score, setScore] = useState<[number, number]>([0, 0]);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
@@ -38,7 +39,6 @@ export default function createGenericMCQProvider({
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
       async function handleOptionClick(isCorr: boolean) {
-         setIsNextQnBtnDisabled(false);
          setIsCorrect(isCorr);
 
          if (isCorr) {
@@ -69,7 +69,6 @@ export default function createGenericMCQProvider({
       function redoSet() {
          setWrongAnsArr([]);
          setScore([0, 0]);
-         setIsNextQnBtnDisabled(true);
          setIsCorrect(null);
          setIsLoading(true);
          setHasReachedEnd(false);
@@ -77,7 +76,6 @@ export default function createGenericMCQProvider({
       }
       
       function handleNextQnBtnClick() {
-         setIsNextQnBtnDisabled(true);
          setIsLoading(true);
          setIsCorrect(null);
          setQnSequence(prev => prev.slice(1));
@@ -117,11 +115,11 @@ export default function createGenericMCQProvider({
             qnObj,
             isLoading,
             isCorrect,
-            isNextQnBtnDisabled,
             score,
             wrongAnsArr,
             error,
             hasReachedEnd,
+            isSetRandom,
             handleOptionClick,
             handleNextQnBtnClick,
             redoSet

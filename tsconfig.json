@@ -24,6 +24,6 @@
          "@/*": ["./src/*"]
       }
    },
-   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/lib/tttttt.mts"],
+   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/serverFuncs/tttttt.mts"],
    "exclude": ["node_modules"]
 }

@@ -1,6 +1,6 @@
 import QuestionsApp from "@/app/ui/QuestionsApp";
-import checkAdminUserAuth from "@/lib/checkAdminUserAuth";
-import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
+import checkAdminUserAuth from "@/serverFuncs/checkAdminUserAuth";
+import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import { HREF_LOOKUP_MAP } from "@/types";
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";
@@ -32,7 +32,9 @@ export default async function QuestionsPage({
    return <QuestionsApp
       qnCategory={cat}
       qnNumArray={
-         name === "Random" ? sampleSize(range(...qnNumRange), 50) : shuffle(range(...qnNumRange))
+         name === "Random" 
+         ?  shuffle(sampleSize(range(...qnNumRange), 50)) 
+         :  shuffle(range(...qnNumRange))
       }
       userName={userName}
       title={
@@ -43,5 +45,6 @@ export default async function QuestionsPage({
             : titleName + " - " + name) 
       }
       trackQns={isTracked}
+      isSetRandom={name === "Random"}
    />
 }

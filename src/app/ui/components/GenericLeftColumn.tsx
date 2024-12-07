@@ -20,7 +20,6 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
 
    const {
       handleNextQnBtnClick,
-      isNextQnBtnDisabled,
       score: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj,
@@ -97,7 +96,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
             <Button 
                variant="primary" 
                className="d-flex align-items-center justify-content-center"
-               disabled={isNextQnBtnDisabled}
+               disabled={isCorrect === null}
                onClick={() => handleNextQnBtnClick()}
             >
                <strong>Next&nbsp;</strong><CircleArrowRight size={22} strokeWidth={2}/>

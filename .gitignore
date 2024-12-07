@@ -38,5 +38,5 @@ next-env.d.ts
 
 private/
 
-src/lib/connectToDB2.ts
-src/lib/test.ts
+src/serverFuncs/connectToDB2.ts
+src/serverFuncs/test.ts

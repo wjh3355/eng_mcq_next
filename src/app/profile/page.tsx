@@ -1,12 +1,10 @@
-import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
+import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
-import fetchUserData from "@/lib/fetchUserData";
+import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
-import Link from "next/link";
-import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
+import StatsTable from "./StatsTable";
 
 export const dynamic = 'force-dynamic';
 
@@ -57,52 +55,9 @@ async function UserStatsTable({ name }: { name: string }) {
          </p>
          {
             JSON.stringify(userData.qnData) === "{}" 
-
                ? <p><strong className="text-danger">You have not done any questions yet!</strong></p>
+               : <StatsTable userData={userData}/>
 
-               : <section style={{ overflowX: "auto" }} >
-                  <Table striped>
-                     <thead>
-                        <tr>
-                           <th>Category</th>
-                           <th>No. Attempted</th>
-                           <th>No. Incorrect</th>
-                           <th></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {
-                           (Object.entries(userData.qnData) as [
-                              CurrentQnCategoriesTracked,
-                              { numQnsAttempted: number; wrongQnNums: number[] }
-                           ][]).map(([cat, {numQnsAttempted, wrongQnNums}]) => 
-                              <tr key={cat} >
-                                 <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                                 <td>{numQnsAttempted}</td>
-                                 <td>{wrongQnNums.length}</td>
-                                 {wrongQnNums.length === 0
-                                    ? <td/>
-                                    : <td>
-                                          <Link 
-                                             href={`/profile/${cat}`}
-                                             className="btn btn-primary btn-sm"
-                                          >
-                                             <strong>View</strong>
-                                          </Link>
-                                          &ensp;
-                                          <Link 
-                                             href={`/redoWrong/${cat}`}
-                                             className="btn btn-warning btn-sm"
-                                          >
-                                             <strong>Redo</strong>
-                                          </Link>
-                                    </td>
-                                 }
-                              </tr>)
-                        }
-                     </tbody>
-                  </Table>
-               </section>
          }
       </>
    );

@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 
 import { ClozeContextValue, ClozeObj, EMPTY_CLOZE_CONTEXT_VALUE, EMPTY_CLOZE_OBJ } from "@/types";
 
-import fetchClozeFromDB from "@/lib/fetchClozeFromDB";
+import fetchClozeFromDB from "@/serverFuncs/fetchClozeFromDB";
 
 export default function createGenericClozeProvider({
    qnNumArray,

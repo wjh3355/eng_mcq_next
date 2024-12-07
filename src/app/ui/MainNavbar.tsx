@@ -29,14 +29,14 @@ export default function MainNavbar() {
 
                   {isAuthenticated && 
                      <>
-                        <Nav.Link as={Link} href="/profile">
-                           Profile
-                        </Nav.Link>
-                        
                         <Nav.Link as={Link} href="/questions">
                            Questions
                         </Nav.Link>
 
+                        <Nav.Link as={Link} href="/profile">
+                           Profile
+                        </Nav.Link>
+                     
                         {/* <Nav.Link as={Link} href="/redoWrong">
                            Reattempt
                         </Nav.Link> */}

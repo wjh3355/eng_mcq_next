@@ -5,9 +5,9 @@ import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
-import fetchHomepageNotice from "@/lib/fetchHomepageNotice";
+import fetchHomepageNotice from "@/serverFuncs/fetchHomepageNotice";
 import { NotebookPen } from "lucide-react";
-import ensureUserDataDocExists from "@/lib/ensureUserDataDocExists";
+import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
 
 export const dynamic = 'force-dynamic';
 

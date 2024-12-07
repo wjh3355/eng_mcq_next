@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import checkNormalUserAuth from "@/lib/checkNormalUserAuth";
+import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import { CurrentQnCategories, QN_CATEGORIES_DATA, QnSet } from "@/types";
 import Link from "next/link";
 

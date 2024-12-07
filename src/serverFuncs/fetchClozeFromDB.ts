@@ -1,6 +1,6 @@
 'use server';
 
-import { connectToDB } from "@/lib/connectToDB";
+import { connectToDB } from "@/serverFuncs/connectToDB";
 import { ClozeObj } from "@/types";
 
 export default async function fetchClozeFromDB(
