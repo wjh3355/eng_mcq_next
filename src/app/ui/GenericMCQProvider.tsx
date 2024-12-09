@@ -5,7 +5,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
 
 import fetchQnFromDB from "@/serverFuncs/fetchQnFromDB";
-import updateUserData from "@/serverFuncs/updateUserData";
+import updateUserQnData from "@/serverFuncs/updateUserQnData";
 
 export default function createGenericMCQProvider({
    qnCategory,
@@ -53,7 +53,7 @@ export default function createGenericMCQProvider({
 
          if (trackQns && userName !== "") {
             try {
-               await updateUserData({
+               await updateUserQnData({
                   cat: qnCategory, 
                   userName, 
                   qnNum: qnObj.qnNum, 

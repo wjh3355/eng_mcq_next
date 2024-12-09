@@ -3,7 +3,7 @@
 import { connectToDB } from "@/serverFuncs/connectToDB";
 import { CurrentQnCategories } from "@/types";
 
-export default async function updateUserData({
+export default async function updateUserQnData({
    cat,
    userName,
    qnNum,

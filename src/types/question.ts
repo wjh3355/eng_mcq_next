@@ -1,3 +1,5 @@
+import { ClozeData, EMPTY_CLOZE_DATA } from "./others"
+
 export type MCQContextValue = {
    qnObj: QnObj,
    wrongAnsArr: QnObj[],
@@ -48,7 +50,7 @@ export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
    redoSet() {}
 }
 
-////////////////////////////////////////////// 
+///////////////////////////////////////////////////////////////////
 
 export type ClozeObj = {
    qnNum: number,
@@ -56,9 +58,11 @@ export type ClozeObj = {
 }
 
 export type ClozeContextValue = {
+   clozeData: ClozeData,
    clozeObj: ClozeObj,
    isLoading: boolean,
    error: string,
+   handleCompletion: (score: number) => Promise<void>,
 }
 
 export const EMPTY_CLOZE_OBJ: ClozeObj = {
@@ -67,9 +71,11 @@ export const EMPTY_CLOZE_OBJ: ClozeObj = {
 }
 
 export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
+   clozeData: EMPTY_CLOZE_DATA,
    clozeObj: EMPTY_CLOZE_OBJ,
    isLoading: true,
    error: "",
+   async handleCompletion() {}
 }
 
 export type ClozeFormData = Record<number, {

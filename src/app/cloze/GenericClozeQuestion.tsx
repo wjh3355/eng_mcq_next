@@ -1,7 +1,8 @@
 "use client";
 
+import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from "@/types";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -10,12 +11,16 @@ import Skeleton from "react-loading-skeleton";
 
 export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
-   const { clozeObj: { passage, qnNum }, isLoading } = QnContextToUse();
+   const { 
+      clozeObj: { passage, qnNum },
+      isLoading,
+      clozeData: { hasDoneCloze },
+      handleCompletion
+   } = QnContextToUse();
 
    const [formData, setFormData] = useState<ClozeFormData>({});
    const [textArr, setTextArr] = useState<string[]>([]);
    const [score, setScore] = useState<number>(0);
-   const [numWordsTested, setNumWordsTested] = useState<number>(0);
    const [numTriesLeft, setNumTriesLeft] = useState<number>(3);
    const [showAns, setShowAns] = useState<boolean>(false);
    const [animateWrong, setAnimateWrong] = useState<boolean>(false);
@@ -27,9 +32,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          .match(/\{[^}]*\}/g)!
          .map((match) => 
             [...match.slice(1, -1).split("/").filter((word) => word !== "")]);
-         
-      const textArr = passage.split(/\{[^}]*\}/g);
-   
+            
       const initialFormData: ClozeFormData = Object.fromEntries(
          Array.from(
             { length: wordsToTestArr.length }, 
@@ -45,23 +48,21 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       );
 
       setFormData(initialFormData);
-      setTextArr(textArr);
-      setNumWordsTested(wordsToTestArr.length);
+      setTextArr(passage.split(/\{[^}]*\}/g));
 
       return () => {
          setFormData({});
          setTextArr([]);
          setScore(0);
-         setNumWordsTested(0);
          setNumTriesLeft(3);
          setShowAns(false);
       }
    }, [passage, isLoading])
 
-   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
 
-      const newData = { ...formData };
+      const newData = cloneDeep(formData);
 
       for (let i in newData) {
          const { value, correctAnswers } = newData[i];
@@ -81,11 +82,16 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       setFormData(newData);
 
       if (numTriesLeft === 1 || newScore >= 8) {
+
          setShowAns(true);
+         await handleCompletion(newScore);
+
       } else {
+
          setNumTriesLeft(prev => prev - 1);
          setAnimateWrong(true);
          setTimeout(() => setAnimateWrong(false), 400);
+         
       }
    };
 
@@ -99,7 +105,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    };
 
    function handleReset() {
-      const resettedData = { ...formData };
+      const resettedData = cloneDeep(formData);
       for (let i in resettedData) {
          const { isCorrect } = resettedData[i];
          if (isCorrect !== true) {
@@ -165,70 +171,79 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       return formattedParagraphs;
    })();
 
+   const AnsCard = () => {
+      return (
+         <Card border="success" className="mt-3">
+            <Card.Header>
+               <strong>Solution</strong>
+            </Card.Header>
+            <Card.Body>
+               <AnswersListWrapper>
+                  {
+                     Object.values(formData).map(({ correctAnswers }, idx) => 
+                        <div key={idx}>
+                           {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
+                        </div>
+                     )
+                  }
+               </AnswersListWrapper>
+            </Card.Body>
+         </Card>
+      );
+   }
+
+   if (hasDoneCloze) return null;
+
    return (
       <>
-         <form 
-            onSubmit={handleFormSubmit} 
-            style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
-         >
-            {
-               !isLoading
-               ?  <div>
-                     <div>
-                        <strong><u>Cloze #{qnNum}</u></strong>
-                     </div>
-                     {paragraphToRender.map((paraArr, idx) => 
-                        <p key={idx}>{paraArr}</p>)
-                     }
-                  </div>
-               :  <Skeleton height={30}/>
-            }
-
-            <div className="mt-3 hstack gap-3 d-flex justify-content-center">
-
-               <div className="border border-2 rounded border-info px-2">
-                  Score: {score} / {numWordsTested}
-               </div>
-
-               <Button 
-                  type="submit"
-                  disabled={showAns || isLoading}
-                  variant="danger"
-               >
-                  Submit Answer
-               </Button>
-
-               <Button 
-                  onClick={() => handleReset()}
-                  variant="secondary"
-                  disabled={showAns || isLoading}
-                  className="d-flex align-items-center"
-               >
-                  <RotateCcw size={22} strokeWidth={2}/>&nbsp;Reset
-               </Button>
-            </div>
-         </form>
+         {
+            isLoading
+               ?  <Skeleton height={50}/>
+               :  <form
+                     onSubmit={handleFormSubmit} 
+                     style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
+                  >
+                     <header><strong><u>Cloze #{qnNum}</u></strong></header>
+         
+                     <article>
+                        {paragraphToRender.map((paraArr, idx) => 
+                           <p key={idx}>{paraArr}</p>)
+                        }
+                     </article>
+         
+                     <section className="mt-3 hstack gap-3 d-flex justify-content-center">
+         
+                        <div className="border border-2 rounded border-info px-2">
+                           Score: {score} / 15
+                        </div>
+         
+                        <Button 
+                           type="submit"
+                           variant="danger"
+                           disabled={showAns || isLoading}
+                           className="d-flex align-items-center"
+                        >
+                           <Send size={22} strokeWidth={2}/>&nbsp;Submit
+                        </Button>
+         
+                        <Button 
+                           onClick={() => handleReset()}
+                           variant="secondary"
+                           disabled={showAns || isLoading}
+                           className="d-flex align-items-center"
+                        >
+                           <RotateCcw size={22} strokeWidth={2}/>&nbsp;Reset
+                        </Button>
+                     </section>
+         
+                  </form>
+         }
 
          {
             showAns 
-               ?  <Card border="success" className="mt-3">
-                     <Card.Header>
-                        Solution:
-                     </Card.Header>
-                     <Card.Body>
-                        <AnswersListWrapper>
-                           {
-                              Object.values(formData).map(({ correctAnswers }, idx) => 
-                                 <div key={idx}>
-                                    {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
-                                 </div>
-                              )
-                           }
-                        </AnswersListWrapper>
-                     </Card.Body>
-                  </Card>
-               :  <div className="text-center fw-bold my-3">
-                     You need to get at least 8 blanks correct ({numTriesLeft} tries left)
+               ?  <AnsCard/>
+               :  !isLoading && <div className="text-center fw-bold my-3">
+                     Answer at least 8 blanks correctly ({numTriesLeft} tries left)!
                   </div>
          }
       </>

@@ -8,7 +8,7 @@ export default async function fetchClozeFromDB() {
       const { db } = await connectToDB("english_questions");
       const data = await db
          .collection("clozePassage")
-         .findOne({ qnNum: 1 }, { projection: { _id: 0 } });
+         .findOne({}, { projection: { _id: 0 } });
 
       if (!data) throw new Error("Question not found");
 

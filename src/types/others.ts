@@ -31,13 +31,25 @@ export type UserData = {
          wrongQnNums: number[];
       }
    >>;
+   clozeData: ClozeData
 };
 
-export function makeNewUserDoc(name: string): UserData {
+export type ClozeData = {
+   hasDoneCloze: boolean,
+   score: number
+}
+
+export const EMPTY_CLOZE_DATA: ClozeData = {
+   hasDoneCloze: false,
+   score: 0
+}
+
+export function makeNewUserDoc(newName: string): UserData {
    return {
-      name,
+      name: newName,
       dateCreated: new Date(),
-      qnData: {}
+      qnData: {},
+      clozeData: EMPTY_CLOZE_DATA
    };
 };
 

@@ -4,7 +4,7 @@ import ClozeApp from "./ClozeApp";
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-   await checkNormalUserAuth();
+   const user = await checkNormalUserAuth();
 
-   return <ClozeApp/>
+   return <ClozeApp userName={user.given_name!}/>
 }
