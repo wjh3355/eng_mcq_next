@@ -33,6 +33,10 @@ export default function MainNavbar() {
                            Questions
                         </Nav.Link>
 
+                        <Nav.Link as={Link} href="/cloze">
+                           Cloze
+                        </Nav.Link>
+
                         <Nav.Link as={Link} href="/profile">
                            Profile
                         </Nav.Link>

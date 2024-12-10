@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { ClozeContextValue, ClozeData, ClozeObj, EMPTY_CLOZE_CONTEXT_VALUE, EMPTY_CLOZE_DATA, EMPTY_CLOZE_OBJ } from "@/types";
+import { ClozeContextValue, UserClozeData, EMPTY_CLOZE_CONTEXT_VALUE, EMPTY_USER_CLOZE_DATA } from "@/types";
 import fetchClozeFromDB from "@/serverFuncs/fetchClozeFromDB";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import updateUserClozeData from "@/serverFuncs/updateUserClozeData";
@@ -16,16 +16,18 @@ export default function createGenericClozeProvider(userName: string) {
 
    function ClozeProvider({ children }: { children: React.ReactNode }) {
 
-      const [clozeData, setClozeData] = useState<ClozeData>(EMPTY_CLOZE_DATA);
-      const [clozeObj, setClozeObj] = useState<ClozeObj>(EMPTY_CLOZE_OBJ);
+      const [userClozeData, setUserClozeData] = useState<UserClozeData>(EMPTY_USER_CLOZE_DATA);
+      const [qnNum, setQnNum] = useState<number>(NaN);
+      const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
+      const [textArr, setTextArr] = useState<string[]>([]);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [error, setError] = useState<string>("");
 
-      async function handleCompletion(score: number) {
+      async function handleCompletion(correctAns: number[]) {
          try {
             await updateUserClozeData({
                userName,
-               score
+               correctAns
             });
          } catch (error) {
             console.error("Error updating user data:", error);
@@ -33,12 +35,44 @@ export default function createGenericClozeProvider(userName: string) {
          }
       }
 
+      async function handleReset() {
+         try {
+            await updateUserClozeData({
+               userName
+            });
+            window.location.reload();
+         } catch (error){
+            console.error("Error resetting user data:", error);
+            setError("Error resetting user data");
+         }
+      }
+
       useEffect(() => {
 
          (async () => {
             try {
-               setClozeData((await fetchUserData(userName)).clozeData);
-               setClozeObj(await fetchClozeFromDB());
+               setUserClozeData((await fetchUserData(userName)).clozeData);
+
+               const { passage, qnNum } = await fetchClozeFromDB();
+
+               setWordsToTestArr(
+                  passage
+                     .match(/\{[^}]*\}/g)!
+                     .map(match => 
+                        [...match
+                           .slice(1, -1)
+                           .split("/")
+                           .filter(word => word !== "")
+                     ]
+                     )
+               );
+
+               setTextArr(
+                  passage.split(/\{[^}]*\}/g)
+               );
+
+               setQnNum(qnNum);
+
             } catch (error) {
                if (error instanceof Error) {
                   console.error("Error when fetching cloze or user data:", error.message);
@@ -53,16 +87,19 @@ export default function createGenericClozeProvider(userName: string) {
       }, [])
 
       useEffect(() => {
-         if (!Number.isNaN(clozeObj.qnNum)) setIsLoading(false);
-      }, [clozeObj])
+         if (!Number.isNaN(qnNum)) setIsLoading(false);
+      }, [qnNum])
 
       return (
          <QnContext.Provider value={{
-            clozeData,
-            clozeObj,
+            userClozeData,
+            wordsToTestArr,
+            textArr,
+            qnNum,
             isLoading,
             error,
-            handleCompletion
+            handleCompletion,
+            handleReset
          }}>
             {children}
          </QnContext.Provider>

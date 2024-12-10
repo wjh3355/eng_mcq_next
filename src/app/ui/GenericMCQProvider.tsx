@@ -54,9 +54,9 @@ export default function createGenericMCQProvider({
          if (trackQns && userName !== "") {
             try {
                await updateUserQnData({
+                  userName,
                   cat: qnCategory, 
-                  userName, 
-                  qnNum: qnObj.qnNum, 
+                  qnNum: qnObj.qnNum,
                   isCorrect: isCorr
                });
             } catch (error) {
@@ -117,9 +117,9 @@ export default function createGenericMCQProvider({
             isCorrect,
             score,
             wrongAnsArr,
-            error,
             hasReachedEnd,
             isSetRandom,
+            error,
             handleOptionClick,
             handleNextQnBtnClick,
             redoSet

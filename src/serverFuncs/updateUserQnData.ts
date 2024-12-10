@@ -15,9 +15,19 @@ export default async function updateUserQnData({
    isCorrect: boolean | null
 }) {
 
-   const updateQuery: any = { $inc: { [ `qnData.${cat}.numQnsAttempted` ]: 1 } };
+   const updateQuery: any = { 
+      $inc: { 
+         [ `qnData.${cat}.numQnsAttempted` ]: 1 
+      } 
+   };
 
-   if (isCorrect === false) updateQuery.$addToSet = { [ `qnData.${cat}.wrongQnNums` ]: qnNum };
+   if (isCorrect === false) {
+      updateQuery.$addToSet = { 
+         [ `qnData.${cat}.wrongQnNums` ]: qnNum 
+      }
+   } else if (isCorrect === true) {
+      updateQuery.$inc.score = 10
+   };
 
    const setQuery = {
       $set: {

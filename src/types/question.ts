@@ -1,4 +1,4 @@
-import { ClozeData, EMPTY_CLOZE_DATA } from "./others"
+import { UserClozeData, EMPTY_USER_CLOZE_DATA } from "./others"
 
 export type MCQContextValue = {
    qnObj: QnObj,
@@ -58,28 +58,32 @@ export type ClozeObj = {
 }
 
 export type ClozeContextValue = {
-   clozeData: ClozeData,
-   clozeObj: ClozeObj,
+   userClozeData: UserClozeData,
+   wordsToTestArr: string[][],
+   textArr: string[],
+   qnNum: number,
    isLoading: boolean,
    error: string,
-   handleCompletion: (score: number) => Promise<void>,
-}
-
-export const EMPTY_CLOZE_OBJ: ClozeObj = {
-   qnNum: NaN,
-   passage: ""
+   handleCompletion: (correctAns: number[]) => Promise<void>,
+   handleReset: () => Promise<void>
 }
 
 export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
-   clozeData: EMPTY_CLOZE_DATA,
-   clozeObj: EMPTY_CLOZE_OBJ,
+   userClozeData: EMPTY_USER_CLOZE_DATA,
+   wordsToTestArr: [],
+   textArr: [],
+   qnNum: NaN,
    isLoading: true,
    error: "",
-   async handleCompletion() {}
+   async handleCompletion() {},
+   async handleReset() {}
 }
 
-export type ClozeFormData = Record<number, {
-   value: string,
-   correctAnswers: string[],
-   isCorrect: boolean | null
-}>;
+export type ClozeFormData = Record<
+   number, 
+   {
+      value: string,
+      correctAnswers: string[],
+      isCorrect: boolean | null
+   }
+>;

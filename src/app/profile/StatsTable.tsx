@@ -15,7 +15,10 @@ export default function StatsTable({ userData }: { userData: UserData }) {
 
    return (
       <>
-
+         <p>
+            <strong>Total Score: </strong>
+            {userData.score}
+         </p>
          <section style={{ overflowX: "auto" }}>
             <Table striped>
                <thead>

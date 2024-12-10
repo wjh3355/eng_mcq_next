@@ -21,6 +21,8 @@ export type QnSet = {
    href: string;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 export type UserData = {
    name: string;
    dateCreated: Date;
@@ -31,17 +33,18 @@ export type UserData = {
          wrongQnNums: number[];
       }
    >>;
-   clozeData: ClozeData
+   clozeData: UserClozeData,
+   score: number
 };
 
-export type ClozeData = {
+export type UserClozeData = {
    hasDoneCloze: boolean,
-   score: number
+   correctAns: number[]
 }
 
-export const EMPTY_CLOZE_DATA: ClozeData = {
+export const EMPTY_USER_CLOZE_DATA: UserClozeData = {
    hasDoneCloze: false,
-   score: 0
+   correctAns: []
 }
 
 export function makeNewUserDoc(newName: string): UserData {
@@ -49,9 +52,12 @@ export function makeNewUserDoc(newName: string): UserData {
       name: newName,
       dateCreated: new Date(),
       qnData: {},
-      clozeData: EMPTY_CLOZE_DATA
+      clozeData: EMPTY_USER_CLOZE_DATA,
+      score: 0
    };
 };
+
+//////////////////////////////////////////////////////////////////
 
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 

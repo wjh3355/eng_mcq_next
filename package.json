@@ -9,7 +9,8 @@
       "lint": "next lint",
       "checkqn": "npx tsx private/checkQn.ts",
       "updateqn": "npx tsx private/updateQn.ts",
-      "updatenotice": "npx tsx private/updateNotice.ts"
+      "updatenotice": "npx tsx private/updateNotice.ts",
+      "doThis": "npx tsx private/doThis.ts"
    },
    "dependencies": {
       "@babel/core": "^7.25.2",
