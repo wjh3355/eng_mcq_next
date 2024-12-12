@@ -13,7 +13,7 @@ export default async function Page() {
    return <Container>
       <Row className="my-3">
          <Col>
-            <h5 className="m-0 text-center">Questions</h5>
+            <h5 className="m-0 text-center">MCQ Questions</h5>
          </Col>
       </Row>
 

@@ -1,10 +1,11 @@
 import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
 import StatsTable from "./StatsTable";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
+import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
@@ -18,35 +19,23 @@ export default async function Page() {
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
 
-         <Row>
-            <Col>
-               <p>
-                  <strong>Username: </strong>
-                  {user.given_name}
-               </p>
-               <p>
-                  <strong>Email address: </strong>
-                  {user.email}
-               </p>
-               <Suspense fallback={<p>Fetching data...</p>}>
-                  <Stats name={user.given_name!} />
-               </Suspense>
-            </Col>
-         </Row>
+         <Suspense fallback={<Skeleton height={40}/>}>
+            <Stats kindeUser={user} />
+         </Suspense>
 
       </Container>
    );
 }
 
-async function Stats({ name }: { name: string }) {
+async function Stats({ kindeUser }: { kindeUser: KindeUser<Record<string, any>> }) {
 
    let userData;
    try {
-      userData = await fetchUserData(name);
+      userData = await fetchUserData(kindeUser.given_name!);
    } catch (error) {
       return <p>Error loading user stats.</p>;
    }
 
-   return <StatsTable userData={userData}/>;
+   return <StatsTable userData={userData} kindeUser={kindeUser}/>;
          
 }

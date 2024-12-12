@@ -19,7 +19,7 @@ export default async function ensureUserDataDocExists(name: string) {
 
    } catch (error: unknown) {
       if (error instanceof Error) {
-         console.error("Unable to create new user document:", error.message);
+         console.error("Unable to create/check new user document:", error.message);
          throw new Error(error.message);
       } else {
          console.error("An unexpected error occured:", error);

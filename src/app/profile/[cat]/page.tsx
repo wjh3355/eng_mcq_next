@@ -14,6 +14,7 @@ import Col from "react-bootstrap/Col";
 
 import { RotateCcw } from 'lucide-react';
 import { notFound } from "next/navigation";
+import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +34,7 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
             <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].name}: Incorrect Questions</h5>
          </Row>
 
-         <Suspense fallback={<div className="d-flex justify-content-center">Fetching data...</div>}>
+         <Suspense fallback={<Skeleton height={40}/>}>
             <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
          </Suspense>
 

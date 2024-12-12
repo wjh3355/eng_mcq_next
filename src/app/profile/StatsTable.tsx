@@ -12,13 +12,30 @@ import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
 import eraseUserData from "@/serverFuncs/eraseUserData";
 import { Info } from "lucide-react";
+import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
-export default function StatsTable({ userData }: { userData: UserData }) {
+export default function StatsTable({ 
+   userData,
+   kindeUser
+}: { 
+   userData: UserData,
+   kindeUser: KindeUser<Record<string, any>> 
+}) {
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
 
    return (
       <>
+      
+         <p>
+            <strong>Username: </strong>
+            {kindeUser.given_name}
+         </p>
+
+         <p>
+            <strong>Email address: </strong>
+            {kindeUser.email}
+         </p>
 
          <p>
             <strong>Date created: </strong>
@@ -152,6 +169,8 @@ export default function StatsTable({ userData }: { userData: UserData }) {
                </div>
             </Modal.Body>
          </Modal>
+
+         <p className="text-light" style={{marginTop: "60px"}}>{JSON.stringify(userData)}</p>
       </>
    );
 }
