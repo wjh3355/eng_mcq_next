@@ -30,7 +30,7 @@ export default function MainNavbar() {
                   {isAuthenticated && 
                      <>
                         <Nav.Link as={Link} href="/questions">
-                           Questions
+                           MCQ Questions
                         </Nav.Link>
 
                         <Nav.Link as={Link} href="/cloze">

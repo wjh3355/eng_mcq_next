@@ -29,7 +29,7 @@ export default async function Page() {
                   {user.email}
                </p>
                <Suspense fallback={<p>Fetching data...</p>}>
-                  <UserStatsTable name={user.given_name!} />
+                  <Stats name={user.given_name!} />
                </Suspense>
             </Col>
          </Row>
@@ -38,7 +38,7 @@ export default async function Page() {
    );
 }
 
-async function UserStatsTable({ name }: { name: string }) {
+async function Stats({ name }: { name: string }) {
 
    let userData;
    try {
@@ -47,18 +47,6 @@ async function UserStatsTable({ name }: { name: string }) {
       return <p>Error loading user stats.</p>;
    }
 
-   return (
-      <>
-         <p>
-            <strong>Date created: </strong>
-            {userData.dateCreated.toDateString()}
-         </p>
-         {
-            JSON.stringify(userData.qnData) === "{}" 
-               ? <p><strong className="text-danger">You have not done any questions yet!</strong></p>
-               : <StatsTable userData={userData}/>
-
-         }
-      </>
-   );
+   return <StatsTable userData={userData}/>;
+         
 }

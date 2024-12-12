@@ -71,8 +71,8 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
 
    return (
       <>
-         <Alert variant="info" className="d-flex align-items-center">
-            You already attempted this cloze! Your score:&nbsp;
+         <Alert variant="info" >
+            You already attempted this cloze!<br/>Your score:&nbsp;
             
             <strong>{correctAns.length} / 15</strong>
 

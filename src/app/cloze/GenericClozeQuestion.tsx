@@ -6,6 +6,7 @@ import { RotateCcw, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import styled, { keyframes, css } from "styled-components";
 
 export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
@@ -171,13 +172,21 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
    return (
       <>
+         {
+            !showAns && 
+            <Alert variant="info">
+               Get at least 8 blanks correct ({numTriesLeft} tries left).
+            </Alert>
+         }
+
+
          <form
             onSubmit={handleFormSubmit} 
             style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
          >
-            <header><strong><u>Cloze #{qnNum}</u></strong></header>
 
             <article>
+               <header><strong><u>Cloze #{qnNum}</u></strong></header>
                {paragraphToRender.map((paraArr, idx) => 
                   <p key={idx}>{paraArr}</p>)
                }
@@ -185,8 +194,8 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
             <section className="mt-3 hstack gap-3 d-flex justify-content-center">
 
-               <div className="border border-2 rounded border-info px-2">
-                  Score: {score} / 15
+               <div>
+                  Score: <strong>{score} / 15</strong>
                </div>
 
                <Button 
@@ -211,29 +220,25 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          </form>
          
          {
-            showAns 
-
-               ?  <Card border="success" className="mt-3">
-                     <Card.Header>
-                        <strong>Solution</strong>
-                     </Card.Header>
-                     <Card.Body>
-                        <AnswersListWrapper>
-                           {
-                              Object.values(formData).map(({ correctAnswers }, idx) => 
-                                 <div key={idx}>
-                                    {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
-                                 </div>
-                              )
-                           }
-                        </AnswersListWrapper>
-                     </Card.Body>
-                  </Card>
-
-               :  !isLoading && <div className="text-center fw-bold my-3">
-                     Answer at least 8 blanks correctly ({numTriesLeft} tries left)!
-                  </div>
+            showAns &&  
+               <Card border="success" className="mt-3">
+                  <Card.Header>
+                     <strong>Solution</strong>
+                  </Card.Header>
+                  <Card.Body>
+                     <AnswersListWrapper>
+                        {
+                           Object.values(formData).map(({ correctAnswers }, idx) => 
+                              <div key={idx}>
+                                 {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
+                              </div>
+                           )
+                        }
+                     </AnswersListWrapper>
+                  </Card.Body>
+               </Card>
          }
+
       </>
    )
 }
