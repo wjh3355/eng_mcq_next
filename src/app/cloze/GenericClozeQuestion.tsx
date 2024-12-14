@@ -4,7 +4,6 @@ import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from "@/types";
 import { RotateCcw, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import styled, { keyframes, css } from "styled-components";
@@ -23,7 +22,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    const [formData, setFormData] = useState<ClozeFormData>({});
    const [score, setScore] = useState<number>(0);
    const [numTriesLeft, setNumTriesLeft] = useState<number>(3);
-   const [showAns, setShowAns] = useState<boolean>(false);
+   const [hasAttempted, setHasAttempted] = useState<boolean>(false);
    const [animateWrong, setAnimateWrong] = useState<boolean>(false);
 
    useEffect(() => {
@@ -49,7 +48,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          setFormData({});
          setScore(0);
          setNumTriesLeft(3);
-         setShowAns(false);
+         setHasAttempted(false);
       }
    }, [isLoading, wordsToTestArr, textArr, qnNum])
 
@@ -78,7 +77,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
       if (numTriesLeft === 1 || correctAns.length >= 8) {
 
-         setShowAns(true);
+         setHasAttempted(true);
          await handleCompletion(correctAns);
 
       } else {
@@ -135,7 +134,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                   <strong>({idx + 1})</strong>&nbsp;
                   <ClozeInput
                      autoFocus={idx === 0}
-                     disabled={isCorrect === true || showAns}
+                     disabled={isCorrect === true || hasAttempted}
                      autoComplete="off"
                      
                      type="text"
@@ -171,14 +170,14 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    })()
 
    return (
-      <>
-         {
-            !showAns && 
-            <Alert variant="info">
-               Get at least 8 blanks correct ({numTriesLeft} tries left).
-            </Alert>
-         }
-
+      <section>
+         <Alert variant="info">
+            {
+               hasAttempted
+               ? "Refresh the page to see the correct answers."
+               : "Get at least 8 / 15 blanks correct."
+            }
+         </Alert>
 
          <form
             onSubmit={handleFormSubmit} 
@@ -201,53 +200,27 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                <Button 
                   type="submit"
                   variant="danger"
-                  disabled={showAns || isLoading}
-                  className="d-flex align-items-center"
+                  disabled={hasAttempted || isLoading}
+                  className="d-flex align-items-center fw-bold"
                >
-                  <Send size={22} strokeWidth={2}/>&nbsp;Submit
+                  <Send size={22} strokeWidth={2} className="me-1"/>
+                  {`Submit (${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
                </Button>
 
                <Button 
                   onClick={() => handleReset()}
                   variant="secondary"
-                  disabled={showAns || isLoading}
-                  className="d-flex align-items-center"
+                  disabled={hasAttempted || isLoading}
+                  className="d-flex align-items-center fw-bold"
                >
-                  <RotateCcw size={22} strokeWidth={2}/>&nbsp;Reset
+                  <RotateCcw size={22} strokeWidth={2} className="me-1"/>Reset
                </Button>
             </section>
 
          </form>
-         
-         {
-            showAns &&  
-               <Card border="success" className="mt-3">
-                  <Card.Header>
-                     <strong>Solution</strong>
-                  </Card.Header>
-                  <Card.Body>
-                     <AnswersListWrapper>
-                        {
-                           Object.values(formData).map(({ correctAnswers }, idx) => 
-                              <div key={idx}>
-                                 {Number(idx)+1})&nbsp;{correctAnswers.join(" / ")}
-                              </div>
-                           )
-                        }
-                     </AnswersListWrapper>
-                  </Card.Body>
-               </Card>
-         }
-
-      </>
+      </section>
    )
 }
-
-const AnswersListWrapper = styled.div`
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-   gap: 5px
-`
 
 const inputAnimation = keyframes`
    0% { transform: scale(1); }

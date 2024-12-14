@@ -95,7 +95,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
 
             <Button 
                variant="primary" 
-               className="d-flex align-items-center justify-content-center"
+               className="d-flex align-items-center justify-content-center px-4"
                disabled={isCorrect === null}
                onClick={() => handleNextQnBtnClick()}
             >

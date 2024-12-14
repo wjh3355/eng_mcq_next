@@ -72,7 +72,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
    return (
       <>
          <Alert variant="info" >
-            You already attempted this cloze!<br/>Your score:&nbsp;
+            You already attempted this cloze.<br/>Your score:&nbsp;
             
             <strong>{correctAns.length} / 15</strong>
 
