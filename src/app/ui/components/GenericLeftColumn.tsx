@@ -20,7 +20,8 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
 
    const {
       handleNextQnBtnClick,
-      score: [numCorrect, numTotal],
+      thisSessionScore: [numCorrect, numTotal],
+      userScore,
       wrongAnsArr,
       qnObj,
       isLoading,
@@ -51,7 +52,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
 
             <DropdownButton 
                variant="warning"
-               title="Score"
+               title="Results"
                drop="down"
             >
                <div className="hstack gap-3 py-1 px-3">
@@ -68,7 +69,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
                   <div className="vr"/>
 
                   <div className="text-center">
-                     Result<br/><span className="fs-5 text-danger">{
+                     Percentage<br/><span className="fs-5 text-danger">{
                         numTotal === 0
                         ? 0
                         : Math.round(100*numCorrect/numTotal)
@@ -76,6 +77,10 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
                   </div>
                </div>
             </DropdownButton>
+
+            <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
+               Score: {userScore}
+            </div>
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"

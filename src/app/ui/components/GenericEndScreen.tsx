@@ -17,7 +17,7 @@ export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: (
 
    const { 
       hasReachedEnd,
-      score: [numCorrect, numTotal],
+      thisSessionScore: [numCorrect, numTotal],
       wrongAnsArr,
       redoSet,
       isSetRandom

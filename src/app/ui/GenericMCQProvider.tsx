@@ -6,6 +6,7 @@ import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY
 
 import fetchQnFromDB from "@/serverFuncs/fetchQnFromDB";
 import updateUserQnData from "@/serverFuncs/updateUserQnData";
+import fetchUserData from "@/serverFuncs/fetchUserData";
 
 export default function createGenericMCQProvider({
    qnCategory,
@@ -33,7 +34,8 @@ export default function createGenericMCQProvider({
       const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-      const [score, setScore] = useState<[number, number]>([0, 0]);
+      const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
+      const [userScore, setUserScore] = useState<number>(0);
       const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
@@ -42,9 +44,9 @@ export default function createGenericMCQProvider({
          setIsCorrect(isCorr);
 
          if (isCorr) {
-            setScore(([right, tot]) => [right+1, tot+1]);
+            setThisSessionScore(([right, tot]) => [right+1, tot+1]);
          } else {
-            setScore(([right, tot]) => [right, tot+1]);
+            setThisSessionScore(([right, tot]) => [right, tot+1]);
 
             if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
                setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
@@ -68,7 +70,7 @@ export default function createGenericMCQProvider({
 
       function redoSet() {
          setWrongAnsArr([]);
-         setScore([0, 0]);
+         setThisSessionScore([0, 0]);
          setIsCorrect(null);
          setIsLoading(true);
          setHasReachedEnd(false);
@@ -89,6 +91,7 @@ export default function createGenericMCQProvider({
          } else {
             try {
                setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
+               setUserScore((await fetchUserData(userName)).score);
             } catch (error) {
                if (error instanceof Error) {
                   console.error("Error when fetching new QnObj:", error.message);
@@ -115,7 +118,8 @@ export default function createGenericMCQProvider({
             qnObj,
             isLoading,
             isCorrect,
-            score,
+            thisSessionScore,
+            userScore,
             wrongAnsArr,
             hasReachedEnd,
             isSetRandom,

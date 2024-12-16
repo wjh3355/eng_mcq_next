@@ -67,7 +67,7 @@ export default function StatsTable({
 
          <Accordion>
             <Accordion.Item eventKey="0">
-               <Accordion.Header>Cloze</Accordion.Header>
+               <Accordion.Header><strong>Cloze</strong></Accordion.Header>
                <Accordion.Body>
                   {
                      userData.clozeData.hasDoneCloze
@@ -77,7 +77,7 @@ export default function StatsTable({
                </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-               <Accordion.Header>MCQ Questions</Accordion.Header>
+               <Accordion.Header><strong>MCQ Questions</strong></Accordion.Header>
                <Accordion.Body>
                   {
                      JSON.stringify(userData.qnData) === "{}"
@@ -107,17 +107,10 @@ export default function StatsTable({
                                     ) : (
                                        <td>
                                           <Link
-                                             href={`/profile/${cat}`}
-                                             className="btn btn-primary btn-sm"
+                                             href={`/profile/wrongmcq/${cat}`}
+                                             className="btn btn-primary btn-sm px-3"
                                           >
                                              <strong>View</strong>
-                                          </Link>
-                                          &ensp;
-                                          <Link
-                                             href={`/redoWrong/${cat}`}
-                                             className="btn btn-warning btn-sm"
-                                          >
-                                             <strong>Redo</strong>
                                           </Link>
                                        </td>
                                     )}

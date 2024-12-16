@@ -2,10 +2,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
 import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
+import Sunbirds from "./Sunbirds";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,56 +24,42 @@ export default async function Page() {
             </Col>
          </Row>
 
-         <Row>
-            <Col className="d-flex justify-content-center">
-               <Image
-                  src="/homepageImage.jpg"
-                  width={350}
-                  height={204}
-                  alt="Photo of a Sunbird"
-               />
-            </Col>
-         </Row>
-         <Row>
-            <Col className="d-flex justify-content-center">
-               <p style={{fontSize: "10px"}}><i>By Rejaul karim.rk - Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=92670804</i></p>
-            </Col>
-         </Row>
+         <Sunbirds/>
 
          <Row className="mt-3">
             <Col className="d-flex justify-content-center">
 
-         {user 
+               {user 
 
-            ?  <div className="d-flex flex-column gap-3 w-50">
-                  <Link
-                     className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-                     href="/questions"
-                  >
-                     <NotebookPen />&nbsp;MCQ Questions
-                  </Link>
+                  ?  <div className="d-flex flex-column gap-3 w-50">
+                        <Link
+                           className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+                           href="/mcq"
+                        >
+                           <NotebookPen className="me-2"/>MCQ Questions
+                        </Link>
 
-                  <Link
-                     className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-                     href="/cloze"
-                  >
-                     <FileText />&nbsp;Cloze Passage
-                  </Link>
+                        <Link
+                           className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+                           href="/cloze"
+                        >
+                           <FileText className="me-2"/>Cloze Passage
+                        </Link>
 
-                  <Link
-                     className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-                     href="/profile"
-                  >
-                     <CircleUserRound />&nbsp;Your Profile
-                  </Link>
-               </div>
+                        <Link
+                           className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+                           href="/profile"
+                        >
+                           <CircleUserRound className="me-2"/>Your Profile
+                        </Link>
+                     </div>
 
-            :  <div className="d-flex flex-column w-50">
-                  <Link href="/questions/demo" className="btn btn-lg btn-primary d-flex justify-content-center align-items-center">
-                     <NotebookPen />&nbsp;Demo Questions
-                  </Link>
-               </div>
-         }
+                  :  <div className="d-flex flex-column w-50">
+                        <Link href="/mcq/sets/demo" className="btn btn-lg btn-primary d-flex justify-content-center align-items-center">
+                           <NotebookPen className="me-2"/>Demo Questions
+                        </Link>
+                     </div>
+               }
          
             </Col>
          </Row>

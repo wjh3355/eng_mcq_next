@@ -49,7 +49,7 @@ async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsA
             <Row className="my-4">
                <Col className="d-flex justify-content-end">
                   <Link
-                     href={`/redoWrong/${cat}`}
+                     href={`/mcq/redo/${cat}`}
                      className="btn btn-warning d-flex align-items-center"
                   >
                      <RotateCcw size={22} strokeWidth={2}/>&nbsp;<strong>Attempt Questions Again</strong>

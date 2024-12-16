@@ -7,14 +7,17 @@ import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
 
-export default async function QuestionsPage({
+export default async function MCQQuestionsPage({
    params
 }: {
    params: Promise<{ 
       href: string[]
    }>
 }) {
-   const match = HREF_LOOKUP_MAP["/questions/" + (await params).href.join("/")];
+
+   const { href } = await params;
+
+   const match = HREF_LOOKUP_MAP["/mcq/sets/" + href.join("/")];
 
    if (!match) return notFound();
 
