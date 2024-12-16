@@ -3,13 +3,13 @@
 import { connectToDB } from "@/serverFuncs/connectToDB";
 import { ClozeObj } from "@/types";
 
-export default async function fetchClozeFromDB() {
+export default async function fetchClozeFromDB(num: number) {
    try {
       const { db } = await connectToDB("english_questions");
       const data = await db
          .collection("clozePassage")
-         .findOne({}, { projection: { _id: 0 } });
-
+         .findOne({ qnNum: num }, { projection: { _id: 0 } });
+      
       if (!data) throw new Error("Question not found");
 
       return data as unknown as ClozeObj;

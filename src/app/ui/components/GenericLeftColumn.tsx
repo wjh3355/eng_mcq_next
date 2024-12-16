@@ -19,6 +19,7 @@ import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
+      qnCategory,
       handleNextQnBtnClick,
       thisSessionScore: [numCorrect, numTotal],
       userScore,
@@ -78,9 +79,12 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
                </div>
             </DropdownButton>
 
-            <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-               Score: {userScore}
-            </div>
+            {
+               qnCategory !== "demo" &&
+               <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
+                  Score: {userScore}
+               </div>
+            }
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"

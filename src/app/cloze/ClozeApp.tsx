@@ -7,14 +7,23 @@ import createGenericClozeProvider from "./GenericClozeProvider";
 import GenericClozeQuestion from "./GenericClozeQuestion";
 import GenericClozeCompleted from "./GenericClozeCompleted";
 import Skeleton from "react-loading-skeleton";
+import { CLOZE_QNNUM_ARR } from "@/types";
+import { notFound } from "next/navigation";
 
 export default function ClozeApp({
-   userName
+   userName,
+   qnNumToFetch
 }: {
    userName: string
+   qnNumToFetch: number
 }) {
 
-   const { ClozeProvider, useClozeContext } = createGenericClozeProvider(userName);
+   if (!CLOZE_QNNUM_ARR.includes(qnNumToFetch)) notFound();
+
+   const { ClozeProvider, useClozeContext } = createGenericClozeProvider({
+      userName,
+      qnNumToFetch
+   });
 
    function ClozeLoadingSkeleton() {
       const { isLoading } = useClozeContext();

@@ -1,6 +1,7 @@
-import { UserClozeData, EMPTY_USER_CLOZE_DATA } from "./others"
+import { UserClozeData, EMPTY_USER_CLOZE_DATA, CurrentQnCategories } from "./others"
 
 export type MCQContextValue = {
+   qnCategory: CurrentQnCategories,
    qnObj: QnObj,
    wrongAnsArr: QnObj[],
    error: string,
@@ -38,6 +39,7 @@ export const EMPTY_QN_OBJ: QnObj = {
 }
 
 export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
+   qnCategory: "debug",
    qnObj: EMPTY_QN_OBJ,
    isLoading: true,
    isCorrect: null,

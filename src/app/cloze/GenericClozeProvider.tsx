@@ -6,7 +6,13 @@ import fetchClozeFromDB from "@/serverFuncs/fetchClozeFromDB";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import updateUserClozeData from "@/serverFuncs/updateUserClozeData";
 
-export default function createGenericClozeProvider(userName: string) {
+export default function createGenericClozeProvider({
+   qnNumToFetch,
+   userName 
+}: { 
+   userName: string
+   qnNumToFetch: number
+}) {
 
    const QnContext = createContext<ClozeContextValue>(EMPTY_CLOZE_CONTEXT_VALUE);
 
@@ -17,7 +23,7 @@ export default function createGenericClozeProvider(userName: string) {
    function ClozeProvider({ children }: { children: React.ReactNode }) {
 
       const [userClozeData, setUserClozeData] = useState<UserClozeData>(EMPTY_USER_CLOZE_DATA);
-      const [qnNum, setQnNum] = useState<number>(NaN);
+      const [qnNum, setQnNum] = useState<number>(qnNumToFetch);
       const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
       const [textArr, setTextArr] = useState<string[]>([]);
       const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -53,7 +59,7 @@ export default function createGenericClozeProvider(userName: string) {
             try {
                setUserClozeData((await fetchUserData(userName)).clozeData);
 
-               const { passage, qnNum } = await fetchClozeFromDB();
+               const { passage, qnNum } = await fetchClozeFromDB(qnNumToFetch);
 
                setWordsToTestArr(
                   passage

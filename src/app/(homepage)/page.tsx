@@ -56,7 +56,7 @@ export default async function Page() {
 
                   :  <div className="d-flex flex-column w-50">
                         <Link href="/mcq/sets/demo" className="btn btn-lg btn-primary d-flex justify-content-center align-items-center">
-                           <NotebookPen className="me-2"/>Demo Questions
+                           <NotebookPen className="me-2"/>Demo MCQ Questions
                         </Link>
                      </div>
                }

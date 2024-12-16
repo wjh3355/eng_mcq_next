@@ -50,7 +50,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          setNumTriesLeft(3);
          setHasAttempted(false);
       }
-   }, [isLoading, wordsToTestArr, textArr, qnNum])
+   }, [isLoading, wordsToTestArr])
 
    if (hasDoneCloze || isLoading) return null;
 
@@ -77,6 +77,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
       if (numTriesLeft === 1 || correctAns.length >= 8) {
 
+         setNumTriesLeft(prev => prev - 1);
          setHasAttempted(true);
          await handleCompletion(correctAns);
 

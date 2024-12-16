@@ -91,7 +91,7 @@ export default function createGenericMCQProvider({
          } else {
             try {
                setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
-               setUserScore((await fetchUserData(userName)).score);
+               if (qnCategory !== "demo") setUserScore((await fetchUserData(userName)).score);
             } catch (error) {
                if (error instanceof Error) {
                   console.error("Error when fetching new QnObj:", error.message);
@@ -115,6 +115,7 @@ export default function createGenericMCQProvider({
 
       return (
          <QnContext.Provider value={{
+            qnCategory,
             qnObj,
             isLoading,
             isCorrect,
