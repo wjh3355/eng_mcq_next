@@ -1,12 +1,12 @@
 "use client";
 
-import cloneDeep from "lodash/cloneDeep";
-import { ClozeContextValue, ClozeFormData } from "@/types";
-import { RotateCcw, Send } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import styled, { keyframes, css } from "styled-components";
+import { RotateCcw, Send } from "lucide-react";
+import cloneDeep from "lodash/cloneDeep";
+import { ClozeContextValue, ClozeFormData } from "@/types";
 
 export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
@@ -14,8 +14,9 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       wordsToTestArr,
       textArr,
       qnNum,
+      title,
       isLoading,
-      userClozeData: { hasDoneCloze },
+      prevUserCorrectAns,
       handleCompletion
    } = QnContextToUse();
 
@@ -27,32 +28,27 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
    useEffect(() => {
       if (isLoading) return;
-            
-      const initialFormData: ClozeFormData = Object.fromEntries(
-         Array.from(
-            { length: wordsToTestArr.length }, 
-            (_, i) => [
-               i, 
-               { 
-                  value: "", 
-                  isCorrect: null, 
-                  correctAnswers: wordsToTestArr[i] 
-               }
-            ]
+
+      setFormData(
+         Object.fromEntries(
+            Array.from(
+               { length: wordsToTestArr.length },
+               (_, i) => (               
+                  [
+                     i, 
+                     {
+                        value: "", 
+                        isCorrect: null, 
+                        correctAnswers: wordsToTestArr[i] 
+                     }
+                  ]
+               )
+            )
          )
-      );
+      )
+   }, [wordsToTestArr, isLoading])
 
-      setFormData(initialFormData);
-
-      return () => {
-         setFormData({});
-         setScore(0);
-         setNumTriesLeft(3);
-         setHasAttempted(false);
-      }
-   }, [isLoading, wordsToTestArr])
-
-   if (hasDoneCloze || isLoading) return null;
+   if (prevUserCorrectAns !== null || isLoading) return null;
 
    async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
@@ -75,6 +71,9 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
       setFormData(newFormData);
 
+      setAnimateWrong(true);
+      setTimeout(() => setAnimateWrong(false), 400);
+
       if (numTriesLeft === 1 || correctAns.length >= 8) {
 
          setNumTriesLeft(prev => prev - 1);
@@ -84,8 +83,6 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       } else {
 
          setNumTriesLeft(prev => prev - 1);
-         setAnimateWrong(true);
-         setTimeout(() => setAnimateWrong(false), 400);
          
       }
    }
@@ -114,8 +111,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    }
 
    const paragraphToRender: (string | React.JSX.Element)[][] = (() => {
-
-      if (JSON.stringify(formData) === "{}") return [];
+      if (JSON.stringify(formData) === "{}") return [[<span key={0} className="text-secondary fst-italic">Loading passage...</span>]];
 
       const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
          (acc, part, idx) => {
@@ -133,7 +129,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                ...splitPart,
                <span key={idx} className="d-inline-block">
                   <strong>({idx + 1})</strong>&nbsp;
-                  <ClozeInput
+                  <ClozeInputElement
                      autoFocus={idx === 0}
                      disabled={isCorrect === true || hasAttempted}
                      autoComplete="off"
@@ -172,6 +168,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
    return (
       <section>
+
          <Alert variant="info">
             {
                hasAttempted
@@ -186,7 +183,7 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
          >
 
             <article>
-               <header><strong><u>Cloze #{qnNum}</u></strong></header>
+               <header><strong><u>Cloze #{qnNum}: {title}</u></strong></header>
                {paragraphToRender.map((paraArr, idx) => 
                   <p key={idx}>{paraArr}</p>)
                }
@@ -216,20 +213,22 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                >
                   <RotateCcw size={22} strokeWidth={2} className="me-1"/>Reset
                </Button>
+
             </section>
 
          </form>
+
       </section>
    )
 }
 
-const inputAnimation = keyframes`
+const inputAnim = keyframes`
    0% { transform: scale(1); }
    50% { transform: scale(1.1); }
    100% { transform: scale(1); }
 `;
 
-const ClozeInput = styled.input<{
+const ClozeInputElement = styled.input<{
    $animate: boolean,
    $isCorrect: boolean | null
 }>`
@@ -243,6 +242,6 @@ const ClozeInput = styled.input<{
    font-weight: ${({$isCorrect}) => $isCorrect ? "bold" : "default"};
 
    ${(props) =>
-      props.$animate && css`animation: ${inputAnimation} 400ms infinite;`
+      props.$animate && css`animation: ${inputAnim} 400ms infinite;`
    }
 `

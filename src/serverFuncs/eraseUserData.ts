@@ -1,6 +1,5 @@
 "use server";
 
-import { EMPTY_USER_CLOZE_DATA } from "@/types";
 import { connectToDB } from "./connectToDB";
 
 export default async function eraseUserData(name: string) {
@@ -11,8 +10,8 @@ export default async function eraseUserData(name: string) {
          {
             $set: {
                qnData: {},
-               score: 0,
-               clozeData: EMPTY_USER_CLOZE_DATA
+               clozeData: [],
+               score: 0
             }
          }
       );   

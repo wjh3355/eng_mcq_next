@@ -12,7 +12,8 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
       wordsToTestArr,
       textArr,
       qnNum,
-      userClozeData: { hasDoneCloze, correctAns },
+      title,
+      prevUserCorrectAns,
       isLoading,
       handleReset
    } = QnContextToUse();
@@ -21,7 +22,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
       if (isLoading) return;
    }, [isLoading])
 
-   if (!hasDoneCloze || isLoading) return null;
+   if (prevUserCorrectAns === null || isLoading) return null;
 
    const garbage: (string | React.JSX.Element)[][] = (() => {
       const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
@@ -43,7 +44,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
                   ({idx + 1})&nbsp;
                   <span
                      className={"text-decoration-underline" +
-                     (correctAns.includes(idx) ? " text-success" : " text-danger")}
+                     (prevUserCorrectAns.includes(idx) ? " text-success" : " text-danger")}
                   >
                      {wordsToTestArr[idx].join("/")}
                   </span>
@@ -74,7 +75,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
          <Alert variant="info" >
             You already attempted this cloze.<br/>Your score:&nbsp;
             
-            <strong>{correctAns.length} / 15</strong>
+            <strong>{prevUserCorrectAns.length} / 15</strong>
 
             <Button
                size="sm"
@@ -89,7 +90,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
          <article 
             style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
          >
-            <header><strong><u>Cloze #{qnNum}</u></strong></header>
+            <header><strong><u>Cloze #{qnNum}: {title}</u></strong></header>
             {garbage.map((paraArr, idx) => 
                <p key={idx}>{paraArr}</p>)
             }

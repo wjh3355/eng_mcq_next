@@ -21,44 +21,6 @@ export type QnSet = {
    href: string;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-export type UserData = {
-   name: string;
-   dateCreated: Date;
-   qnData: Partial<Record<
-      CurrentQnCategoriesTracked,
-      {
-         numQnsAttempted: number;
-         wrongQnNums: number[];
-      }
-   >>;
-   clozeData: UserClozeData,
-   score: number
-};
-
-export type UserClozeData = {
-   hasDoneCloze: boolean,
-   correctAns: number[]
-}
-
-export const EMPTY_USER_CLOZE_DATA: UserClozeData = {
-   hasDoneCloze: false,
-   correctAns: []
-}
-
-export function makeNewUserDoc(newName: string): UserData {
-   return {
-      name: newName,
-      dateCreated: new Date(),
-      qnData: {},
-      clozeData: EMPTY_USER_CLOZE_DATA,
-      score: 0
-   };
-};
-
-//////////////////////////////////////////////////////////////////
-
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    debug: {

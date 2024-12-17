@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { ClozeContextValue, UserClozeData, EMPTY_CLOZE_CONTEXT_VALUE, EMPTY_USER_CLOZE_DATA } from "@/types";
+import { ClozeContextValue, EMPTY_CLOZE_CONTEXT_VALUE } from "@/types";
 import fetchClozeFromDB from "@/serverFuncs/fetchClozeFromDB";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import updateUserClozeData from "@/serverFuncs/updateUserClozeData";
@@ -22,8 +22,9 @@ export default function createGenericClozeProvider({
 
    function ClozeProvider({ children }: { children: React.ReactNode }) {
 
-      const [userClozeData, setUserClozeData] = useState<UserClozeData>(EMPTY_USER_CLOZE_DATA);
+      const [prevUserCorrectAns, setPrevUserCorrectAns] = useState<null | number[]>(null);
       const [qnNum, setQnNum] = useState<number>(qnNumToFetch);
+      const [title, setTitle] = useState<string>("");
       const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
       const [textArr, setTextArr] = useState<string[]>([]);
       const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -33,6 +34,7 @@ export default function createGenericClozeProvider({
          try {
             await updateUserClozeData({
                userName,
+               qnNum,
                correctAns
             });
          } catch (error) {
@@ -44,7 +46,8 @@ export default function createGenericClozeProvider({
       async function handleReset() {
          try {
             await updateUserClozeData({
-               userName
+               userName,
+               qnNum
             });
             window.location.reload();
          } catch (error){
@@ -57,9 +60,9 @@ export default function createGenericClozeProvider({
 
          (async () => {
             try {
-               setUserClozeData((await fetchUserData(userName)).clozeData);
+               const userClozeData = (await fetchUserData(userName)).clozeData;
 
-               const { passage, qnNum } = await fetchClozeFromDB(qnNumToFetch);
+               const { passage, qnNum, title } = await fetchClozeFromDB(qnNumToFetch);
 
                setWordsToTestArr(
                   passage
@@ -77,6 +80,13 @@ export default function createGenericClozeProvider({
                   passage.split(/\{[^}]*\}/g)
                );
 
+               setPrevUserCorrectAns(
+                  userClozeData
+                     .find(cz => cz.qnNum === qnNum)
+                     ?.correctAns || null
+               );
+
+               setTitle(title);
                setQnNum(qnNum);
 
             } catch (error) {
@@ -98,10 +108,11 @@ export default function createGenericClozeProvider({
 
       return (
          <QnContext.Provider value={{
-            userClozeData,
+            prevUserCorrectAns,
             wordsToTestArr,
             textArr,
             qnNum,
+            title,
             isLoading,
             error,
             handleCompletion,

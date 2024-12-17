@@ -1,44 +1,38 @@
 "use server";
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { EMPTY_USER_CLOZE_DATA } from "@/types";
+import { UserData } from "@/types";
 
 export default async function updateUserClozeData({
    userName,
+   qnNum,
    correctAns,
 }: {
    userName: string,
+   qnNum: number
    correctAns?: number[],
 }) {
 
    try {
       const { db } = await connectToDB("userDatas");
+      const userCollection = db.collection<UserData>("userQnData");
 
       if (correctAns) {
-         await db
-            .collection("userQnData")
+         await userCollection
             .updateOne(
-            { name: userName }, 
-            {
-               $set: { 
-                  clozeData: {
-                     hasDoneCloze: true,
-                     correctAns
-                  } 
+               { name: userName }, 
+               {
+                  $push: { clozeData: { qnNum, correctAns } }
                }
-            }
-         );
+            );
       } else {
-         await db
-            .collection("userQnData")
+         await userCollection
             .updateOne(
-            { name: userName }, 
-            {
-               $set: { 
-                  clozeData: EMPTY_USER_CLOZE_DATA
+               { name: userName }, 
+               {
+                  $pull: { clozeData: { qnNum } }
                }
-            }
-         );
+            );
       }
       
 

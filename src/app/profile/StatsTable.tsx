@@ -70,9 +70,17 @@ export default function StatsTable({
                <Accordion.Header><strong>Cloze</strong></Accordion.Header>
                <Accordion.Body>
                   {
-                     userData.clozeData.hasDoneCloze
-                     ?  `Score: ${userData.clozeData.correctAns.length} / 15`
-                     :  "You have not attempted the cloze yet!"
+                     userData.clozeData.length === 0
+                     ? "You have not attempted any cloze questions yet!"
+                     : <ul>
+                        {
+                           userData.clozeData.map(({qnNum, correctAns}) => 
+                              <li key={qnNum}>
+                                 {`Cloze ${qnNum}: ${correctAns.length} / 15 correct`}
+                              </li>
+                           )
+                        }
+                     </ul>
                   }
                </Accordion.Body>
             </Accordion.Item>

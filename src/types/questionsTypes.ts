@@ -1,4 +1,4 @@
-import { UserClozeData, EMPTY_USER_CLOZE_DATA, CurrentQnCategories } from "./others"
+import { CurrentQnCategories } from "./others"
 
 export type MCQContextValue = {
    qnCategory: CurrentQnCategories,
@@ -58,14 +58,16 @@ export const EMPTY_CONTEXT_VALUE: MCQContextValue = {
 
 export type ClozeObj = {
    qnNum: number,
+   title: string,
    passage: string
 }
 
 export type ClozeContextValue = {
-   userClozeData: UserClozeData,
+   prevUserCorrectAns: null | number[],
    wordsToTestArr: string[][],
    textArr: string[],
    qnNum: number,
+   title: string,
    isLoading: boolean,
    error: string,
    handleCompletion: (correctAns: number[]) => Promise<void>,
@@ -73,10 +75,11 @@ export type ClozeContextValue = {
 }
 
 export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
-   userClozeData: EMPTY_USER_CLOZE_DATA,
+   prevUserCorrectAns: null,
    wordsToTestArr: [],
    textArr: [],
    qnNum: NaN,
+   title: "",
    isLoading: true,
    error: "",
    async handleCompletion() {},
