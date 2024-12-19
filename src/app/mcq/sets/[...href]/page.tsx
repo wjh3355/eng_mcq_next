@@ -1,4 +1,4 @@
-import QuestionsApp from "@/app/ui/QuestionsApp";
+import MCQApp from "@/app/ui/MCQApp";
 import checkAdminUserAuth from "@/serverFuncs/checkAdminUserAuth";
 import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import { HREF_LOOKUP_MAP } from "@/types";
@@ -32,7 +32,7 @@ export default async function MCQQuestionsPage({
       userName = (await checkNormalUserAuth()).given_name || "";
    }
 
-   return <QuestionsApp
+   return <MCQApp
       qnCategory={cat}
       qnNumArray={
          name === "Random" 

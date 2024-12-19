@@ -9,14 +9,14 @@ import Modal from "react-bootstrap/Modal";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
 import DictionaryEntry from "./DictionaryEntry";
-import QnSentenceFormatter from "./QnSentenceFormatter";
+import MCQQnSentence from "./MCQQnSentence";
 import PaginatedDictEntries from "./PaginatedDictEntries";
 import { MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
-export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
+export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       qnCategory,
@@ -42,7 +42,7 @@ export default function GenericLeftColumn({ QnContextToUse }: { QnContextToUse: 
          <Card body className="mb-3">
             {isLoading 
                ?  <Skeleton height="24px" />
-               :  <QnSentenceFormatter
+               :  <MCQQnSentence
                      sentence={sentence}
                      wordToTest={wordToTest}
                   />

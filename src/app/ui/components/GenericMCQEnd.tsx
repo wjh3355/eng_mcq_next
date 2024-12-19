@@ -13,7 +13,7 @@ import Modal from "react-bootstrap/Modal";
 import PaginatedDictEntries from "./PaginatedDictEntries";
 import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
 
-export default function GenericEndScreen({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
+export default function GenericMCQEnd({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const { 
       hasReachedEnd,

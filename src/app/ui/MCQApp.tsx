@@ -5,13 +5,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import createGenericMCQProvider from "@/app/ui/GenericMCQProvider";
-import GenericLeftColumn from "@/app/ui/components/GenericLeftColumn";
-import GenericRightColumn from "@/app/ui/components/GenericRightColumn";
+import GenericMCQLeft from "./components/GenericMCQLeft";
+import GenericMCQRight from "@/app/ui/components/GenericMCQRight";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
-import GenericEndScreen from "@/app/ui/components/GenericEndScreen";
+import GenericMCQEnd from "@/app/ui/components/GenericMCQEnd";
 import { CurrentQnCategories } from "@/types";
 
-export default function QuestionsApp({
+export default function MCQApp({
    qnCategory,
    qnNumArray,
    userName,
@@ -44,9 +44,9 @@ export default function QuestionsApp({
             </Col>
          </Row>
          <Row>
-            <GenericLeftColumn QnContextToUse={useMCQContext}/>
-            <GenericRightColumn QnContextToUse={useMCQContext}/>
-            <GenericEndScreen QnContextToUse={useMCQContext}/>
+            <GenericMCQLeft QnContextToUse={useMCQContext}/>
+            <GenericMCQRight QnContextToUse={useMCQContext}/>
+            <GenericMCQEnd QnContextToUse={useMCQContext}/>
          </Row>
       </Container>
    </MCQProvider>;

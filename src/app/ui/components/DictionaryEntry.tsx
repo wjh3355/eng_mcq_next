@@ -1,5 +1,5 @@
 import { QnObj } from "@/types";
-import ReviewSentenceFormatter from "./ReviewSentenceFormatter";
+import MCQReviewSentence from "./MCQReviewSentence";
 import Badge from "react-bootstrap/Badge";
 
 export default function DictionaryEntry({ 
@@ -25,7 +25,7 @@ export default function DictionaryEntry({
          </div>
          {!dontShowSentence &&
             <div className="p-2 fst-italic bg-secondary bg-opacity-10">
-               <ReviewSentenceFormatter
+               <MCQReviewSentence
                   sentence={sentence}
                   wordToTest={wordToTest}
                   correctAns={correctAns}

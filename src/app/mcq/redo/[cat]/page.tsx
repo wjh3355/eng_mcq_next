@@ -2,7 +2,7 @@ import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { CurrentQnCategoriesTracked, QN_CATEGORIES_DATA } from "@/types";
 import { notFound } from "next/navigation";
-import QuestionsApp from "@/app/ui/QuestionsApp";
+import MCQApp from "@/app/ui/MCQApp";
 
 export default async function RedoWrongQnsPage({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
 
@@ -13,7 +13,7 @@ export default async function RedoWrongQnsPage({ params }: { params: Promise<{ c
 
    if (wrongQnNums.length === 0) notFound();
 
-   return <QuestionsApp
+   return <MCQApp
       qnCategory={cat}
       qnNumArray={wrongQnNums}
       userName=""

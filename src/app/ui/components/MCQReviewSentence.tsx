@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ReviewSentenceFormatter({
+export default function MCQReviewSentence({
    sentence,
    wordToTest,
    correctAns,

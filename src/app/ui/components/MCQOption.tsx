@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const OptionButton = styled.button<{
+const MCQOption = styled.button<{
    $isRed: boolean;
    $isGreen: boolean;
    $isBolded: boolean;
@@ -27,4 +27,4 @@ const OptionButton = styled.button<{
 
 `
 
-export default OptionButton;
+export default MCQOption;

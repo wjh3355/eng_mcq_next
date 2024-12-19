@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import range from "lodash/range";
 
-export default function QnSentenceFormatter({
+export default function MCQQnSentence({
    sentence,
    wordToTest,
 }: {

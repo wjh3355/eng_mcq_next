@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
-import StatsTable from "./StatsTable";
+import StatsTable from "../ui/components/StatsTable";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import Skeleton from "react-loading-skeleton";
 

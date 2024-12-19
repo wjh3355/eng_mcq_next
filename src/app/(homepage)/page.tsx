@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
 import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
-import Sunbirds from "./Sunbirds";
+import Sunbirds from "../ui/components/Sunbirds";
 
 export const dynamic = 'force-dynamic';
 

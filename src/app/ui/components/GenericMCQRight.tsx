@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 
 import { MCQContextValue } from "@/types";
 
-import OptionButton from "./OptionButton";
+import MCQOption from "./MCQOption";
 import Skeleton from "react-loading-skeleton";
 
 import { CircleCheck, CircleX } from 'lucide-react';
 
-export default function GenericRightColumn({
+export default function GenericMCQRight({
    QnContextToUse
 }: {
    QnContextToUse: () => MCQContextValue
@@ -49,7 +49,7 @@ export default function GenericRightColumn({
       const isGreen = isAllDisabled && isThisCorrectOption;
       const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
 
-      return <OptionButton
+      return <MCQOption
             key={thisOption}
             disabled={isAllDisabled}
             onClick={async () => {
@@ -73,7 +73,7 @@ export default function GenericRightColumn({
                   strokeWidth={3}
                   style={{position: "absolute", right: "3%"}}
                /> }
-      </OptionButton>
+      </MCQOption>
    };
 
    if (hasReachedEnd) return null;

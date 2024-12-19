@@ -45,18 +45,18 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
 async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: CurrentQnCategoriesTracked }) {
    try {
       return <>
-            <PaginatedDictEntries qnObjArr={await fetchQnArrFromDB(cat, wrongQnNumsArr)}/>
-            <Row className="my-4">
-               <Col className="d-flex justify-content-end">
-                  <Link
-                     href={`/mcq/redo/${cat}`}
-                     className="btn btn-warning d-flex align-items-center"
-                  >
-                     <RotateCcw size={22} strokeWidth={2}/>&nbsp;<strong>Attempt Questions Again</strong>
-                  </Link>
-               </Col>
-            </Row>
-         </>
+         <PaginatedDictEntries qnObjArr={await fetchQnArrFromDB(cat, wrongQnNumsArr)}/>
+         <Row className="my-4">
+            <Col className="d-flex justify-content-end">
+               <Link
+                  href={`/mcq/redo/${cat}`}
+                  className="btn btn-warning d-flex align-items-center"
+               >
+                  <RotateCcw size={22} strokeWidth={2}/>&nbsp;<strong>Attempt Questions Again</strong>
+               </Link>
+            </Col>
+         </Row>
+      </>
    } catch (error) {
       return <p>Error loading incorrect questions.</p>;
    }

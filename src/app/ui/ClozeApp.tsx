@@ -3,9 +3,9 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import createGenericClozeProvider from "./GenericClozeProvider";
-import GenericClozeQuestion from "./GenericClozeQuestion";
-import GenericClozeCompleted from "./GenericClozeCompleted";
+import createGenericClozeProvider from "../ui/GenericClozeProvider";
+import GenericCloze from "../ui/components/GenericCloze";
+import GenericClozeCompleted from "../ui/components/GenericClozeCompleted";
 import Skeleton from "react-loading-skeleton";
 import { CLOZE_QNNUM_ARR } from "@/types";
 import { notFound } from "next/navigation";
@@ -41,7 +41,7 @@ export default function ClozeApp({
             <h5 className="text-center m-0">Comprehension Cloze</h5>
          </Row>
          <ClozeLoadingSkeleton/>
-         <GenericClozeQuestion QnContextToUse={useClozeContext}/>
+         <GenericCloze QnContextToUse={useClozeContext}/>
          <GenericClozeCompleted QnContextToUse={useClozeContext}/>
       </Container>
    </ClozeProvider>;

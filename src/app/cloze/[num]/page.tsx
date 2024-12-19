@@ -1,5 +1,5 @@
 import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
-import ClozeApp from "../ClozeApp";
+import ClozeApp from "@/app/ui/ClozeApp";
 
 export const dynamic = 'force-dynamic';
 

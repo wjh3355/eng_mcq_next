@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import styled, { keyframes, css } from "styled-components";
+import ClozeInput from "./ClozeInput";
 import { RotateCcw, Send } from "lucide-react";
 import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from "@/types";
 
-export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
+export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
    const {
       wordsToTestArr,
@@ -97,13 +97,15 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    }
 
    function handleReset() {
-      const resettedFormData = cloneDeep(formData);
-      for (let i in resettedFormData) {
-         if (resettedFormData[i].isCorrect !== true) {
-            resettedFormData[i].value = "";
+      setFormData(prev => {
+         const newFormData = cloneDeep(prev);
+         for (let i in newFormData) {
+            if (newFormData[i].isCorrect !== true) {
+               newFormData[i].value = "";
+            }
          }
-      }
-      setFormData(resettedFormData);
+         return newFormData;
+      });
    }
 
    function handleKeypress(event: React.KeyboardEvent) {
@@ -127,12 +129,12 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
 
          } else if (fragment === "BLANK") {
 
-            const {value, isCorrect} = formData[blankCountr];
+            const { value, isCorrect } = formData[blankCountr];
 
             currArray.push(
                <span key={blankCountr} className="d-inline-block">
                   <strong>({blankCountr + 1})</strong>&nbsp;
-                  <ClozeInputElement
+                  <ClozeInput
                      autoFocus={blankCountr === 0}
                      disabled={isCorrect === true || hasAttempted}
                      autoComplete="off"
@@ -219,27 +221,3 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
       </section>
    )
 }
-
-const inputAnim = keyframes`
-   0% { transform: scale(1); }
-   50% { transform: scale(1.1); }
-   100% { transform: scale(1); }
-`;
-
-const ClozeInputElement = styled.input<{
-   $animate: boolean,
-   $isCorrect: boolean | null
-}>`
-   width: 130px;
-   height: 32px;
-   text-align: center;
-   border: 2px solid;
-
-   border-color: ${({$isCorrect}) => $isCorrect === true ? "green" : ($isCorrect === false ? "rgb(190, 44, 44)" : "lightGray")};
-   color: ${({$isCorrect}) => $isCorrect ? "green" : "default"};
-   font-weight: ${({$isCorrect}) => $isCorrect ? "bold" : "default"};
-
-   ${(props) =>
-      props.$animate && css`animation: ${inputAnim} 400ms infinite;`
-   }
-`
