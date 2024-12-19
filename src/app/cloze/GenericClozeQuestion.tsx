@@ -111,31 +111,34 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
    }
 
    const paragraphToRender: (string | React.JSX.Element)[][] = (() => {
-      if (JSON.stringify(formData) === "{}") return [[<span key={0} className="text-secondary fst-italic">Loading passage...</span>]];
+      if (JSON.stringify(formData) === "{}") return [];
 
-      const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
-         (acc, part, idx) => {
-   
-            const splitPart = part.split(/(\|\|)/);
-   
-            if (idx === textArr.length - 1) {
-               return [...acc, ...splitPart];
-            } 
-   
-            const { value, isCorrect } = formData[idx];
+      let blankCountr = 0;
 
-            return [
-               ...acc,
-               ...splitPart,
-               <span key={idx} className="d-inline-block">
-                  <strong>({idx + 1})</strong>&nbsp;
+      let formattedParagraphs: (string | React.JSX.Element)[][] = [];
+      let currArray: (string | React.JSX.Element)[] = [];
+
+      for (let fragment of textArr) {
+
+         if (fragment === "||") {
+
+            formattedParagraphs.push(currArray);
+            currArray = [];
+
+         } else if (fragment === "BLANK") {
+
+            const {value, isCorrect} = formData[blankCountr];
+
+            currArray.push(
+               <span key={blankCountr} className="d-inline-block">
+                  <strong>({blankCountr + 1})</strong>&nbsp;
                   <ClozeInputElement
-                     autoFocus={idx === 0}
+                     autoFocus={blankCountr === 0}
                      disabled={isCorrect === true || hasAttempted}
                      autoComplete="off"
                      
                      type="text"
-                     name={idx.toString()}
+                     name={blankCountr.toString()}
                      value={value}
 
                      onChange={handleInputUpdate}
@@ -145,23 +148,18 @@ export default function GenericClozeQuestion({ QnContextToUse }: { QnContextToUs
                      $animate={animateWrong && (isCorrect === false)}
                   />
                </span>
-            ]; 
-         },
-         []
-      );
-   
-      let formattedParagraphs: (string | React.JSX.Element)[][] = [];
-      let currentArray: (string | React.JSX.Element)[] = [];
-      for (let item of paragraphsWithInput) {
-         if (item === "||") {
-            formattedParagraphs.push(currentArray);
-            currentArray = [];
+            );
+
+            blankCountr++;
+
          } else {
-            currentArray.push(item);
+
+            currArray.push(fragment);
+            
          }
       }
       
-      formattedParagraphs.push(currentArray);
+      formattedParagraphs.push(currArray);
 
       return formattedParagraphs;
    })()

@@ -67,17 +67,18 @@ export default function createGenericClozeProvider({
                setWordsToTestArr(
                   passage
                      .match(/\{[^}]*\}/g)!
-                     .map(match => 
-                        [...match
-                           .slice(1, -1)
-                           .split("/")
-                           .filter(word => word !== "")
-                     ]
+                     .map(match => match
+                        .slice(1, -1)
+                        .split("/")
+                        .filter(Boolean)
                      )
                );
 
                setTextArr(
-                  passage.split(/\{[^}]*\}/g)
+                  passage
+                     .replace(/{.*?}/g, "BLANK")
+                     .split(/(BLANK|\|\|)/)
+                     .filter(Boolean)
                );
 
                setPrevUserCorrectAns(
@@ -103,8 +104,13 @@ export default function createGenericClozeProvider({
       }, [])
 
       useEffect(() => {
-         if (!Number.isNaN(qnNum)) setIsLoading(false);
-      }, [qnNum])
+         if (
+            !Number.isNaN(qnNum)
+            && title.length > 0
+            && textArr.length > 0
+            && wordsToTestArr.length > 0
+         ) setIsLoading(false);
+      }, [qnNum, title, textArr, wordsToTestArr])
 
       return (
          <QnContext.Provider value={{

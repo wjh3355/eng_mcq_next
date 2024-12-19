@@ -25,49 +25,49 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
    if (prevUserCorrectAns === null || isLoading) return null;
 
    const garbage: (string | React.JSX.Element)[][] = (() => {
-      const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
-         (acc, part, idx) => {
-   
-            const splitPart = part.split(/(\|\|)/);
-   
-            if (idx === textArr.length - 1) {
-               return [...acc, ...splitPart];
-            }
 
-            return [
-               ...acc,
-               ...splitPart,
+      let blankCountr = 0;
+
+      let formattedParagraphs: (string | React.JSX.Element)[][] = [];
+      let currArray: (string | React.JSX.Element)[] = [];
+
+      for (let fragment of textArr) {
+
+         if (fragment === "||") {
+
+            formattedParagraphs.push(currArray);
+            currArray = [];
+
+         } else if (fragment === "BLANK") {
+
+            currArray.push(
                <span 
-                  key={idx} 
-                  className="d-inline-block fw-bold"
+               key={blankCountr} 
+               className="d-inline-block fw-bold"
                >
-                  ({idx + 1})&nbsp;
+                  ({blankCountr + 1})&nbsp;
                   <span
                      className={"text-decoration-underline" +
-                     (prevUserCorrectAns.includes(idx) ? " text-success" : " text-danger")}
+                     (prevUserCorrectAns.includes(blankCountr) ? " text-success" : " text-danger")}
                   >
-                     {wordsToTestArr[idx].join("/")}
+                     {wordsToTestArr[blankCountr].join("/")}
                   </span>
                </span>
-            ];
+            );
 
-         }, []
-      );
-   
-      let formattedParagraphs: (string | React.JSX.Element)[][] = [];
-      let currentArray: (string | React.JSX.Element)[] = [];
-      for (let item of paragraphsWithInput) {
-         if (item === "||") {
-            formattedParagraphs.push(currentArray);
-            currentArray = [];
+            blankCountr++;
+
          } else {
-            currentArray.push(item);
+
+            currArray.push(fragment);
+            
          }
       }
       
-      formattedParagraphs.push(currentArray);
+      formattedParagraphs.push(currArray);
 
       return formattedParagraphs;
+
    })();
 
    return (
@@ -98,3 +98,26 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
       </>
    );
 }
+
+// const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
+//    (acc, part, idx) => {
+
+//       const splitPart = part.split(/(\|\|)/);
+
+//       if (idx === textArr.length - 1) {
+//          return [...acc, ...splitPart];
+//       }
+
+//       return [
+//          ...acc,
+//          ...splitPart,
+
+//       ];
+
+//    }, []
+// );
+
+// let formattedParagraphs: (string | React.JSX.Element)[][] = [];
+// let currentArray: (string | React.JSX.Element)[] = [];
+// for (let item of paragraphsWithInput) {
+

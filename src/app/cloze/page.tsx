@@ -26,7 +26,7 @@ export default async function Page() {
                   <Link
                      href={`/cloze/${qnNum}`}
                   >
-                     Cloze {qnNum}: {title}
+                     Cloze&nbsp;{qnNum}:&ensp;{title}
                   </Link>
                </li>
             )}
