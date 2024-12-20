@@ -1,4 +1,4 @@
-import { QnObj } from "@/types";
+import { MCQQnObj } from "@/types";
 import MCQReviewSentence from "./MCQReviewSentence";
 import Badge from "react-bootstrap/Badge";
 
@@ -7,7 +7,7 @@ export default function DictionaryEntry({
    num,
    dontShowSentence
 }: { 
-   qnObj: QnObj, 
+   qnObj: MCQQnObj, 
    num?: number,
    dontShowSentence?: boolean
 }) {

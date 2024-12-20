@@ -1,4 +1,5 @@
-export * from "./questionsTypes";
+export * from "./clozeTypes";
+export * from "./mcqTypes"
 export * from "./userTypes";
-export * from "./others";
+export * from "./qnSetData";
 export * from "./zodSchemas";

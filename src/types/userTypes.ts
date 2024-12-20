@@ -1,4 +1,4 @@
-import { CurrentQnCategoriesTracked } from "./others";
+import { CurrentQnCategoriesTracked } from "./qnSetData";
 
 export type UserData = {
    name: string;

@@ -41,55 +41,55 @@ export default function GenericMCQRight({
       }
    }, [options]);
 
-   function renderButtonForThisOption(thisOption: string) {
-      const isThisCorrectOption = thisOption === correctAns;
-      const isThisSelected = thisOption === selectedOption;
+   function OptionsArr() { 
 
-      const isRed = isAllDisabled && isThisSelected && !isThisCorrectOption;
-      const isGreen = isAllDisabled && isThisCorrectOption;
-      const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
+      return randomisedOptions.map((thisOption, idx) => {
 
-      return <MCQOption
-            key={thisOption}
-            disabled={isAllDisabled}
-            onClick={async () => {
-               setSelectedOption(thisOption);
-               setIsAllDisabled(true);
-               await handleOptionClick(isThisCorrectOption);
-            }}
-            $isRed={isRed}
-            $isGreen={isGreen}
-            $isBolded={isBolded}
+         const isThisCorrectOption = thisOption === correctAns;
+         const isThisSelected = thisOption === selectedOption;
 
-         >
-            {thisOption}
-            { isGreen && <CircleCheck 
-                  size={22} 
-                  strokeWidth={3}
-                  style={{position: "absolute", right: "3%"}}
-               /> }
-            { isRed && <CircleX 
-                  size={22} 
-                  strokeWidth={3}
-                  style={{position: "absolute", right: "3%"}}
-               /> }
-      </MCQOption>
-   };
+         const isRed = isAllDisabled && isThisSelected && !isThisCorrectOption;
+         const isGreen = isAllDisabled && isThisCorrectOption;
+         const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
+
+         return <MCQOption
+               key={idx}
+               disabled={isAllDisabled}
+               onClick={async () => {
+                  setSelectedOption(thisOption);
+                  setIsAllDisabled(true);
+                  await handleOptionClick(isThisCorrectOption);
+               }}
+               $isRed={isRed}
+               $isGreen={isGreen}
+               $isBolded={isBolded}
+
+            >
+               {thisOption}
+               { isGreen && <CircleCheck 
+                     size={22} 
+                     strokeWidth={3}
+                     style={{position: "absolute", right: "3%"}}
+                  /> }
+               { isRed && <CircleX 
+                     size={22} 
+                     strokeWidth={3}
+                     style={{position: "absolute", right: "3%"}}
+                  /> }
+         </MCQOption>
+      
+      });
+
+   }
 
    if (hasReachedEnd) return null;
 
    return (
       <Col lg={4} md={5}>
          <div className="vstack gap-3">
-            {
-               isLoading
-                  ? <>
-                        <Skeleton height={47} />
-                        <Skeleton height={47} />
-                        <Skeleton height={47} />
-                        <Skeleton height={47} />
-                     </>
-                  : randomisedOptions.map(renderButtonForThisOption)
+            {isLoading
+               ? <><Skeleton height={47} /><Skeleton height={47} /><Skeleton height={47} /><Skeleton height={47} /></>
+               : <OptionsArr/>
             }
          </div>
       </Col>

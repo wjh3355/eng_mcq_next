@@ -1,13 +1,13 @@
 "use client";
 
-import { QnObj } from "@/types";
+import { MCQQnObj } from "@/types";
 import DictionaryEntry from "./DictionaryEntry";
 import Pagination from "react-bootstrap/Pagination";
 import { useState } from "react";
 
 const itemsPerPg = 10;
 
-export default function PaginatedDictEntries({ qnObjArr }: { qnObjArr: QnObj[] }) {
+export default function PaginatedDictEntries({ qnObjArr }: { qnObjArr: MCQQnObj[] }) {
 
    const [currPage, setCurrPage] = useState<number>(1);
    

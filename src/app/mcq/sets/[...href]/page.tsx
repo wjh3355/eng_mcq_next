@@ -37,16 +37,10 @@ export default async function MCQQuestionsPage({
       qnNumArray={
          name === "Random" 
          ?  shuffle(sampleSize(range(...qnNumRange), 50)) 
-         :  shuffle(range(...qnNumRange))
+         :  range(...qnNumRange)
       }
       userName={userName}
-      title={
-         cat === "debug" 
-         ? "DEBUG" 
-         : (cat === "demo" 
-            ? "Demo Questions" 
-            : titleName + " - " + name) 
-      }
+      title={titleName + " - " + name}
       trackQns={isTracked}
       isSetRandom={name === "Random"}
    />

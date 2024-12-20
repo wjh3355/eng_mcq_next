@@ -3,7 +3,8 @@ export type CurrentQnCategoriesTracked =
    'phrasalVerbs' | 
    'psleWordsCloze' | 
    'psleWordsMcq' | 
-   'pslePhrasesCloze';
+   'pslePhrasesCloze' |
+   'psleGrammar';
 
 export type CurrentQnCategories = CurrentQnCategoriesTracked | 'demo' | 'debug';
 
@@ -24,26 +25,26 @@ export type QnSet = {
 export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    debug: {
-      name: "qaz",
+      name: "/Debug/",
       isTracked: false,
       requiresAuth: true,
       requiresAdminAuth: true,
       sets: [{
          qnNumRange: [1, 6],
-         name: "qux",
+         name: "?Debug?",
          href: "/mcq/sets/debug",
       }]
    },
 
    demo: {
-      name: "spam",
+      name: "Demo MCQ",
       isTracked: false,
       requiresAuth: false,
       requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "eggs",
+            name: "All",
             href: "/mcq/sets/demo",
          }
       ]
@@ -220,6 +221,20 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
             qnNumRange: [1, 351],
             name: "Random",
             href: "/mcq/sets/pslePhrasesCloze"
+         }
+      ]
+   },
+
+   psleGrammar: {
+      name: "PSLE Grammar MCQ",
+      isTracked: true,
+      requiresAuth: true,
+      requiresAdminAuth: false,
+      sets: [
+         {
+            qnNumRange: [1, 101],
+            name: "All Questions",
+            href: "/mcq/sets/psleGrammar"
          }
       ]
    }

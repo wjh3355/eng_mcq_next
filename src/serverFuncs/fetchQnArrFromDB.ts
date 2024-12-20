@@ -1,7 +1,7 @@
 'use server';
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { CurrentQnCategories, QnObj, QnObjArrSchema } from "@/types";
+import { CurrentQnCategories, MCQQnObj, QnObjArrSchema } from "@/types";
 
 export default async function fetchQnArrFromDB(
    collection: CurrentQnCategories, 
@@ -23,7 +23,7 @@ export default async function fetchQnArrFromDB(
          throw new Error("Type validation error");
       }
 
-      const qnObjArrInOriginalOrder: QnObj[] = qnNums
+      const qnObjArrInOriginalOrder: MCQQnObj[] = qnNums
          .map(num => zodResult.data.find(qn => qn.qnNum === num))
          .filter(ent => ent !== undefined);
 

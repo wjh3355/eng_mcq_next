@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 
-import { CurrentQnCategories, MCQContextValue, QnObj, EMPTY_CONTEXT_VALUE, EMPTY_QN_OBJ } from "@/types";
+import { CurrentQnCategories, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
 
 import fetchQnFromDB from "@/serverFuncs/fetchQnFromDB";
 import updateUserQnData from "@/serverFuncs/updateUserQnData";
@@ -22,7 +22,7 @@ export default function createGenericMCQProvider({
    isSetRandom: boolean
 }) {
 
-   const QnContext = createContext<MCQContextValue>(EMPTY_CONTEXT_VALUE);
+   const QnContext = createContext<MCQContextValue>(EMPTY_MCQ_CONTEXT_VALUE);
 
    function useMCQContext() { 
       return useContext(QnContext);
@@ -31,12 +31,12 @@ export default function createGenericMCQProvider({
    function MCQProvider({ children }: { children: React.ReactNode }) {
 
       const [qnSequence, setQnSequence] = useState<number[]>(qnNumArray);
-      const [qnObj, setQnObj] = useState<QnObj>(EMPTY_QN_OBJ);
+      const [qnObj, setQnObj] = useState<MCQQnObj>(EMPTY_MCQ_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
       const [userScore, setUserScore] = useState<number>(0);
-      const [wrongAnsArr, setWrongAnsArr] = useState<QnObj[]>([]);
+      const [wrongAnsArr, setWrongAnsArr] = useState<MCQQnObj[]>([]);
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
@@ -84,7 +84,7 @@ export default function createGenericMCQProvider({
       }
 
       const fetchNewQnObj = useCallback(async () => {
-         setQnObj(EMPTY_QN_OBJ);
+         setQnObj(EMPTY_MCQ_QN_OBJ);
 
          if (qnSequence.length === 0) {
             setHasReachedEnd(true);
@@ -94,7 +94,7 @@ export default function createGenericMCQProvider({
                if (qnCategory !== "demo") setUserScore((await fetchUserData(userName)).score);
             } catch (error) {
                if (error instanceof Error) {
-                  console.error("Error when fetching new QnObj:", error.message);
+                  console.error("Error when fetching new MCQQnObj:", error.message);
                   setError(error.message);
                } else {
                   console.error("An unexpected error occurred:", error);

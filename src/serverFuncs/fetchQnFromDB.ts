@@ -1,7 +1,7 @@
 'use server';
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { CurrentQnCategories, QnObj, QnObjSchema } from "@/types";
+import { CurrentQnCategories, MCQQnObj, QnObjSchema } from "@/types";
 
 export default async function fetchQnFromDB(
    collection: CurrentQnCategories, 
@@ -22,7 +22,7 @@ export default async function fetchQnFromDB(
          throw new Error("Type validation error");
       }
 
-      return zodResult.data as QnObj;
+      return zodResult.data as MCQQnObj;
 
    } catch (error: unknown) {
       if (error instanceof Error) {
