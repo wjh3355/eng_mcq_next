@@ -56,7 +56,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       requiresAdminAuth: false,
       sets: [
          {
-            qnNumRange: [1, 4],
+            qnNumRange: [1, 100],
             name: "Set 1",
             href: "/mcq/sets/gep/1"
          },

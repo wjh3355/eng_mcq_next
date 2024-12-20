@@ -5,3 +5,12 @@
 .customFont {
    font-family: "Cantata One", sans-serif;
 }
+
+@media (min-width: 992px){
+   .acctBtn {
+      width: 80px;
+      height: 30px;
+      margin-top: auto;
+      margin-bottom: auto;
+   }
+}

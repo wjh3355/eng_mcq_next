@@ -26,7 +26,8 @@ export default async function Page() {
                   [
                      CurrentQnCategories, { name: string, sets: QnSet[] }
                   ][]
-               ).filter(([cat]) => cat !== "debug" && cat !== "demo")
+               )
+                  .filter(([cat]) => cat !== "debug" && cat !== "demo")
                   .map(([cat, {name, sets}]) => (
                      <Col key={cat} lg={3} md={5} sm={6} className="mb-4">
                         <div className="card">
