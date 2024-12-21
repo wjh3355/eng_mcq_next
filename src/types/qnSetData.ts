@@ -101,27 +101,37 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       requiresAdminAuth: false,
       sets: [
          {
-            qnNumRange: [1, 61],
+            qnNumRange: [1, 51],
             name: "Set 1",
             href: "/mcq/sets/phrasalVerbs/1"
          },
          {
-            qnNumRange: [61, 121],
+            qnNumRange: [51, 101],
             name: "Set 2",
             href: "/mcq/sets/phrasalVerbs/2"
          },
          {
-            qnNumRange: [121, 181],
+            qnNumRange: [101, 151],
             name: "Set 3",
             href: "/mcq/sets/phrasalVerbs/3"
          },
          {
-            qnNumRange: [181, 241],
+            qnNumRange: [151, 201],
             name: "Set 4",
             href: "/mcq/sets/phrasalVerbs/4"
          },
          {
-            qnNumRange: [1, 241],
+            qnNumRange: [201, 251],
+            name: "Set 5",
+            href: "/mcq/sets/phrasalVerbs/5"
+         },
+         {
+            qnNumRange: [251, 301],
+            name: "Set 6",
+            href: "/mcq/sets/phrasalVerbs/6"
+         },
+         {
+            qnNumRange: [1, 301],
             name: "Random",
             href: "/mcq/sets/phrasalVerbs"
          }
