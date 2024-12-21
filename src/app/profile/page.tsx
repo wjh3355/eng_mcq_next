@@ -1,4 +1,4 @@
-import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
+import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import fetchUserData from "@/serverFuncs/fetchUserData";

@@ -1,6 +1,5 @@
 import MCQApp from "@/app/ui/MCQApp";
-import checkAdminUserAuth from "@/serverFuncs/checkAdminUserAuth";
-import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
+import { checkNormalUserAuth, checkAdminUserAuth } from "@/serverFuncs/checkUserAuth";
 import { HREF_LOOKUP_MAP } from "@/types";
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";

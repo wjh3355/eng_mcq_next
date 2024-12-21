@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
+
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Modal from "react-bootstrap/Modal";
 import Popover from "react-bootstrap/Popover";
 import Accordion from "react-bootstrap/Accordion";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+
 import { CurrentQnCategoriesTracked, UserData } from "@/types";
 import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
@@ -25,7 +30,7 @@ export default function StatsTable({
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
 
    return (
-      <>
+      <Container>
       
          <p>
             <strong>Username: </strong>
@@ -65,71 +70,74 @@ export default function StatsTable({
             </OverlayTrigger>
          </p>
 
-         <Accordion>
-            <Accordion.Item eventKey="0">
-               <Accordion.Header><strong>Cloze</strong></Accordion.Header>
-               <Accordion.Body>
-                  {
-                     userData.clozeData.length === 0
-                     ? "You have not attempted any cloze questions yet!"
-                     : <ul>
+         <Row>
+            <Col xl={8} lg={10} className="mx-auto">
+               <Accordion>
+                  <Accordion.Item eventKey="0">
+                     <Accordion.Header><strong>Cloze</strong></Accordion.Header>
+                     <Accordion.Body>
                         {
-                           userData.clozeData.map(({qnNum, correctAns}) => 
-                              <li key={qnNum}>
-                                 {`Cloze ${qnNum}: ${correctAns.length} / 15 correct`}
-                              </li>
-                           )
+                           userData.clozeData.length === 0
+                           ? "You have not attempted any cloze questions yet!"
+                           : <ul>
+                              {
+                                 userData.clozeData.map(({qnNum, correctAns}) => 
+                                    <li key={qnNum}>
+                                       {`Cloze ${qnNum}: ${correctAns.length} / 15 correct`}
+                                    </li>
+                                 )
+                              }
+                           </ul>
                         }
-                     </ul>
-                  }
-               </Accordion.Body>
-            </Accordion.Item>
-            <Accordion.Item eventKey="1">
-               <Accordion.Header><strong>MCQ Questions</strong></Accordion.Header>
-               <Accordion.Body>
-                  {
-                     JSON.stringify(userData.qnData) === "{}"
-                     ?  "You have not attempted any MCQ questions yet!"
-                     :  <Table striped>
-                           <thead>
-                              <tr>
-                                 <th>Category</th>
-                                 <th>No. Attempted</th>
-                                 <th>No. Incorrect</th>
-                                 <th></th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              {(
-                                 Object.entries(userData.qnData) as [
-                                    CurrentQnCategoriesTracked,
-                                    { numQnsAttempted: number; wrongQnNums: number[] }
-                                 ][]
-                              ).map(([cat, { numQnsAttempted, wrongQnNums }]) => (
-                                 <tr key={cat}>
-                                    <td>{QN_CATEGORIES_DATA[cat].name}</td>
-                                    <td>{numQnsAttempted}</td>
-                                    <td>{wrongQnNums.length}</td>
-                                    {wrongQnNums.length === 0 ? (
-                                       <td />
-                                    ) : (
-                                       <td>
-                                          <Link
-                                             href={`/profile/wrongmcq/${cat}`}
-                                             className="btn btn-primary btn-sm px-3"
-                                          >
-                                             <strong>View</strong>
-                                          </Link>
-                                       </td>
-                                    )}
-                                 </tr>
-                              ))}
-                           </tbody>
-                        </Table>
-                  }
-               </Accordion.Body>
-            </Accordion.Item>
-         </Accordion>
+                     </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1">
+                     <Accordion.Header><strong>MCQ Questions</strong></Accordion.Header>
+                     <Accordion.Body>
+                        {
+                           JSON.stringify(userData.qnData) === "{}"
+                           ?  "You have not attempted any MCQ questions yet!"
+                           :  <Table striped>
+                                 <thead>
+                                    <tr>
+                                       <th>Category</th>
+                                       <th>No. Attempted</th>
+                                       <th>No. Incorrect</th>
+                                       <th></th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    {(
+                                       Object.entries(userData.qnData) as [
+                                          CurrentQnCategoriesTracked,
+                                          { numQnsAttempted: number; wrongQnNums: number[] }
+                                       ][]
+                                    ).map(([cat, { numQnsAttempted, wrongQnNums }]) => (
+                                       <tr key={cat}>
+                                          <td>{QN_CATEGORIES_DATA[cat].name}</td>
+                                          <td>{numQnsAttempted}</td>
+                                          <td>{wrongQnNums.length}</td>
+                                          {wrongQnNums.length === 0 
+                                             ?  <td />
+                                             :  <td>
+                                                <Link
+                                                   href={`/profile/wrongmcq/${cat}`}
+                                                   className="btn btn-primary btn-sm px-3"
+                                                >
+                                                   <strong>View</strong>
+                                                </Link>
+                                             </td>
+                                          }
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </Table>
+                        }
+                     </Accordion.Body>
+                  </Accordion.Item>
+               </Accordion>
+            </Col>
+         </Row>
 
          <Button
             variant="danger"
@@ -172,6 +180,6 @@ export default function StatsTable({
          </Modal>
 
          <p className="text-light" style={{marginTop: "60px"}}>{JSON.stringify(userData)}</p>
-      </>
+      </Container>
    );
 }

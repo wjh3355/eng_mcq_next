@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import ClozeInput from "./ClozeInput";
-import { RotateCcw, Send } from "lucide-react";
 import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from "@/types";
 
@@ -199,19 +198,16 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
                   type="submit"
                   variant="danger"
                   disabled={hasAttempted || isLoading}
-                  className="d-flex align-items-center fw-bold"
                >
-                  <Send size={22} strokeWidth={2} className="me-1"/>
-                  {`Submit (${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
+                  Submit&nbsp;<strong>{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}</strong>
                </Button>
 
                <Button 
                   onClick={() => handleReset()}
                   variant="secondary"
                   disabled={hasAttempted || isLoading}
-                  className="d-flex align-items-center fw-bold"
                >
-                  <RotateCcw size={22} strokeWidth={2} className="me-1"/>Reset
+                  Reset
                </Button>
 
             </section>

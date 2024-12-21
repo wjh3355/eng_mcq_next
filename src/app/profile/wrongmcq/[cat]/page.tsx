@@ -2,8 +2,8 @@ import { Suspense } from "react";
 
 import Link from "next/link";
 
-import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
-import fetchQnArr from "@/serverFuncs/fetchQnArr";
+import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
+import { fetchQnArr } from "@/serverFuncs/fetchQn";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";

@@ -1,4 +1,4 @@
-import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
+import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { CurrentQnCategoriesTracked, QN_CATEGORIES_DATA } from "@/types";
 import { notFound } from "next/navigation";
