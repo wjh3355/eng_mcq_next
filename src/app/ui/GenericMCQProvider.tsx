@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 
 import { CurrentQnCategories, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
 
-import fetchQnFromDB from "@/serverFuncs/fetchQnFromDB";
+import fetchQn from "@/serverFuncs/fetchQn";
 import updateUserQnData from "@/serverFuncs/updateUserQnData";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 
@@ -90,7 +90,7 @@ export default function createGenericMCQProvider({
             setHasReachedEnd(true);
          } else {
             try {
-               setQnObj(await fetchQnFromDB(qnCategory, qnSequence[0]));
+               setQnObj(await fetchQn(qnCategory, qnSequence[0]));
                if (qnCategory !== "demo") setUserScore((await fetchUserData(userName)).score);
             } catch (error) {
                if (error instanceof Error) {

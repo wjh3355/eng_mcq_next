@@ -57,7 +57,7 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       requiresAdminAuth: false,
       sets: [
          {
-            qnNumRange: [1, 100],
+            qnNumRange: [1, 101],
             name: "Set 1",
             href: "/mcq/sets/gep/1"
          },
@@ -232,9 +232,14 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
       requiresAdminAuth: false,
       sets: [
          {
-            qnNumRange: [1, 101],
-            name: "All Questions",
-            href: "/mcq/sets/psleGrammar"
+            qnNumRange: [1, 51],
+            name: "Set 1",
+            href: "/mcq/sets/psleGrammar/1"
+         },
+         {
+            qnNumRange: [51, 101],
+            name: "Set 2",
+            href: "/mcq/sets/psleGrammar/2"
          }
       ]
    }

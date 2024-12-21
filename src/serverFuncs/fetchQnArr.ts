@@ -3,7 +3,7 @@
 import { connectToDB } from "@/serverFuncs/connectToDB";
 import { CurrentQnCategories, MCQQnObj, QnObjArrSchema } from "@/types";
 
-export default async function fetchQnArrFromDB(
+export default async function fetchQnArr(
    collection: CurrentQnCategories, 
    qnNums: number[]
 ) {

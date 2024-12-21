@@ -37,7 +37,7 @@ export default async function MCQQuestionsPage({
       qnNumArray={
          name === "Random" 
          ?  shuffle(sampleSize(range(...qnNumRange), 50)) 
-         :  range(...qnNumRange)
+         :  shuffle(range(...qnNumRange))
       }
       userName={userName}
       title={titleName + " - " + name}

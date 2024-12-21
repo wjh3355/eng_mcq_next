@@ -35,6 +35,9 @@ export default async function updateUserQnData({
             numQnsAttempted: 1,
             wrongQnNums: isCorrect ? [] : [qnNum]
          }
+      },
+      $inc: {
+         score: isCorrect ? 10 : 0
       }
    }
 

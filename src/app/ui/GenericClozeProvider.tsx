@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { ClozeContextValue, EMPTY_CLOZE_CONTEXT_VALUE } from "@/types";
-import fetchClozeFromDB from "@/serverFuncs/fetchClozeFromDB";
+import fetchCloze from "@/serverFuncs/fetchCloze";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import updateUserClozeData from "@/serverFuncs/updateUserClozeData";
 
@@ -62,7 +62,7 @@ export default function createGenericClozeProvider({
             try {
                const userClozeData = (await fetchUserData(userName)).clozeData;
 
-               const { passage, qnNum, title } = await fetchClozeFromDB(qnNumToFetch);
+               const { passage, qnNum, title } = await fetchCloze(qnNumToFetch);
 
                setWordsToTestArr(
                   passage

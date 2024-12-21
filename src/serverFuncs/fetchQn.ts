@@ -1,18 +1,28 @@
 'use server';
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { ClozeObj } from "@/types";
+import { CurrentQnCategories, MCQQnObj, QnObjSchema } from "@/types";
 
-export default async function fetchClozeFromDB(num: number) {
+export default async function fetchQn(
+   collection: CurrentQnCategories, 
+   qnNum: number
+) {
    try {
       const { db } = await connectToDB("english_questions");
       const data = await db
-         .collection("clozePassage")
-         .findOne({ qnNum: num }, { projection: { _id: 0 } });
-      
+         .collection(collection)
+         .findOne({ qnNum }, { projection: { _id: 0 } });
+
       if (!data) throw new Error("Question not found");
 
-      return data as unknown as ClozeObj;
+      const zodResult = QnObjSchema.safeParse(data);
+
+      if (!zodResult.success) {
+         console.error("Data not of correct type:", zodResult.error.issues);
+         throw new Error("Type validation error");
+      }
+
+      return zodResult.data as MCQQnObj;
 
    } catch (error: unknown) {
       if (error instanceof Error) {

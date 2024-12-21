@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import checkNormalUserAuth from "@/serverFuncs/checkNormalUserAuth";
-import fetchQnArrFromDB from "@/serverFuncs/fetchQnArrFromDB";
+import fetchQnArr from "@/serverFuncs/fetchQnArr";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
 async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: CurrentQnCategoriesTracked }) {
    try {
       return <>
-         <PaginatedDictEntries qnObjArr={await fetchQnArrFromDB(cat, wrongQnNumsArr)}/>
+         <PaginatedDictEntries qnObjArr={await fetchQnArr(cat, wrongQnNumsArr)}/>
          <Row className="my-4">
             <Col className="d-flex justify-content-end">
                <Link
