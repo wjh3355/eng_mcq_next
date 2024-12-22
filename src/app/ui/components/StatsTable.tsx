@@ -12,7 +12,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import { QnCategory, UserData } from "@/types";
+import { QnCategory, QnCategoryUserData, UserData } from "@/types";
 import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
 import eraseUserData from "@/serverFuncs/eraseUserData";
@@ -107,14 +107,10 @@ export default function StatsTable({
                                     </tr>
                                  </thead>
                                  <tbody>
-                                    {(
-                                       Object.entries(userData.qnData) as [
-                                          QnCategory,
-                                          { numQnsAttempted: number; wrongQnNums: number[] }
-                                       ][]
-                                    ).map(([cat, { numQnsAttempted, wrongQnNums }]) => (
+                                    {(Object.entries(userData.qnData) as [ QnCategory, QnCategoryUserData ][])
+                                       .map(([cat, { numQnsAttempted, wrongQnNums }]) => (
                                        <tr key={cat}>
-                                          <td>{QN_CATEGORIES_DATA[cat].name}</td>
+                                          <td>{QN_CATEGORIES_DATA[cat].categoryName}</td>
                                           <td>{numQnsAttempted}</td>
                                           <td>{wrongQnNums.length}</td>
                                           {wrongQnNums.length === 0 

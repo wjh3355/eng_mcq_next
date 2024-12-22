@@ -17,7 +17,7 @@ export default async function RedoWrongQnsPage({ params }: { params: Promise<{ c
       qnCategory={cat}
       qnNumArray={wrongQnNums}
       userName=""
-      title={QN_CATEGORIES_DATA[cat].name + " - Incorrect Questions"}
+      title={QN_CATEGORIES_DATA[cat].categoryName + " - Incorrect Questions"}
       isSetRandom={false}
    />
 }

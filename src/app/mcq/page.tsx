@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
-import { QnCategory, QN_CATEGORIES_DATA } from "@/types";
+import { QnCategory, QN_CATEGORIES_DATA, QnCategoryUserData } from "@/types";
 import Link from "next/link";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import MCQDisplayGrid from "../ui/components/MCQDisplayGrid";
@@ -59,13 +59,13 @@ async function WrongQnsTable({ user }: { user: string }) {
                </thead>
                <tbody>
                   {
-                     (Object.entries(userQnData) as [ QnCategory, { wrongQnNums: number[] } ][])
+                     (Object.entries(userQnData) as [ QnCategory, QnCategoryUserData ][])
                         .filter(([_, { wrongQnNums }]) => wrongQnNums.length > 0)
                         .map(([cat, { wrongQnNums }], idx) => 
                            <tr key={idx}>
                               <td>
                                  <Link className="me-1" href={`/mcq/redo/${cat}`}>
-                                    {QN_CATEGORIES_DATA[cat].name}
+                                    {QN_CATEGORIES_DATA[cat].categoryName}
                                  </Link>
                               </td>
                               <td>

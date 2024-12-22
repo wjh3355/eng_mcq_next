@@ -22,17 +22,17 @@ export default async function MCQQuestionsPage({
 
    if (!match) return notFound();
 
-   const { cat, titleName, set: { qnNumRange, name } } = match;
+   const { cat, categoryName, set: { qnNumRange, setName } } = match;
 
    return <MCQApp
       qnCategory={cat}
       qnNumArray={
-         name === "Random" 
+         setName === "Random" 
          ?  shuffle(sampleSize(range(...qnNumRange), 50)) 
          :  shuffle(range(...qnNumRange))
       }
       userName={user.given_name!}
-      title={titleName + " - " + name}
-      isSetRandom={name === "Random"}
+      title={categoryName + " - " + setName}
+      isSetRandom={setName === "Random"}
    />
 }

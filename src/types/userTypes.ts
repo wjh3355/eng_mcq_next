@@ -1,16 +1,15 @@
 import { QnCategory } from "./qnSetData";
 
+export type QnCategoryUserData = {
+   numQnsAttempted: number;
+   wrongQnNums: number[];
+}
+
 export type UserData = {
    name: string;
    dateCreated: Date;
    
-   qnData: Partial<Record<
-      QnCategory,
-      {
-         numQnsAttempted: number;
-         wrongQnNums: number[];
-      }
-   >>;
+   qnData: Partial<Record<QnCategory, QnCategoryUserData>>;
 
    clozeData: {
       qnNum: number

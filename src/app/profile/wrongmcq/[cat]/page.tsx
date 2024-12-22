@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: Promise<{ cat: QnCatego
    return ( 
       <Container className="mb-4">
          <Row className="my-3">
-            <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].name}: Incorrect Questions</h5>
+            <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].categoryName}: Incorrect Questions</h5>
          </Row>
 
          <Suspense fallback={<Skeleton height={40}/>}>

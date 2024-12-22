@@ -7,225 +7,199 @@ export type QnCategory =
    'psleGrammar';
 
 export type QnCategoryData = {
-   name: string;
+   categoryName: string;
    sets: QnSet[];
 }
 
 export type QnSet = {
    qnNumRange: [number, number];
-   name: string;
+   setName: string;
    href: string;
 }
 
 export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
 
-   // debug: {
-   //    name: "/Debug/",
-   //    isTracked: false,
-   //    requiresAuth: true,
-   //    requiresAdminAuth: true,
-   //    sets: [{
-   //       qnNumRange: [1, 6],
-   //       name: "?Debug?",
-   //       href: "/mcq/sets/debug",
-   //    }]
-   // },
-
-   // demo: {
-   //    name: "Demo MCQ",
-   //    isTracked: false,
-   //    requiresAuth: false,
-   //    requiresAdminAuth: false,
-   //    sets: [
-   //       {
-   //          qnNumRange: [1, 51],
-   //          name: "All",
-   //          href: "/mcq/sets/demo",
-   //       }
-   //    ]
-   // },
-
    gep: {
-      name: "GEP Vocab MCQ",
+      categoryName: "GEP Vocab MCQ",
       sets: [
          {
             qnNumRange: [1, 101],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/gep/1"
          },
          {
             qnNumRange: [101, 201],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/gep/2"
          },
          {
             qnNumRange: [201, 301],            
-            name: "Set 3",
+            setName: "Set 3",
             href: "/mcq/sets/gep/3"
          },
          {
             qnNumRange: [301, 401],            
-            name: "Set 4",
+            setName: "Set 4",
             href: "/mcq/sets/gep/4"
          },
          {
             qnNumRange: [401, 501],            
-            name: "Set 5",
+            setName: "Set 5",
             href: "/mcq/sets/gep/5"
          },
          {
             qnNumRange: [501, 601],            
-            name: "Set 6",
+            setName: "Set 6",
             href: "/mcq/sets/gep/6"
          },
          {
             qnNumRange: [1, 601],
-            name: "Random",
+            setName: "Random",
             href: "/mcq/sets/gep"
          }
       ]
    },
 
    phrasalVerbs: {
-      name: "Phrasal Verbs Cloze",
+      categoryName: "Phrasal Verbs Cloze",
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/phrasalVerbs/1"
          },
          {
             qnNumRange: [51, 101],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/phrasalVerbs/2"
          },
          {
             qnNumRange: [101, 151],
-            name: "Set 3",
+            setName: "Set 3",
             href: "/mcq/sets/phrasalVerbs/3"
          },
          {
             qnNumRange: [151, 201],
-            name: "Set 4",
+            setName: "Set 4",
             href: "/mcq/sets/phrasalVerbs/4"
          },
          {
             qnNumRange: [201, 251],
-            name: "Set 5",
+            setName: "Set 5",
             href: "/mcq/sets/phrasalVerbs/5"
          },
          {
             qnNumRange: [251, 301],
-            name: "Set 6",
+            setName: "Set 6",
             href: "/mcq/sets/phrasalVerbs/6"
          },
          {
             qnNumRange: [1, 301],
-            name: "Random",
+            setName: "Random",
             href: "/mcq/sets/phrasalVerbs"
          }
       ]
    },
 
    psleWordsCloze: {
-      name: "PSLE Words Cloze",
+      categoryName: "PSLE Words Cloze",
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/psleWordsCloze/1"
          },
          {
             qnNumRange: [51, 101],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/psleWordsCloze/2"
          },
          {
             qnNumRange: [1, 101],
-            name: "Random",
+            setName: "Random",
             href: "/mcq/sets/psleWordsCloze"
          }
       ]
    },
 
    psleWordsMcq: {
-      name: "PSLE Words MCQ",
+      categoryName: "PSLE Words MCQ",
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/psleWordsMcq/1"
          },
          {
             qnNumRange: [51, 101],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/psleWordsMcq/2"
          },
          {
             qnNumRange: [1, 101],
-            name: "Random",
+            setName: "Random",
             href: "/mcq/sets/psleWordsMcq"
          }
       ]
    },
 
    pslePhrasesCloze: {
-      name: "PSLE Phrases Cloze",
+      categoryName: "PSLE Phrases Cloze",
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/pslePhrasesCloze/1"
          },
          {
             qnNumRange: [51, 101],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/pslePhrasesCloze/2"
          },
          {
             qnNumRange: [101, 151],
-            name: "Set 3",
+            setName: "Set 3",
             href: "/mcq/sets/pslePhrasesCloze/3"
          },
          {
             qnNumRange: [151, 201],
-            name: "Set 4",
+            setName: "Set 4",
             href: "/mcq/sets/pslePhrasesCloze/4"
          },
          {
             qnNumRange: [201, 251],
-            name: "Set 5",
+            setName: "Set 5",
             href: "/mcq/sets/pslePhrasesCloze/5"
          },
          {
             qnNumRange: [251, 301],
-            name: "Set 6",
+            setName: "Set 6",
             href: "/mcq/sets/pslePhrasesCloze/6"
          },
          {
             qnNumRange: [301, 351],
-            name: "Set 7",
+            setName: "Set 7",
             href: "/mcq/sets/pslePhrasesCloze/7"
          },
          {
             qnNumRange: [1, 351],
-            name: "Random",
+            setName: "Random",
             href: "/mcq/sets/pslePhrasesCloze"
          }
       ]
    },
 
    psleGrammar: {
-      name: "PSLE Grammar MCQ",
+      categoryName: "PSLE Grammar MCQ",
       sets: [
          {
             qnNumRange: [1, 51],
-            name: "Set 1",
+            setName: "Set 1",
             href: "/mcq/sets/psleGrammar/1"
          },
          {
             qnNumRange: [51, 101],
-            name: "Set 2",
+            setName: "Set 2",
             href: "/mcq/sets/psleGrammar/2"
          }
       ]
@@ -233,16 +207,20 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
 }
 
 export function findCategoryOfDemoQnNum(qnNum: number): string {
-   if (qnNum >= 1 && qnNum <= 10) return QN_CATEGORIES_DATA["phrasalVerbs"].name
-   else if (qnNum >= 11 && qnNum <= 30) return QN_CATEGORIES_DATA["pslePhrasesCloze"].name
-   else if (qnNum >= 31 && qnNum <= 40) return QN_CATEGORIES_DATA["psleWordsCloze"].name
-   else if (qnNum >= 41 && qnNum <= 50) return QN_CATEGORIES_DATA["psleWordsMcq"].name
-   else return QN_CATEGORIES_DATA["psleGrammar"].name
+   let cat: QnCategory;
+
+   if (qnNum >= 1 && qnNum <= 10) cat = "phrasalVerbs";
+   else if (qnNum >= 11 && qnNum <= 30) cat = "pslePhrasesCloze";
+   else if (qnNum >= 31 && qnNum <= 40) cat = "psleWordsCloze";
+   else if (qnNum >= 41 && qnNum <= 50) cat = "psleWordsMcq";
+   else cat = "psleGrammar";
+
+   return QN_CATEGORIES_DATA[cat].categoryName;
 }
 
 export type HrefLookupData = {
    cat: QnCategory,
-   titleName: string,
+   categoryName: string,
    set: QnSet
 }
 
@@ -256,7 +234,7 @@ export const HREF_LOOKUP_MAP: Record<string, HrefLookupData> = (() => {
       for (const set of catData.sets) {
          map[set.href] = {
             cat: cat2,
-            titleName: catData.name,
+            categoryName: catData.categoryName,
             set
          };
       }
