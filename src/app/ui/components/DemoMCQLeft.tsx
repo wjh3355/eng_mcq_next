@@ -11,17 +11,16 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import DictionaryEntry from "./DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
 import PaginatedDictEntries from "./PaginatedDictEntries";
-import { MCQContextValue } from '@/types';
+import { findCategoryOfDemoQnNum, MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
-export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
+export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       handleNextQnBtnClick,
       thisSessionScore: [numCorrect, numTotal],
-      userScore,
       wrongAnsArr,
       qnObj,
       isLoading,
@@ -29,7 +28,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
       hasReachedEnd
    } = QnContextToUse();
 
-   const { sentence, wordToTest } = qnObj;
+   const { sentence, wordToTest, qnNum } = qnObj;
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
@@ -41,20 +40,23 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
          <Card body className="mb-3">
             {isLoading 
                ?  <Skeleton height="24px" />
-               :  <MCQQnSentence
-                     sentence={sentence}
-                     wordToTest={wordToTest}
-                  />
+               :  <>
+                     <div className="mb-2">
+                        <small className="border border-0 rounded bg-secondary-subtle p-2 fst-italic">
+                           From {findCategoryOfDemoQnNum(qnNum)}
+                        </small>
+                     </div>
+                     <MCQQnSentence
+                        sentence={sentence}
+                        wordToTest={wordToTest}
+                     />
+                  </>
             }
          </Card>
 
          <section className="hstack gap-3 mb-3">
 
-            <DropdownButton 
-               variant="warning"
-               title="Results"
-               drop="down"
-            >
+            <DropdownButton variant="warning" title="Results" drop="down">
                <div className="hstack gap-3 py-1 px-3">
                   <div className="text-center">
                      Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
@@ -77,10 +79,6 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
                   </div>
                </div>
             </DropdownButton>
-
-            <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-               Score: {userScore}
-            </div>
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"
@@ -109,10 +107,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
 
          </section>
 
-         <Modal size="lg" centered
-            show={isReviewShown}
-            onHide={() => setIsReviewShown(!isReviewShown)}
-         >
+         <Modal size="lg" centered show={isReviewShown} onHide={() => setIsReviewShown(!isReviewShown)}>
             <Modal.Header closeButton><Modal.Title className="fs-5">Review Incorrect Questions</Modal.Title></Modal.Header>
             <Modal.Body><PaginatedDictEntries qnObjArr={wrongAnsArr}/></Modal.Body>
          </Modal>

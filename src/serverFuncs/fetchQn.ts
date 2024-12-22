@@ -1,10 +1,10 @@
 'use server';
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { CurrentQnCategories, MCQQnObj, QnObjSchema, QnObjArrSchema } from "@/types";
+import { QnCategory, MCQQnObj, QnObjSchema, QnObjArrSchema } from "@/types";
 
 export async function fetchQn(
-   collection: CurrentQnCategories, 
+   collection: QnCategory | "demo", 
    qnNum: number
 ) {
    try {
@@ -13,7 +13,7 @@ export async function fetchQn(
          .collection(collection)
          .findOne({ qnNum }, { projection: { _id: 0 } });
 
-      if (!data) throw new Error("Question not found");
+      if (!data) throw new Error(`${collection} Q${qnNum} not found`);
 
       const zodResult = QnObjSchema.safeParse(data);
 
@@ -26,7 +26,7 @@ export async function fetchQn(
 
    } catch (error: unknown) {
       if (error instanceof Error) {
-         console.error("Unable to fetch question from database:", error.message);
+         console.error(`Unable to fetch ${collection} Q${qnNum} from database:`, error.message);
          throw new Error(error.message);
       } else {
          console.error("An unexpected error occured:", error);
@@ -36,7 +36,7 @@ export async function fetchQn(
 };
 
 export async function fetchQnArr(
-   collection: CurrentQnCategories, 
+   collection: QnCategory, 
    qnNums: number[]
 ) {
    try {

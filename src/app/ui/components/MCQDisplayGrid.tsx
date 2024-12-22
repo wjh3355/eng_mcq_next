@@ -1,7 +1,7 @@
 "use client";
 
 import { QN_CATEGORIES_DATA } from "@/types";
-import { CurrentQnCategories, QnSet } from "@/types";
+import { QnCategory, QnSet } from "@/types";
 import Link from "next/link";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -9,7 +9,7 @@ import Card from "react-bootstrap/Card";
 export default function MCQDisplayGrid() {
    return (
       <>
-         {(Object.entries(QN_CATEGORIES_DATA) as [ CurrentQnCategories, { name: string, sets: QnSet[] } ][])
+         {(Object.entries(QN_CATEGORIES_DATA) as [ QnCategory, { name: string, sets: QnSet[] } ][])
             .filter(([_, {name}]) => name !== "/Debug/" && name !== "Demo MCQ")
             .map(([cat, { name, sets }]) => 
                <Col key={cat} xl={3} lg={4} md={6} className="mb-3">

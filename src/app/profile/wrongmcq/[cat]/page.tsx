@@ -6,7 +6,7 @@ import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import { fetchQnArr } from "@/serverFuncs/fetchQn";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
-import { QN_CATEGORIES_DATA, CurrentQnCategoriesTracked } from "@/types";
+import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -18,7 +18,7 @@ import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
-export default async function Page({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
+export default async function Page({ params }: { params: Promise<{ cat: QnCategory }> }) {
 
    const currUser = await checkNormalUserAuth();
    const userData = await fetchUserData(currUser.given_name!);
@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ cat: CurrentQ
    );
 }
 
-async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: CurrentQnCategoriesTracked }) {
+async function ShowEntriesWithPagination({ wrongQnNumsArr, cat }: { wrongQnNumsArr: number[], cat: QnCategory }) {
    try {
       return <>
          <PaginatedDictEntries qnObjArr={await fetchQnArr(cat, wrongQnNumsArr)}/>

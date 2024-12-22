@@ -1,10 +1,10 @@
 import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import fetchUserData from "@/serverFuncs/fetchUserData";
-import { CurrentQnCategoriesTracked, QN_CATEGORIES_DATA } from "@/types";
+import { QnCategory, QN_CATEGORIES_DATA } from "@/types";
 import { notFound } from "next/navigation";
 import MCQApp from "@/app/ui/MCQApp";
 
-export default async function RedoWrongQnsPage({ params }: { params: Promise<{ cat: CurrentQnCategoriesTracked }> }) {
+export default async function RedoWrongQnsPage({ params }: { params: Promise<{ cat: QnCategory }> }) {
 
    const { cat } = await params;
    const user = await checkNormalUserAuth();
@@ -17,7 +17,6 @@ export default async function RedoWrongQnsPage({ params }: { params: Promise<{ c
       qnCategory={cat}
       qnNumArray={wrongQnNums}
       userName=""
-      trackQns={false}
       title={QN_CATEGORIES_DATA[cat].name + " - Incorrect Questions"}
       isSetRandom={false}
    />

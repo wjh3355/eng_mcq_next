@@ -55,7 +55,7 @@ export default function Advert() {
          <Row className="d-flex align-items-center">
             <Col className="justify-content-center">
                Want to experience this website&apos;s features? View our free
-               <Link href="/mcq/sets/demo" className="btn btn-outline-primary mx-1 fw-bold">
+               <Link href="/mcq/demo" className="btn btn-outline-primary mx-1 fw-bold">
                   Demo MCQ Questions
                </Link>.
             </Col>

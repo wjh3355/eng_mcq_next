@@ -1,7 +1,7 @@
 "use server";
 
 import { connectToDB } from "@/serverFuncs/connectToDB";
-import { CurrentQnCategories } from "@/types";
+import { QnCategory } from "@/types";
 
 export default async function updateUserQnData({
    cat,
@@ -9,7 +9,7 @@ export default async function updateUserQnData({
    qnNum,
    isCorrect
 }: {
-   cat: CurrentQnCategories,
+   cat: QnCategory,
    userName: string,
    qnNum: number,
    isCorrect: boolean | null

@@ -9,20 +9,19 @@ import GenericMCQLeft from "./components/GenericMCQLeft";
 import GenericMCQRight from "@/app/ui/components/GenericMCQRight";
 import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 import GenericMCQEnd from "@/app/ui/components/GenericMCQEnd";
-import { CurrentQnCategories } from "@/types";
+import { QnCategory } from "@/types";
+import DemoMCQLeft from "./components/DemoMCQLeft";
 
 export default function MCQApp({
    qnCategory,
    qnNumArray,
    userName,
-   trackQns,
    title,
    isSetRandom
 }: {
-   qnCategory: CurrentQnCategories,
+   qnCategory: QnCategory | "demo",
    qnNumArray: number[],
    userName: string,
-   trackQns: boolean,
    title: string,
    isSetRandom: boolean
 }) {
@@ -31,7 +30,6 @@ export default function MCQApp({
       qnCategory,
       qnNumArray,
       userName,
-      trackQns,
       isSetRandom
    });
 
@@ -44,7 +42,11 @@ export default function MCQApp({
             </Col>
          </Row>
          <Row>
-            <GenericMCQLeft QnContextToUse={useMCQContext}/>
+            {
+               qnCategory === "demo"
+               ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
+               :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
+            }
             <GenericMCQRight QnContextToUse={useMCQContext}/>
             <GenericMCQEnd QnContextToUse={useMCQContext}/>
          </Row>

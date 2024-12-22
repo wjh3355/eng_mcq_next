@@ -1,11 +1,11 @@
-import { CurrentQnCategoriesTracked } from "./qnSetData";
+import { QnCategory } from "./qnSetData";
 
 export type UserData = {
    name: string;
    dateCreated: Date;
    
    qnData: Partial<Record<
-      CurrentQnCategoriesTracked,
+      QnCategory,
       {
          numQnsAttempted: number;
          wrongQnNums: number[];

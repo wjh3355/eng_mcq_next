@@ -1,4 +1,4 @@
-export type CurrentQnCategoriesTracked = 
+export type QnCategory = 
    'gep' | 
    'phrasalVerbs' | 
    'psleWordsCloze' | 
@@ -6,13 +6,8 @@ export type CurrentQnCategoriesTracked =
    'pslePhrasesCloze' |
    'psleGrammar';
 
-export type CurrentQnCategories = CurrentQnCategoriesTracked | 'demo' | 'debug';
-
 export type QnCategoryData = {
    name: string;
-   isTracked: boolean;
-   requiresAuth: boolean;
-   requiresAdminAuth: boolean;
    sets: QnSet[];
 }
 
@@ -22,39 +17,36 @@ export type QnSet = {
    href: string;
 }
 
-export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
+export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
 
-   debug: {
-      name: "/Debug/",
-      isTracked: false,
-      requiresAuth: true,
-      requiresAdminAuth: true,
-      sets: [{
-         qnNumRange: [1, 6],
-         name: "?Debug?",
-         href: "/mcq/sets/debug",
-      }]
-   },
+   // debug: {
+   //    name: "/Debug/",
+   //    isTracked: false,
+   //    requiresAuth: true,
+   //    requiresAdminAuth: true,
+   //    sets: [{
+   //       qnNumRange: [1, 6],
+   //       name: "?Debug?",
+   //       href: "/mcq/sets/debug",
+   //    }]
+   // },
 
-   demo: {
-      name: "Demo MCQ",
-      isTracked: false,
-      requiresAuth: false,
-      requiresAdminAuth: false,
-      sets: [
-         {
-            qnNumRange: [1, 51],
-            name: "All",
-            href: "/mcq/sets/demo",
-         }
-      ]
-   },
+   // demo: {
+   //    name: "Demo MCQ",
+   //    isTracked: false,
+   //    requiresAuth: false,
+   //    requiresAdminAuth: false,
+   //    sets: [
+   //       {
+   //          qnNumRange: [1, 51],
+   //          name: "All",
+   //          href: "/mcq/sets/demo",
+   //       }
+   //    ]
+   // },
 
    gep: {
       name: "GEP Vocab MCQ",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 101],
@@ -96,9 +88,6 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    phrasalVerbs: {
       name: "Phrasal Verbs Cloze",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
@@ -140,9 +129,6 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    psleWordsCloze: {
       name: "PSLE Words Cloze",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
@@ -164,9 +150,6 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    psleWordsMcq: {
       name: "PSLE Words MCQ",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
@@ -188,9 +171,6 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    pslePhrasesCloze: {
       name: "PSLE Phrases Cloze",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
@@ -237,9 +217,6 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
 
    psleGrammar: {
       name: "PSLE Grammar MCQ",
-      isTracked: true,
-      requiresAuth: true,
-      requiresAdminAuth: false,
       sets: [
          {
             qnNumRange: [1, 51],
@@ -255,12 +232,17 @@ export const QN_CATEGORIES_DATA: Record<CurrentQnCategories, QnCategoryData> = {
    }
 }
 
+export function findCategoryOfDemoQnNum(qnNum: number): string {
+   if (qnNum >= 1 && qnNum <= 20) return QN_CATEGORIES_DATA["phrasalVerbs"].name
+   else if (qnNum >= 21 && qnNum <= 30) return QN_CATEGORIES_DATA["pslePhrasesCloze"].name
+   else if (qnNum >= 31 && qnNum <= 40) return QN_CATEGORIES_DATA["psleWordsCloze"].name
+   else if (qnNum >= 41 && qnNum <= 50) return QN_CATEGORIES_DATA["psleWordsMcq"].name
+   else return QN_CATEGORIES_DATA["psleGrammar"].name
+}
+
 export type HrefLookupData = {
-   cat: CurrentQnCategories,
+   cat: QnCategory,
    titleName: string,
-   isTracked: boolean,
-   requiresAuth: boolean,
-   requiresAdminAuth: boolean,
    set: QnSet
 }
 
@@ -268,17 +250,14 @@ export const HREF_LOOKUP_MAP: Record<string, HrefLookupData> = (() => {
    const map: Record<string, HrefLookupData> = {};
 
    for (const cat in QN_CATEGORIES_DATA) {
-      const cat2 = cat as CurrentQnCategories
+      const cat2 = cat as QnCategory
       const catData = QN_CATEGORIES_DATA[cat2];
 
       for (const set of catData.sets) {
-         map[set.href] = { 
-            cat: cat2, 
+         map[set.href] = {
+            cat: cat2,
             titleName: catData.name,
-            isTracked: catData.isTracked,
-            requiresAuth: catData.requiresAuth,
-            requiresAdminAuth: catData.requiresAdminAuth,
-            set 
+            set
          };
       }
    }

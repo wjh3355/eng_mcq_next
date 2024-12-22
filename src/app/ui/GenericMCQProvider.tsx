@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 
-import { CurrentQnCategories, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
+import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
 
 import { fetchQn } from "@/serverFuncs/fetchQn";
 import updateUserQnData from "@/serverFuncs/updateUserQnData";
@@ -12,13 +12,11 @@ export default function createGenericMCQProvider({
    qnCategory,
    qnNumArray,
    userName,
-   trackQns,
    isSetRandom
 }: {
-   qnCategory: CurrentQnCategories
+   qnCategory: QnCategory | "demo"
    qnNumArray: number[],
    userName: string,
-   trackQns: boolean,
    isSetRandom: boolean
 }) {
 
@@ -53,7 +51,7 @@ export default function createGenericMCQProvider({
             }
          }
 
-         if (trackQns && userName !== "") {
+         if (qnCategory !== "demo" && userName !== "") {
             try {
                await updateUserQnData({
                   userName,
@@ -90,16 +88,20 @@ export default function createGenericMCQProvider({
             setHasReachedEnd(true);
          } else {
             try {
+
                setQnObj(await fetchQn(qnCategory, qnSequence[0]));
                if (qnCategory !== "demo") setUserScore((await fetchUserData(userName)).score);
+
             } catch (error) {
+
                if (error instanceof Error) {
-                  console.error("Error when fetching new MCQQnObj:", error.message);
+                  console.error("Error when fetching new question or user data:", error.message);
                   setError(error.message);
                } else {
                   console.error("An unexpected error occurred:", error);
                   setError("An unexpected error occurred");
                }
+               
             }
          }
 

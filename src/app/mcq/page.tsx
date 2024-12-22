@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
-import { CurrentQnCategories, QN_CATEGORIES_DATA } from "@/types";
+import { QnCategory, QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import MCQDisplayGrid from "../ui/components/MCQDisplayGrid";
@@ -59,7 +59,7 @@ async function WrongQnsTable({ user }: { user: string }) {
                </thead>
                <tbody>
                   {
-                     (Object.entries(userQnData) as [ CurrentQnCategories, { wrongQnNums: number[] } ][])
+                     (Object.entries(userQnData) as [ QnCategory, { wrongQnNums: number[] } ][])
                         .filter(([_, { wrongQnNums }]) => wrongQnNums.length > 0)
                         .map(([cat, { wrongQnNums }], idx) => 
                            <tr key={idx}>
