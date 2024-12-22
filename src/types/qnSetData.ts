@@ -233,8 +233,8 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
 }
 
 export function findCategoryOfDemoQnNum(qnNum: number): string {
-   if (qnNum >= 1 && qnNum <= 20) return QN_CATEGORIES_DATA["phrasalVerbs"].name
-   else if (qnNum >= 21 && qnNum <= 30) return QN_CATEGORIES_DATA["pslePhrasesCloze"].name
+   if (qnNum >= 1 && qnNum <= 10) return QN_CATEGORIES_DATA["phrasalVerbs"].name
+   else if (qnNum >= 11 && qnNum <= 30) return QN_CATEGORIES_DATA["pslePhrasesCloze"].name
    else if (qnNum >= 31 && qnNum <= 40) return QN_CATEGORIES_DATA["psleWordsCloze"].name
    else if (qnNum >= 41 && qnNum <= 50) return QN_CATEGORIES_DATA["psleWordsMcq"].name
    else return QN_CATEGORIES_DATA["psleGrammar"].name
