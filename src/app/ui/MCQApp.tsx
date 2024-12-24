@@ -42,8 +42,7 @@ export default function MCQApp({
             </Col>
          </Row>
          <Row>
-            {
-               qnCategory === "demo"
+            {qnCategory === "demo"
                ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
                :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
             }

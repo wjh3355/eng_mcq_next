@@ -33,7 +33,7 @@ export default function createGenericMCQProvider({
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
-      const [userScore, setUserScore] = useState<number>(0);
+      const [userScore, setUserScore] = useState<number>(NaN);
       const [wrongAnsArr, setWrongAnsArr] = useState<MCQQnObj[]>([]);
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);

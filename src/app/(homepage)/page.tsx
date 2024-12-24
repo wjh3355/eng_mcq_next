@@ -25,8 +25,8 @@ export default async function Page() {
             </Col>
          </Row>
 
-         <Row className="d-flex justify-content-center">
-            <Col lg={6} md={8} sm={10} xs>
+         <Row>
+            <Col>
                <Sunbirds/>
             </Col>
          </Row>

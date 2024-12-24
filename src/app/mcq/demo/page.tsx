@@ -3,7 +3,6 @@ import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 
 export default async function DemoQnsPage() {
-
    return <MCQApp
       qnCategory={"demo"}
       qnNumArray={shuffle(range(1, 61))}

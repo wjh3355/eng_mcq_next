@@ -206,7 +206,7 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
    }
 }
 
-export function findCategoryOfDemoQnNum(qnNum: number): string {
+export function getDemoQnCat(qnNum: number): string {
    let cat: QnCategory;
 
    if (qnNum >= 1 && qnNum <= 10) cat = "phrasalVerbs";

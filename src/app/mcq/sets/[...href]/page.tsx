@@ -6,20 +6,9 @@ import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
 
-export default async function MCQQuestionsPage({
-   params
-}: {
-   params: Promise<{ 
-      href: string[]
-   }>
-}) {
-
+export default async function MCQQuestionsPage({ params }: { params: Promise<{ href: string[] }> }) {
    const user = await checkNormalUserAuth();
-
-   const { href } = await params;
-
-   const match = HREF_LOOKUP_MAP["/mcq/sets/" + href.join("/")];
-
+   const match = HREF_LOOKUP_MAP["/mcq/sets/" + (await params).href.join("/")];
    if (!match) return notFound();
 
    const { cat, categoryName, set: { qnNumRange, setName } } = match;

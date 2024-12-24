@@ -79,7 +79,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
             </DropdownButton>
 
             <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-               Score: {userScore}
+               {Number.isNaN(userScore) ? "Loading..." : `Score: ${userScore}`}
             </div>
 
             <button 
