@@ -10,7 +10,7 @@ export async function fetchCloze(num: number) {
          .collection("clozePassage")
          .findOne({ qnNum: num }, { projection: { _id: 0 } });
       
-      if (!data) throw new Error("Question not found");
+      if (!data) throw new Error(`Cannot find cloze Q${num}`);
 
       return data as unknown as ClozeObj;
 

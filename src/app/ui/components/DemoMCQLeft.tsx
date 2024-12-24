@@ -80,7 +80,7 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                </div>
             </DropdownButton>
 
-            <Button size="sm" variant="link" className="ms-auto p-0" onClick={() => setIsHelpShown(true)}>
+            <Button variant="link" className="ms-auto p-0" onClick={() => setIsHelpShown(true)}>
                Help
             </Button>
 

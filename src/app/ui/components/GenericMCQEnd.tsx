@@ -29,15 +29,13 @@ export default function GenericMCQEnd({ QnContextToUse }: { QnContextToUse: () =
 
    return (
       <>
-         <Col>
+         <Col lg={8} className="mx-auto">
             <Card body>
-               <div className="vstack gap-4 text-center p-3">
+               <div className="vstack gap-4 p-3">
 
-                  <div>
-                     <CircleCheckBig size={48} className="text-primary"/>
-                  </div>
+                  <CircleCheckBig size={48} className="text-primary mx-auto"/>
 
-                  <h4>You reached the end of this set</h4>
+                  <h4 className="text-center">You reached the end of this set</h4>
 
                   <div className="d-flex justify-content-center hstack gap-3">
                      <Button
@@ -63,7 +61,7 @@ export default function GenericMCQEnd({ QnContextToUse }: { QnContextToUse: () =
 
                   <Container>
                      <Row>
-                        <Col md={6} className="border-0 bg-warning-subtle rounded p-3">
+                        <Col md={6} className="border-0 bg-warning-subtle rounded p-3 text-center">
                            <div className="hstack gap-3 d-inline-flex">
                               <div className="text-center">
                                  Correct<br/><span className="fs-5 text-success">{numCorrect}</span>

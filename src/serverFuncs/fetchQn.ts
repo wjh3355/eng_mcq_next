@@ -13,7 +13,7 @@ export async function fetchQn(
          .collection(collection)
          .findOne({ qnNum }, { projection: { _id: 0 } });
 
-      if (!data) throw new Error(`${collection} Q${qnNum} not found`);
+      if (!data) throw new Error(`Cannot find Q${qnNum} from ${collection}`);
 
       const zodResult = QnObjSchema.safeParse(data);
 

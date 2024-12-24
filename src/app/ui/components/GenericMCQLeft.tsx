@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import Spinner from "react-bootstrap/Spinner";
 
 import DictionaryEntry from "./DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
@@ -41,20 +42,13 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
          <Card body className="mb-3">
             {isLoading 
                ?  <Skeleton height="24px" />
-               :  <MCQQnSentence
-                     sentence={sentence}
-                     wordToTest={wordToTest}
-                  />
+               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} />
             }
          </Card>
 
          <section className="hstack gap-3 mb-3">
 
-            <DropdownButton 
-               variant="warning"
-               title="Results"
-               drop="down"
-            >
+            <DropdownButton variant="warning" title="Results" drop="down" >
                <div className="hstack gap-3 py-1 px-3">
                   <div className="text-center">
                      Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
@@ -69,17 +63,20 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
                   <div className="vr"/>
 
                   <div className="text-center">
-                     Percentage<br/><span className="fs-5 text-danger">{
-                        numTotal === 0
-                        ? 0
-                        : Math.round(100*numCorrect/numTotal)
-                     }%</span>
+                     Percentage
+                     <br/>
+                     <span className="fs-5 text-danger">
+                        {Math.round(100*numCorrect/numTotal) || 0}%
+                     </span>
                   </div>
                </div>
             </DropdownButton>
 
             <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-               {Number.isNaN(userScore) ? "Loading..." : `Score: ${userScore}`}
+               {Number.isNaN(userScore) 
+                  ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
+                  :  <span>Score: {userScore}</span>
+               }
             </div>
 
             <button 
@@ -109,10 +106,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
 
          </section>
 
-         <Modal size="lg" centered
-            show={isReviewShown}
-            onHide={() => setIsReviewShown(!isReviewShown)}
-         >
+         <Modal size="lg" centered show={isReviewShown} onHide={() => setIsReviewShown(!isReviewShown)}>
             <Modal.Header closeButton><Modal.Title className="fs-5">Review Incorrect Questions</Modal.Title></Modal.Header>
             <Modal.Body><PaginatedDictEntries qnObjArr={wrongAnsArr}/></Modal.Body>
          </Modal>
