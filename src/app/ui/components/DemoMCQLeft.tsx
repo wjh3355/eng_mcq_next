@@ -7,8 +7,6 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 
 import DictionaryEntry from "./DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";

@@ -182,7 +182,22 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
             href: "/mcq/sets/pslePhrasesCloze/7"
          },
          {
-            qnNumRange: [1, 351],
+            qnNumRange: [351, 401],
+            setName: "Set 7",
+            href: "/mcq/sets/pslePhrasesCloze/8"
+         },
+         {
+            qnNumRange: [401, 451],
+            setName: "Set 7",
+            href: "/mcq/sets/pslePhrasesCloze/9"
+         },
+         {
+            qnNumRange: [451, 501],
+            setName: "Set 7",
+            href: "/mcq/sets/pslePhrasesCloze/10"
+         },
+         {
+            qnNumRange: [1, 501],
             setName: "Random",
             href: "/mcq/sets/pslePhrasesCloze"
          }
