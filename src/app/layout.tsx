@@ -6,7 +6,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/global.css";
 import { Inter } from 'next/font/google';
 
-import MainNavbar from "@/app/ui/MainNavbar";
+import NavB from "./ui/NavB";
+import Footer from "./ui/Footer";
 import MaintenancePage from "./ui/MaintenancePage";
 
 import AuthProvider from "./AuthProvider";
@@ -30,8 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                {isUnderMaintenance
                   ? <MaintenancePage/>
                   : <>
-                     <MainNavbar />
+                     <NavB />
                      {children}
+                     <Footer />
                      <Analytics />
                      <SpeedInsights />
                   </>

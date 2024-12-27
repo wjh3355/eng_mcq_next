@@ -11,10 +11,10 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import DictionaryEntry from "./DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
 import PaginatedDictEntries from "./PaginatedDictEntries";
-import { getDemoQnCat, MCQContextValue } from '@/types';
+import { DEMO_DATA, MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";
-import { BadgeInfo, BookText, CircleArrowRight, CircleHelp } from "lucide-react";
+import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
 export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
@@ -45,7 +45,7 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                   </Card.Body>
                :  <>
                      <Card.Header>
-                        <small>From {getDemoQnCat(qnNum)}</small>
+                        <small>From {DEMO_DATA.getDemoQnCat(qnNum)}</small>
                      </Card.Header>
                      <Card.Body>
                         <MCQQnSentence sentence={sentence} wordToTest={wordToTest}/>

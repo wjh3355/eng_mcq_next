@@ -221,16 +221,19 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
    }
 }
 
-export function getDemoQnCat(qnNum: number): string {
-   let cat: QnCategory;
-
-   if (qnNum >= 1 && qnNum <= 10) cat = "phrasalVerbs";
-   else if (qnNum >= 11 && qnNum <= 30) cat = "pslePhrasesCloze";
-   else if (qnNum >= 31 && qnNum <= 40) cat = "psleWordsCloze";
-   else if (qnNum >= 41 && qnNum <= 50) cat = "psleWordsMcq";
-   else cat = "psleGrammar";
-
-   return QN_CATEGORIES_DATA[cat].categoryName;
+export const DEMO_DATA: { qnNumRange: [number, number], getDemoQnCat: (param: number) => string } = {
+   qnNumRange: [1, 61],
+   getDemoQnCat(qnNum: number): string {
+      let cat: QnCategory;
+   
+      if (qnNum >= 1 && qnNum <= 10) cat = "phrasalVerbs";
+      else if (qnNum >= 11 && qnNum <= 30) cat = "pslePhrasesCloze";
+      else if (qnNum >= 31 && qnNum <= 40) cat = "psleWordsCloze";
+      else if (qnNum >= 41 && qnNum <= 50) cat = "psleWordsMcq";
+      else cat = "psleGrammar";
+   
+      return QN_CATEGORIES_DATA[cat].categoryName;
+   }
 }
 
 export type HrefLookupData = {

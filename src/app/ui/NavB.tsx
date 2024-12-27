@@ -16,7 +16,7 @@ import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-export default function MainNavbar() {
+export default function NavB() {
    const { isAuthenticated } = useKindeBrowserClient();
 
    return (

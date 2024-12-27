@@ -2,7 +2,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
-// import Image from "next/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
 import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
@@ -26,19 +25,13 @@ export default async function Page() {
          </Row>
 
          <Row>
-            <Col>
+            <Col lg={7} md={8} sm={10} className="mx-auto">
                <Sunbirds/>
+               {user && <LoggedInLinks/>}
             </Col>
          </Row>
 
-         <Row className="mt-3">
-            <Col className="d-flex justify-content-center">
-               {user 
-                  ?  <LoggedInLinks/>
-                  :  <Advert/>
-               }
-            </Col>
-         </Row>
+         {!user && <Advert/>}
 
       </Container>
    );
@@ -46,7 +39,7 @@ export default async function Page() {
 
 function LoggedInLinks() {
    return (
-      <div className="d-flex flex-column gap-3 w-50">
+      <div className="d-flex flex-column gap-3 mt-3">
          <Link
             className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
             href="/mcq"
@@ -62,7 +55,7 @@ function LoggedInLinks() {
          </Link>
 
          <Link
-            className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+            className="btn btn-lg btn-success d-flex align-items-center justify-content-center"
             href="/profile"
          >
             <CircleUserRound className="me-2"/>Your Profile

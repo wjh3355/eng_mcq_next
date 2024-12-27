@@ -31,44 +31,36 @@ export default function StatsTable({
 
    return (
       <Container>
-      
-         <p>
-            <strong>Username: </strong>
-            {kindeUser.given_name}
-         </p>
+         <dl className="row">
+            <dt className="col-sm-3">Username</dt>
+            <dd className="col-sm-9">{kindeUser.given_name}</dd>
 
-         <p>
-            <strong>Email address: </strong>
-            {kindeUser.email}
-         </p>
+            <dt className="col-sm-3">Email address</dt>
+            <dd className="col-sm-9">{kindeUser.email}</dd>
 
-         <p>
-            <strong>Date created: </strong>
-            {userData.dateCreated.toDateString()}
-         </p>
+            <dt className="col-sm-3">Date created</dt>
+            <dd className="col-sm-9">{userData.dateCreated.toDateString()}</dd>
 
-         <p className="d-flex align-items-center">
-            <strong>Total Score:&nbsp;</strong>
-            {userData.score}&nbsp;
-
-            <OverlayTrigger
-               overlay={
-                  <Popover>
-                     <Popover.Body className="fs-6">
-                        Every correct MCQ question answered earns you <strong>10</strong> points.
-                     </Popover.Body>
-                  </Popover>
-               }
-               trigger="click"
-               placement="right"
-            >
-               <button
-                  className="border-0 bg-transparent px-0"
+            <dt className="col-sm-3">Total score</dt>
+            <dd className="col-sm-9">
+               {userData.score}
+               <OverlayTrigger
+                  overlay={
+                     <Popover>
+                        <Popover.Body className="fs-6">
+                           Every correct MCQ question answered earns you <strong>10</strong> points.
+                        </Popover.Body>
+                     </Popover>
+                  }
+                  trigger="click"
+                  placement="right"
                >
-                  <Info size={17} strokeWidth={3} color="#808080" />
-               </button>
-            </OverlayTrigger>
-         </p>
+                  <button className="border-0 bg-transparent p-0 ms-1">
+                     <Info size={17} strokeWidth={3} color="#808080" />
+                  </button>
+               </OverlayTrigger>
+            </dd>
+         </dl>
 
          <Row>
             <Col xl={8} lg={10} className="mx-auto">

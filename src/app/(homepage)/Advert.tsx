@@ -2,12 +2,14 @@
 
 import { BadgeInfo, BookmarkX, BookOpenText, CalendarPlus2, ChartNoAxesCombined, ListTodo } from "lucide-react";
 import Link from "next/link";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 export default function Advert() {
    return (
-      <Container>
-         <Row>
+      <>
+         <Row className="mt-3">
             <Col md={6} lg={4} className="mb-3">
                <Card body className="h-100 bg-success-subtle border-0">
                   <Card.Title><ListTodo /></Card.Title>
@@ -52,15 +54,15 @@ export default function Advert() {
             </Col>
          </Row>
 
-         <Row className="d-flex align-items-center">
-            <Col className="justify-content-center">
+         <Row>
+            <Col>
                Want to experience this website&apos;s features? View our free
                <Link href="/mcq/demo" className="btn btn-outline-primary mx-1 fw-bold">
                   Demo MCQ Questions
                </Link>.
             </Col>
          </Row>
-         <Row className="d-flex align-items-center">
+         <Row>
             <Col>
                Interested for an account? Contact us via email
                <Link href="mailto:changxinshang@hotmail.com" className="mx-1 fw-bold">
@@ -68,6 +70,6 @@ export default function Advert() {
                </Link>
             </Col>
          </Row>
-      </Container>
+      </>
    );
 }
