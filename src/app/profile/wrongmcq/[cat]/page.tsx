@@ -8,7 +8,6 @@ import fetchUserData from "@/serverFuncs/fetchUserData";
 import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -29,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ cat: QnCatego
    if (wrongQnNumsArr.length === 0) notFound();
 
    return ( 
-      <Container className="mb-4">
+      <>
          <Row className="my-3">
             <h5 className="text-center m-0">{QN_CATEGORIES_DATA[cat].categoryName}: Incorrect Questions</h5>
          </Row>
@@ -38,7 +37,7 @@ export default async function Page({ params }: { params: Promise<{ cat: QnCatego
             <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} cat={cat}/>
          </Suspense>
 
-      </Container>
+      </>
    );
 }
 

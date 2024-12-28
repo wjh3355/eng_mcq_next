@@ -1,6 +1,5 @@
 "use client";
 
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
 import createGenericClozeProvider from "../ui/GenericClozeProvider";
@@ -36,13 +35,11 @@ export default function ClozeApp({
    }
 
    return <ClozeProvider>
-      <Container className="mb-4">
-         <Row className="my-3">
-            <h5 className="text-center m-0">Comprehension Cloze</h5>
-         </Row>
-         <ClozeLoadingSkeleton/>
-         <GenericCloze QnContextToUse={useClozeContext}/>
-         <GenericClozeCompleted QnContextToUse={useClozeContext}/>
-      </Container>
+      <Row className="my-3">
+         <h5 className="text-center m-0">Comprehension Cloze</h5>
+      </Row>
+      <ClozeLoadingSkeleton/>
+      <GenericCloze QnContextToUse={useClozeContext}/>
+      <GenericClozeCompleted QnContextToUse={useClozeContext}/>
    </ClozeProvider>;
 }

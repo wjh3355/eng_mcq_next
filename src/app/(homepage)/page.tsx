@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Link from "next/link";
@@ -17,7 +16,7 @@ export default async function Page() {
    if (user) await ensureUserDataDocExists(user.given_name!);
 
    return (
-      <Container className="mb-4">
+      <>
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">Revise for the PSLE English Paper</h5>
@@ -33,7 +32,7 @@ export default async function Page() {
 
          {!user && <Advert/>}
 
-      </Container>
+      </>
    );
 }
 

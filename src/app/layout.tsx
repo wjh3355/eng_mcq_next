@@ -32,7 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   ? <MaintenancePage/>
                   : <>
                      <NavB />
-                     {children}
+                     <main className="container mb-4">
+                        {children}
+                     </main>
                      <Footer />
                      <Analytics />
                      <SpeedInsights />

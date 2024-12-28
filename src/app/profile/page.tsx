@@ -1,5 +1,4 @@
 import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
@@ -14,14 +13,14 @@ export default async function Page() {
    const user = await checkNormalUserAuth();
    
    return (
-      <Container className="mb-4">
+      <>
          <Row className="my-3">
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
          <Suspense fallback={<Skeleton height={40}/>}>
             <Stats kindeUser={user} />
          </Suspense>
-      </Container>
+      </>
    );
 }
 

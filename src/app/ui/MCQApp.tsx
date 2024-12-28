@@ -1,6 +1,5 @@
 "use client";
 
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
@@ -34,21 +33,19 @@ export default function MCQApp({
    });
 
    return <MCQProvider>
-      <Container className="mb-4">
-         <Row className="my-3">
-            <Col>
-               <GenericErrorContainer QnContextToUse={useMCQContext}/>
-               <h5 className="text-center m-0">{title}</h5>
-            </Col>
-         </Row>
-         <Row>
-            {qnCategory === "demo"
-               ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
-               :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
-            }
-            <GenericMCQRight QnContextToUse={useMCQContext}/>
-            <GenericMCQEnd QnContextToUse={useMCQContext}/>
-         </Row>
-      </Container>
+      <Row className="my-3">
+         <Col>
+            <GenericErrorContainer QnContextToUse={useMCQContext}/>
+            <h5 className="text-center m-0">{title}</h5>
+         </Col>
+      </Row>
+      <Row>
+         {qnCategory === "demo"
+            ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
+            :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
+         }
+         <GenericMCQRight QnContextToUse={useMCQContext}/>
+         <GenericMCQEnd QnContextToUse={useMCQContext}/>
+      </Row>
    </MCQProvider>;
 }

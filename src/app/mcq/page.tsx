@@ -17,7 +17,7 @@ export default async function Page() {
    const user = await checkNormalUserAuth();
 
    return (
-      <Container>
+      <>
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">MCQ Question Sets</h5>
@@ -32,7 +32,7 @@ export default async function Page() {
             <WrongQnsTable user={user.given_name!}/>
          </Suspense>
 
-      </Container>
+      </>
    )
 }
 

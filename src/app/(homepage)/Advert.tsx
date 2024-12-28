@@ -62,14 +62,6 @@ export default function Advert() {
                </Link>.
             </Col>
          </Row>
-         <Row>
-            <Col>
-               Interested for an account? Contact us via email
-               <Link href="mailto:changxinshang@hotmail.com" className="mx-1 fw-bold">
-                  here.
-               </Link>
-            </Col>
-         </Row>
       </>
    );
 }

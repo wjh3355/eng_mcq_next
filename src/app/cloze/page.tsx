@@ -15,14 +15,14 @@ export default async function Page() {
    await checkNormalUserAuth();
 
    return (
-      <Container>
+      <>
          <Row className="my-3">
             <h5 className="m-0 text-center">Comprehension Cloze</h5>
          </Row>
          <Suspense fallback={<Skeleton height={40}/>}>
             <ClozeTable/>
          </Suspense>
-      </Container>
+      </>
    );
 }
 
