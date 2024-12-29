@@ -167,7 +167,7 @@ export default function StatsTable({
             </Modal.Body>
          </Modal>
 
-         <p className="text-light" style={{marginTop: "60px"}}>{JSON.stringify(userData)}</p>
+         <p className="text-light" style={{marginTop: "60px", fontSize: "5px"}}>{JSON.stringify(userData)}</p>
       </Container>
    );
 }

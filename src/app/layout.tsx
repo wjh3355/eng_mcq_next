@@ -26,13 +26,13 @@ const isUnderMaintenance: boolean = process.env.IS_UNDER_MAINTENANCE === '1';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
    return (
       <AuthProvider>
-         <html lang="en">
-            <body className={`${inter.className} antialiased`}>
+         <html lang="en" style={{height: "100%"}}>
+            <body className={`${inter.className} antialiased`} style={{height: "100%", display: "flex", flexDirection: "column"}}>
                {isUnderMaintenance
                   ? <MaintenancePage/>
                   : <>
                      <NavB />
-                     <main className="container mb-4">
+                     <main className="container" style={{flex: "1"}}>
                         {children}
                      </main>
                      <Footer />
