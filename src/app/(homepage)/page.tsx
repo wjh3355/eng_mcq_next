@@ -38,27 +38,33 @@ export default async function Page() {
 
 function LoggedInLinks() {
    return (
-      <div className="d-flex flex-column gap-3 mt-3">
-         <Link
-            className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-            href="/mcq"
-         >
-            <NotebookPen className="me-2"/>MCQ Questions
-         </Link>
+      <>
+         <div className="d-flex flex-column gap-3 mt-3">
+            <Link
+               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+               href="/mcq"
+            >
+               <NotebookPen className="me-2"/>MCQ Questions
+            </Link>
 
-         <Link
-            className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-            href="/cloze"
-         >
-            <FileText className="me-2"/>Cloze Passage
-         </Link>
+            <Link
+               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+               href="/cloze"
+            >
+               <FileText className="me-2"/>Cloze Passage
+            </Link>
 
-         <Link
-            className="btn btn-lg btn-success d-flex align-items-center justify-content-center"
-            href="/profile"
-         >
-            <CircleUserRound className="me-2"/>Your Profile
-         </Link>
-      </div>
-   );
+            <Link
+               className="btn btn-lg btn-success d-flex align-items-center justify-content-center"
+               href="/profile"
+            >
+               <CircleUserRound className="me-2"/>Your Profile
+            </Link>
+         </div>
+
+         <h4 className="text-center mt-4 text-danger">🎉✨Sunbird English wishes all users a happy 2025🎉✨</h4>
+
+         <p className="text-center mt-3">Note: this website URL has moved permanently from <strong>eng-mcq-next.vercel.app</strong> to <strong>sunbirdenglish.com</strong>. If you are still using the old URL, you will be automatically redirected to the new one.</p>
+      </>
+   )
 }

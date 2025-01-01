@@ -2,7 +2,7 @@ import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import Row from "react-bootstrap/Row";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
-import StatsTable from "../ui/components/StatsTable";
+import UserStatsTable from "../ui/components/UserStatsTable";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import Skeleton from "react-loading-skeleton";
 
@@ -26,5 +26,5 @@ export default async function Page() {
 
 async function Stats({ kindeUser }: { kindeUser: KindeUser<Record<string, any>> }) {
    const userData = await fetchUserData(kindeUser.given_name!);
-   return <StatsTable userData={userData} kindeUser={kindeUser}/>; 
+   return <UserStatsTable userData={userData} kindeUser={kindeUser}/>; 
 }

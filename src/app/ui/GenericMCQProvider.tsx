@@ -33,7 +33,7 @@ export default function createGenericMCQProvider({
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
       const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
-      const [userScore, setUserScore] = useState<number>(NaN);
+      const [userPoints, setUserPoints] = useState<number>(NaN);
       const [wrongAnsArr, setWrongAnsArr] = useState<MCQQnObj[]>([]);
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
@@ -90,7 +90,7 @@ export default function createGenericMCQProvider({
             try {
 
                setQnObj(await fetchQn(qnCategory, qnSequence[0]));
-               if (qnCategory !== "demo") setUserScore((await fetchUserData(userName)).score);
+               if (qnCategory !== "demo") setUserPoints((await fetchUserData(userName)).score);
 
             } catch (error) {
 
@@ -122,7 +122,7 @@ export default function createGenericMCQProvider({
             isLoading,
             isCorrect,
             thisSessionScore,
-            userScore,
+            userPoints,
             wrongAnsArr,
             hasReachedEnd,
             isSetRandom,

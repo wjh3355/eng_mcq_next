@@ -19,7 +19,7 @@ import eraseUserData from "@/serverFuncs/eraseUserData";
 import { Info } from "lucide-react";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
-export default function StatsTable({ 
+export default function UserStatsTable({ 
    userData,
    kindeUser
 }: { 
@@ -41,7 +41,7 @@ export default function StatsTable({
             <dt className="col-sm-3">Date created</dt>
             <dd className="col-sm-9">{userData.dateCreated.toDateString()}</dd>
 
-            <dt className="col-sm-3">Total score</dt>
+            <dt className="col-sm-3">Total points</dt>
             <dd className="col-sm-9">
                {userData.score}
                <OverlayTrigger
@@ -167,7 +167,8 @@ export default function StatsTable({
             </Modal.Body>
          </Modal>
 
-         <p className="text-light" style={{marginTop: "60px", fontSize: "5px"}}>{JSON.stringify(userData)}</p>
+         <p className="text-light" style={{color: "rgb(255, 255, 255)", fontSize: "2px"}}>{JSON.stringify(userData)}</p>
+      
       </Container>
    );
 }

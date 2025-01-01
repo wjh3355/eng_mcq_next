@@ -22,7 +22,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
    const {
       handleNextQnBtnClick,
       thisSessionScore: [numCorrect, numTotal],
-      userScore,
+      userPoints,
       wrongAnsArr,
       qnObj,
       isLoading,
@@ -36,6 +36,17 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
    const [isExplShown, setIsExplShown] = useState(false);
 
    if (hasReachedEnd) return null;
+
+   function ScoreComponent() {
+      return (
+         <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
+            {Number.isNaN(userPoints) 
+               ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
+               :  <span>Points: {userPoints}</span>
+            }
+         </div>
+      );
+   }
 
    return (
       <Col lg={8} md={7}>
@@ -70,14 +81,16 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
                      </span>
                   </div>
                </div>
+
+               { 
+                  window.innerWidth < 576 &&
+                     <div className="d-flex justify-content-center mt-2 mb-1">
+                        <ScoreComponent/>
+                     </div>
+               }
             </DropdownButton>
 
-            <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-               {Number.isNaN(userScore) 
-                  ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
-                  :  <span>Score: {userScore}</span>
-               }
-            </div>
+            { window.innerWidth >= 576 && <ScoreComponent/> }
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"

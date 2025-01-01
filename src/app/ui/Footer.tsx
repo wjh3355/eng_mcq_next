@@ -5,33 +5,32 @@ import Col from "react-bootstrap/Col";
 
 export default function Footer() {
    return (
-      <footer className="container-fluid bg-light py-4 mt-auto">
+      <footer className="container-fluid bg-light py-3 mt-auto" style={{fontSize: "13px"}}>
          <Row>
-            <Col md={4} className="mb-4">
+            <Col md={4} className="mb-3">
                <h6>About Us</h6>
-               <p className="text-secondary">
-                  Your company description goes here. Add a brief overview of
-                  your services or mission.
+               <p className="text-secondary m-0">
+                  An interactive english learning website for 🇸🇬 Singapore 🧑‍🎓 primary school students.
                </p>
             </Col>
-            <Col md={4} className="mb-4">
+            <Col md={4} className="mb-3">
                <h6>Quick Links</h6>
-               <ul className="list-unstyled text-secondary">
+               <ul className="list-unstyled text-secondary m-0">
                   <li><Link href="/">Home</Link></li>
                   <li><Link href="/profile">Profile</Link></li>
-                  <li><Link href="/privacy">Privacy Policy</Link></li>
+                  {/* <li><Link href="/privacy">Privacy Policy</Link></li> ADD IN THE FUTURE ASAP*/} 
                </ul>
             </Col>
-            <Col md={4} className="mb-4">
+            <Col md={4} className="mb-3">
                <h6>Contact Info</h6>
-               <ul className="list-unstyled text-secondary">
+               <ul className="list-unstyled text-secondary m-0">
                   Email: <Link href="mailto:changxinshang@hotmail.com">changxinshang@hotmail.com</Link>
                </ul>
             </Col>
          </Row>
          <Row>
             <Col className="text-center">
-               <p className="text-secondary">
+               <p className="text-secondary m-0">
                   &copy; {new Date().getFullYear()} Sunbird English. All
                   rights reserved.
                </p>

@@ -188,9 +188,9 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
                }
             </article>
 
-            <section className="mt-3 hstack gap-3 d-flex justify-content-center">
+            <section className="vstack gap-2">
 
-               <div>
+               <div className="mx-auto bg-warning px-4 border-0 rounded-2">
                   Score: <strong>{score} / 15</strong>
                </div>
 
@@ -198,14 +198,16 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
                   type="submit"
                   variant="danger"
                   disabled={hasAttempted || isLoading}
+                  className="fw-bold mx-auto px-4"
                >
-                  Submit&nbsp;<strong>{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}</strong>
+                  Submit&nbsp;{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
                </Button>
 
                <Button 
                   onClick={() => handleReset()}
                   variant="secondary"
                   disabled={hasAttempted || isLoading}
+                  className="fw-bold mx-auto px-4"
                >
                   Reset
                </Button>
