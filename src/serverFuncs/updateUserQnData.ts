@@ -9,7 +9,7 @@ export default async function updateUserQnData({
    qnNum,
    isCorrect
 }: {
-   cat: QnCategory,
+   cat: string,
    userName: string,
    qnNum: number,
    isCorrect: boolean | null

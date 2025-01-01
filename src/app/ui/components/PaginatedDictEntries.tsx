@@ -31,6 +31,8 @@ export default function PaginatedDictEntries({ qnObjArr }: { qnObjArr: MCQQnObj[
       navigablePgNums = [1, 2];
    }
 
+   if (qnObjArr.length === 0) return <section className="text-center text-secondary">You have no incorrect questions from this set yet</section>
+
    return (
       <section>
          {totalNumOfPages > 1 &&

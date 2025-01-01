@@ -216,6 +216,11 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
             qnNumRange: [51, 101],
             setName: "Set 2",
             href: "/mcq/sets/psleGrammar/2"
+         },
+         {
+            qnNumRange: [1, 101],
+            setName: "Random",
+            href: "/mcq/sets/psleGrammar"
          }
       ]
    }

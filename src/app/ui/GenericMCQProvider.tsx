@@ -12,13 +12,17 @@ export default function createGenericMCQProvider({
    qnCategory,
    qnNumArray,
    userName,
-   isSetRandom
+   isSetRandom,
+   isRedo
 }: {
    qnCategory: QnCategory | "demo"
    qnNumArray: number[],
    userName: string,
-   isSetRandom: boolean
+   isSetRandom: boolean,
+   isRedo: boolean
 }) {
+
+   const toUseUserData: boolean = !(qnCategory === "demo" || userName === "" || isRedo);
 
    const QnContext = createContext<MCQContextValue>(EMPTY_MCQ_CONTEXT_VALUE);
 
@@ -51,7 +55,7 @@ export default function createGenericMCQProvider({
             }
          }
 
-         if (qnCategory !== "demo" && userName !== "") {
+         if (toUseUserData) {
             try {
                await updateUserQnData({
                   userName,
@@ -90,7 +94,7 @@ export default function createGenericMCQProvider({
             try {
 
                setQnObj(await fetchQn(qnCategory, qnSequence[0]));
-               if (qnCategory !== "demo") setUserPoints((await fetchUserData(userName)).score);
+               if (toUseUserData) setUserPoints((await fetchUserData(userName)).score);
 
             } catch (error) {
 

@@ -62,7 +62,7 @@ function LoggedInLinks() {
             </Link>
          </div>
 
-         <h4 className="text-center mt-4 text-danger">🎉✨Sunbird English wishes all users a happy 2025🎉✨</h4>
+         <h4 className="text-center mt-4 text-danger fw-bold">🎉✨ Sunbird English wishes all users a happy 2025 🎉✨</h4>
 
          <p className="text-center mt-3">Note: this website URL has moved permanently from <strong>eng-mcq-next.vercel.app</strong> to <strong>sunbirdenglish.com</strong>. If you are still using the old URL, you will be automatically redirected to the new one.</p>
       </>

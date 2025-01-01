@@ -11,5 +11,6 @@ export default async function DemoQnsPage() {
       userName={""}
       title={"Demo MCQ Questions"}
       isSetRandom={false}
+      isRedo={false}
    />
 }

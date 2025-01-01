@@ -10,26 +10,30 @@ import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
 import GenericMCQEnd from "@/app/ui/components/GenericMCQEnd";
 import { QnCategory } from "@/types";
 import DemoMCQLeft from "./components/DemoMCQLeft";
+import RedoMCQLeft from "./components/RedoMCQLeft";
 
 export default function MCQApp({
    qnCategory,
    qnNumArray,
    userName,
    title,
-   isSetRandom
+   isSetRandom,
+   isRedo
 }: {
    qnCategory: QnCategory | "demo",
    qnNumArray: number[],
    userName: string,
    title: string,
-   isSetRandom: boolean
+   isSetRandom: boolean,
+   isRedo: boolean
 }) {
 
    const { MCQProvider, useMCQContext } = createGenericMCQProvider({
       qnCategory,
       qnNumArray,
       userName,
-      isSetRandom
+      isSetRandom,
+      isRedo
    });
 
    return <MCQProvider>
@@ -42,7 +46,10 @@ export default function MCQApp({
       <Row>
          {qnCategory === "demo"
             ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
-            :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
+            :  (isRedo
+                  ?  <RedoMCQLeft QnContextToUse={useMCQContext}/>
+                  :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
+               )
          }
          <GenericMCQRight QnContextToUse={useMCQContext}/>
          <GenericMCQEnd QnContextToUse={useMCQContext}/>

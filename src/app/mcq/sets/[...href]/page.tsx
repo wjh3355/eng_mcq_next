@@ -23,5 +23,6 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ h
       userName={user.given_name!}
       title={categoryName + " - " + setName}
       isSetRandom={setName === "Random"}
+      isRedo={false}
    />
 }
