@@ -51,7 +51,7 @@ function LoggedInLinks() {
                className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
                href="/cloze"
             >
-               <FileText className="me-2"/>Cloze Passage
+               <FileText className="me-2"/>Cloze Passages
             </Link>
 
             <Link

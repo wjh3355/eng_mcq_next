@@ -18,13 +18,12 @@ export default function Footer() {
                <ul className="list-unstyled text-secondary m-0">
                   <li><Link href="/">Home</Link></li>
                   <li><Link href="/profile">Profile</Link></li>
-                  {/* <li><Link href="/privacy">Privacy Policy</Link></li> ADD IN THE FUTURE ASAP*/} 
                </ul>
             </Col>
             <Col md={4} className="mb-3">
                <h6>Contact Info</h6>
                <ul className="list-unstyled text-secondary m-0">
-                  Email: <Link href="mailto:changxinshang@hotmail.com">changxinshang@hotmail.com</Link>
+                  Email: <Link href="mailto:sunbirdenglish.sg@gmail.com">sunbirdenglish.sg@gmail.com</Link>
                </ul>
             </Col>
          </Row>

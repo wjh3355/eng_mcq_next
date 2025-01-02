@@ -16,7 +16,7 @@ import { QnCategory, QnCategoryUserData, UserData } from "@/types";
 import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
 import eraseUserData from "@/serverFuncs/eraseUserData";
-import { Info } from "lucide-react";
+import { Info, Trash2 } from "lucide-react";
 import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 export default function UserStatsTable({ 
@@ -130,9 +130,9 @@ export default function UserStatsTable({
          <Button
             variant="danger"
             onClick={() => setShowCfmEraseData(true)}
-            className="d-flex align-items-center mt-3"
+            className="d-flex align-items-center mt-3 mx-auto px-4"
          >
-            <strong>Erase all data</strong>
+            <Trash2 className="me-1"/><strong>Erase all data</strong>
          </Button>
 
          <Modal size="lg" centered

@@ -8,7 +8,6 @@ import Link from "next/link";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import MCQDisplayGrid from "../ui/components/MCQDisplayGrid";
 import { Suspense } from "react";
-import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +27,7 @@ export default async function Page() {
             <MCQDisplayGrid/>
          </Row>
 
-         <Suspense fallback={<Skeleton height={40}/>}>
+         <Suspense fallback={<p>Loading wrong questions (if any)...</p>}>
             <WrongQnsTable user={user.given_name!}/>
          </Suspense>
 
