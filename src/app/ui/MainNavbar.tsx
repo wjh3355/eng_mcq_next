@@ -6,7 +6,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import Spinner from "react-bootstrap/Spinner";
 
 import "@/styles/global.css";
 
@@ -16,7 +15,7 @@ import Link from "next/link";
 
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
-export default function NavB() {
+export default function MainNavbar() {
    const { isAuthenticated } = useKindeBrowserClient();
 
    return (
@@ -59,30 +58,29 @@ export default function NavB() {
 function AccountButton() {
    const { user, isAuthenticated, isLoading } = useKindeBrowserClient();
 
-   if (isLoading) {
-      return (
-         <div className="btn btn-danger btn-sm d-flex align-items-center justify-content-center disabled acctBtn">
-            <Spinner animation="border" size="sm"/>
-         </div>
-      );
-   }
+   if (isLoading) return null;
 
    if (isAuthenticated) {
       return (
          <>
-            <Navbar.Text className="me-lg-2">
+            <Navbar.Text>
                Welcome,&nbsp;<strong>{user?.given_name!}</strong>
             </Navbar.Text>
-            <LogoutLink className="btn btn-danger btn-sm acctBtn">
+            <LogoutLink className="btn btn-danger btn-sm acctBtn ms-lg-2">
                Log Out
             </LogoutLink>
          </>
       );
    } else {
       return (
-         <LoginLink className="btn btn-danger btn-sm acctBtn">
-            Log In
-         </LoginLink>
+         <>
+            <LoginLink className="btn btn-danger btn-sm acctBtn">
+               Log In
+            </LoginLink>
+            <Link href="https://englishtutor.kinde.com/knock-knock" className="btn btn-outline-success btn-sm ms-lg-2 mt-lg-0 mt-2">
+               Request Access
+            </Link>
+         </>
       );
    }
 };
