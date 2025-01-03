@@ -2,13 +2,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import AIDictionary from "./AIDictionary";
 import Image from "next/image";
-import { checkAdminUserAuth } from "@/serverFuncs/checkUserAuth";
+import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
-   await checkAdminUserAuth();
+   await checkNormalUserAuth();
 
    return (
       <>
