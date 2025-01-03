@@ -4,6 +4,8 @@ import AIDictionary from "./AIDictionary";
 import Image from "next/image";
 import { checkAdminUserAuth } from "@/serverFuncs/checkUserAuth";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page() {
 
    await checkAdminUserAuth();
