@@ -266,4 +266,4 @@ export const HREF_LOOKUP_MAP: Record<string, HrefLookupData> = (() => {
    return map;
 })();
 
-export const CLOZE_QNNUM_ARR = [1, 2];
+export const CLOZE_QNNUM_ARR = [1, 2, 3];
