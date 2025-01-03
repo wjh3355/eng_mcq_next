@@ -10,7 +10,7 @@
       "checkqn": "npx tsx private/checkQn.ts",
       "updateqn": "npx tsx private/updateQn.ts",
       "updatenotice": "npx tsx private/updateNotice.ts",
-      "doThis": "npx tsx private/doThis.ts"
+      "test": "npx tsx private/test.ts"
    },
    "dependencies": {
       "@babel/core": "^7.25.2",
@@ -23,6 +23,7 @@
       "lucide-react": "^0.454.0",
       "mongodb": "^6.8.0",
       "next": "15.0.0",
+      "openai": "^4.77.0",
       "react": "^18",
       "react-bootstrap": "^2.10.4",
       "react-dom": "^18",

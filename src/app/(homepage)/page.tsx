@@ -7,7 +7,7 @@ import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
 import Sunbirds from "../ui/components/Sunbirds";
 import Advert from "./Advert";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function Page() {
    const { getUser } = getKindeServerSession();

@@ -30,3 +30,15 @@ export const UserDataSchema = z.object({
       }).strict()
    )
 }).strict();
+
+export const AIDefinitionSchema = z.object({
+   wordToDefine: z.string(),
+   definitions: z.array(
+      z.object({
+         type: z.string(),
+         def: z.string(),
+         sentence: z.string()
+      })
+   ),
+   errorIfAny: z.string().nullable()
+});
