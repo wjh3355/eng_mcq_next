@@ -11,9 +11,11 @@ export type QnCategoryData = {
    sets: QnSet[];
 }
 
+export type QnSetName = number | "Random" | "In Order";
+
 export type QnSet = {
    qnNumRange: [number, number];
-   setName: string;
+   setName: QnSetName;
    href: string;
 }
 
@@ -24,38 +26,43 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 101],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/gep/1"
          },
          {
             qnNumRange: [101, 201],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/gep/2"
          },
          {
             qnNumRange: [201, 301],            
-            setName: "Set 3",
+            setName: 3,
             href: "/mcq/sets/gep/3"
          },
          {
             qnNumRange: [301, 401],            
-            setName: "Set 4",
+            setName: 4,
             href: "/mcq/sets/gep/4"
          },
          {
             qnNumRange: [401, 501],            
-            setName: "Set 5",
+            setName: 5,
             href: "/mcq/sets/gep/5"
          },
          {
             qnNumRange: [501, 601],            
-            setName: "Set 6",
+            setName: 6,
             href: "/mcq/sets/gep/6"
          },
          {
             qnNumRange: [1, 601],
             setName: "Random",
             href: "/mcq/sets/gep"
+         },
+         {
+            qnNumRange: [1, 601],
+            setName: "In Order",
+            href: "/mcq/sets/gep/in_order"
          }
       ]
    },
@@ -65,38 +72,43 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 51],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/phrasalVerbs/1"
          },
          {
             qnNumRange: [51, 101],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/phrasalVerbs/2"
          },
          {
             qnNumRange: [101, 151],
-            setName: "Set 3",
+            setName: 3,
             href: "/mcq/sets/phrasalVerbs/3"
          },
          {
             qnNumRange: [151, 201],
-            setName: "Set 4",
+            setName: 4,
             href: "/mcq/sets/phrasalVerbs/4"
          },
          {
             qnNumRange: [201, 251],
-            setName: "Set 5",
+            setName: 5,
             href: "/mcq/sets/phrasalVerbs/5"
          },
          {
             qnNumRange: [251, 301],
-            setName: "Set 6",
+            setName: 6,
             href: "/mcq/sets/phrasalVerbs/6"
          },
          {
             qnNumRange: [1, 301],
             setName: "Random",
             href: "/mcq/sets/phrasalVerbs"
+         },
+         {
+            qnNumRange: [1, 301],
+            setName: "In Order",
+            href: "/mcq/sets/phrasalVerbs/in_order"
          }
       ]
    },
@@ -106,18 +118,23 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 51],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/psleWordsCloze/1"
          },
          {
             qnNumRange: [51, 101],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/psleWordsCloze/2"
          },
          {
             qnNumRange: [1, 101],
             setName: "Random",
             href: "/mcq/sets/psleWordsCloze"
+         },
+         {
+            qnNumRange: [1, 101],
+            setName: "In Order",
+            href: "/mcq/sets/psleWordsCloze/in_order"
          }
       ]
    },
@@ -127,18 +144,23 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 51],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/psleWordsMcq/1"
          },
          {
             qnNumRange: [51, 101],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/psleWordsMcq/2"
          },
          {
             qnNumRange: [1, 101],
             setName: "Random",
             href: "/mcq/sets/psleWordsMcq"
+         },
+         {
+            qnNumRange: [1, 101],
+            setName: "In Order",
+            href: "/mcq/sets/psleWordsMcq/in_order"
          }
       ]
    },
@@ -148,58 +170,63 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 51],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/pslePhrasesCloze/1"
          },
          {
             qnNumRange: [51, 101],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/pslePhrasesCloze/2"
          },
          {
             qnNumRange: [101, 151],
-            setName: "Set 3",
+            setName: 3,
             href: "/mcq/sets/pslePhrasesCloze/3"
          },
          {
             qnNumRange: [151, 201],
-            setName: "Set 4",
+            setName: 4,
             href: "/mcq/sets/pslePhrasesCloze/4"
          },
          {
             qnNumRange: [201, 251],
-            setName: "Set 5",
+            setName: 5,
             href: "/mcq/sets/pslePhrasesCloze/5"
          },
          {
             qnNumRange: [251, 301],
-            setName: "Set 6",
+            setName: 6,
             href: "/mcq/sets/pslePhrasesCloze/6"
          },
          {
             qnNumRange: [301, 351],
-            setName: "Set 7",
+            setName: 7,
             href: "/mcq/sets/pslePhrasesCloze/7"
          },
          {
             qnNumRange: [351, 401],
-            setName: "Set 8",
+            setName: 8,
             href: "/mcq/sets/pslePhrasesCloze/8"
          },
          {
             qnNumRange: [401, 451],
-            setName: "Set 9",
+            setName: 9,
             href: "/mcq/sets/pslePhrasesCloze/9"
          },
          {
             qnNumRange: [451, 501],
-            setName: "Set 10",
+            setName: 10,
             href: "/mcq/sets/pslePhrasesCloze/10"
          },
          {
             qnNumRange: [1, 501],
             setName: "Random",
             href: "/mcq/sets/pslePhrasesCloze"
+         },
+         {
+            qnNumRange: [1, 501],
+            setName: "In Order",
+            href: "/mcq/sets/pslePhrasesCloze/in_order"
          }
       ]
    },
@@ -209,18 +236,23 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
       sets: [
          {
             qnNumRange: [1, 51],
-            setName: "Set 1",
+            setName: 1,
             href: "/mcq/sets/psleGrammar/1"
          },
          {
             qnNumRange: [51, 101],
-            setName: "Set 2",
+            setName: 2,
             href: "/mcq/sets/psleGrammar/2"
          },
          {
             qnNumRange: [1, 101],
             setName: "Random",
             href: "/mcq/sets/psleGrammar"
+         },
+         {
+            qnNumRange: [1, 101],
+            setName: "In Order",
+            href: "/mcq/sets/psleGrammar/in_order"
          }
       ]
    }

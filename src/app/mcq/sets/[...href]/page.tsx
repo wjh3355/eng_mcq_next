@@ -13,15 +13,23 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ h
 
    const { cat, categoryName, set: { qnNumRange, setName } } = match;
 
+   let qnNumArray: number[] = [];
+   if (typeof setName === "number") {
+      qnNumArray = shuffle(range(...qnNumRange));
+   } else if (setName === "Random") {
+      qnNumArray = shuffle(sampleSize(range(...qnNumRange), 50));
+   } else if (setName === "In Order") {
+      qnNumArray = range(...qnNumRange);
+   }
+
    return <MCQApp
       qnCategory={cat}
-      qnNumArray={
-         setName === "Random" 
-         ?  shuffle(sampleSize(range(...qnNumRange), 50)) 
-         :  shuffle(range(...qnNumRange))
-      }
+      qnNumArray={qnNumArray}
       userName={user.given_name!}
-      title={categoryName + " - " + setName}
+      title={categoryName 
+         + " - " 
+         + (typeof setName === "number" ? `Set ${setName}` : setName)
+      }
       isSetRandom={setName === "Random"}
       isRedo={false}
    />
