@@ -1,5 +1,5 @@
 import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
-import { fetchClozeArr } from "@/serverFuncs/fetchCloze";
+import { fetchClozeArr } from "@/serverFuncs/clozeActions";
 import Link from "next/link";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";

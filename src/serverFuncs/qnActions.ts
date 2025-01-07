@@ -71,3 +71,23 @@ export async function fetchQnArr(
       }
    }
 };
+
+export async function fetchNumQns(collection: QnCategory) {
+   try {
+      const { db } = await connectToDB("english_questions");
+      const numOfQns = await db
+         .collection(collection)
+         .countDocuments();
+
+      return numOfQns;
+
+   } catch (error: unknown) {
+      if (error instanceof Error) {
+         console.error("Unable to fetch number of questions from database:", error.message);
+         throw new Error(error.message);
+      } else {
+         console.error("An unexpected error occured:", error);
+         throw new Error("An unexpected error occured");
+      }
+   }
+}

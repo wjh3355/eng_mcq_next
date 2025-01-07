@@ -4,7 +4,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 
 import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
 
-import { fetchQn } from "@/serverFuncs/fetchQn";
+import { fetchQn } from "@/serverFuncs/qnActions";
 import updateUserQnData from "@/serverFuncs/updateUserQnData";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 
