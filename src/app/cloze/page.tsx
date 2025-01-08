@@ -1,11 +1,11 @@
-import { fetchClozeArr } from "@/serverFuncs/clozeActions";
+import { fetchClozeArr } from "@/utils/clozeActions";
 import Link from "next/link";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 
 export const dynamic = 'force-dynamic';
 

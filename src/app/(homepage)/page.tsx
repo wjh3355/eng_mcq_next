@@ -3,9 +3,9 @@ import Col from "react-bootstrap/Col";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
-import ensureUserDataDocExists from "@/serverFuncs/ensureUserDataDocExists";
-import Sunbirds from "../ui/components/Sunbirds";
-import Advert from "./Advert";
+import ensureUserDataDocExists from "@/utils/ensureUserDataDocExists";
+import Sunbirds from "@/components/Sunbirds";
+import Advert from "@/components/Advert";
 
 export const revalidate = 3600;
 

@@ -3,10 +3,10 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { QnCategory, QN_CATEGORIES_DATA, QnCategoryUserData, qnCategoriesArray } from "@/types";
 import Link from "next/link";
-import fetchUserData from "@/serverFuncs/fetchUserData";
+import fetchUserData from "@/utils/fetchUserData";
 import React, { Suspense } from "react";
-import { fetchNumQns } from "@/serverFuncs/qnActions";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import { fetchNumQns } from "@/utils/qnActions";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 
 export const dynamic = 'force-dynamic';
 

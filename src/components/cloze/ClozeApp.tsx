@@ -2,12 +2,10 @@
 
 import Row from "react-bootstrap/Row";
 
-import createGenericClozeProvider from "../ui/GenericClozeProvider";
-import GenericCloze from "../ui/components/GenericCloze";
-import GenericClozeCompleted from "../ui/components/GenericClozeCompleted";
+import createGenericClozeProvider from "./GenericClozeProvider";
+import GenericCloze from "./GenericCloze";
+import GenericClozeCompleted from "./GenericClozeCompleted";
 import Skeleton from "react-loading-skeleton";
-import { CLOZE_QNNUM_ARR } from "@/types";
-import { notFound } from "next/navigation";
 
 export default function ClozeApp({
    userName,
@@ -16,8 +14,6 @@ export default function ClozeApp({
    userName: string
    qnNumToFetch: number
 }) {
-
-   if (!CLOZE_QNNUM_ARR.includes(qnNumToFetch)) notFound();
 
    const { ClozeProvider, useClozeContext } = createGenericClozeProvider({
       userName,
@@ -36,7 +32,7 @@ export default function ClozeApp({
 
    return <ClozeProvider>
       <Row className="my-3">
-         <h5 className="text-center m-0">Comprehension Cloze</h5>
+         <h5 className="text-center m-0">Comprehension Cloze {qnNumToFetch}</h5>
       </Row>
       <ClozeLoadingSkeleton/>
       <GenericCloze QnContextToUse={useClozeContext}/>

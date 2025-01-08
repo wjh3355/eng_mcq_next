@@ -1,6 +1,6 @@
 'use server';
 
-import { connectToDB } from "@/serverFuncs/connectToDB";
+import { connectToDB } from "@/utils/connectToDB";
 import { QnCategory, MCQQnObj, QnObjSchema, QnObjArrSchema } from "@/types";
 
 export async function fetchQn(

@@ -2,9 +2,9 @@
 
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { ClozeContextValue, EMPTY_CLOZE_CONTEXT_VALUE } from "@/types";
-import { fetchCloze } from "@/serverFuncs/clozeActions";
-import fetchUserData from "@/serverFuncs/fetchUserData";
-import updateUserClozeData from "@/serverFuncs/updateUserClozeData";
+import { fetchCloze } from "@/utils/clozeActions";
+import fetchUserData from "@/utils/fetchUserData";
+import { updateUserClozeData } from "@/utils/updateUserData";
 
 export default function createGenericClozeProvider({
    qnNumToFetch,

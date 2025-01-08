@@ -1,6 +1,6 @@
 "use client";
 
-import getAIDefinition from "@/serverFuncs/getAIDefinition";
+import getAIDefinition from "@/utils/getAIDefinition";
 import { AIDefinition } from "@/types/aiDefTypes";
 import { useState } from "react";
 import Row from "react-bootstrap/Row";

@@ -1,4 +1,4 @@
-import MCQApp from "@/app/ui/MCQApp";
+import MCQApp from "@/components/mcq/MCQApp";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import { DEMO_DATA } from "@/types";

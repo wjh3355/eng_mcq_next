@@ -1,8 +1,8 @@
-import fetchUserData from "@/serverFuncs/fetchUserData";
+import fetchUserData from "@/utils/fetchUserData";
 import { QnCategory, QN_CATEGORIES_DATA } from "@/types";
 import { notFound } from "next/navigation";
-import MCQApp from "@/app/ui/MCQApp";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import MCQApp from "@/components/mcq/MCQApp";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 
 export default async function RedoWrongQnsPage({ params }: { params: Promise<{ category: QnCategory }> }) {
 

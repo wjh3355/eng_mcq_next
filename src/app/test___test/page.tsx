@@ -1,6 +1,6 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import AIDictionary from "./AIDictionary";
+import AIDictionary from "../../components/AIDictionary";
 import Image from "next/image";
 
 export const dynamic = 'force-dynamic';

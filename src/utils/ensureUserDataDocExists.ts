@@ -1,6 +1,6 @@
 "use server";
 
-import { connectToDB } from "@/serverFuncs/connectToDB";
+import { connectToDB } from "@/utils/connectToDB";
 import { makeNewUserDoc } from "@/types";
 
 export default async function ensureUserDataDocExists(name: string) {

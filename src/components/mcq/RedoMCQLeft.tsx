@@ -8,15 +8,15 @@ import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
-import DictionaryEntry from "./DictionaryEntry";
+import DictionaryEntry from "../DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
-import PaginatedDictEntries from "./PaginatedDictEntries";
-import { DEMO_DATA, MCQContextValue } from '@/types';
+import PaginatedDictEntries from "../PaginatedDictEntries";
+import { MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";
 
-export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
+export default function RedoMCQLeft({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {
 
    const {
       handleNextQnBtnClick,
@@ -28,29 +28,19 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
       hasReachedEnd
    } = QnContextToUse();
 
-   const { sentence, wordToTest, qnNum } = qnObj;
+   const { sentence, wordToTest } = qnObj;
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
-   const [isHelpShown, setIsHelpShown] = useState(false);
 
    if (hasReachedEnd) return null;
 
    return (
       <Col lg={8} md={7}>
-         <Card className="mb-3">
-            {isLoading
-               ?  <Card.Body>
-                     <Skeleton height="24px" />
-                  </Card.Body>
-               :  <>
-                     <Card.Header>
-                        <small>From {DEMO_DATA.getDemoQnCat(qnNum)}</small>
-                     </Card.Header>
-                     <Card.Body>
-                        <MCQQnSentence sentence={sentence} wordToTest={wordToTest}/>
-                     </Card.Body>
-                  </>
+         <Card body className="mb-3">
+            {isLoading 
+               ?  <Skeleton height="24px" />
+               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} />
             }
          </Card>
 
@@ -80,12 +70,8 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                </div>
             </DropdownButton>
 
-            <Button variant="link" className="ms-auto p-0" onClick={() => setIsHelpShown(true)}>
-               Help
-            </Button>
-
             <button 
-               className="border-0 bg-transparent p-0"
+               className="border-0 bg-transparent p-0 ms-auto"
                disabled={isCorrect === null}
                onClick={() => setIsExplShown(true)}
             >
@@ -121,35 +107,6 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
             <Modal.Body><DictionaryEntry qnObj={qnObj}/></Modal.Body>
          </Modal>
 
-         <Modal size="lg" centered show={isHelpShown} onHide={() => setIsHelpShown(false)}>
-            <Modal.Header closeButton><Modal.Title className="fs-5">Help</Modal.Title></Modal.Header>
-            <Modal.Body style={{textAlign: "justify", lineHeight: "25px"}}>
-               <p>You will be presented with a series of MCQ questions that test vocabulary or grammar.</p>
-               <ul>
-                  <li>If there is a <strong>bolded</strong> word or phrase in the sentence, choose the option closest in meaning to it.</li>
-                  <li>If there is a <u>blank</u> in the sentence, choose the option that best fits the blank.</li>
-               </ul>
-               <p>
-                  If the option you selected was correct, it will become <strong style={{ color: "green" }}>green</strong>. Otherwise, it will become <strong style={{ color: "rgb(190, 44, 44)" }}>red</strong> and the correct option will be indicated in <strong style={{ color: "green" }}>green</strong>.
-               </p>
-               <p>
-                  The <BadgeInfo size={21} strokeWidth={2}/> icon displays the definition of the word/phrase tested in the question, while <BookText size={21} strokeWidth={2}/> keeps track of all the questions you answered wrongly. Clicking
-                  <Button 
-                     variant="primary"
-                     size="sm"
-                     className="d-inline mx-2"
-                  >
-                     Next&nbsp;<CircleArrowRight size={20} strokeWidth={2} className="my-auto"/>
-                  </Button>
-                  displays the next question (once you answered the current one).
-               </p>
-               <p>
-                  You may click
-                  <Button variant="warning" className="d-inline mx-2" size="sm">Results</Button>
-                  at any time to view your current score.            
-               </p>
-            </Modal.Body>
-         </Modal>
       </Col>
    );
 };

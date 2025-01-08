@@ -2,10 +2,9 @@ import { Suspense } from "react";
 
 import Link from "next/link";
 
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
-import { fetchQnArr } from "@/serverFuncs/qnActions";
-import fetchUserData from "@/serverFuncs/fetchUserData";
-import PaginatedDictEntries from "@/app/ui/components/PaginatedDictEntries";
+import { fetchQnArr } from "@/utils/qnActions";
+import fetchUserData from "@/utils/fetchUserData";
+import PaginatedDictEntries from "@/components/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
 import Row from "react-bootstrap/Row";
@@ -14,13 +13,14 @@ import Col from "react-bootstrap/Col";
 import { RotateCcw } from 'lucide-react';
 import { notFound } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: { params: Promise<{ category: QnCategory }> }) {
 
-   const currUser = await checkNormalUserAuth();
-   const userData = await fetchUserData(currUser.given_name!);
+   const { kindeUserGivenName } = await getUserDataHeaders();
+   const userData = await fetchUserData(kindeUserGivenName);
    const { category } = await params;
 
    const wrongQnNumsArr = userData.qnData[category]?.wrongQnNums ?? [];

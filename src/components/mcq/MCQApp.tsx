@@ -3,14 +3,14 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import createGenericMCQProvider from "@/app/ui/GenericMCQProvider";
-import GenericMCQLeft from "./components/GenericMCQLeft";
-import GenericMCQRight from "@/app/ui/components/GenericMCQRight";
-import GenericErrorContainer from "@/app/ui/components/GenericErrorContainer";
-import GenericMCQEnd from "@/app/ui/components/GenericMCQEnd";
+import createGenericMCQProvider from "./GenericMCQProvider";
+import GenericMCQLeft from "./GenericMCQLeft";
+import GenericMCQRight from "./GenericMCQRight";
+import GenericErrorContainer from "../GenericErrorContainer";
+import GenericMCQEnd from "./GenericMCQEnd";
 import { QnCategory } from "@/types";
-import DemoMCQLeft from "./components/DemoMCQLeft";
-import RedoMCQLeft from "./components/RedoMCQLeft";
+import DemoMCQLeft from "./DemoMCQLeft";
+import RedoMCQLeft from "./RedoMCQLeft";
 
 export default function MCQApp({
    qnCategory,

@@ -9,9 +9,9 @@ import Modal from "react-bootstrap/Modal";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Spinner from "react-bootstrap/Spinner";
 
-import DictionaryEntry from "./DictionaryEntry";
+import DictionaryEntry from "../DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
-import PaginatedDictEntries from "./PaginatedDictEntries";
+import PaginatedDictEntries from "../PaginatedDictEntries";
 import { MCQContextValue } from '@/types';
 
 import Skeleton from "react-loading-skeleton";

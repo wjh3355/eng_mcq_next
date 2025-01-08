@@ -1,5 +1,5 @@
-import MCQApp from "@/app/ui/MCQApp";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import MCQApp from "@/components/mcq/MCQApp";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
 export default async function SingleQnsPage({ params }: { params: Promise<{ category: QnCategory, qnNum: number }> }) {

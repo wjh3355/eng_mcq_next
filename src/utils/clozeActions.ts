@@ -1,6 +1,6 @@
 'use server';
 
-import { connectToDB } from "@/serverFuncs/connectToDB";
+import { connectToDB } from "@/utils/connectToDB";
 import { ClozeObj } from "@/types";
 
 export async function fetchCloze(num: number) {
@@ -47,3 +47,23 @@ export async function fetchClozeArr() {
       }
    }
 };
+
+export async function fetchNumClozes() {
+   try {
+      const { db } = await connectToDB("english_questions");
+      const numClozes = await db
+         .collection("clozePassage")
+         .countDocuments();
+
+      return numClozes;
+
+   } catch (error: unknown) {
+      if (error instanceof Error) {
+         console.error("Unable to fetch number of cloze passages from database:", error.message);
+         throw new Error(error.message);
+      } else {
+         console.error("An unexpected error occured:", error);
+         throw new Error("An unexpected error occured");
+      }
+   }
+}

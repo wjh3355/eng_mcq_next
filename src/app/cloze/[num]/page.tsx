@@ -1,12 +1,17 @@
-import ClozeApp from "@/app/ui/ClozeApp";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import ClozeApp from "@/components/cloze/ClozeApp";
+import { fetchNumClozes } from "@/utils/clozeActions";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
+import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
-export default async function Page({ params }: { params: Promise<{ num: number }> }) {
+export default async function Page({ params }: { params: Promise<{ num: string }> }) {
    const { kindeUserGivenName } = await getUserDataHeaders();
 
-   const { num } = await params;
+   const int = parseInt((await params).num, 10);
+   const numOfClozes = await fetchNumClozes();
 
-   return <ClozeApp userName={kindeUserGivenName} qnNumToFetch={Number(num)}/>
+   if (!(int >= 1 && int <= numOfClozes)) notFound();
+
+   return <ClozeApp userName={kindeUserGivenName} qnNumToFetch={int}/>
 }

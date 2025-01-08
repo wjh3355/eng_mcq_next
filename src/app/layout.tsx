@@ -6,11 +6,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/global.css";
 import { Inter } from 'next/font/google';
 
-import MainNavbar from "./ui/MainNavbar";
-import Footer from "./ui/Footer";
-import MaintenancePage from "./ui/MaintenancePage";
+import MainNavbar from "@/components/MainNavbar";
+import Footer from "@/components/Footer";
+import MaintenancePage from "@/components/MaintenancePage";
 
-import AuthProvider from "./AuthProvider";
+import AuthProvider from "../components/AuthProvider";
 
 export const metadata = {
    title: "Sunbird English",

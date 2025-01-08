@@ -53,5 +53,3 @@ export const DEMO_DATA: { qnNumRange: [number, number], getDemoQnCat: (param: nu
       return QN_CATEGORIES_DATA[cat].categoryName;
    }
 }
-
-export const CLOZE_QNNUM_ARR = [1, 2, 3, 4];

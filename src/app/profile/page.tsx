@@ -1,9 +1,9 @@
 import Row from "react-bootstrap/Row";
-import fetchUserData from "@/serverFuncs/fetchUserData";
+import fetchUserData from "@/utils/fetchUserData";
 import { Suspense } from "react";
-import UserStatsTable from "../ui/components/UserStatsTable";
+import UserStatsTable from "../../components/UserStatsTable";
 import Skeleton from "react-loading-skeleton";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 import { HeaderUserDetails } from "@/types";
 
 export const dynamic = 'force-dynamic';

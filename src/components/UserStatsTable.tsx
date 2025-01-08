@@ -15,7 +15,7 @@ import Container from "react-bootstrap/Container";
 import { HeaderUserDetails, QnCategory, QnCategoryUserData, UserData } from "@/types";
 import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
-import eraseUserData from "@/serverFuncs/eraseUserData";
+import eraseUserData from "@/utils/eraseUserData";
 import { Info, Trash2 } from "lucide-react";
 
 export default function UserStatsTable({ 

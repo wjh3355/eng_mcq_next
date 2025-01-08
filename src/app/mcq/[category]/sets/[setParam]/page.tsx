@@ -1,11 +1,11 @@
-import MCQApp from "@/app/ui/MCQApp";
+import MCQApp from "@/components/mcq/MCQApp";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
-import { fetchNumQns } from "@/serverFuncs/qnActions";
-import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import { fetchNumQns } from "@/utils/qnActions";
+import getUserDataHeaders from "@/utils/getUserDataHeaders";
 
 export default async function MCQQuestionsPage({ params }: { params: Promise<{ category: QnCategory, setParam: string }> }) {
    
