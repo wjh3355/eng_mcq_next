@@ -9,24 +9,23 @@
       "lint": "next lint",
       "checkqn": "npx tsx private/checkQn.ts",
       "updateqn": "npx tsx private/updateQn.ts",
-      "updatenotice": "npx tsx private/updateNotice.ts",
       "test": "npx tsx private/test.ts"
    },
    "dependencies": {
       "@babel/core": "^7.25.2",
       "@kinde-oss/kinde-auth-nextjs": "^2.3.6",
       "@popperjs/core": "^2.11.8",
-      "@vercel/analytics": "^1.3.1",
-      "@vercel/speed-insights": "^1.0.12",
+      "@vercel/analytics": "^1.4.1",
+      "@vercel/speed-insights": "^1.1.0",
       "bootstrap": "^5.3.3",
       "lodash": "^4.17.21",
-      "lucide-react": "^0.454.0",
+      "lucide-react": "^0.469.0",
       "mongodb": "^6.8.0",
-      "next": "15.0.0",
+      "next": "^15.1.4",
       "openai": "^4.77.0",
-      "react": "^18",
-      "react-bootstrap": "^2.10.4",
-      "react-dom": "^18",
+      "react": "^19.0.0",
+      "react-bootstrap": "^2.10.7",
+      "react-dom": "^19.0.0",
       "react-loading-skeleton": "^3.4.0",
       "styled-components": "^6.1.13",
       "zod": "^3.23.8"
@@ -34,12 +33,12 @@
    "devDependencies": {
       "@types/lodash": "^4.17.7",
       "@types/node": "^22.7.5",
-      "@types/react": "^18.3.3",
-      "@types/react-dom": "^18.3.0",
+      "@types/react": "^19.0.3",
+      "@types/react-dom": "^19.0.2",
       "chalk": "^5.3.0",
       "dotenv": "^16.4.5",
-      "eslint": "8.0.0",
-      "eslint-config-next": "14.2.15",
+      "eslint": "9.17.0",
+      "eslint-config-next": "15.1.4",
       "typescript": "^5"
    }
 }

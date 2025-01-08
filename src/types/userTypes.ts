@@ -28,3 +28,9 @@ export function makeNewUserDoc(newName: string): UserData {
       score: 0
    };
 };
+
+export type HeaderUserDetails = {
+   kindeUserEmail: string
+   kindeUserId: string
+   kindeUserGivenName: string
+};

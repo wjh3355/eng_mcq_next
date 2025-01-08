@@ -1,15 +1,15 @@
 import MCQApp from "@/app/ui/MCQApp";
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
 import { fetchNumQns } from "@/serverFuncs/qnActions";
+import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
 
 export default async function MCQQuestionsPage({ params }: { params: Promise<{ category: QnCategory, setParam: string }> }) {
    
-   const user = await checkNormalUserAuth();
+   const { kindeUserGivenName } = await getUserDataHeaders();
    const { category, setParam } = await params;
    const totalNumQns = await fetchNumQns(category);
 
@@ -43,7 +43,7 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ c
    return <MCQApp
       qnCategory={category}
       qnNumArray={qnNumArray}
-      userName={user.given_name!}
+      userName={kindeUserGivenName}
       title={title}
       isSetRandom={setParam === "random"}
       isRedo={false}

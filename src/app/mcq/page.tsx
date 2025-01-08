@@ -1,18 +1,18 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import { QnCategory, QN_CATEGORIES_DATA, QnCategoryUserData, qnCategoriesArray } from "@/types";
 import Link from "next/link";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import React, { Suspense } from "react";
 import { fetchNumQns } from "@/serverFuncs/qnActions";
+import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
-   const user = await checkNormalUserAuth();
+   const { kindeUserGivenName } = await getUserDataHeaders();
 
    return (
       <>
@@ -24,7 +24,7 @@ export default async function Page() {
 
          <Row>
             {qnCategoriesArray.map(category => 
-               <Suspense fallback={<h5>Loading {category} data</h5>} key={category}>
+               <Suspense fallback={<div/>} key={category}>
                   <DisplayCategorySets category={category}/>
                </Suspense>
             )}
@@ -32,11 +32,9 @@ export default async function Page() {
 
          <Row className="my-3">
             <Suspense fallback={<p>Loading wrong questions (if any)...</p>}>
-               <WrongQnsTable user={user.given_name!}/>
+               <WrongQnsTable user={kindeUserGivenName}/>
             </Suspense>
          </Row>
-         
-
       </>
    )
 }
@@ -51,7 +49,7 @@ async function DisplayCategorySets({ category }: { category: QnCategory }) {
    for (let setNum = 1; setNum <= numPossibleSets; setNum++) {
       links.push(
          <li key={setNum}>
-            <Link href={`/mcq/sets/${category}/${setNum}`}>
+            <Link href={`/mcq/${category}/sets/${setNum}`}>
                {`Set ${setNum} (${(setNum-1)*setSize + 1} to ${setNum*setSize})`}
             </Link>
          </li>
@@ -60,7 +58,7 @@ async function DisplayCategorySets({ category }: { category: QnCategory }) {
 
    links.push(
       <li key={numPossibleSets + 1} className="mt-2">
-         <Link href={`/mcq/sets/${category}/random`}>
+         <Link href={`/mcq/${category}/sets/random`}>
             50 random questions
          </Link>
       </li>
@@ -86,35 +84,33 @@ async function WrongQnsTable({ user }: { user: string }) {
 
    if (JSON.stringify(userQnData) === "{}") return null;
 
-   return <>
-      <Col xl={6} lg={8} md={10} className="mx-auto">
-         <h5 className="m-0 text-center">Redo Wrong Questions</h5>
-         <Table striped>
-            <thead>
-               <tr>
-                  <th>Category</th>
-                  <th>No. Incorrect</th>
-               </tr>
-            </thead>
-            <tbody>
-               {
-                  (Object.entries(userQnData) as [ QnCategory, QnCategoryUserData ][])
-                     .filter(([_, { wrongQnNums }]) => wrongQnNums.length > 0)
-                     .map(([cat, { wrongQnNums }], idx) => 
-                        <tr key={idx}>
-                           <td>
-                              <Link className="me-1" href={`/mcq/redo/${cat}`}>
-                                 {QN_CATEGORIES_DATA[cat].categoryName}
-                              </Link>
-                           </td>
-                           <td>
-                              {wrongQnNums.length}
-                           </td>
-                        </tr>
-                     )
-               }
-            </tbody>
-         </Table>
-      </Col>
-   </>;
+   return <Col xl={6} lg={8} md={10} className="mx-auto">
+      <h5 className="m-0 text-center">Redo Wrong Questions</h5>
+      <Table striped>
+         <thead>
+            <tr>
+               <th>Category</th>
+               <th>No. Incorrect</th>
+            </tr>
+         </thead>
+         <tbody>
+            {
+               (Object.entries(userQnData) as [ QnCategory, QnCategoryUserData ][])
+                  .filter(([_, { wrongQnNums }]) => wrongQnNums.length > 0)
+                  .map(([cat, { wrongQnNums }], idx) => 
+                     <tr key={idx}>
+                        <td>
+                           <Link className="me-1" href={`/mcq/${cat}/redo`}>
+                              {QN_CATEGORIES_DATA[cat].categoryName}
+                           </Link>
+                        </td>
+                        <td>
+                           {wrongQnNums.length}
+                        </td>
+                     </tr>
+                  )
+            }
+         </tbody>
+      </Table>
+   </Col>;
 }

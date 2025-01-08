@@ -1,18 +1,17 @@
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import { fetchClozeArr } from "@/serverFuncs/clozeActions";
 import Link from "next/link";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
+import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
-   await checkNormalUserAuth();
+   await getUserDataHeaders();
 
    return (
       <>

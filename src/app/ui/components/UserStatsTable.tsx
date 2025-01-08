@@ -12,19 +12,18 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
-import { QnCategory, QnCategoryUserData, UserData } from "@/types";
+import { HeaderUserDetails, QnCategory, QnCategoryUserData, UserData } from "@/types";
 import { QN_CATEGORIES_DATA } from "@/types";
 import Link from "next/link";
 import eraseUserData from "@/serverFuncs/eraseUserData";
 import { Info, Trash2 } from "lucide-react";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 
 export default function UserStatsTable({ 
    userData,
    kindeUser
 }: { 
    userData: UserData,
-   kindeUser: KindeUser<Record<string, any>> 
+   kindeUser: HeaderUserDetails
 }) {
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
@@ -33,10 +32,13 @@ export default function UserStatsTable({
       <Container>
          <dl className="row">
             <dt className="col-sm-3">Username</dt>
-            <dd className="col-sm-9">{kindeUser.given_name}</dd>
+            <dd className="col-sm-9">{kindeUser.kindeUserGivenName}</dd>
 
             <dt className="col-sm-3">Email address</dt>
-            <dd className="col-sm-9">{kindeUser.email}</dd>
+            <dd className="col-sm-9">{kindeUser.kindeUserEmail}</dd>
+
+            <dt className="col-sm-3">ID</dt>
+            <dd className="col-sm-9">{kindeUser.kindeUserId}</dd>
 
             <dt className="col-sm-3">Date created</dt>
             <dd className="col-sm-9">{userData.dateCreated.toDateString()}</dd>

@@ -1,10 +1,10 @@
 import MCQApp from "@/app/ui/MCQApp";
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
+import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
 export default async function SingleQnsPage({ params }: { params: Promise<{ category: QnCategory, qnNum: number }> }) {
 
-   const user = await checkNormalUserAuth();
+   const { kindeUserGivenName } = await getUserDataHeaders();
    const { category, qnNum } = await params;
    const qnNumInt = Number(qnNum);
    const categoryName = QN_CATEGORIES_DATA[category].categoryName
@@ -12,7 +12,7 @@ export default async function SingleQnsPage({ params }: { params: Promise<{ cate
    return <MCQApp
       qnCategory={category}
       qnNumArray={[qnNumInt]}
-      userName={user.given_name!}
+      userName={kindeUserGivenName}
       title={categoryName + " - " + `Q${qnNumInt}`}
       isSetRandom={false}
       isRedo={false}

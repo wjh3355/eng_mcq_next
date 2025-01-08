@@ -1,16 +1,16 @@
-import { checkNormalUserAuth } from "@/serverFuncs/checkUserAuth";
 import Row from "react-bootstrap/Row";
 import fetchUserData from "@/serverFuncs/fetchUserData";
 import { Suspense } from "react";
 import UserStatsTable from "../ui/components/UserStatsTable";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/types";
 import Skeleton from "react-loading-skeleton";
+import getUserDataHeaders from "@/serverFuncs/getUserDataHeaders";
+import { HeaderUserDetails } from "@/types";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
-   const user = await checkNormalUserAuth();
+   const user = await getUserDataHeaders();
    
    return (
       <>
@@ -24,7 +24,7 @@ export default async function Page() {
    );
 }
 
-async function Stats({ kindeUser }: { kindeUser: KindeUser<Record<string, any>> }) {
-   const userData = await fetchUserData(kindeUser.given_name!);
+async function Stats({ kindeUser }: { kindeUser: HeaderUserDetails }) {
+   const userData = await fetchUserData(kindeUser.kindeUserGivenName);
    return <UserStatsTable userData={userData} kindeUser={kindeUser}/>; 
 }
