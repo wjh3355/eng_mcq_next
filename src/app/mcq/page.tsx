@@ -7,6 +7,7 @@ import fetchUserData from "@/utils/fetchUserData";
 import React, { Suspense } from "react";
 import { fetchNumQns } from "@/utils/qnActions";
 import getUserDataHeaders from "@/utils/getUserDataHeaders";
+import Skeleton from "react-loading-skeleton";
 
 export const dynamic = 'force-dynamic';
 
@@ -24,9 +25,11 @@ export default async function Page() {
 
          <Row>
             {qnCategoriesArray.map(category => 
-               <Suspense fallback={<div/>} key={category}>
-                  <DisplayCategorySets category={category}/>
-               </Suspense>
+               <Col key={category} xl={3} lg={4} md={6} className="mb-3">                  
+                  <Suspense fallback={<Skeleton height={200}/>}>
+                     <DisplayCategorySets category={category}/>
+                  </Suspense>
+               </Col>
             )}
          </Row>
 
@@ -65,16 +68,14 @@ async function DisplayCategorySets({ category }: { category: QnCategory }) {
    )
 
    return (
-      <Col key={category} xl={3} lg={4} md={6} className="mb-3">
-         <div className="card h-100 bg-light">
-            <div className="card-header">{categoryName}</div>
-            <div className="card-body">
-               <ul>
-                  {links}
-               </ul>
-            </div>
+      <div className="card h-100 bg-light">
+         <div className="card-header">{categoryName}</div>
+         <div className="card-body">
+            <ul>
+               {links}
+            </ul>
          </div>
-      </Col>
+      </div>
    )
 }
 

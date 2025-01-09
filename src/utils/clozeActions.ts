@@ -1,7 +1,7 @@
 'use server';
 
 import { connectToDB } from "@/utils/connectToDB";
-import { ClozeObj } from "@/types";
+import { ClozeObj, ClozeObjArrSchema, ClozeObjSchema } from "@/types";
 
 export async function fetchCloze(num: number) {
    try {
@@ -12,7 +12,11 @@ export async function fetchCloze(num: number) {
       
       if (!data) throw new Error(`Cannot find cloze Q${num}`);
 
-      return data as unknown as ClozeObj;
+      const zodResult = ClozeObjSchema.safeParse(data);
+
+      if (!zodResult.success) throw new Error("Type validation error");
+
+      return zodResult.data as ClozeObj;
 
    } catch (error: unknown) {
       if (error instanceof Error) {
@@ -25,7 +29,7 @@ export async function fetchCloze(num: number) {
    }
 };
 
-export async function fetchClozeArr() {
+export async function fetchAllClozeArr() {
    try {
       const { db } = await connectToDB("english_questions");
       const data = await db
@@ -35,7 +39,11 @@ export async function fetchClozeArr() {
       
       if (!data) throw new Error("Question not found");
 
-      return data as unknown as ClozeObj[];
+      const zodResult = ClozeObjArrSchema.safeParse(data);
+
+      if (!zodResult.success) throw new Error("Type validation error");
+
+      return zodResult.data.sort((a, b) => a.qnNum - b.qnNum) as ClozeObj[];
 
    } catch (error: unknown) {
       if (error instanceof Error) {

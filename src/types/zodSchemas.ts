@@ -13,6 +13,14 @@ export const QnObjSchema = z.object({
 
 export const QnObjArrSchema = z.array(QnObjSchema);
 
+export const ClozeObjSchema = z.object({
+   qnNum: z.number(),
+   title: z.string(),
+   passage: z.string()
+}).strict();
+
+export const ClozeObjArrSchema = z.array(ClozeObjSchema);
+
 export const UserDataSchema = z.object({
    name: z.string(),
    dateCreated: z.date(),

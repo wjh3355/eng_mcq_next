@@ -17,10 +17,7 @@ export async function fetchQn(
 
       const zodResult = QnObjSchema.safeParse(data);
 
-      if (!zodResult.success) {
-         console.error("Data not of correct type:", zodResult.error.issues);
-         throw new Error("Type validation error");
-      }
+      if (!zodResult.success) throw new Error("Type validation error");
 
       return zodResult.data as MCQQnObj;
 
@@ -50,10 +47,7 @@ export async function fetchQnArr(
 
       const zodResult = QnObjArrSchema.safeParse(data);
 
-      if (!zodResult.success) {
-         console.error("Data not of correct type:", zodResult.error.issues);
-         throw new Error("Type validation error");
-      }
+      if (!zodResult.success) throw new Error("Type validation error");
 
       const qnObjArrInOriginalOrder: MCQQnObj[] = qnNums
          .map(num => zodResult.data.find(qn => qn.qnNum === num))

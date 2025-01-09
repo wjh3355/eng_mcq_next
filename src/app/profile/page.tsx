@@ -26,5 +26,5 @@ export default async function Page() {
 
 async function Stats({ kindeUser }: { kindeUser: HeaderUserDetails }) {
    const userData = await fetchUserData(kindeUser.kindeUserGivenName);
-   return <UserStatsTable userData={userData} kindeUser={kindeUser}/>; 
+   return <UserStatsTable mongoUserData={userData} kindeUserData={kindeUser}/>; 
 }

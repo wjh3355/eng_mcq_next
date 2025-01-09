@@ -18,34 +18,127 @@ import Link from "next/link";
 import eraseUserData from "@/utils/eraseUserData";
 import { Info, Trash2 } from "lucide-react";
 
+import { sum } from "lodash";
+
 export default function UserStatsTable({ 
-   userData,
-   kindeUser
+   mongoUserData,
+   kindeUserData
 }: { 
-   userData: UserData,
-   kindeUser: HeaderUserDetails
+   mongoUserData: UserData,
+   kindeUserData: HeaderUserDetails
 }) {
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
+
+   function McqStats() {
+      if (JSON.stringify(mongoUserData.qnData) === "{}") {
+         return <p>You have not attempted any MCQ questions yet!</p>;
+      }
+
+      const dataAsArr = Object.entries(mongoUserData.qnData) as [ QnCategory, QnCategoryUserData ][];
+
+      const totalAttempted = sum(dataAsArr.map(([_, dat]) => dat.numQnsAttempted));
+      const totalWrong = sum(dataAsArr.map(([_, dat]) => dat.wrongQnNums.length));
+      const totalCorrect = totalAttempted - totalWrong;
+      const totalPercentCorrect = Math.round(totalCorrect*100 / totalAttempted);
+
+      return (
+         <>
+            <Table striped>
+               <thead>
+                  <tr>
+                     <th>Category</th>
+                     <th>No. Correct</th>
+                     <th>No. Attempted</th>
+                     <th>View Incorrect</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
+                     <tr key={cat}>
+                        <td>{QN_CATEGORIES_DATA[cat].categoryName}</td>
+                        <td>{numQnsAttempted - wrongQnNums.length}</td>
+                        <td>{numQnsAttempted}</td>
+                        <td>
+                           <Link
+                              href={`/profile/wrongmcq/${cat}`}
+                              className={"fw-bold btn btn-primary btn-sm px-3 " + (wrongQnNums.length === 0 ? "disabled" : "")}
+                           >
+                              View
+                           </Link>
+                        </td>
+                        
+                     </tr>
+                  )}
+               </tbody>
+            </Table>
+
+            <div className="text-center">
+               Overall score:&nbsp;
+               <strong>
+                  {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
+               </strong>
+            </div>
+         </>
+      );
+   }
+
+   function ClozeStats() {
+      if (mongoUserData.clozeData.length === 0) {
+         return <p>You have not attempted any Cloze questions yet!</p>;
+      }
+
+      return (
+         <Table striped>
+            <thead>
+               <tr>
+                  <th>Cloze No.</th>
+                  <th>Score</th>
+                  <th>View Cloze</th>
+               </tr>
+            </thead>
+            <tbody>
+               {mongoUserData.clozeData.map(({qnNum, correctAns}) => 
+                  <tr key={qnNum}>
+                     <td>
+                        {`Q${qnNum}`}
+                     </td>
+                     <td>
+                        {`${correctAns.length} / 15`}
+                     </td>
+                     <td>
+                        <Link 
+                           href={`/cloze/${qnNum}`} 
+                           className="btn btn-primary btn-sm px-3 fw-bold"
+                        >
+                           View
+                        </Link>
+                     </td>
+                  </tr>
+               )}
+            </tbody>
+         </Table>
+      );
+   }
 
    return (
       <Container>
          <dl className="row">
             <dt className="col-sm-3">Username</dt>
-            <dd className="col-sm-9">{kindeUser.kindeUserGivenName}</dd>
+            <dd className="col-sm-9">{kindeUserData.kindeUserGivenName}</dd>
 
             <dt className="col-sm-3">Email address</dt>
-            <dd className="col-sm-9">{kindeUser.kindeUserEmail}</dd>
+            <dd className="col-sm-9">{kindeUserData.kindeUserEmail}</dd>
 
             <dt className="col-sm-3">ID</dt>
-            <dd className="col-sm-9">{kindeUser.kindeUserId}</dd>
+            <dd className="col-sm-9">{kindeUserData.kindeUserId}</dd>
 
             <dt className="col-sm-3">Date created</dt>
-            <dd className="col-sm-9">{userData.dateCreated.toDateString()}</dd>
+            <dd className="col-sm-9">{mongoUserData.dateCreated.toDateString()}</dd>
 
             <dt className="col-sm-3">Total points</dt>
             <dd className="col-sm-9">
-               {userData.score}
+               {mongoUserData.score}
                <OverlayTrigger
                   overlay={
                      <Popover>
@@ -66,63 +159,17 @@ export default function UserStatsTable({
 
          <Row>
             <Col xl={8} lg={10} className="mx-auto">
-               <Accordion>
+               <Accordion alwaysOpen>
                   <Accordion.Item eventKey="0">
                      <Accordion.Header><strong>Cloze</strong></Accordion.Header>
                      <Accordion.Body>
-                        {
-                           userData.clozeData.length === 0
-                           ? "You have not attempted any cloze questions yet!"
-                           : <ul>
-                              {
-                                 userData.clozeData.map(({qnNum, correctAns}) => 
-                                    <li key={qnNum}>
-                                       {`Cloze ${qnNum}: ${correctAns.length} / 15 correct`}
-                                    </li>
-                                 )
-                              }
-                           </ul>
-                        }
+                        <ClozeStats/>
                      </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="1">
                      <Accordion.Header><strong>MCQ Questions</strong></Accordion.Header>
                      <Accordion.Body>
-                        {
-                           JSON.stringify(userData.qnData) === "{}"
-                           ?  "You have not attempted any MCQ questions yet!"
-                           :  <Table striped>
-                                 <thead>
-                                    <tr>
-                                       <th>Category</th>
-                                       <th>No. Attempted</th>
-                                       <th>No. Incorrect</th>
-                                       <th></th>
-                                    </tr>
-                                 </thead>
-                                 <tbody>
-                                    {(Object.entries(userData.qnData) as [ QnCategory, QnCategoryUserData ][])
-                                       .map(([cat, { numQnsAttempted, wrongQnNums }]) => (
-                                       <tr key={cat}>
-                                          <td>{QN_CATEGORIES_DATA[cat].categoryName}</td>
-                                          <td>{numQnsAttempted}</td>
-                                          <td>{wrongQnNums.length}</td>
-                                          {wrongQnNums.length === 0 
-                                             ?  <td />
-                                             :  <td>
-                                                <Link
-                                                   href={`/profile/wrongmcq/${cat}`}
-                                                   className="btn btn-primary btn-sm px-3"
-                                                >
-                                                   <strong>View</strong>
-                                                </Link>
-                                             </td>
-                                          }
-                                       </tr>
-                                    ))}
-                                 </tbody>
-                              </Table>
-                        }
+                        <McqStats/>
                      </Accordion.Body>
                   </Accordion.Item>
                </Accordion>
@@ -152,7 +199,7 @@ export default function UserStatsTable({
                      <Button
                         variant="light"
                         onClick={async () => {
-                           await eraseUserData(userData.name);
+                           await eraseUserData(mongoUserData.name);
                            window.location.reload();
                         }}
                      >
@@ -169,7 +216,8 @@ export default function UserStatsTable({
             </Modal.Body>
          </Modal>
 
-         <p className="text-light" style={{color: "rgb(255, 255, 255)", fontSize: "2px"}}>{JSON.stringify(userData)}</p>
+         <p className="text-light" style={{color: "rgb(255, 255, 255)", fontSize: "10px"}}>{JSON.stringify(mongoUserData)}</p>
+         <p className="text-light" style={{color: "rgb(255, 255, 255)", fontSize: "10px"}}>{JSON.stringify(kindeUserData)}</p>
       
       </Container>
    );

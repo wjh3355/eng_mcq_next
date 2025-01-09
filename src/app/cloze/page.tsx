@@ -1,4 +1,4 @@
-import { fetchClozeArr } from "@/utils/clozeActions";
+import { fetchAllClozeArr } from "@/utils/clozeActions";
 import Link from "next/link";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -26,7 +26,7 @@ export default async function Page() {
 }
 
 async function ClozeTable() {
-   const clozeObjArr = await fetchClozeArr();
+   const clozeObjArr = await fetchAllClozeArr();
 
    return (
       <Row>
@@ -41,14 +41,14 @@ async function ClozeTable() {
                            </Link>
                         </td>
                      </tr>
-                     )}
-                     <tr>
-                        <td>
-                           <div className="text-center text-secondary fst-italic">
-                              More coming soon
-                           </div>
-                        </td>
-                     </tr>
+                  )}
+                  <tr>
+                     <td>
+                        <div className="text-center text-secondary fst-italic">
+                           More coming soon
+                        </div>
+                     </td>
+                  </tr>
                </tbody>
             </Table>
          </Col>
