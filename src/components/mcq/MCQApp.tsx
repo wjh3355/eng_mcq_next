@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import createGenericMCQProvider from "./GenericMCQProvider";
 import GenericMCQLeft from "./GenericMCQLeft";
 import GenericMCQRight from "./GenericMCQRight";
-import GenericErrorContainer from "../GenericErrorContainer";
+import GenericErrorContainer from "./GenericErrorContainer";
 import GenericMCQEnd from "./GenericMCQEnd";
 import { QnCategory } from "@/types";
 import DemoMCQLeft from "./DemoMCQLeft";

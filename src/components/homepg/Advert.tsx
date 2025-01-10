@@ -56,9 +56,12 @@ export default function Advert() {
 
          <Row>
             <Col>
-               Want to experience this website&apos;s features? View our free
-               <Link href="/demo_mcq" className="btn btn-outline-primary mx-1 fw-bold">
+               View our free
+               <Link href="/demo/mcq" className="btn btn-outline-primary mx-1 fw-bold">
                   Demo MCQ Questions
+               </Link> or
+               <Link href="/demo/cloze" className="btn btn-outline-primary mx-1 fw-bold">
+                  Demo Cloze Passage
                </Link>.
             </Col>
          </Row>

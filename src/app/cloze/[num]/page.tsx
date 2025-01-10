@@ -8,10 +8,15 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ params }: { params: Promise<{ num: string }> }) {
    const { kindeUserGivenName } = await getUserDataHeaders();
 
-   const int = parseInt((await params).num, 10);
+   const qnNumInt = parseInt((await params).num, 10);
    const numOfClozes = await fetchNumClozes();
 
-   if (!(int >= 1 && int <= numOfClozes)) notFound();
+   if (!(qnNumInt >= 1 && qnNumInt <= numOfClozes)) notFound();
 
-   return <ClozeApp userName={kindeUserGivenName} qnNumToFetch={int}/>
+   return <ClozeApp 
+      userName={kindeUserGivenName} 
+      qnNum={qnNumInt}
+      isDemo={false}
+      mainTitle={`Comprehension Cloze - Q${qnNumInt}`}
+   />
 }

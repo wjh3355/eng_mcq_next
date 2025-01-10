@@ -7,11 +7,13 @@ import fetchUserData from "@/utils/fetchUserData";
 import { updateUserClozeData } from "@/utils/updateUserData";
 
 export default function createGenericClozeProvider({
-   qnNumToFetch,
-   userName 
+   qnNum,
+   userName,
+   isDemo
 }: { 
    userName: string
-   qnNumToFetch: number
+   qnNum: number,
+   isDemo: boolean
 }) {
 
    const QnContext = createContext<ClozeContextValue>(EMPTY_CLOZE_CONTEXT_VALUE);
@@ -23,36 +25,43 @@ export default function createGenericClozeProvider({
    function ClozeProvider({ children }: { children: React.ReactNode }) {
 
       const [prevUserCorrectAns, setPrevUserCorrectAns] = useState<null | number[]>(null);
-      const [qnNum, setQnNum] = useState<number>(qnNumToFetch);
-      const [title, setTitle] = useState<string>("");
+      const [passageTitle, setPassageTitle] = useState<string>("");
       const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
       const [textArr, setTextArr] = useState<string[]>([]);
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [error, setError] = useState<string>("");
 
       async function handleCompletion(correctAns: number[]) {
-         try {
-            await updateUserClozeData({
-               userName,
-               qnNum,
-               correctAns
-            });
-         } catch (error) {
-            console.error("Error updating user data:", error);
-            setError("Error updating user data");
+         if (isDemo) {
+            setPrevUserCorrectAns(correctAns);
+         } else {
+            try {
+               await updateUserClozeData({
+                  userName,
+                  qnNum,
+                  correctAns
+               });
+            } catch (error) {
+               console.error("Error updating user data:", error);
+               setError("Error updating user data");
+            }
          }
       }
 
       async function handleReset() {
-         try {
-            await updateUserClozeData({
-               userName,
-               qnNum
-            });
-            window.location.reload();
-         } catch (error){
-            console.error("Error resetting user data:", error);
-            setError("Error resetting user data");
+         if (isDemo) {
+            setPrevUserCorrectAns(null);
+         } else {
+            try {
+               await updateUserClozeData({
+                  userName,
+                  qnNum
+               });
+               window.location.reload();
+            } catch (error){
+               console.error("Error resetting user data:", error);
+               setError("Error resetting user data");
+            }
          }
       }
 
@@ -60,12 +69,17 @@ export default function createGenericClozeProvider({
 
          (async () => {
             try {
-               const userClozeData = (await fetchUserData(userName)).clozeData;
 
-               const { passage, qnNum, title } = await fetchCloze(qnNumToFetch);
+               if (!isDemo) {
+                  const userClozeData = (await fetchUserData(userName)).clozeData;
+                  const userDataForCurrentCloze = userClozeData.find(cz => cz.qnNum === qnNum);
+                  setPrevUserCorrectAns(userDataForCurrentCloze?.correctAns || null);
+               }
+
+               const cloze = await fetchCloze(qnNum);
 
                setWordsToTestArr(
-                  passage
+                  cloze.passage
                      .match(/\{[^}]*\}/g)!
                      .map(match => match
                         .slice(1, -1)
@@ -75,20 +89,13 @@ export default function createGenericClozeProvider({
                );
 
                setTextArr(
-                  passage
+                  cloze.passage
                      .replace(/{.*?}/g, "BLANK")
                      .split(/(BLANK|\|\|)/)
                      .filter(Boolean)
                );
 
-               setPrevUserCorrectAns(
-                  userClozeData
-                     .find(cz => cz.qnNum === qnNum)
-                     ?.correctAns || null
-               );
-
-               setTitle(title);
-               setQnNum(qnNum);
+               setPassageTitle(cloze.title);
 
             } catch (error) {
                if (error instanceof Error) {
@@ -105,20 +112,20 @@ export default function createGenericClozeProvider({
 
       useEffect(() => {
          if (
-            !Number.isNaN(qnNum)
-            && title.length > 0
+            passageTitle.length > 0
             && textArr.length > 0
             && wordsToTestArr.length > 0
          ) setIsLoading(false);
-      }, [qnNum, title, textArr, wordsToTestArr])
+      }, [passageTitle, textArr, wordsToTestArr])
 
       return (
          <QnContext.Provider value={{
+            isDemo,
             prevUserCorrectAns,
             wordsToTestArr,
             textArr,
             qnNum,
-            title,
+            passageTitle,
             isLoading,
             error,
             handleCompletion,

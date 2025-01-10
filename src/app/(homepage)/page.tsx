@@ -4,8 +4,8 @@ import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
 import ensureUserDataDocExists from "@/utils/ensureUserDataDocExists";
-import Sunbirds from "@/components/Sunbirds";
-import Advert from "@/components/Advert";
+import Sunbirds from "@/components/homepg/Sunbirds";
+import Advert from "@/components/homepg/Advert";
 
 export const revalidate = 3600;
 

@@ -6,17 +6,18 @@ import Alert from "react-bootstrap/Alert";
 import ClozeInput from "./ClozeInput";
 import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from "@/types";
+import Card from "react-bootstrap/Card";
 
 export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
    const {
       wordsToTestArr,
       textArr,
-      qnNum,
-      title,
+      passageTitle,
       isLoading,
       prevUserCorrectAns,
-      handleCompletion
+      handleCompletion,
+      isDemo
    } = QnContextToUse();
 
    const [formData, setFormData] = useState<ClozeFormData>({});
@@ -47,7 +48,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
       )
    }, [wordsToTestArr, isLoading])
 
-   if (prevUserCorrectAns !== null || isLoading) return null;
+   if (isLoading || (prevUserCorrectAns !== null && !isDemo)) return null;
 
    async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
@@ -165,24 +166,47 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
       return formattedParagraphs;
    })()
 
-   return (
-      <section>
-
-         <Alert variant="info">
-            {
-               hasAttempted
+   function ClozeAlert() {
+      if (isDemo) {
+         return <Alert variant="info">
+            Get at least 8 / 15 blanks correct.
+         </Alert>
+      } else {
+         return <Alert variant="info">
+            {hasAttempted
                ? "Refresh the page to see the correct answers."
                : "Get at least 8 / 15 blanks correct."
             }
-         </Alert>
+         </Alert>;
+      }
+   }
 
-         <form
-            onSubmit={handleFormSubmit} 
-            style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
-         >
+   function AnswersForDemo() {
+      if (isDemo && prevUserCorrectAns !== null) {
+         return <Card className="mt-3 border-2 border-success">
+            <Card.Header>Answers</Card.Header>
+            <Card.Body>
+               <div className="grid">
+                  {wordsToTestArr.map((thisBlankAns, ansNum) => 
+                     <div key={ansNum} className="g-col-6">
+                        {`${ansNum}) ${thisBlankAns.join("/")}`} 
+                     </div>
+                  )}
+               </div>
+            </Card.Body>
+         </Card>
+      } else return null
+   }
 
-            <article>
-               <header><strong><u>Cloze #{qnNum}: {title}</u></strong></header>
+   return (
+      <section>
+         
+         <ClozeAlert/>
+
+         <form onSubmit={handleFormSubmit} >
+
+            <article style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}>
+               <header className="fw-bold text-decoration-underline">{passageTitle}</header>
                {paragraphToRender.map((paraArr, idx) => 
                   <p key={idx}>{paraArr}</p>)
                }
@@ -190,31 +214,35 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
             <section className="vstack gap-2">
 
-               <div className="mx-auto bg-warning px-4 border-0 rounded-2">
+               <div className="mx-auto bg-warning px-4 border-0 rounded-2 py-2">
                   Score: <strong>{score} / 15</strong>
                </div>
 
-               <Button 
-                  type="submit"
-                  variant="danger"
-                  disabled={hasAttempted || isLoading}
-                  className="fw-bold mx-auto px-4"
-               >
-                  Submit&nbsp;{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
-               </Button>
+               <div className="hstack gap-2 d-flex justify-content-center">
+                  <Button 
+                     type="submit"
+                     variant="danger"
+                     disabled={hasAttempted || isLoading}
+                     className="fw-bold px-4"
+                  >
+                     Submit&nbsp;{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
+                  </Button>
 
-               <Button 
-                  onClick={() => handleReset()}
-                  variant="secondary"
-                  disabled={hasAttempted || isLoading}
-                  className="fw-bold mx-auto px-4"
-               >
-                  Reset
-               </Button>
+                  <Button 
+                     onClick={() => handleReset()}
+                     variant="secondary"
+                     disabled={hasAttempted || isLoading}
+                     className="fw-bold px-4"
+                  >
+                     Reset
+                  </Button>
+               </div>
 
             </section>
 
          </form>
+
+         <AnswersForDemo/>
 
       </section>
    )

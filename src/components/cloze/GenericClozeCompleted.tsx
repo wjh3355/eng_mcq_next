@@ -11,18 +11,18 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
    const {
       wordsToTestArr,
       textArr,
-      qnNum,
-      title,
+      passageTitle,
       prevUserCorrectAns,
       isLoading,
-      handleReset
+      handleReset,
+      isDemo
    } = QnContextToUse();
 
    useEffect(() => {
       if (isLoading) return;
    }, [isLoading])
 
-   if (prevUserCorrectAns === null || isLoading) return null;
+   if (prevUserCorrectAns === null || isLoading || isDemo) return null;
 
    const garbage: (string | React.JSX.Element)[][] = (() => {
 
@@ -87,10 +87,8 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
             </Button>
          </Alert>
 
-         <article 
-            style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}
-         >
-            <header><strong><u>Cloze #{qnNum}: {title}</u></strong></header>
+         <article style={{lineHeight: "40px", fontSize: "17px", textAlign: "justify"}}>
+            <header className="fw-bold text-decoration-underline">{passageTitle}</header>
             {garbage.map((paraArr, idx) => 
                <p key={idx}>{paraArr}</p>)
             }
@@ -98,26 +96,3 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
       </>
    );
 }
-
-// const paragraphsWithInput = textArr.reduce<(string | React.JSX.Element)[]>(
-//    (acc, part, idx) => {
-
-//       const splitPart = part.split(/(\|\|)/);
-
-//       if (idx === textArr.length - 1) {
-//          return [...acc, ...splitPart];
-//       }
-
-//       return [
-//          ...acc,
-//          ...splitPart,
-
-//       ];
-
-//    }, []
-// );
-
-// let formattedParagraphs: (string | React.JSX.Element)[][] = [];
-// let currentArray: (string | React.JSX.Element)[] = [];
-// for (let item of paragraphsWithInput) {
-

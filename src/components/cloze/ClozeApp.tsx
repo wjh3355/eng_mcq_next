@@ -9,15 +9,20 @@ import Skeleton from "react-loading-skeleton";
 
 export default function ClozeApp({
    userName,
-   qnNumToFetch
+   qnNum,
+   isDemo,
+   mainTitle
 }: {
    userName: string
-   qnNumToFetch: number
+   qnNum: number
+   isDemo: boolean
+   mainTitle: string
 }) {
 
    const { ClozeProvider, useClozeContext } = createGenericClozeProvider({
       userName,
-      qnNumToFetch
+      qnNum,
+      isDemo
    });
 
    function ClozeLoadingSkeleton() {
@@ -32,7 +37,7 @@ export default function ClozeApp({
 
    return <ClozeProvider>
       <Row className="my-3">
-         <h5 className="text-center m-0">Comprehension Cloze {qnNumToFetch}</h5>
+         <h5 className="text-center m-0">{mainTitle}</h5>
       </Row>
       <ClozeLoadingSkeleton/>
       <GenericCloze QnContextToUse={useClozeContext}/>

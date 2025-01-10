@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
-import PaginatedDictEntries from "../PaginatedDictEntries";
+import PaginatedDictEntries from "../dict/PaginatedDictEntries";
 import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
 
 export default function GenericMCQEnd({ QnContextToUse }: { QnContextToUse: () => MCQContextValue }) {

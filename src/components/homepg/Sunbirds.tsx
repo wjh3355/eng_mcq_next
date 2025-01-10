@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Carousel from "react-bootstrap/Carousel";
-import pic1 from "../../public/A.jpg"
-import pic2 from "../../public/B.jpg";
-import pic3 from "../../public/C.jpg";
+import pic1 from "../../../public/A.jpg"
+import pic2 from "../../../public/B.jpg";
+import pic3 from "../../../public/C.jpg";
 
 export default function Sunbirds() {
    const birdPics = [pic1, pic2, pic3];

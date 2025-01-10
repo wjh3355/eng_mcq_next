@@ -5,11 +5,12 @@ export type ClozeObj = {
 }
 
 export type ClozeContextValue = {
+   isDemo: boolean
    prevUserCorrectAns: null | number[],
    wordsToTestArr: string[][],
    textArr: string[],
    qnNum: number,
-   title: string,
+   passageTitle: string,
    isLoading: boolean,
    error: string,
    handleCompletion: (correctAns: number[]) => Promise<void>,
@@ -17,11 +18,12 @@ export type ClozeContextValue = {
 }
 
 export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
+   isDemo: false,
    prevUserCorrectAns: null,
    wordsToTestArr: [],
    textArr: [],
    qnNum: NaN,
-   title: "",
+   passageTitle: "",
    isLoading: true,
    error: "",
    async handleCompletion() {},

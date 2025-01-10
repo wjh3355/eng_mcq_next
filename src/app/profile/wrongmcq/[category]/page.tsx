@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { fetchQnArr } from "@/utils/qnActions";
 import fetchUserData from "@/utils/fetchUserData";
-import PaginatedDictEntries from "@/components/PaginatedDictEntries";
+import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
 
 import Row from "react-bootstrap/Row";

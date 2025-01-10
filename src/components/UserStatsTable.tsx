@@ -162,15 +162,11 @@ export default function UserStatsTable({
                <Accordion alwaysOpen>
                   <Accordion.Item eventKey="0">
                      <Accordion.Header><strong>Cloze</strong></Accordion.Header>
-                     <Accordion.Body>
-                        <ClozeStats/>
-                     </Accordion.Body>
+                     <Accordion.Body><ClozeStats/></Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="1">
                      <Accordion.Header><strong>MCQ Questions</strong></Accordion.Header>
-                     <Accordion.Body>
-                        <McqStats/>
-                     </Accordion.Body>
+                     <Accordion.Body><McqStats/></Accordion.Body>
                   </Accordion.Item>
                </Accordion>
             </Col>
