@@ -39,7 +39,7 @@ export default function MainNavbar() {
                   {isAuthenticated && 
                      <Nav>
                         <Nav.Link as={Link} href="/mcq">MCQ Questions</Nav.Link>
-                        <Nav.Link as={Link} href="/cloze">Cloze</Nav.Link>
+                        <Nav.Link as={Link} href="/cloze">Cloze Passages</Nav.Link>
                         <Nav.Link as={Link} href="/profile">Profile</Nav.Link>
                      </Nav>
                   }
