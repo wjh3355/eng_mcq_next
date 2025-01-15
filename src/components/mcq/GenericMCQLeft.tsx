@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import Spinner from "react-bootstrap/Spinner";
 
 import DictionaryEntry from "../dict/DictionaryEntry";
@@ -21,7 +20,6 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
 
    const {
       handleNextQnBtnClick,
-      thisSessionScore: [numCorrect, numTotal],
       userPoints,
       wrongAnsArr,
       qnObj,
@@ -59,38 +57,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
 
          <section className="hstack gap-3 mb-3">
 
-            <DropdownButton variant="warning" title="Results" drop="down" >
-               <div className="hstack gap-3 py-1 px-3">
-                  <div className="text-center">
-                     Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Total<br/><span className="fs-5 text-primary">{numTotal}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Percentage
-                     <br/>
-                     <span className="fs-5 text-danger">
-                        {Math.round(100*numCorrect/numTotal) || 0}%
-                     </span>
-                  </div>
-               </div>
-
-               { 
-                  window.innerWidth < 576 &&
-                     <div className="d-flex justify-content-center mt-2 mb-1">
-                        <ScoreComponent/>
-                     </div>
-               }
-            </DropdownButton>
-
-            { window.innerWidth >= 576 && <ScoreComponent/> }
+            <ScoreComponent/>
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"
@@ -100,13 +67,13 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
                <BadgeInfo size={25} strokeWidth={2}/>
             </button>
 
-            <button 
+            {/* <button 
                className="border-0 bg-transparent p-0"
                disabled={wrongAnsArr.length === 0}
                onClick={() => setIsReviewShown(!isReviewShown)}
             >
                <BookText size={25} strokeWidth={2}/>
-            </button>
+            </button> */}
 
             <Button 
                variant="primary" 

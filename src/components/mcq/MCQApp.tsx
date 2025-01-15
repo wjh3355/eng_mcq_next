@@ -11,6 +11,7 @@ import GenericMCQEnd from "./GenericMCQEnd";
 import { QnCategory } from "@/types";
 import DemoMCQLeft from "./DemoMCQLeft";
 import RedoMCQLeft from "./RedoMCQLeft";
+import GenericProgressBar from "./GenericProgressBar";
 
 export default function MCQApp({
    qnCategory,
@@ -47,12 +48,14 @@ export default function MCQApp({
          {qnCategory === "demo"
             ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
             :  (isRedo
-                  ?  <RedoMCQLeft QnContextToUse={useMCQContext}/>
-                  :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
-               )
+               ?  <RedoMCQLeft QnContextToUse={useMCQContext}/>
+               :  <GenericMCQLeft QnContextToUse={useMCQContext}/>
+            )
          }
          <GenericMCQRight QnContextToUse={useMCQContext}/>
          <GenericMCQEnd QnContextToUse={useMCQContext}/>
+
+         <GenericProgressBar QnContextToUse={useMCQContext}/>
       </Row>
    </MCQProvider>;
 }

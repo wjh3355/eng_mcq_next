@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
-import DropdownButton from "react-bootstrap/DropdownButton";
 
 import DictionaryEntry from "../dict/DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
@@ -20,7 +19,6 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
 
    const {
       handleNextQnBtnClick,
-      thisSessionScore: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj,
       isLoading,
@@ -56,30 +54,6 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
 
          <section className="hstack gap-3 mb-3">
 
-            <DropdownButton variant="warning" title="Results" drop="down">
-               <div className="hstack gap-3 py-1 px-3">
-                  <div className="text-center">
-                     Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Total<br/><span className="fs-5 text-primary">{numTotal}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Percentage<br/><span className="fs-5 text-danger">{
-                        numTotal === 0
-                        ? 0
-                        : Math.round(100*numCorrect/numTotal)
-                     }%</span>
-                  </div>
-               </div>
-            </DropdownButton>
-
             <Button variant="link" className="ms-auto p-0" onClick={() => setIsHelpShown(true)}>
                Help
             </Button>
@@ -90,14 +64,6 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                onClick={() => setIsExplShown(true)}
             >
                <BadgeInfo size={25} strokeWidth={2}/>
-            </button>
-
-            <button 
-               className="border-0 bg-transparent p-0"
-               disabled={wrongAnsArr.length === 0}
-               onClick={() => setIsReviewShown(true)}
-            >
-               <BookText size={25} strokeWidth={2}/>
             </button>
 
             <Button 
