@@ -2,6 +2,7 @@ import { QnCategory } from "./qnSetData"
 
 export type MCQContextValue = {
    numQnsInSet: number,
+   currNum: number,
    qnCategory: QnCategory | "demo",
    qnObj: MCQQnObj,
    wrongAnsArr: MCQQnObj[],
@@ -41,6 +42,7 @@ export const EMPTY_MCQ_QN_OBJ: MCQQnObj = {
 
 export const EMPTY_MCQ_CONTEXT_VALUE: MCQContextValue = {
    numQnsInSet: NaN,
+   currNum: NaN,
    qnCategory: "gep",
    qnObj: EMPTY_MCQ_QN_OBJ,
    isLoading: true,

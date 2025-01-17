@@ -28,7 +28,7 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ c
 
    if (category === "phrasalVerbs" && setParam === "common") {
       qnNumArray = shuffle(range(301, 361));
-      title += "Commonly Tested Verbs"
+      title += "Commonly Tested"
    } else if (setParam === "random") {
       qnNumArray = sampleSize(allQnNumsRange, 50);
       title += "Random";

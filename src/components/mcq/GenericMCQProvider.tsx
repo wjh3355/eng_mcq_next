@@ -132,6 +132,7 @@ export default function createGenericMCQProvider({
             isSetRandom,
             error,
             numQnsInSet: qnNumArray.length,
+            currNum: qnNumArray.length - qnSequence.length + 1,
             handleOptionClick,
             handleNextQnBtnClick,
             redoSet

@@ -4,36 +4,40 @@ import range from "lodash/range";
 export default function MCQQnSentence({
    sentence,
    wordToTest,
+   num
 }: {
    sentence: string;
    wordToTest: string | null;
+   num: number
 }) {
    if ( wordToTest && sentence.includes(wordToTest) ) {
       const idxsToBeBolded = [...sentence.matchAll(new RegExp(wordToTest, 'g'))]
          .map(match => match.index)
          .reduce<number[]>((acc, curr) => [...acc, ...range(curr, curr + wordToTest.length)], []);
 
-      return (
-         <TypingAnim 
-            sentence={sentence}
-            boldRange={idxsToBeBolded}
-         />
-      );
+      return <TypingAnim 
+         sentence={sentence}
+         boldRange={idxsToBeBolded}
+         num={num}
+      />
 
    } else {
-      return <TypingAnim sentence={sentence} boldRange={[]}/>;
+      return <TypingAnim sentence={sentence} boldRange={[]} num={num}/>;
    }
 };
 
 function TypingAnim({ 
    sentence,
-   boldRange
+   boldRange,
+   num
 }: { 
    sentence: string
    boldRange: number[]
+   num: number
 }){
    return (
       <TypingAnimContainer>
+         {`Q${num}. `}
          {sentence.split('').map((char, idx) => (
             <TypingAnimChar 
                key={idx} 
@@ -66,6 +70,6 @@ const TypingAnimChar = styled.span<{
 }>`
    opacity: 0;
    animation: ${fadeIn} 10ms linear forwards;
-   animation-delay: ${({$index}) => $index * 10 }ms;
+   animation-delay: ${({$index}) => $index * 12 }ms;
    font-weight: ${({$isBold}) => $isBold ? 'bold' : 'normal' }
 `;

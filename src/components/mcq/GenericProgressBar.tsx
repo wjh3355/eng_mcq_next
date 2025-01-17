@@ -19,10 +19,10 @@ export default function GenericProgressBar({
    const percentWrong = Math.round(100*numQnsWrong/numQnsInSet) || 0;
 
    return (
-      <Col className="mt-4">
+      <Col className="mt-4" style={{height: "50px"}}>
          <ProgressBar className="w-75 mx-auto">
-            <ProgressBar animated variant="success" now={percentCorrect} key={1}/>
-            <ProgressBar animated variant="danger" now={percentWrong} key={2}/>
+            <ProgressBar variant="success" now={percentCorrect} key={1} label={numQnsCorrect}/>
+            <ProgressBar variant="danger" now={percentWrong} key={2} label={numQnsWrong}/>
          </ProgressBar>
       </Col>
    )

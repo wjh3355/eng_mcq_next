@@ -25,7 +25,8 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
       qnObj,
       isLoading,
       isCorrect,
-      hasReachedEnd
+      hasReachedEnd,
+      currNum
    } = QnContextToUse();
 
    const { sentence, wordToTest } = qnObj;
@@ -51,7 +52,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
          <Card body className="mb-3">
             {isLoading 
                ?  <Skeleton height="24px" />
-               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} />
+               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} num={currNum}/>
             }
          </Card>
 
@@ -67,13 +68,13 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
                <BadgeInfo size={25} strokeWidth={2}/>
             </button>
 
-            {/* <button 
+            <button 
                className="border-0 bg-transparent p-0"
                disabled={wrongAnsArr.length === 0}
                onClick={() => setIsReviewShown(!isReviewShown)}
             >
                <BookText size={25} strokeWidth={2}/>
-            </button> */}
+            </button>
 
             <Button 
                variant="primary" 

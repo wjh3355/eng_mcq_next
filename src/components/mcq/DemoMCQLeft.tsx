@@ -23,7 +23,8 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
       qnObj,
       isLoading,
       isCorrect,
-      hasReachedEnd
+      hasReachedEnd,
+      currNum
    } = QnContextToUse();
 
    const { sentence, wordToTest, qnNum } = qnObj;
@@ -46,7 +47,7 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                         <small>From {DEMO_DATA.getDemoQnCat(qnNum)}</small>
                      </Card.Header>
                      <Card.Body>
-                        <MCQQnSentence sentence={sentence} wordToTest={wordToTest}/>
+                        <MCQQnSentence sentence={sentence} wordToTest={wordToTest} num={currNum}/>
                      </Card.Body>
                   </>
             }
@@ -108,11 +109,6 @@ export default function DemoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
                      Next&nbsp;<CircleArrowRight size={20} strokeWidth={2} className="my-auto"/>
                   </Button>
                   displays the next question (once you answered the current one).
-               </p>
-               <p>
-                  You may click
-                  <Button variant="warning" className="d-inline mx-2" size="sm">Results</Button>
-                  at any time to view your current score.            
                </p>
             </Modal.Body>
          </Modal>

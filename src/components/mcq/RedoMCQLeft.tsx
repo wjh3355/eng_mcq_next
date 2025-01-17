@@ -20,12 +20,12 @@ export default function RedoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
 
    const {
       handleNextQnBtnClick,
-      thisSessionScore: [numCorrect, numTotal],
       wrongAnsArr,
       qnObj,
       isLoading,
       isCorrect,
-      hasReachedEnd
+      hasReachedEnd,
+      currNum
    } = QnContextToUse();
 
    const { sentence, wordToTest } = qnObj;
@@ -40,35 +40,11 @@ export default function RedoMCQLeft({ QnContextToUse }: { QnContextToUse: () => 
          <Card body className="mb-3">
             {isLoading 
                ?  <Skeleton height="24px" />
-               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} />
+               :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} num={currNum}/>
             }
          </Card>
 
          <section className="hstack gap-3 mb-3">
-
-            <DropdownButton variant="warning" title="Results" drop="down">
-               <div className="hstack gap-3 py-1 px-3">
-                  <div className="text-center">
-                     Correct<br/><span className="fs-5 text-success">{numCorrect}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Total<br/><span className="fs-5 text-primary">{numTotal}</span>
-                  </div>
-
-                  <div className="vr"/>
-
-                  <div className="text-center">
-                     Percentage<br/><span className="fs-5 text-danger">{
-                        numTotal === 0
-                        ? 0
-                        : Math.round(100*numCorrect/numTotal)
-                     }%</span>
-                  </div>
-               </div>
-            </DropdownButton>
 
             <button 
                className="border-0 bg-transparent p-0 ms-auto"

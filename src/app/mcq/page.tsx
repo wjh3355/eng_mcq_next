@@ -81,7 +81,7 @@ async function DisplayCategorySets({ category }: { category: QnCategory }) {
       links.push(
          <li key={7} className="mt-2">
             <Link href={`/mcq/${category}/sets/common`}>
-               60 Commonly Tested Verbs
+               60 Commonly Tested
             </Link>
          </li>
       )
