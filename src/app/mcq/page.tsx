@@ -45,15 +45,43 @@ export default async function Page() {
 async function DisplayCategorySets({ category }: { category: QnCategory }) {
    const totalNumQns = await fetchNumQns(category);
    const { setSize, categoryName } = QN_CATEGORIES_DATA[category];
-   const numPossibleSets = Math.floor(totalNumQns / setSize);
+   const numPossibleSets = Math.ceil(totalNumQns / setSize);
 
    const links: React.JSX.Element[] = [];
 
-   for (let setNum = 1; setNum <= numPossibleSets; setNum++) {
+   if (category !== "phrasalVerbs") {
+      for (let setNum = 1; setNum <= numPossibleSets; setNum++) {
+         links.push(
+            <li key={setNum}>
+               <Link href={`/mcq/${category}/sets/${setNum}`}>
+                  {`Set ${setNum} (${(setNum-1)*setSize + 1} to ${
+                     setNum*setSize <= totalNumQns
+                     ?  setNum*setSize
+                     :  totalNumQns
+                  })`}
+               </Link>
+            </li>
+         )
+      }
+   } else {
+      for (let setNum = 1; setNum <= numPossibleSets-2; setNum++) {
+         links.push(
+            <li key={setNum}>
+               <Link href={`/mcq/${category}/sets/${setNum}`}>
+                  {`Set ${setNum} (${(setNum-1)*setSize + 1} to ${
+                     setNum*setSize <= totalNumQns
+                     ?  setNum*setSize
+                     :  totalNumQns
+                  })`}
+               </Link>
+            </li>
+         )
+      }
+
       links.push(
-         <li key={setNum}>
-            <Link href={`/mcq/${category}/sets/${setNum}`}>
-               {`Set ${setNum} (${(setNum-1)*setSize + 1} to ${setNum*setSize})`}
+         <li key={7} className="mt-2">
+            <Link href={`/mcq/${category}/sets/common`}>
+               60 Commonly Tested Verbs
             </Link>
          </li>
       )

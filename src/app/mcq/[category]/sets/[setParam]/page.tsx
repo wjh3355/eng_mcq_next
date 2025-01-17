@@ -17,15 +17,19 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ c
 
    const catData = QN_CATEGORIES_DATA[category];
    if (!catData) notFound();
+   const { setSize, categoryName } = catData
 
-   const numPossibleSets = Math.floor(totalNumQns / catData.setSize);
+   const numPossibleSets = Math.ceil(totalNumQns / setSize);
 
    const setAsInteger = parseInt(setParam, 10);
 
    let qnNumArray: number[] = [];
-   let title: string = catData.categoryName + " - ";
+   let title: string = categoryName + " - ";
 
-   if (setParam === "random") {
+   if (category === "phrasalVerbs" && setParam === "common") {
+      qnNumArray = shuffle(range(301, 361));
+      title += "Commonly Tested Verbs"
+   } else if (setParam === "random") {
       qnNumArray = sampleSize(allQnNumsRange, 50);
       title += "Random";
    } else if (setParam === "in_order") {
@@ -33,7 +37,11 @@ export default async function MCQQuestionsPage({ params }: { params: Promise<{ c
       title += "In Order";
    } else if (setAsInteger >= 1 && setAsInteger <= numPossibleSets) {
       qnNumArray = shuffle(
-         allQnNumsRange.slice((setAsInteger - 1)*catData.setSize, setAsInteger*catData.setSize)
+         allQnNumsRange.slice((setAsInteger - 1)*setSize, (
+            setAsInteger*setSize <= totalNumQns 
+               ?  setAsInteger*setSize
+               :  totalNumQns
+         ))
       );
       title += `Set ${setAsInteger}`;
    } else {
