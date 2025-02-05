@@ -1,6 +1,6 @@
 "use client";
 
-import { ClozeContextValue } from "@/types"
+import { ClozeContextValue } from '@/definitions'
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
@@ -81,7 +81,7 @@ export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToU
                size="sm"
                variant="info" 
                className="ms-auto d-flex align-items-center"
-               onClick={async () => await handleReset()}
+               onClick={() => handleReset()}
             >
                <RotateCcw size={18} strokeWidth={2}/>&nbsp;Reset
             </Button>

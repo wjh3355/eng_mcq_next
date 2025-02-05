@@ -1,6 +1,6 @@
 "use client";
 
-import { MCQContextValue } from "@/types";
+import { MCQContextValue } from '@/definitions';
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Col from "react-bootstrap/Col";
 

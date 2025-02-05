@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import shuffle from "lodash/shuffle";
 import { useEffect, useState } from "react";
 
-import { MCQContextValue } from "@/types";
+import { MCQContextValue } from '@/definitions';
 
 import MCQOption from "./MCQOption";
 import Skeleton from "react-loading-skeleton";

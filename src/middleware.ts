@@ -1,27 +1,29 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export async function middleware(request: NextRequest) {
-   const { getUser } = getKindeServerSession();
-   const userIfAny = await getUser();
+const protectedPaths = [
+   "/cloze",
+   "/mcq",
+   "/profile",
+   "/test"
+]
 
-   if (!userIfAny) {
-      return NextResponse.redirect(new URL("/api/auth/login", request.url))
+export default auth(req => {
+
+   const { pathname: currPath } = req.nextUrl;
+
+   if (currPath.startsWith("/admin")) {
+      return NextResponse.redirect(`${process.env.BASE_URL}`);
+   } else if (
+      protectedPaths.some(protPath => currPath.startsWith(protPath))
+      && !req.auth
+   ) {
+      return NextResponse.redirect(`${process.env.BASE_URL}/auth`);
    }
 
-   const requestHeaders = new Headers(request.headers);
-   requestHeaders.set("x-user-given-name", userIfAny.given_name!);
-   requestHeaders.set("x-user-id", userIfAny.id);
-   requestHeaders.set("x-user-email", userIfAny.email!);
-
-   return NextResponse.next({
-      request: {
-         headers: requestHeaders,
-      },
-   });
-}
+   return NextResponse.next();
+})
 
 export const config = {
-   matcher: ["/profile/:path*", "/mcq/:path*", "/cloze/:path*", "/test/:path*"],
-};
+   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}

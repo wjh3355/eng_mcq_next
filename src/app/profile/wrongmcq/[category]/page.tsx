@@ -2,10 +2,9 @@ import { Suspense } from "react";
 
 import Link from "next/link";
 
-import { fetchQnArr } from "@/utils/qnActions";
-import fetchUserData from "@/utils/fetchUserData";
+import { fetchQnArr } from "@/lib/mongodb/questions/qnActions";
 import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
-import { QN_CATEGORIES_DATA, QnCategory } from "@/types";
+import { QN_CATEGORIES_DATA, QnCategory } from "@/definitions";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -13,22 +12,22 @@ import Col from "react-bootstrap/Col";
 import { RotateCcw } from 'lucide-react';
 import { notFound } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
-import getUserDataHeaders from "@/utils/getUserDataHeaders";
+import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
+import Container from "react-bootstrap/esm/Container";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }: { params: Promise<{ category: QnCategory }> }) {
 
-   const { kindeUserGivenName } = await getUserDataHeaders();
-   const userData = await fetchUserData(kindeUserGivenName);
+   const user = await checkAuthForRoute();
    const { category } = await params;
 
-   const wrongQnNumsArr = userData.qnData[category]?.wrongQnNums ?? [];
+   const wrongQnNumsArr = user.qnData[category]?.wrongQnNums ?? [];
 
    if (wrongQnNumsArr.length === 0) notFound();
 
    return ( 
-      <>
+      <Container>
          <Row className="my-3">
             <h5 className="text-center m-0">{QN_CATEGORIES_DATA[category].categoryName}: Incorrect Questions</h5>
          </Row>
@@ -37,7 +36,7 @@ export default async function Page({ params }: { params: Promise<{ category: QnC
             <ShowEntriesWithPagination wrongQnNumsArr={wrongQnNumsArr} category={category}/>
          </Suspense>
 
-      </>
+      </Container>
    );
 }
 

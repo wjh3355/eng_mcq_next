@@ -1,6 +1,6 @@
 "use client";
 
-import { MCQQnObj } from "@/types";
+import { MCQQnObj } from '@/definitions';
 import DictionaryEntry from "./DictionaryEntry";
 import Pagination from "react-bootstrap/Pagination";
 import { useState } from "react";

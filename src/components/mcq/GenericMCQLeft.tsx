@@ -11,7 +11,7 @@ import Spinner from "react-bootstrap/Spinner";
 import DictionaryEntry from "../dict/DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
 import PaginatedDictEntries from "../dict/PaginatedDictEntries";
-import { MCQContextValue } from '@/types';
+import { MCQContextValue } from '@/definitions';
 
 import Skeleton from "react-loading-skeleton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";

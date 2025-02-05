@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import DictionaryEntry from "../dict/DictionaryEntry";
 import MCQQnSentence from "./MCQQnSentence";
 import PaginatedDictEntries from "../dict/PaginatedDictEntries";
-import { DEMO_DATA, MCQContextValue } from '@/types';
+import { DEMO_DATA, MCQContextValue } from '@/definitions';
 
 import Skeleton from "react-loading-skeleton";
 import { BadgeInfo, BookText, CircleArrowRight } from "lucide-react";

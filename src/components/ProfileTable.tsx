@@ -1,0 +1,275 @@
+"use client";
+
+import { useState } from "react";
+
+import Table from "react-bootstrap/Table";
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Modal from "react-bootstrap/Modal";
+import Popover from "react-bootstrap/Popover";
+import Accordion from "react-bootstrap/Accordion";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+
+import {
+   QnCategory,
+   QnCategoryUserData,
+   QN_CATEGORIES_DATA,
+} from "@/definitions";
+import Link from "next/link";
+import { Info, Trash2 } from "lucide-react";
+
+import { sum } from "lodash";
+import { UserProfileDocument } from "@/definitions";
+import axios, { AxiosError } from "axios";
+import { DateTime } from "luxon";
+
+export default function ProfileTable({ user }: { user: UserProfileDocument }) {
+
+   console.log(user);
+
+   const { qnData, clozeData, score, email, dateCreated } = user;
+
+   const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
+   const [resetDataError, setResetDataError] = useState<string>("");
+
+   function McqStats() {
+      if (JSON.stringify(qnData) === "{}") {
+         return <p>You have not attempted any MCQ questions yet!</p>;
+      }
+
+      const dataAsArr = Object.entries(qnData) as [
+         QnCategory,
+         QnCategoryUserData
+      ][];
+
+      const totalAttempted = sum(
+         dataAsArr.map(([_, dat]) => dat.numQnsAttempted)
+      );
+      const totalWrong = sum(
+         dataAsArr.map(([_, dat]) => dat.wrongQnNums.length)
+      );
+      const totalCorrect = totalAttempted - totalWrong;
+      const totalPercentCorrect = Math.round(
+         (totalCorrect * 100) / totalAttempted
+      );
+
+      return (
+         <>
+            <Table striped>
+               <thead>
+                  <tr>
+                     <th>Category</th>
+                     <th>No. Correct</th>
+                     <th>No. Attempted</th>
+                     <th>View Incorrect</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => (
+                     <tr key={cat}>
+                        <td>{QN_CATEGORIES_DATA[cat].categoryName}</td>
+                        <td>{numQnsAttempted - wrongQnNums.length}</td>
+                        <td>{numQnsAttempted}</td>
+                        <td>
+                           <Link
+                              href={`/profile/wrongmcq/${cat}`}
+                              className={
+                                 "fw-bold btn btn-primary btn-sm px-3 " +
+                                 (wrongQnNums.length === 0 ? "disabled" : "")
+                              }
+                           >
+                              View
+                           </Link>
+                        </td>
+                     </tr>
+                  ))}
+               </tbody>
+            </Table>
+
+            <div className="text-center">
+               Overall score:&nbsp;
+               <strong>
+                  {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
+               </strong>
+            </div>
+         </>
+      );
+   }
+
+   function ClozeStats() {
+      if (clozeData.length === 0) {
+         return <p>You have not attempted any Cloze questions yet!</p>;
+      }
+
+      return (
+         <Table striped>
+            <thead>
+               <tr>
+                  <th>Cloze No.</th>
+                  <th>Score</th>
+                  <th>View Cloze</th>
+               </tr>
+            </thead>
+            <tbody>
+               {clozeData.map(({ qnNum, correctAns }) => (
+                  <tr key={qnNum}>
+                     <td>{`Q${qnNum}`}</td>
+                     <td>{`${correctAns.length} / 15`}</td>
+                     <td>
+                        <Link
+                           href={`/cloze/${qnNum}`}
+                           className="btn btn-primary btn-sm px-3 fw-bold"
+                        >
+                           View
+                        </Link>
+                     </td>
+                  </tr>
+               ))}
+            </tbody>
+         </Table>
+      );
+   }
+
+   return (
+      <Container>
+         <dl className="row">
+            <dt className="col-sm-3">Email address</dt>
+            <dd className="col-sm-9">{email}</dd>
+
+            {/* <dt className="col-sm-3">ID</dt>
+            <dd className="col-sm-9">{_id.toString()}</dd> */}
+
+            <dt className="col-sm-3">Date created</dt>
+            <dd className="col-sm-9">
+               {DateTime.fromISO(dateCreated).toISODate()}
+            </dd>
+
+            <dt className="col-sm-3">Total points</dt>
+            <dd className="col-sm-9">
+               {score}
+               <OverlayTrigger
+                  overlay={
+                     <Popover>
+                        <Popover.Body className="fs-6">
+                           Every correct MCQ question answered earns you{" "}
+                           <strong>10</strong> points.
+                        </Popover.Body>
+                     </Popover>
+                  }
+                  trigger="click"
+                  placement="right"
+               >
+                  <button className="border-0 bg-transparent p-0 ms-1">
+                     <Info size={17} strokeWidth={3} color="#808080" />
+                  </button>
+               </OverlayTrigger>
+            </dd>
+         </dl>
+
+         <Row>
+            <Col xl={8} lg={10} className="mx-auto">
+               <Accordion alwaysOpen>
+                  <Accordion.Item eventKey="0">
+                     <Accordion.Header>
+                        <strong>Cloze</strong>
+                     </Accordion.Header>
+                     <Accordion.Body>
+                        <ClozeStats />
+                     </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1">
+                     <Accordion.Header>
+                        <strong>MCQ Questions</strong>
+                     </Accordion.Header>
+                     <Accordion.Body>
+                        <McqStats />
+                     </Accordion.Body>
+                  </Accordion.Item>
+               </Accordion>
+            </Col>
+         </Row>
+
+         <div className="hstack gap-3 d-flex justify-content-center mt-3">
+            <Button
+               variant="danger"
+               onClick={() => setShowCfmEraseData(true)}
+               className="d-flex align-items-center px-4"
+            >
+               <Trash2 className="me-1" />
+               <strong>Erase all data</strong>
+            </Button>
+            <Link
+               className="btn btn-warning d-flex align-items-center px-4"
+               href="/profile/changePassword"
+            >
+               <strong>Change Password</strong>
+            </Link>
+         </div>
+
+         <Modal
+            size="lg"
+            centered
+            show={showCfmEraseData}
+            onHide={() => setShowCfmEraseData(false)}
+            backdrop="static"
+         >
+            <Modal.Header>
+               <Modal.Title className="fs-5">Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+
+               <p className="text-center mb-3">
+                  Do you really want to erase all your question answering data?
+                  This <strong>cannot</strong> be undone.
+               </p>
+
+               <div className="d-flex justify-content-center">
+                  <div className="hstack gap-3">
+                     <Button
+                        variant="light"
+                        onClick={() =>
+                           axios
+                              .post("/api/user/update-profile-data", {
+                                 email,
+                                 action: {
+                                    todo: "reset data",
+                                 },
+                              })
+                              .then(res => window.location.reload())
+                              .catch((err: AxiosError<{ error: string }>) => {
+                                 setResetDataError(err.response?.data.error ?? "Unknown error occurred when resetting your data")
+                              })
+                        }
+                     >
+                        Confirm Erase
+                     </Button>
+                     <Button
+                        variant="danger"
+                        onClick={() => setShowCfmEraseData(false)}
+                     >
+                        Cancel
+                     </Button>
+                  </div>
+               </div>
+
+               {resetDataError &&
+                  <Alert variant="danger">
+                     <strong>{resetDataError}. Please try again later.</strong>
+                  </Alert>
+               }
+
+            </Modal.Body>
+         </Modal>
+
+         <p
+            className="text-light"
+            style={{ color: "rgb(255, 255, 255)", fontSize: "10px" }}
+         >
+            {JSON.stringify(user)}
+         </p>
+      </Container>
+   );
+}

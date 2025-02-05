@@ -1,4 +1,4 @@
-import { MCQQnObj } from "@/types";
+import { MCQQnObj } from '@/definitions';
 import MCQReviewSentence from "../mcq/MCQReviewSentence";
 import Badge from "react-bootstrap/Badge";
 

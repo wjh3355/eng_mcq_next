@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import ClozeInput from "./ClozeInput";
 import cloneDeep from "lodash/cloneDeep";
-import { ClozeContextValue, ClozeFormData } from "@/types";
+import { ClozeContextValue, ClozeFormData } from '@/definitions';
 import Card from "react-bootstrap/Card";
 
 export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
@@ -78,7 +78,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
          setNumTriesLeft(prev => prev - 1);
          setHasAttempted(true);
-         await handleCompletion(correctAns);
+         handleCompletion(correctAns);
 
       } else {
 
@@ -186,6 +186,9 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
          return <Card className="mt-3 border-2 border-success">
             <Card.Header>Answers</Card.Header>
             <Card.Body>
+               <div className="text-center">
+                  <Button className="mb-2" onClick={() => window.location.reload()}><strong>Attempt cloze again</strong></Button>
+               </div>
                <div className="grid">
                   {wordsToTestArr.map((thisBlankAns, ansNum) => 
                      <div key={ansNum} className="g-col-6">

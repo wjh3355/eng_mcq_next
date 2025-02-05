@@ -1,28 +1,26 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 
-import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from "@/types";
+import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from '@/definitions';
 
-import { fetchQn } from "@/utils/qnActions";
-import { updateUserQnData } from "@/utils/updateUserData";
-import fetchUserData from "@/utils/fetchUserData";
+import axios, { AxiosError } from "axios";
 
 export default function createGenericMCQProvider({
    qnCategory,
    qnNumArray,
-   userName,
+   email,
    isSetRandom,
    isRedo
 }: {
    qnCategory: QnCategory | "demo"
    qnNumArray: number[],
-   userName: string,
+   email: string,
    isSetRandom: boolean,
    isRedo: boolean
 }) {
 
-   const toUseUserData: boolean = !(qnCategory === "demo" || userName === "" || isRedo);
+   const toUseUserData: boolean = !(qnCategory === "demo" || email === "" || isRedo);
 
    const QnContext = createContext<MCQContextValue>(EMPTY_MCQ_CONTEXT_VALUE);
 
@@ -42,7 +40,7 @@ export default function createGenericMCQProvider({
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
-      async function handleOptionClick(isCorr: boolean) {
+      function handleOptionClick(isCorr: boolean) {
          setIsCorrect(isCorr);
 
          if (isCorr) {
@@ -56,17 +54,22 @@ export default function createGenericMCQProvider({
          }
 
          if (toUseUserData) {
-            try {
-               await updateUserQnData({
-                  userName,
-                  cat: qnCategory, 
-                  qnNum: qnObj.qnNum,
-                  isCorrect: isCorr
-               });
-            } catch (error) {
-               console.error("Error updating user data:", error);
-               setError("Error updating user data");
-            }
+            axios
+               .post(
+                  "/api/user/update-profile-data",
+                  {
+                     email,
+                     action: {
+                        todo: "update mcq",
+                        mcqCategory: qnCategory,
+                        mcqCatQnNum: qnObj.qnNum,
+                        isCorrect: isCorr
+                     }
+                  }
+               )
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
          }
       }
 
@@ -85,35 +88,50 @@ export default function createGenericMCQProvider({
          setQnSequence(prev => prev.slice(1));
       }
 
-      const fetchNewQnObj = useCallback(async () => {
+      useEffect(() => {
+
          setQnObj(EMPTY_MCQ_QN_OBJ);
 
          if (qnSequence.length === 0) {
             setHasReachedEnd(true);
-         } else {
-            try {
-
-               setQnObj(await fetchQn(qnCategory, qnSequence[0]));
-               if (toUseUserData) setUserPoints((await fetchUserData(userName)).score);
-
-            } catch (error) {
-
-               if (error instanceof Error) {
-                  console.error("Error when fetching new question or user data:", error.message);
-                  setError(error.message);
-               } else {
-                  console.error("An unexpected error occurred:", error);
-                  setError("An unexpected error occurred");
-               }
-               
-            }
+            return;
          }
 
-      }, [qnSequence]);
+         if (qnCategory === "demo") {
+            axios
+               .get(
+                  "/api/qns/get-demo-mcq-qn",
+                  { params: { qnNum: qnSequence[0] } }
+               )
+               .then(res => setQnObj(res.data.qnObj))
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
+         } else {
+            axios
+               .get(
+                  "/api/qns/get-mcq-qn",
+                  { params: { category: qnCategory, qnNum: qnSequence[0] } }
+               )
+               .then(res => setQnObj(res.data.qnObj))
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
+         }
 
-      useEffect(() => {
-         fetchNewQnObj();
-      }, [fetchNewQnObj])
+         if (toUseUserData) {
+            axios
+               .get(
+                  "/api/user/get-user",
+                  { params: { email, type: "profile" } }
+               )
+               .then(res => setUserPoints(res.data.userDoc.score))
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
+         }   
+   
+      }, [qnSequence])
 
       useEffect(() => {
          if (!Number.isNaN(qnObj.qnNum)) setIsLoading(false);

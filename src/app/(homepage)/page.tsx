@@ -1,22 +1,20 @@
+import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Link from "next/link";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
-import ensureUserDataDocExists from "@/utils/ensureUserDataDocExists";
 import Sunbirds from "@/components/homepg/Sunbirds";
+import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
+import Link from "next/link";
+import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
 
 export const revalidate = 3600;
 
 export default async function Page() {
-   const { getUser } = getKindeServerSession();
-   const user = await getUser();
 
-   if (user) await ensureUserDataDocExists(user.given_name!);
-
+   const session = await auth();
+   
    return (
-      <>
+      <Container>
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">Revise for the PSLE English Paper</h5>
@@ -26,13 +24,13 @@ export default async function Page() {
          <Row>
             <Col lg={7} md={8} sm={10} className="mx-auto">
                <Sunbirds/>
-               {user && <LoggedInLinks/>}
+               {session && <LoggedInLinks/>}
             </Col>
          </Row>
 
-         {!user && <Advert/>}
+         {!session && <Advert/>}
 
-      </>
+      </Container>
    );
 }
 

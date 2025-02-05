@@ -1,30 +1,29 @@
 import Row from "react-bootstrap/Row";
-import fetchUserData from "@/utils/fetchUserData";
 import { Suspense } from "react";
-import UserStatsTable from "../../components/UserStatsTable";
+import ProfileTable from "../../components/ProfileTable";
 import Skeleton from "react-loading-skeleton";
-import getUserDataHeaders from "@/utils/getUserDataHeaders";
-import { HeaderUserDetails } from "@/types";
+import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
+import { UserProfileDocument } from "@/definitions";
+import Container from "react-bootstrap/esm/Container";
 
 export const dynamic = 'force-dynamic';
 
 export default async function Page() {
 
-   const user = await getUserDataHeaders();
+   const user = await checkAuthForRoute();
    
    return (
-      <>
+      <Container>
          <Row className="my-3">
             <h5 className="text-center m-0">Your Profile</h5>
          </Row>
          <Suspense fallback={<Skeleton height={40}/>}>
-            <Stats kindeUser={user} />
+            <Stats user={user} />
          </Suspense>
-      </>
+      </Container>
    );
 }
 
-async function Stats({ kindeUser }: { kindeUser: HeaderUserDetails }) {
-   const userData = await fetchUserData(kindeUser.kindeUserGivenName);
-   return <UserStatsTable mongoUserData={userData} kindeUserData={kindeUser}/>; 
+async function Stats({ user }: { user: UserProfileDocument }) {
+   return <ProfileTable user={user}/>; 
 }

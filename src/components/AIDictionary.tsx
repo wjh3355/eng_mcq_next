@@ -1,7 +1,7 @@
 "use client";
 
-import getAIDefinition from "@/utils/getAIDefinition";
-import { AIDefinition } from "@/types/aiDefTypes";
+import getAIDefinition from "@/lib/mongodb/unused_getAIDefinition";
+import { AIDefinition } from "@/definitions";
 import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";

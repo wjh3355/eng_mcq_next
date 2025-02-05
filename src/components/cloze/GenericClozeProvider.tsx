@@ -1,17 +1,15 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { ClozeContextValue, EMPTY_CLOZE_CONTEXT_VALUE } from "@/types";
-import { fetchCloze } from "@/utils/clozeActions";
-import fetchUserData from "@/utils/fetchUserData";
-import { updateUserClozeData } from "@/utils/updateUserData";
+import { ClozeContextValue, ClozeObj, EMPTY_CLOZE_CONTEXT_VALUE, UserProfileDocument } from '@/definitions';
+import axios, { AxiosError } from "axios";
 
 export default function createGenericClozeProvider({
+   user,
    qnNum,
-   userName,
    isDemo
 }: { 
-   userName: string
+   user: UserProfileDocument
    qnNum: number,
    isDemo: boolean
 }) {
@@ -31,82 +29,124 @@ export default function createGenericClozeProvider({
       const [isLoading, setIsLoading] = useState<boolean>(true);
       const [error, setError] = useState<string>("");
 
-      async function handleCompletion(correctAns: number[]) {
+      function handleCompletion(correctAns: number[]) {
+
          if (isDemo) {
             setPrevUserCorrectAns(correctAns);
-         } else {
-            try {
-               await updateUserClozeData({
-                  userName,
-                  qnNum,
-                  correctAns
-               });
-            } catch (error) {
-               console.error("Error updating user data:", error);
-               setError("Error updating user data");
-            }
+            return;
          }
+
+         axios
+            .post(
+               "/api/user/update-profile-data",
+               {
+                  email: user.email,
+                  action: {
+                     todo: "update cloze",
+                     clozeQnNum: qnNum,
+                     correctAns
+                  }
+               }
+            )
+            .then(() => {})
+            .catch((err: AxiosError<{ error: string }>) => 
+               setError(err.response?.data.error ?? "An unknown error occurred")
+            )
       }
 
-      async function handleReset() {
+      function handleReset() {
+
          if (isDemo) {
             setPrevUserCorrectAns(null);
-         } else {
-            try {
-               await updateUserClozeData({
-                  userName,
-                  qnNum
-               });
-               window.location.reload();
-            } catch (error){
-               console.error("Error resetting user data:", error);
-               setError("Error resetting user data");
-            }
+            return;
          }
+
+         axios
+            .post(
+               "/api/user/update-profile-data",
+               {
+                  email: user.email,
+                  action: {
+                     todo: "update cloze",
+                     clozeQnNum: qnNum,
+                     correctAns: null
+                  }
+               }
+            )
+            .then(() => window.location.reload())
+            .catch((err: AxiosError<{ error: string }>) => 
+               setError(err.response?.data.error ?? "An unknown error occurred")
+            )
       }
 
       useEffect(() => {
 
-         (async () => {
-            try {
+         if (isDemo) {
 
-               if (!isDemo) {
-                  const userClozeData = (await fetchUserData(userName)).clozeData;
-                  const userDataForCurrentCloze = userClozeData.find(cz => cz.qnNum === qnNum);
-                  setPrevUserCorrectAns(userDataForCurrentCloze?.correctAns || null);
-               }
+            axios
+               .get("/api/qns/get-demo-cloze-qn")
+               .then(res => {
+                  const clozeObj: ClozeObj = res.data.clozeObj;
 
-               const cloze = await fetchCloze(qnNum);
-
-               setWordsToTestArr(
-                  cloze.passage
-                     .match(/\{[^}]*\}/g)!
-                     .map(match => match
-                        .slice(1, -1)
-                        .split("/")
+                  setWordsToTestArr(
+                     clozeObj.passage
+                        .match(/\{[^}]*\}/g)!
+                        .map(match => match
+                           .slice(1, -1)
+                           .split("/")
+                           .filter(Boolean)
+                        )
+                  );
+         
+                  setTextArr(
+                     clozeObj.passage
+                        .replace(/{.*?}/g, "BLANK")
+                        .split(/(BLANK|\|\|)/)
                         .filter(Boolean)
-                     )
-               );
+                  );
+         
+                  setPassageTitle(clozeObj.title);
+               })
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
 
-               setTextArr(
-                  cloze.passage
-                     .replace(/{.*?}/g, "BLANK")
-                     .split(/(BLANK|\|\|)/)
-                     .filter(Boolean)
-               );
+         } else {
 
-               setPassageTitle(cloze.title);
+            const userDataForCurrentCloze = user.clozeData.find(cz => cz.qnNum === qnNum);
+            setPrevUserCorrectAns(userDataForCurrentCloze?.correctAns || null);
 
-            } catch (error) {
-               if (error instanceof Error) {
-                  console.error("Error when fetching cloze or user data:", error.message);
-                  setError(error.message);
-               } else {
-                  console.error("An unexpected error occurred:", error);
-                  setError("An unexpected error occurred");
-               }
-            }
-         })()
+            axios
+               .get(
+                  "/api/qns/get-cloze-qn",
+                  { params: { qnNum } }
+               )
+               .then(res => {
+                  const clozeObj: ClozeObj = res.data.clozeObj;
+   
+                  setWordsToTestArr(
+                     clozeObj.passage
+                        .match(/\{[^}]*\}/g)!
+                        .map(match => match
+                           .slice(1, -1)
+                           .split("/")
+                           .filter(Boolean)
+                        )
+                  );
+         
+                  setTextArr(
+                     clozeObj.passage
+                        .replace(/{.*?}/g, "BLANK")
+                        .split(/(BLANK|\|\|)/)
+                        .filter(Boolean)
+                  );
+         
+                  setPassageTitle(clozeObj.title);
+               })
+               .catch((err: AxiosError<{ error: string }>) => 
+                  setError(err.response?.data.error ?? "An unknown error occurred")
+               )
+         }
 
       }, [])
 
