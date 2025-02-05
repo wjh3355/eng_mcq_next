@@ -10,8 +10,6 @@ const paramSchema = z.object({
 
 export const GET = auth(
    async function GET(req) {
-
-      console.log("Cookies:", req.cookies.getAll());
    
       try {
       
