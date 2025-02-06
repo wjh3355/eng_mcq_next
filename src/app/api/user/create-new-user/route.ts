@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const reqSchema = z.object({
-   email: z.string().email().nonempty(),
+   email: z.string().nonempty(),
    password: z.string().nonempty(),
    token: z.string().nonempty()
 })
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       // check params
       if (!validationRes.success) {
          return NextResponse.json(
-            { error: "Invalid params" },
+            { error: "Invalid paraaaadaaams" },
             { status: 400 }
          );
       }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       const pendingUser = await db.collection("unregistered").findOne({ email, token });
       if (!pendingUser) {
          return NextResponse.json(
-            { error: "Invalid registration token" },
+            { error: "Invalid email or registration token" },
             { status: 400 }
          );
       }

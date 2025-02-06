@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import Link from "next/link";
 
-import { fetchQnArr } from "@/lib/mongodb/questions/qnActions";
+import { fetchMcqQnArr } from "@/lib/mongodb/get-qns-server";
 import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/definitions";
 
@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ category: QnC
 async function ShowEntriesWithPagination({ wrongQnNumsArr, category }: { wrongQnNumsArr: number[], category: QnCategory }) {
    try {
       return <>
-         <PaginatedDictEntries qnObjArr={await fetchQnArr(category, wrongQnNumsArr)}/>
+         <PaginatedDictEntries qnObjArr={await fetchMcqQnArr(category, wrongQnNumsArr)}/>
          <Row className="my-4">
             <Col className="d-flex justify-content-end">
                <Link

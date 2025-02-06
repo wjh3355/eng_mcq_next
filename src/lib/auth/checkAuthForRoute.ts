@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { UserProfileDocument } from "@/definitions";
-import getUserServer from "../mongodb/get-user-server";
+import { getUserServer } from "../mongodb/get-user-server";
 
 export async function checkAuthForRoute(): Promise<UserProfileDocument> {
 

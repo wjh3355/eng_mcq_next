@@ -19,28 +19,47 @@ import Link from "next/link";
 export default function SignInForm() {
    const router = useRouter();
 
+   const yupValidationSchema = yup.object({
+      email: yup.string().email("Invalid email address").required("Required"),
+      password: yup.string().required("Required")
+   })
+
    const FormikElement = () => 
       <Formik
          initialValues={{ email: "", password: "" }}
-         validationSchema={yup.object({
-            email: yup.string().email("Invalid email address").required("Required"),
-            password: yup.string().required("Required")
-         })}
+         validationSchema={yupValidationSchema}
          onSubmit={async (values, { setSubmitting, setStatus }) => {
+            
+            setSubmitting(true);
+            setStatus({});
+
             try {
-               setSubmitting(true);
                const res = await signIn("credentials", {
                   email: values.email.toLowerCase().trim(),
-                  password: values.password.toLowerCase().trim(),
+                  password: values.password.trim(),
                   redirect: false,
                });
                if (res?.error) {
-                  console.log("\n\n\n" + res.error + "\n\n\n")
-                  setStatus({ msg: "Incorrect email or password." });
+
+                  switch (res.code) {
+                     case "1":
+                        setStatus({ msg: "Invalid email or password." });
+                        break;
+                     case "2":
+                        setStatus({ msg: "You have been suspended!" });
+                        break;
+                     case "3":
+                     default:
+                        setStatus({ msg: "Unknown error. Please try again." });
+                        break;
+                  }
+
                } else {
+
                   setStatus({ msg: "Welcome! Redirecting..." });
                   await new Promise((r) => setTimeout(r, 500));
                   router.push("/");
+
                }
             } catch (e) {
                setStatus({ msg: "Error incountered. Try again later." });

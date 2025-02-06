@@ -14,6 +14,7 @@ export type UserAuthDocument = {
    psdResetToken: string | null;
    psdResetTokenExpiry: string | null;
    dateCreated: string;
+   isSuspended: boolean;
 };
 
 export type UserProfileDocument = {
@@ -60,6 +61,7 @@ export function newUserDocuments({
       psdResetToken: null,
       psdResetTokenExpiry: null,
       dateCreated: new Date().toISOString(),
+      isSuspended: false
    };
 
    const newProfileDoc: UserProfileDocument = {

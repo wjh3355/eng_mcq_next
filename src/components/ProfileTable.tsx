@@ -28,8 +28,6 @@ import { DateTime } from "luxon";
 
 export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
-   console.log(user);
-
    const { qnData, clozeData, score, email, dateCreated } = user;
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);

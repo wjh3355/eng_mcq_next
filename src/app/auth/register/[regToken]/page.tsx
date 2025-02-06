@@ -19,33 +19,38 @@ import { signIn } from "next-auth/react";
 export default function RegistrationForm() {
    const { regToken } = useParams<{ regToken: string }>();
 
+   const yupValidationSchema = yup.object({
+      email: yup
+         .string()
+         .email("Invalid email address")
+         .required("Required"),
+      password: yup
+         .string()
+         .test(
+            "password-strength",
+            "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number",
+            (value) => {
+               if (!value) return false;
+               const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+               return regex.test(value);
+            }
+         )
+         .required("Required"),
+      confirmPassword: yup
+         .string()
+         .oneOf([yup.ref("password"), ""], "Passwords must match")
+         .required("Required"),
+   });
+
    const FormikElement = () => (
       <Formik
          initialValues={{ email: "", password: "", confirmPassword: "" }}
-         validationSchema={yup.object({
-            email: yup
-               .string()
-               .email("Invalid email address")
-               .required("Required"),
-            password: yup
-               .string()
-               .test(
-                  "password-strength",
-                  "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number",
-                  (value) => {
-                     if (!value) return false;
-                     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-                     return regex.test(value);
-                  }
-               )
-               .required("Required"),
-            confirmPassword: yup
-               .string()
-               .oneOf([yup.ref("password"), ""], "Passwords must match")
-               .required("Required"),
-         })}
+         validationSchema={yupValidationSchema}
          onSubmit={(values, { setSubmitting, setStatus, resetForm }) => {
+
+            setStatus({})
             setSubmitting(true);
+            
             axios
                .post("/api/user/create-new-user", 
                   {
@@ -66,7 +71,7 @@ export default function RegistrationForm() {
 
                   return await signIn("credentials", {
                      email: values.email.toLowerCase().trim(),
-                     password: values.password.toLowerCase().trim(),
+                     password: values.password.trim(),
                      redirectTo: "/"
                   })
                })

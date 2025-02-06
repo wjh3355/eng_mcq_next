@@ -15,18 +15,23 @@ import axios from "axios";
 import { UserInviteDocument } from "@/definitions";
 
 export default function CreateNewUnregisteredUserForm() {
+
+   const yupValidationSchema = yup.object({
+      email: yup
+         .string()
+         .email("Invalid email address")
+         .required("Required"),
+   })
+
    const FormikElement = () => (
       <Formik
          initialValues={{ email: "" }}
-         validationSchema={yup.object({
-            email: yup
-               .string()
-               .email("Invalid email address")
-               .required("Required"),
-         })}
+         validationSchema={yupValidationSchema}
          onSubmit={(values, { setSubmitting, setStatus }) => {
+
             setSubmitting(true);
             setStatus({});
+            
             axios
                .post("/api/user/create-new-unreg-user", { email: values.email })
                .then((res) => {

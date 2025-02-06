@@ -1,14 +1,16 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import axios from "axios";
 import { UserAuthDocument } from "./definitions";
 import { z } from "zod";
 
-const credSchema = z.object({
-   email: z.string().email().nonempty(),
-   password: z.string().nonempty()
-})
+class CustomCredentialsError extends CredentialsSignin {
+   constructor(code: string) {
+      super();
+      this.code = code;
+   }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
    // debug: true,
@@ -23,11 +25,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email: { label: "Email:", type: "email" },
             password: { label: "Password:", type: "password" }
          },
-         async authorize(credentials): Promise<UserAuthDocument | null> {
-            try {               
-               const zodRes = credSchema.safeParse(credentials);
+         async authorize(credentials) {
+            try {      
+
+               // console.log("\n\n" + JSON.stringify(credentials) + "\n\n")
+
+               const zodRes = z.object({
+                  email: z.string().nonempty(),
+                  password: z.string().nonempty()
+               }).safeParse(credentials);
                
-               if (!zodRes.success) throw new Error("Invalid credentials type");
+               if (!zodRes.success) throw new CustomCredentialsError("1");
 
                const { email, password } = zodRes.data;
                
@@ -37,19 +45,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                      params: { email, type: "auth" },
                      headers: { Authorization: `Bearer ${process.env.AUTH_SECRET}` }
                   }
-               );
-   
-               if (res.status !== 200) throw new Error("API error: " + res.data.error);
-   
+               ).catch(err => {
+                  throw new CustomCredentialsError("1")
+               })
+
                const user: UserAuthDocument = res.data.userDoc;
 
-               if (!(await compare(password, user.passwordHash))) throw new Error("Incorrect password");
-   
+               // console.log(user);
+
+               if (!(await compare(password, user.passwordHash))) throw new CustomCredentialsError("1");
+
+               if (user.isSuspended) throw new CustomCredentialsError("2");
+
                return user;
 
             } catch (error) {
-               console.log(error)
-               return null;
+               if (error instanceof CustomCredentialsError) {
+                  throw new CustomCredentialsError(error.code)
+               } else {
+                  throw new CustomCredentialsError("3")
+               }
             }
          },
       }),
