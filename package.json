@@ -9,8 +9,7 @@
       "lint": "next lint",
       "checkqn": "npx tsx private/checkQn.ts",
       "updateqn": "npx tsx private/updateQn.ts",
-      "test": "npx tsx private/test.ts",
-      "doThisAlso": "npx tsx private/doThisAlso.ts"
+      "doThis": "npx tsx private/doThis.ts"
    },
    "dependencies": {
       "@auth/mongodb-adapter": "^3.7.4",
