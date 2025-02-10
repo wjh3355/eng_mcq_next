@@ -14,6 +14,8 @@ export const GET = auth(
    
       try {
       
+         // check params
+         // should never actually fail since the params are validated client-side
          const paramZodRes = paramSchema.safeParse({
             email: req.nextUrl.searchParams.get("email"),
             type: req.nextUrl.searchParams.get("type")
@@ -28,6 +30,8 @@ export const GET = auth(
    
          const { email, type } = paramZodRes.data;
 
+         // check if user being fetched is the same as the authenticated user. 
+         // if not, check if the authenticated user is an admin (always allowed)
          if (!req.auth || (req.auth.user.role !== "admin" && req.auth.user.email !== email)) {
             return NextResponse.json(
                { error: "Unauthorized" },
@@ -37,6 +41,7 @@ export const GET = auth(
    
          await client.connect();
    
+         // fetch user data of the type specified
          const db = client.db("userDatas");
          const userDoc = await (
             type === "auth" 

@@ -10,6 +10,7 @@ export const POST = auth(
    
       try {
 
+         // check if user is admin
          if (req.auth?.user.role !== "admin") {
             return NextResponse.json(
                { error: "Unauthorised" },
@@ -17,8 +18,9 @@ export const POST = auth(
             );
          }
    
-         const validationRes = z.object({ email: z.string() }).safeParse(await req.json());
          // check params
+         // should never actually fail since the params are validated client-side
+         const validationRes = z.object({ email: z.string() }).safeParse(await req.json());
          if (!validationRes.success) {
             return NextResponse.json(
                { error: "Invalid email" },
@@ -27,10 +29,14 @@ export const POST = auth(
          }
          
          const { email } = validationRes.data;
+
          await client.connect();
          const db = client.db("userDatas");
    
-         // check email provided is not already associated with registered user / invite
+         // check if user already exists (fully registered, present in `auth` collection)
+         // or has pending invite (present in `unregistered` collection)
+         // if yes, return error
+         // we can return specific error messages since only admins have access
          const existingUser = await db.collection("auth").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserAuthDocument | null;
          const existingInvite = await db.collection("unregistered").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserInviteDocument | null;
          if (existingUser) {
@@ -49,7 +55,7 @@ export const POST = auth(
          const newInvite = newUserInvite({ email });
          const mongoRes = await db.collection("unregistered").insertOne(newInvite);
          
-         // return token
+         // return token if invite was successfully created
          if (mongoRes.acknowledged) {
             return NextResponse.json(
                { newInvite },

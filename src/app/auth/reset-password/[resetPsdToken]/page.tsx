@@ -10,30 +10,30 @@ import BSForm from "react-bootstrap/Form";
 import { useParams } from "next/navigation";
 
 import axios, { AxiosError } from "axios";
-import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "react-bootstrap/esm/Spinner";
 import toast from "react-hot-toast";
-
 import Link from "next/link";
 
 type FormData = {
-   email: string;
-   password: string;
+   newPassword: string;
    confirmPassword: string;
 }
 
 const zodSchema = z.object({
-   email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
-   password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, { message: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number" }),
+   newPassword: z
+      .string()
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, 
+         { message: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number" }
+      ),
    confirmPassword: z.string(),
-}).refine(data => data.password === data.confirmPassword, { message: "Passwords must match", path: ["confirmPassword"] });
+}).refine(data => data.newPassword === data.confirmPassword, { message: "Passwords must match", path: ["confirmPassword"] });
 
 function ReactHookForm() {
 
-   const { regToken } = useParams<{ regToken: string }>();
+   const { resetPsdToken } = useParams<{ resetPsdToken: string }>();
 
    const { 
       register,
@@ -43,42 +43,40 @@ function ReactHookForm() {
       formState: { errors, isValid, isDirty, isSubmitting },
    } = useForm<FormData>({ 
       resolver: zodResolver(zodSchema),
-      defaultValues: { email: "", password: "", confirmPassword: "" },
+      defaultValues: { newPassword: "", confirmPassword: "" },
    })
 
    async function attemptRegisterUser(data: FormData) {
 
       try {
-         await axios.post("/api/user/create-new-user", 
+         await axios.post("/api/user/reset-psd", 
             {
-               email: data.email.toLowerCase().trim(),
-               password: data.password.trim(),
-               token: regToken,
+               newPassword: data.newPassword.trim(),
+               token: resetPsdToken,
             }
          )
 
-         toast.success("Account created successfully! Logging you in...");
-
          reset();
 
-         await new Promise(resolve => setTimeout(resolve, 500));
-
-         await signIn("credentials", {
-            email: data.email.toLowerCase().trim(),
-            password: data.password.trim(),
-            redirectTo: "/"
-         })
+         toast.success("Password reset successfully! You may now login with your new password.", { duration: 7000 });
          
       } catch (error) {
          if (error instanceof AxiosError) {
-            toast.error(
-               <div>
-                  <p>Sorry, we were unable to create your account.</p>
-                  <p>If you have already registered, please <Link href="/auth">Log In</Link>.</p>
-                  <p>If you do intend to register, please check your email and registration link. Make sure you have an internet connection.</p>
-               </div>,
-               { duration: 7000, style: { width: "1000px" } },
-            );
+
+            switch (error.response?.data.error) {
+               case "1":
+                  toast.error(
+                     <div>
+                        <p>Invalid or expired token.</p>
+                        <p>Please check your reset password link or request a new link <Link href="/auth/reset-password">here</Link>.</p>
+                     </div>
+                  );
+                  break;
+               default:
+                  toast.error(error.response?.data.error || "Request error. Please try again.");
+                  break;
+            }
+            
          } else {
             toast.error("An unknown error occured. Please try again.");
          }
@@ -90,29 +88,18 @@ function ReactHookForm() {
       <BSForm onSubmit={handleSubmit(attemptRegisterUser)} noValidate>
 
          <BSForm.Group className="mb-3">
-            <BSForm.Label htmlFor="email">Email:</BSForm.Label>
+            <BSForm.Label htmlFor="email">New Password:</BSForm.Label>
             <BSForm.Control 
-               {...register("email", { required: true })}
-               type="email"
-               autoComplete="off"
-               onBlur={() => trigger("email")}
-            />
-            <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
-         </BSForm.Group>
-
-         <BSForm.Group className="mb-3">
-            <BSForm.Label htmlFor="email">Password:</BSForm.Label>
-            <BSForm.Control 
-               {...register("password", { required: true })}
+               {...register("newPassword", { required: true })}
                type="text"
                autoComplete="off"
-               onBlur={() => trigger("password")}
+               onBlur={() => trigger("newPassword")}
             />
-            <BSForm.Text className="text-danger">{errors.password?.message}</BSForm.Text>
+            <BSForm.Text className="text-danger">{errors.newPassword?.message}</BSForm.Text>
          </BSForm.Group>
 
          <BSForm.Group className="mb-3">
-            <BSForm.Label htmlFor="email">Confirm Password:</BSForm.Label>
+            <BSForm.Label htmlFor="email">Confirm New Password:</BSForm.Label>
             <BSForm.Control 
                {...register("confirmPassword", { required: true })}
                type="text"
@@ -122,15 +109,14 @@ function ReactHookForm() {
             <BSForm.Text className="text-danger">{errors.confirmPassword?.message}</BSForm.Text>
          </BSForm.Group>
 
-
-         <div className="text-center d-flex flex-column align-items-center gap-3">
+         <div className="d-flex align-items-center justify-content-center">
             <Button 
                type="submit"
                variant="success"
                className="w-50"
                disabled={!isDirty || !isValid || isSubmitting}
             >
-               {isSubmitting ? <Spinner size="sm"/> : "Register Account"}
+               {isSubmitting ? <Spinner size="sm"/> : "Reset Password"}
             </Button>
          </div>
 
@@ -150,7 +136,7 @@ export default function RegistrationForm() {
                <Card className="p-2 p-md-4 shadow-lg border-0 rounded-4">
                   <Card.Body>
                      <Card.Title className="mb-4 text-center">
-                        Register Your Account
+                        Enter a new password:
                      </Card.Title>
                      <ReactHookForm/>
                   </Card.Body>

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const reqSchema = z.object({
-   email: z.string().nonempty(),
+   email: z.string().nonempty().email(),
    password: z.string().nonempty(),
    token: z.string().nonempty()
 })
@@ -13,8 +13,9 @@ export async function POST(req: NextRequest) {
    
    try {
 
-      const validationRes = reqSchema.safeParse(await req.json());
       // check params
+      // should never actually fail since the params are validated client-side
+      const validationRes = reqSchema.safeParse(await req.json());
       if (!validationRes.success) {
          return NextResponse.json(
             { error: "Invalid params" },
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
       await client.connect();
       const db = client.db("userDatas");
       // first check if user already exists in `auth` collection (already registered)
+      // BAD: might let malicious users know if an email is already registered!
+      // to change in the future
       if (await db.collection("auth").findOne({ email })) {
          return NextResponse.json(
             { error: "User is already registered" },
@@ -43,7 +46,8 @@ export async function POST(req: NextRequest) {
          );
       }
 
-      // create new auth and profile docs for new user
+      // if token is valid, create new auth and profile docs for new user
+      // password hashing is done in the newUserDocuments function
       const { newAuthDoc, newProfileDoc } = newUserDocuments({ 
          email, 
          password, 
@@ -57,6 +61,7 @@ export async function POST(req: NextRequest) {
       // delete unregistered user
       const deleteRes = await db.collection("unregistered").deleteOne({ _id: pendingUser._id });
 
+      // check if all operations were successful, return appropriate response
       if (createAuthRes.acknowledged && createProfileRes.acknowledged && deleteRes.acknowledged) {
          return NextResponse.json(
             { success: true },

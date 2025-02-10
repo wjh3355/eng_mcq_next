@@ -8,8 +8,11 @@ const paramSchema = z.object({
 
 export async function GET(req: NextRequest) {
    
+   // only used server-side in the auth middleware.
+   
    try {
 
+      // check if request is authorised (using a secret key)
       if (req.headers.get("Authorization") !== `Bearer ${process.env.AUTH_SECRET}`) {
          return NextResponse.json(
             { error: "Unauthorised" }, 
@@ -20,7 +23,7 @@ export async function GET(req: NextRequest) {
       const paramZodRes = paramSchema.safeParse({
          email: req.nextUrl.searchParams.get("email"),
       })
-
+      // check params
       if (!paramZodRes.success) {
          return NextResponse.json(
             { error: "Invalid params" },
@@ -32,6 +35,7 @@ export async function GET(req: NextRequest) {
 
       await client.connect();
 
+      // check if user exists
       const db = client.db("userDatas");
       const userDoc = await db.collection("auth").findOne({ email });
 

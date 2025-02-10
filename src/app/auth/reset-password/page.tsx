@@ -8,78 +8,112 @@ import Button from "react-bootstrap/Button"
 import BSForm from "react-bootstrap/Form"
 import Alert from "react-bootstrap/Alert"
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
-
-import * as yup from "yup";
 import Link from "next/link";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "react-bootstrap/esm/Spinner";
+
+const zodSchema = z.object({
+   email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
+})
+
+type FormValues = { email: string };
+
+function ReactHookForm() {
+
+   const { 
+      register,
+      handleSubmit,
+      trigger,
+      formState: { errors, isValid, isDirty, isSubmitting },
+      reset
+   } = useForm<FormValues>({ 
+      resolver: zodResolver(zodSchema),
+      defaultValues: { email: "" }
+   })
+
+   async function attemptCreateResetLink(data: FormValues) {
+
+      try {
+
+         await axios.post("/api/user/gen-reset-psd-token", { email: data.email.toLowerCase().trim() })
+
+         reset();
+
+         toast.success(
+            <div>
+               <p>If your email is registered with us, you will receive a password reset link.</p>                  
+               <p className="mb-0">Please check your spam folder too.</p>
+            </div>,
+            { duration: 7000}
+         );
+
+      } catch (error) {
+         if (error instanceof AxiosError) {
+            toast.error("Request error. Try again.");
+         } else {
+            toast.error("An unknown error occured. Please try again.");
+         }
+      }
+
+   };
+   
+   return (
+      <BSForm 
+         onSubmit={handleSubmit(attemptCreateResetLink)}
+         noValidate
+      >
+
+         <BSForm.Group className="mb-3">
+            <BSForm.Label htmlFor="email">Enter your email to get a reset link:</BSForm.Label>
+            <BSForm.Control 
+               {...register("email", { required: true })}
+               type="email"
+               onBlur={() => trigger("email")}
+            />
+            <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
+         </BSForm.Group>
+
+         <div className="text-center d-flex flex-column align-items-center gap-3">
+            <Button 
+               type="submit"
+               variant="success"
+               className="w-50"
+               disabled={!isDirty || !isValid || isSubmitting}
+            >
+               {isSubmitting ? <Spinner size="sm"/> : "Reset Password"}
+            </Button>
+            <Link href="/auth">Back to Log In</Link>
+         </div>
+
+      </BSForm>
+   )
+}
 
 export default function ResetPasswordForm() {
-
-   const FormikElement = () => 
-      <Formik
-         initialValues={{ email: "", password: "" }}
-         validationSchema={yup.object({
-            email: yup.string().email("Invalid email address").required("Required"),
-         })}
-         onSubmit={(values, { setSubmitting, setStatus }) => {
-            
-            setSubmitting(true);
-            setStatus({});
-
-            axios
-               .post("/api/user/gen-reset-psd-token", { email: values.email.toLowerCase().trim() })
-               .then((res) => {
-                  setStatus({ msg: "You will receive a password reset link if your email is registered with us. Please check your spam folder too." });
-               })
-               .catch((err) => {
-                  setStatus({ msg: err.response?.data?.error || "Something went wrong." });
-               })
-               .finally(() => setSubmitting(false));
-            
-         }}
-      >
-         {({ isSubmitting, status, errors, dirty }) => (
-            <BSForm as={Form} noValidate>
-               <BSForm.Group className="mb-3">
-                  <BSForm.Label htmlFor="email">Email:</BSForm.Label>
-                  <BSForm.Control as={Field} type="email" name="email" />
-                  <BSForm.Text as={ErrorMessage} name="email" component="div" className="text-danger"/>
-               </BSForm.Group>
-
-               {status?.msg && <div className="mb-3 text-danger">{status.msg}</div>}
-
-               <div className="text-center d-flex flex-column align-items-center gap-2">
-                  <Button
-                     variant="success"
-                     type="submit"
-                     className="w-50"
-                     disabled={isSubmitting || Object.keys(errors).length > 0 || !dirty}
-                  >
-                     {isSubmitting ? "Loading..." : "Send Reset Email"}
-                  </Button>
-                  <Link href="/auth">Back to login page</Link>
-               </div>
-            </BSForm>
-         )}
-      </Formik>
 
    return (
       <>
          <Container>
             <Alert variant="danger" className="mt-3">
-               <strong>IMPORTANT:</strong> Due to a migration of authentication software, all existing users are required to <Link href="/auth/reset-password">reset their password</Link> before login.
+               <strong>IMPORTANT:</strong> Due to a migration of authentication software, if you are an existing user, please reset your password using your email below. We apologize for the inconvenience.
+               <br/>
+               <br/>
+               If you have already reset your password, please log in as usual.
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">
             <Row className="w-100 justify-content-center">
                <Col sm={10} md={8} lg={6}>
-                  <Card className="p-4 shadow-sm">
+                  <Card className="p-2 p-md-4 shadow-lg border-0 rounded-4">
                      <Card.Body>
                         <Card.Title className="mb-4 text-center">
-                           Enter your email to reset password
+                           Forgot your password?
                         </Card.Title>
-                        <FormikElement/>
+                        <ReactHookForm/>
                      </Card.Body>
                   </Card>
                </Col>

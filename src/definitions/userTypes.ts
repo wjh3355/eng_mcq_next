@@ -101,4 +101,5 @@ export function newUserInvite({
 export type LoginFormFields = {
    email: string;
    password: string;
+   rememberMe: boolean;
 };

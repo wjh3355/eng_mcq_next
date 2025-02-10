@@ -8,6 +8,7 @@ declare module "next-auth" {
       psdResetToken: string | null;
       psdResetTokenExpiry: string | null;
       dateCreated: string;
+      maxAge: number;
    }
 
    interface Session {
@@ -26,5 +27,6 @@ declare module "@auth/core/adapters" {
       psdResetToken: string | null;
       psdResetTokenExpiry: string | null;
       dateCreated: string;
+      maxAge: number;
    }
 }

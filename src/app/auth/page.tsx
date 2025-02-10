@@ -23,7 +23,8 @@ import toast from "react-hot-toast";
 
 const zodSchema = z.object({
    email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
-   password: z.string().nonempty({ message: "Required" })
+   password: z.string().nonempty({ message: "Required" }),
+   rememberMe: z.boolean(),
 })
 
 function ReactHookForm() {
@@ -38,7 +39,7 @@ function ReactHookForm() {
       formState: { errors, isValid, isDirty, isSubmitting },
    } = useForm<LoginFormFields>({ 
       resolver: zodResolver(zodSchema),
-      defaultValues: { email: "", password: "" }
+      defaultValues: { email: "", password: "", rememberMe: false },
    })
 
    async function attemptLogIn(data: LoginFormFields) {
@@ -47,20 +48,22 @@ function ReactHookForm() {
          const res = await signIn("credentials", {
             email: data.email.toLowerCase().trim(),
             password: data.password.trim(),
+            rememberMe: true,
+
             redirect: false,
          });
 
          if (res?.error) {
             switch (res.code) {
                case "1":
-                  toast.error("Invalid email or password.");
+                  toast.error("Sorry, your email or password was incorrect.");
                   break;
                case "2":
-                  toast.error("You have been suspended!");
+                  toast.error("You have been suspended! Contact support for more information.");
                   break;
                case "3":
                default:
-                  toast.error("An error occurred. Please try again.");
+                  toast.error("An unknown error occured. Please try again.");
                   break;
             }
          } else {
@@ -70,15 +73,12 @@ function ReactHookForm() {
             router.push("/");
          }
       } catch (e) {
-         toast.error("An error occurred. Please try again.");
+         toast.error("An unknown error occured. Please try again.");
       }
    };
    
    return (
-      <BSForm 
-         onSubmit={handleSubmit(attemptLogIn)}
-         noValidate
-      >
+      <BSForm onSubmit={handleSubmit(attemptLogIn)} noValidate>
 
          <BSForm.Group className="mb-3">
             <BSForm.Label htmlFor="email">Email:</BSForm.Label>
@@ -100,7 +100,15 @@ function ReactHookForm() {
             <BSForm.Text className="text-danger">{errors.password?.message}</BSForm.Text>
          </BSForm.Group>
 
-         <div className="text-center d-flex flex-column align-items-center gap-2">
+         <BSForm.Group className="mb-3">
+            <BSForm.Check
+               {...register("rememberMe")}
+               type="checkbox"
+               label="Remember Me"
+            />
+         </BSForm.Group>
+
+         <div className="text-center d-flex flex-column align-items-center gap-3">
             <Button 
                type="submit"
                variant="success"
@@ -109,7 +117,7 @@ function ReactHookForm() {
             >
                {isSubmitting ? <Spinner size="sm"/> : "Sign In"}
             </Button>
-            <Link href="/auth/reset-password">Forgot Password?</Link>
+            <Link href="/auth/reset-password">Forgot password?</Link>
          </div>
 
       </BSForm>
@@ -122,13 +130,13 @@ export default function SignInForm() {
       <>
          <Container>
             <Alert variant="danger" className="mt-3">
-               <strong>IMPORTANT:</strong> Due to a migration of authentication software, all existing users are required to <Link href="/auth/reset-password">reset their password</Link> before login.
+               <strong>IMPORTANT:</strong> Due to a migration of authentication software, if you are an existing user, you are required to <Link href="/auth/reset-password">reset your password</Link> before logging in. We apologize for the inconvenience.
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">
             <Row className="w-100 justify-content-center">
                <Col sm={10} md={8} lg={6}>
-                  <Card className="p-2 p-md-4 shadow-sm">
+                  <Card className="p-2 p-md-4 shadow-lg border-0 rounded-4">
                      <Card.Body>
 
                         <Card.Title className="mb-4 text-center">

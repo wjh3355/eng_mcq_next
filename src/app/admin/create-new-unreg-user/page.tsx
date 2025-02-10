@@ -43,28 +43,26 @@ function ReactHookForm() {
       try {
          const res = await axios.post("/api/user/create-new-unreg-user", { email: data.email.toLowerCase().trim() });
    
-         if (res.status === 200) {
-            const newInvite = res.data.newInvite as UserInviteDocument;
-            setMessage(
-               <p className="text-success">
-                  Success! Send this link to the new user to register their
-                  account:
-                  <br />
-                  <strong>
-                     {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/{newInvite.token}
-                  </strong>
-                  <br/>
-                  Invite created {DateTime.fromISO(newInvite.dateCreated).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}. Will not expire.
-               </p>
-            );
-         } else {
-            toast.error(res.data.error || "Unknown error. Try again.");
-         }
+         const newInvite = res.data.newInvite as UserInviteDocument;
+         setMessage(
+            <p className="text-success">
+               Send this link to the new user to register their
+               account:
+               <br />
+               <strong>
+                  {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/{newInvite.token}
+               </strong>
+               <br/>
+               Invite created {DateTime.fromISO(newInvite.dateCreated).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}. Will not expire.
+            </p>
+         );
+         toast.success("Successfully created new user invite.");
+
       } catch (error) {
          if (error instanceof AxiosError) {
             toast.error("Request error. Try again.");
          } else {
-            toast.error("Unknown error. Try again.");
+            toast.error("An unknown error occured. Please try again.");
          }
       }
 
