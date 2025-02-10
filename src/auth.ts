@@ -40,9 +40,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                const { email, password } = zodRes.data;
                
                const res = await axios.get(
-                  `${process.env.BASE_URL}/api/user/get-user-authenticate-only`, 
+                  `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get-user-authenticate-only`, 
                   {
-                     params: { email, type: "auth" },
+                     params: { email },
                      headers: { Authorization: `Bearer ${process.env.AUTH_SECRET}` }
                   }
                ).catch(err => {
@@ -54,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                // console.log(user);
 
                if (!(await compare(password, user.passwordHash))) throw new CustomCredentialsError("1");
-
+               
                if (user.isSuspended) throw new CustomCredentialsError("2");
 
                return user;

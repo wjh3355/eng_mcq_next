@@ -142,7 +142,7 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
             <dt className="col-sm-3">Date created</dt>
             <dd className="col-sm-9">
-               {DateTime.fromISO(dateCreated).toISODate()}
+               {DateTime.fromISO(dateCreated).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}
             </dd>
 
             <dt className="col-sm-3">Total points</dt>

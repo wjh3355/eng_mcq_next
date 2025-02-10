@@ -40,6 +40,9 @@ export default function MainNavbar() {
                         <Nav.Link as={Link} href="/mcq">MCQ Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze">Cloze Passages</Nav.Link>
                         <Nav.Link as={Link} href="/profile">Profile</Nav.Link>
+                        {session.user.role === "admin" &&
+                           <Nav.Link as={Link} href="/admin" className="text-danger">Admin</Nav.Link>
+                        }
                      </Nav>
                   }
                   <Nav className="ms-auto">

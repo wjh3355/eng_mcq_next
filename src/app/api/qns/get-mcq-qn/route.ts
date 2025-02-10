@@ -11,6 +11,7 @@ const paramSchema = z.object({
 })
 
 export const GET = auth(
+   
    async function GET(req) {
    
       try {

@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 export const POST = auth(
+   
    async function POST(req) {
    
       try {
@@ -30,8 +31,8 @@ export const POST = auth(
          const db = client.db("userDatas");
    
          // check email provided is not already associated with registered user / invite
-         const existingUser = await db.collection("auth").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserAuthDocument;
-         const existingInvite = await db.collection("unregistered").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserInviteDocument;
+         const existingUser = await db.collection("auth").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserAuthDocument | null;
+         const existingInvite = await db.collection("unregistered").findOne({ email }, { projection: { _id: 0 } }) as unknown as UserInviteDocument | null;
          if (existingUser) {
             return NextResponse.json(
                { error: "User already fully registered" },

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       // check params
       if (!validationRes.success) {
          return NextResponse.json(
-            { error: "Invalid paraaaadaaams" },
+            { error: "Invalid params" },
             { status: 400 }
          );
       }

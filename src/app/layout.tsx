@@ -10,6 +10,7 @@ import MainNavbar from "@/components/navbar/MainNavbar";
 import Footer from "@/components/Footer";
 
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
    title: "Sunbird English",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SessionProvider>
                <MainNavbar />
                <main className="mb-4" style={{flex: "1"}}>
+                  <Toaster/>
                   {children}
                </main>
                <Footer />

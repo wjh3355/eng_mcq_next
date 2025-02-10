@@ -9,6 +9,7 @@ const paramSchema = z.object({
 })
 
 export const GET = auth(
+
    async function GET(req) {
    
       try {
@@ -27,14 +28,7 @@ export const GET = auth(
    
          const { email, type } = paramZodRes.data;
 
-         if (
-            !req.auth 
-            || 
-               (
-                  req.auth.user.role !== "admin" 
-                  && req.auth.user.email !== email
-               )
-         ) {
+         if (!req.auth || (req.auth.user.role !== "admin" && req.auth.user.email !== email)) {
             return NextResponse.json(
                { error: "Unauthorized" },
                { status: 403 }

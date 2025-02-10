@@ -4,10 +4,10 @@ import { z } from "zod";
 
 const paramSchema = z.object({
    email: z.string().nonempty(),
-   type: z.enum(["auth", "profile"])
 })
 
 export async function GET(req: NextRequest) {
+   
    try {
 
       if (req.headers.get("Authorization") !== `Bearer ${process.env.AUTH_SECRET}`) {
@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
 
       const paramZodRes = paramSchema.safeParse({
          email: req.nextUrl.searchParams.get("email"),
-         type: req.nextUrl.searchParams.get("type")
       })
 
       if (!paramZodRes.success) {
@@ -29,16 +28,12 @@ export async function GET(req: NextRequest) {
          );
       }
 
-      const { email, type } = paramZodRes.data;
+      const { email } = paramZodRes.data;
 
       await client.connect();
 
       const db = client.db("userDatas");
-      const userDoc = await (
-         type === "auth" 
-            ? db.collection("auth").findOne({ email })
-            : db.collection("profile").findOne({ email })
-      );
+      const userDoc = await db.collection("auth").findOne({ email });
 
       if (!userDoc) {
          return NextResponse.json(

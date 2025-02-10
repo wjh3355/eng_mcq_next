@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { qnCategoriesArrayTuple, QnCategory, UserProfileDocument } from "@/definitions";
 import client from "@/lib/mongodb/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -23,108 +24,119 @@ const reqSchema = z.object({
    ])
 })
 
-export async function POST(req: NextRequest) {
-   try {
+export const POST = auth(
 
-      const zodRes = reqSchema.safeParse(await req.json());
-      if (!zodRes.success) {
-         return NextResponse.json(
-            { error: "Invalid params" },
-            { status: 400 }
-         );
-      }
-
-      const { email, action } = zodRes.data;
-
-      await client.connect();
-      const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
-      const dat = await profileDb.findOne({ email });
-      if (!dat) {
-         return NextResponse.json(
-            { error: "No corresponding user profile" },
-            { status: 500 }
-         );
-      }
-
-      let mongoUpdateRes;
-
-      if (action.todo === "update mcq") {
-
-         const { mcqCategory, mcqCatQnNum, isCorrect } = action
-
-         const updateQuery: any = { 
-            $inc: { 
-               [ `qnData.${mcqCategory}.numQnsAttempted` ]: 1 
-            } 
-         };
+   async function POST(req) {
+      
+      try {
    
-         if (isCorrect === false) {
-            updateQuery.$addToSet = { 
-               [ `qnData.${mcqCategory}.wrongQnNums` ]: mcqCatQnNum 
-            }
-         } else if (isCorrect === true) {
-            updateQuery.$inc.score = 10
-         };
+         const zodRes = reqSchema.safeParse(await req.json());
+         if (!zodRes.success) {
+            return NextResponse.json(
+               { error: "Invalid params" },
+               { status: 400 }
+            );
+         }
    
-         const setQuery = {
-            $set: {
-               [`qnData.${mcqCategory}`]: {
-                  numQnsAttempted: 1,
-                  wrongQnNums: isCorrect ? [] : [mcqCatQnNum]
+         const { email, action } = zodRes.data;
+   
+         await client.connect();
+         const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
+         const dat = await profileDb.findOne({ email });
+         if (!dat) {
+            return NextResponse.json(
+               { error: "No corresponding user profile" },
+               { status: 500 }
+            );
+         }
+   
+         let mongoUpdateRes;
+   
+         switch (action.todo) {
+   
+            case "update mcq":
+                  
+               const { mcqCategory, mcqCatQnNum, isCorrect } = action
+   
+               const updateQuery: any = { 
+                  $inc: { 
+                     [ `qnData.${mcqCategory}.numQnsAttempted` ]: 1 
+                  } 
+               };
+         
+               if (isCorrect === false) {
+                  updateQuery.$addToSet = { 
+                     [ `qnData.${mcqCategory}.wrongQnNums` ]: mcqCatQnNum 
+                  }
+               } else if (isCorrect === true) {
+                  updateQuery.$inc.score = 10
+               };
+         
+               const setQuery = {
+                  $set: {
+                     [`qnData.${mcqCategory}`]: {
+                        numQnsAttempted: 1,
+                        wrongQnNums: isCorrect ? [] : [mcqCatQnNum]
+                     }
+                  },
+                  $inc: {
+                     score: isCorrect ? 10 : 0
+                  }
                }
-            },
-            $inc: {
-               score: isCorrect ? 10 : 0
-            }
+               
+               if (dat.qnData[mcqCategory as QnCategory] === undefined) {
+                  mongoUpdateRes = await profileDb.updateOne({ email }, setQuery);
+               } else {
+                  mongoUpdateRes = await profileDb.updateOne({ email }, updateQuery);
+               }
+   
+               break;
+            
+            case "update cloze": 
+   
+               const { clozeQnNum, correctAns } = action
+   
+               if (correctAns) {
+                  mongoUpdateRes = await profileDb.updateOne({ email }, { $push: { clozeData: { qnNum: clozeQnNum, correctAns } } } );
+               } else {
+                  mongoUpdateRes = await profileDb.updateOne( { email }, { $pull: { clozeData: { qnNum: clozeQnNum } } } );
+               }
+   
+               break;
+         
+            default:
+   
+               mongoUpdateRes = await profileDb.updateOne(
+                  { email },
+                  {
+                     $set: {
+                        qnData: {},
+                        clozeData: [],
+                        score: 0,
+                     },
+                  }
+               );
+   
+               break;
+         }
+   
+         if (mongoUpdateRes.acknowledged) {
+            return NextResponse.json(
+               { success: true },
+               { status: 200 }
+            );
+         } else {
+            return NextResponse.json(
+               { error: `Unable to update user database` },
+               { status: 500 }
+            )
          }
          
-         if (dat.qnData[mcqCategory as QnCategory] === undefined) {
-            mongoUpdateRes = await profileDb.updateOne({ email }, setQuery);
-         } else {
-            mongoUpdateRes = await profileDb.updateOne({ email }, updateQuery);
-         }
-
-      } else if (action.todo === "update cloze") {
-
-         const { clozeQnNum, correctAns } = action
-
-         if (correctAns) {
-            mongoUpdateRes = await profileDb.updateOne({ email }, { $push: { clozeData: { qnNum: clozeQnNum, correctAns } } } );
-         } else {
-            mongoUpdateRes = await profileDb.updateOne( { email }, { $pull: { clozeData: { qnNum: clozeQnNum } } } );
-         }
-
-      } else {
-
-         mongoUpdateRes = await profileDb.updateOne(
-            { email },
-            {
-               $set: {
-                  qnData: {},
-                  clozeData: [],
-                  score: 0,
-               },
-            }
-         );
-
-      }
-
-      if (mongoUpdateRes.acknowledged) {
+      } catch (error) {
          return NextResponse.json(
-            { success: true },
-            { status: 200 }
-         );
-      } else {
-         return NextResponse.json(
-            { error: `Unable to update user database` },
+            { error: `Unable to update user database: ${error}` },
             { status: 500 }
          )
       }
-      
-   } catch (error) {
-      return NextResponse.json(
-         { error: `Unable to update user database: ${error}` },
-         { status: 500 }
-      )
    }
-}
+)

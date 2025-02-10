@@ -7,95 +7,107 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import BSForm from "react-bootstrap/Form";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
-
-import * as yup from "yup";
-
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { UserInviteDocument } from "@/definitions";
+import { z } from "zod";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Spinner from "react-bootstrap/esm/Spinner";
+import { DateTime } from "luxon";
+import toast from "react-hot-toast";
 
-export default function CreateNewUnregisteredUserForm() {
+type FormValues = { email: string };
 
-   const yupValidationSchema = yup.object({
-      email: yup
-         .string()
-         .email("Invalid email address")
-         .required("Required"),
+const zodSchema = z.object({
+   email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
+})
+
+function ReactHookForm() {
+
+   const [message, setMessage] = useState<null | React.JSX.Element>(null);
+
+   const { 
+      register,
+      handleSubmit,
+      trigger,
+      formState: { errors, isValid, isDirty, isSubmitting },
+   } = useForm<FormValues>({ 
+      resolver: zodResolver(zodSchema),
+      defaultValues: { email: "" }
    })
 
-   const FormikElement = () => (
-      <Formik
-         initialValues={{ email: "" }}
-         validationSchema={yupValidationSchema}
-         onSubmit={(values, { setSubmitting, setStatus }) => {
+   async function attemptCreateNewUnregUser(data: FormValues) {
+      setMessage(null);
 
-            setSubmitting(true);
-            setStatus({});
-            
-            axios
-               .post("/api/user/create-new-unreg-user", { email: values.email })
-               .then((res) => {
-                  const newInvite = res.data.newInvite as UserInviteDocument;
-                  setStatus({
-                     msg: (
-                        <p className="text-success">
-                           Success! Send this link to the new user to register their
-                           account:
-                           <br />
-                           <strong>
-                              sunbirdenglish.com/auth/register/{newInvite.token}
-                           </strong>
-                           <br/>
-                           Invite created {newInvite.dateCreated}
-                        </p>
-                     ),
-                  })
-               })
-               .catch((err) =>
-                  setStatus({
-                     msg: (
-                        <p className="text-danger">
-                           {err.response?.data?.error || "Something went wrong."}
-                        </p>
-                     ),
-                  })
-               )
-               .finally(() => setSubmitting(false));
-         }}
+      try {
+         const res = await axios.post("/api/user/create-new-unreg-user", { email: data.email.toLowerCase().trim() });
+   
+         if (res.status === 200) {
+            const newInvite = res.data.newInvite as UserInviteDocument;
+            setMessage(
+               <p className="text-success">
+                  Success! Send this link to the new user to register their
+                  account:
+                  <br />
+                  <strong>
+                     {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/{newInvite.token}
+                  </strong>
+                  <br/>
+                  Invite created {DateTime.fromISO(newInvite.dateCreated).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}. Will not expire.
+               </p>
+            );
+         } else {
+            toast.error(res.data.error || "Unknown error. Try again.");
+         }
+      } catch (error) {
+         if (error instanceof AxiosError) {
+            toast.error("Request error. Try again.");
+         } else {
+            toast.error("Unknown error. Try again.");
+         }
+      }
+
+   };
+   
+   return (
+      <BSForm 
+         onSubmit={handleSubmit(attemptCreateNewUnregUser)}
+         noValidate
       >
-         {({ isSubmitting, status, errors, dirty }) => (
-            <BSForm as={Form} noValidate>
-               <BSForm.Group className="mb-3">
-                  <BSForm.Label htmlFor="email">New User Email:</BSForm.Label>
-                  <BSForm.Control as={Field} type="email" name="email" autoComplete="off"/>
-                  <BSForm.Text
-                     as={ErrorMessage}
-                     name="email"
-                     component="div"
-                     className="text-danger"
-                  />
-               </BSForm.Group>
 
-               <div className="text-center d-flex flex-column align-items-center gap-2">
-                  <Button
-                     variant="primary"
-                     type="submit"
-                     className="w-50"
-                     disabled={
-                        isSubmitting || Object.keys(errors).length > 0 || !dirty
-                     }
-                  >
-                     {isSubmitting ? "Loading..." : "Create unregistered user"}
-                  </Button>
-               </div>
+         <BSForm.Group className="mb-3">
+            <BSForm.Label htmlFor="email">New User Email:</BSForm.Label>
+            <BSForm.Control 
+               {...register("email", { required: true })}
+               type="email"
+               onBlur={() => trigger("email")}
+            />
+            <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
+         </BSForm.Group>
 
-               {status?.msg && (
-                  <div className="mt-3">{status.msg}</div>
-               )}
-            </BSForm>
-         )}
-      </Formik>
-   );
+         {message &&
+            <div className="mb-3 text-danger">
+               {message}
+            </div>
+         }
+
+         <div className="text-center d-flex flex-column align-items-center gap-2">
+            <Button 
+               type="submit"
+               variant="success"
+               className="w-50"
+               disabled={!isDirty || !isValid || isSubmitting}
+            >
+               {isSubmitting ? <Spinner size="sm"/> : "Generate Unique Link"}
+            </Button>
+         </div>
+
+      </BSForm>
+   )
+}
+
+export default function CreateNewUnregisteredUserForm() {
 
    return (
       <Container
@@ -109,7 +121,7 @@ export default function CreateNewUnregisteredUserForm() {
                      <Card.Title className="mb-4 text-center">
                         Create New (Unregistered) User
                      </Card.Title>
-                     <FormikElement />
+                     <ReactHookForm />
                   </Card.Body>
                </Card>
             </Col>

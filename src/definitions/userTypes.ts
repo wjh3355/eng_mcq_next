@@ -2,6 +2,17 @@ import { QnCategory } from "./qnSetData";
 import { randomBytes } from "crypto";
 import { hashSync } from "bcryptjs";
 
+// export type OldUserDocument = {
+//    email: string;
+//    qnData: Partial<Record<QnCategory, QnCategoryUserData>>;
+//    clozeData: {
+//       qnNum: number;
+//       correctAns: number[];
+//    }[];
+//    score: number;
+//    dateCreated: string;
+// }
+
 export type QnCategoryUserData = {
    numQnsAttempted: number;
    wrongQnNums: number[];

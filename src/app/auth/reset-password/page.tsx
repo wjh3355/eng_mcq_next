@@ -12,6 +12,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import * as yup from "yup";
 import Link from "next/link";
+import axios from "axios";
 
 export default function ResetPasswordForm() {
 
@@ -21,8 +22,21 @@ export default function ResetPasswordForm() {
          validationSchema={yup.object({
             email: yup.string().email("Invalid email address").required("Required"),
          })}
-         onSubmit={async (values, { setSubmitting, setStatus }) => {
-            // TODO
+         onSubmit={(values, { setSubmitting, setStatus }) => {
+            
+            setSubmitting(true);
+            setStatus({});
+
+            axios
+               .post("/api/user/gen-reset-psd-token", { email: values.email.toLowerCase().trim() })
+               .then((res) => {
+                  setStatus({ msg: "You will receive a password reset link if your email is registered with us. Please check your spam folder too." });
+               })
+               .catch((err) => {
+                  setStatus({ msg: err.response?.data?.error || "Something went wrong." });
+               })
+               .finally(() => setSubmitting(false));
+            
          }}
       >
          {({ isSubmitting, status, errors, dirty }) => (
@@ -33,7 +47,7 @@ export default function ResetPasswordForm() {
                   <BSForm.Text as={ErrorMessage} name="email" component="div" className="text-danger"/>
                </BSForm.Group>
 
-               {status?.msg && <div className="mb-3 text-success">{status.msg}</div>}
+               {status?.msg && <div className="mb-3 text-danger">{status.msg}</div>}
 
                <div className="text-center d-flex flex-column align-items-center gap-2">
                   <Button
@@ -63,7 +77,7 @@ export default function ResetPasswordForm() {
                   <Card className="p-4 shadow-sm">
                      <Card.Body>
                         <Card.Title className="mb-4 text-center">
-                           Enter Your Password
+                           Enter your email to reset password
                         </Card.Title>
                         <FormikElement/>
                      </Card.Body>

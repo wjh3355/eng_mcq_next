@@ -7,97 +7,116 @@ import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 import BSForm from "react-bootstrap/Form"
 import Alert from "react-bootstrap/Alert"
+import Spinner from "react-bootstrap/esm/Spinner";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { LoginFormFields } from "@/definitions";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import * as yup from "yup";
 import Link from "next/link";
+import { z } from "zod";
+import toast from "react-hot-toast";
 
-export default function SignInForm() {
+const zodSchema = z.object({
+   email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
+   password: z.string().nonempty({ message: "Required" })
+})
+
+function ReactHookForm() {
+
    const router = useRouter();
 
-   const yupValidationSchema = yup.object({
-      email: yup.string().email("Invalid email address").required("Required"),
-      password: yup.string().required("Required")
+   const { 
+      register,
+      handleSubmit,
+      trigger,
+      reset,
+      formState: { errors, isValid, isDirty, isSubmitting },
+   } = useForm<LoginFormFields>({ 
+      resolver: zodResolver(zodSchema),
+      defaultValues: { email: "", password: "" }
    })
 
-   const FormikElement = () => 
-      <Formik
-         initialValues={{ email: "", password: "" }}
-         validationSchema={yupValidationSchema}
-         onSubmit={async (values, { setSubmitting, setStatus }) => {
-            
-            setSubmitting(true);
-            setStatus({});
+   async function attemptLogIn(data: LoginFormFields) {
 
-            try {
-               const res = await signIn("credentials", {
-                  email: values.email.toLowerCase().trim(),
-                  password: values.password.trim(),
-                  redirect: false,
-               });
-               if (res?.error) {
+      try {
+         const res = await signIn("credentials", {
+            email: data.email.toLowerCase().trim(),
+            password: data.password.trim(),
+            redirect: false,
+         });
 
-                  switch (res.code) {
-                     case "1":
-                        setStatus({ msg: "Invalid email or password." });
-                        break;
-                     case "2":
-                        setStatus({ msg: "You have been suspended!" });
-                        break;
-                     case "3":
-                     default:
-                        setStatus({ msg: "Unknown error. Please try again." });
-                        break;
-                  }
-
-               } else {
-
-                  setStatus({ msg: "Welcome! Redirecting..." });
-                  await new Promise((r) => setTimeout(r, 500));
-                  router.push("/");
-
-               }
-            } catch (e) {
-               setStatus({ msg: "Error incountered. Try again later." });
-            } finally {
-               setSubmitting(false);
+         if (res?.error) {
+            switch (res.code) {
+               case "1":
+                  toast.error("Invalid email or password.");
+                  break;
+               case "2":
+                  toast.error("You have been suspended!");
+                  break;
+               case "3":
+               default:
+                  toast.error("An error occurred. Please try again.");
+                  break;
             }
-         }}
+         } else {
+            reset();
+            toast.success("Welcome! Redirecting...");
+            await new Promise((r) => setTimeout(r, 500));
+            router.push("/");
+         }
+      } catch (e) {
+         toast.error("An error occurred. Please try again.");
+      }
+   };
+   
+   return (
+      <BSForm 
+         onSubmit={handleSubmit(attemptLogIn)}
+         noValidate
       >
-         {({ isSubmitting, status, errors, dirty }) => (
-            <BSForm as={Form} noValidate>
-               <BSForm.Group className="mb-3">
-                  <BSForm.Label htmlFor="email">Email:</BSForm.Label>
-                  <BSForm.Control as={Field} type="email" name="email" />
-                  <BSForm.Text as={ErrorMessage} name="email" component="div" className="text-danger"/>
-               </BSForm.Group>
 
-               <BSForm.Group className="mb-3">
-                  <BSForm.Label htmlFor="password">Password:</BSForm.Label>
-                  <BSForm.Control as={Field} type="password" name="password" />
-                  <BSForm.Text as={ErrorMessage} name="password" component="div" className="text-danger"/>
-               </BSForm.Group>
+         <BSForm.Group className="mb-3">
+            <BSForm.Label htmlFor="email">Email:</BSForm.Label>
+            <BSForm.Control 
+               {...register("email", { required: true })}
+               type="email"
+               onBlur={() => trigger("email")}
+            />
+            <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
+         </BSForm.Group>
 
-               {status?.msg && <div className="mb-3 text-danger">{status.msg}</div>}
+         <BSForm.Group className="mb-3">
+            <BSForm.Label htmlFor="email">Password:</BSForm.Label>
+            <BSForm.Control 
+               {...register("password", { required: true })}
+               type="password"
+               onBlur={() => trigger("password")}
+            />
+            <BSForm.Text className="text-danger">{errors.password?.message}</BSForm.Text>
+         </BSForm.Group>
 
-               <div className="text-center d-flex flex-column align-items-center gap-2">
-                  <Button
-                     variant="success"
-                     type="submit"
-                     className="w-50"
-                     disabled={isSubmitting || Object.keys(errors).length > 0 || !dirty}
-                  >
-                     {isSubmitting ? "Loading..." : "Log In"}
-                  </Button>
-                  <Link href="/auth/reset-password">Forgot Password?</Link>
-               </div>
-            </BSForm>
-         )}
-      </Formik>
+         <div className="text-center d-flex flex-column align-items-center gap-2">
+            <Button 
+               type="submit"
+               variant="success"
+               className="w-50"
+               disabled={!isDirty || !isValid || isSubmitting}
+            >
+               {isSubmitting ? <Spinner size="sm"/> : "Sign In"}
+            </Button>
+            <Link href="/auth/reset-password">Forgot Password?</Link>
+         </div>
+
+      </BSForm>
+   )
+}
+
+export default function SignInForm() {
 
    return (
       <>
@@ -109,12 +128,15 @@ export default function SignInForm() {
          <Container fluid className="d-flex align-items-center justify-content-center py-3">
             <Row className="w-100 justify-content-center">
                <Col sm={10} md={8} lg={6}>
-                  <Card className="p-4 shadow-sm">
+                  <Card className="p-2 p-md-4 shadow-sm">
                      <Card.Body>
+
                         <Card.Title className="mb-4 text-center">
                            Sign In to Sunbird English
                         </Card.Title>
-                        <FormikElement/>
+
+                        <ReactHookForm/>
+
                      </Card.Body>
                   </Card>
                </Col>
