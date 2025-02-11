@@ -1,7 +1,6 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
-import axios from "axios";
 import { UserAuthDocument } from "./definitions";
 import { z } from "zod";
 
@@ -36,7 +35,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             try {      
 
                // validate credentials
-               // if invalid, throw error code 1
                const zodRes = z.object({
                   email: z.string().nonempty().email(),
                   password: z.string().nonempty(),
@@ -47,19 +45,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                const { email, password, rememberMe } = zodRes.data;
                
-               // check if user exists
-               // if not, throw error code 1
-               const res = await axios.get(
-                  `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get-user-authenticate-only`, 
-                  {
-                     params: { email },
-                     headers: { Authorization: `Bearer ${process.env.AUTH_SECRET}` }
-                  }
-               ).catch(err => {
-                  throw new CustomCredentialsError("1")
-               })
-
-               const user: UserAuthDocument = res.data.userDoc;
+               // Check if user exists
+               const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get-user-authenticate-only?email=${email}`, {
+                  method: 'GET',
+                  headers: {
+                     'Authorization': `Bearer ${process.env.AUTH_SECRET}`,
+                  },
+               }).catch(err => { throw new CustomCredentialsError("1") });
+               
+               if (res.status !== 200) throw new CustomCredentialsError("1");
+               
+               const user: UserAuthDocument = (await res.json()).userDoc;
 
                // check if password is correct, if not, throw error code 1
                if (!(await compare(password, user.passwordHash))) throw new CustomCredentialsError("1");

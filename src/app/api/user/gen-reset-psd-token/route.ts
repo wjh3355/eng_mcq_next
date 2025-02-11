@@ -1,4 +1,4 @@
-import { newUserDocuments, UserAuthDocument } from "@/definitions";
+import { UserAuthDocument } from "@/definitions";
 import { sendPasswordResetEmail } from "@/lib/email/emailActions";
 import client from "@/lib/mongodb/db";
 import { randomBytes } from "crypto";

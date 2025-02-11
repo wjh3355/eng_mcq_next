@@ -30,6 +30,7 @@ export default async function Page() {
 
          {!session && <Advert/>}
 
+         <p className="text-white">{process.env.NEXT_PUBLIC_BASE_URL}</p>
       </Container>
    );
 }

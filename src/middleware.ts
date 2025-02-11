@@ -17,6 +17,7 @@ export default auth(req => {
    }
    
    if (currPath.startsWith("/admin") && req.auth?.user.role !== "admin") {
+      // all pages under /admin should not be accessible if user is not an admin
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`);
    }
    
@@ -24,6 +25,7 @@ export default auth(req => {
       protectedPaths.some((protPath) => currPath.startsWith(protPath)) &&
       !req.auth
    ) {
+      // all pages under /cloze, /mcq, /profile, /test should not be accessible if user is not logged in
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/auth`);
    }
 
