@@ -1,6 +1,6 @@
 import { ClozeObj, MCQQnObj, QnCategory } from "@/definitions";
 import client from "./db";
-import { ClozeObjArrSchema, QnObjArrSchema } from "../zod/zodSchemas";
+import { ClozeObjArrSchema, McqObjArrSchema } from "../zod/zodSchemas";
 
 export async function fetchNumQns(collection: QnCategory | "clozePassage"): Promise<number> {
    try {
@@ -64,7 +64,7 @@ export async function fetchMcqQnArr(
 
       if (data.length === 0) throw new Error("Questions not found");
 
-      const zodResult = QnObjArrSchema.safeParse(data);
+      const zodResult = McqObjArrSchema.safeParse(data);
 
       if (!zodResult.success) throw new Error("Type validation error");
 

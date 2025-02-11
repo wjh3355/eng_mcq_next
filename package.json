@@ -7,7 +7,9 @@
       "build": "next build",
       "start": "next start",
       "lint": "next lint",
-      "checkqn": "npx tsx private/checkQn.ts",
+      "checkmcq": "npx tsx private/checkMcq.ts",
+      "checkcloze": "npx tsx private/checkCloze.ts",
+      "checkspelling": "npx tsx private/checkSpelling.ts",
       "updateqn": "npx tsx private/updateQn.ts",
       "doThis": "npx tsx private/doThis.ts"
    },

@@ -1,6 +1,6 @@
 import { qnCategoriesArrayTuple } from "@/definitions";
 import client from "@/lib/mongodb/db";
-import { QnObjSchema } from "@/lib/zod/zodSchemas";
+import { McqObjSchema } from "@/lib/zod/zodSchemas";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
          );
       }
 
-      const mongoZodRes = QnObjSchema.safeParse(mongoRes);
+      const mongoZodRes = McqObjSchema.safeParse(mongoRes);
 
       if (!mongoZodRes.success) {
          return NextResponse.json(
