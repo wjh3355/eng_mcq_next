@@ -4,17 +4,15 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import Container from "react-bootstrap/esm/Container";
 import { fetchAllCloze } from "@/lib/mongodb/get-qns-server";
+import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ClozeHomePage() {
 
-   const session = await auth();
-   if (!session) redirect("/");
+   await checkAuthForRoute();
 
    return (
       <Container>

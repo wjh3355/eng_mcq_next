@@ -8,30 +8,30 @@ const paramSchema = z.object({
 
 export async function GET(req: NextRequest) {
    
-   // only used server-side in the auth middleware.
+   // this route is only used server-side in the auth.ts file.
    
+   // check if request is authorised (using a secret key)
+   if (req.headers.get("Authorization") !== `Bearer ${process.env.AUTH_SECRET}`) {
+      return NextResponse.json(
+         { error: "Unauthorised" }, 
+         { status: 401 }
+      );
+   }      
+
+   const paramZodRes = paramSchema.safeParse({
+      email: req.nextUrl.searchParams.get("email"),
+   })
+   // check params
+   if (!paramZodRes.success) {
+      return NextResponse.json(
+         { error: "Invalid params" },
+         { status: 400 }
+      );
+   }
+
+   const { email } = paramZodRes.data;
+
    try {
-
-      // check if request is authorised (using a secret key)
-      if (req.headers.get("Authorization") !== `Bearer ${process.env.AUTH_SECRET}`) {
-         return NextResponse.json(
-            { error: "Unauthorised" }, 
-            { status: 401 }
-         );
-      }      
-
-      const paramZodRes = paramSchema.safeParse({
-         email: req.nextUrl.searchParams.get("email"),
-      })
-      // check params
-      if (!paramZodRes.success) {
-         return NextResponse.json(
-            { error: "Invalid params" },
-            { status: 400 }
-         );
-      }
-
-      const { email } = paramZodRes.data;
 
       await client.connect();
 
