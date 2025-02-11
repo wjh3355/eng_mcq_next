@@ -15,7 +15,26 @@ import React from "react";
 import Spinner from "react-bootstrap/esm/Spinner";
 
 export default function MainNavbar() {
-   const { data: session } = useSession();
+   const { data: session, status } = useSession();
+
+   function handleProtectedNavigation(e: React.MouseEvent) {
+      if (status !== "authenticated") {
+         e.preventDefault();
+         return;
+      }
+   }
+
+   if (status === "loading") {
+      return (
+         <Navbar expand="lg" bg="light" data-bs-theme="light">
+            <Container fluid>
+               <Navbar.Brand as={Link} href="/" className="customFont">
+                  Sunbird English
+               </Navbar.Brand>
+            </Container>
+         </Navbar>
+      );
+   }
 
    return (
       <Navbar expand="lg" bg="light" data-bs-theme="light">
@@ -35,14 +54,17 @@ export default function MainNavbar() {
                </Offcanvas.Header>
 
                <Offcanvas.Body>
-                  {session && 
+                  {status === "authenticated" && 
                      <Nav>
-                        <Nav.Link as={Link} href="/mcq">MCQ Questions</Nav.Link>
-                        <Nav.Link as={Link} href="/cloze">Cloze Passages</Nav.Link>
-                        <Nav.Link as={Link} href="/profile">Profile</Nav.Link>
+
+                        <Nav.Link as={Link} href="/mcq" onClick={handleProtectedNavigation}>MCQ Questions</Nav.Link>
+                        <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
+                        <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Profile</Nav.Link>
+
                         {session.user.role === "admin" &&
                            <Nav.Link as={Link} href="/admin" className="text-danger">Admin</Nav.Link>
                         }
+                        
                      </Nav>
                   }
                   <Nav className="ms-auto">
