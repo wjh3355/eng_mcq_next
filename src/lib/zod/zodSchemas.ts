@@ -35,8 +35,6 @@ export const McqObjSchema = z
       }
    );
 
-export const McqObjArrSchema = z.array(McqObjSchema);
-
 export const ClozeObjSchema = z
    .object({
       qnNum: z.number(),
@@ -71,8 +69,6 @@ export const ClozeObjSchema = z
       }
    );
 
-export const ClozeObjArrSchema = z.array(ClozeObjSchema);
-
 export const SpellingObjSchema = z
    .object({
       qnNum: z.number(),
@@ -83,25 +79,33 @@ export const SpellingObjSchema = z
    })
    .strict();
 
-export const SpellingObjArrSchema = z.array(SpellingObjSchema);
+export const UserAuthDataSchema = z.object({
+   email: z.string().email().nonempty(),
+   passwordHash: z.string().nonempty(),
+   role: z.enum(["user", "admin"]),
+   psdResetToken: z.union([z.string().nonempty(), z.null()]),
+   psdResetTokenExpiry: z.union([z.string().nonempty(), z.null()]),
+   dateCreated: z.string().nonempty(),
+   isSuspended: z.boolean(),
+}).strict();
 
-// export const UserDataSchema = z.object({
-//    name: z.string(),
-//    dateCreated: z.date(),
-//    qnData: z.record(
-//       z.enum([
-//          "gep",
-//          "phrasalVerbs",
-//          "psleWordsCloze",
-//          "psleWordsMcq",
-//          "pslePhrasesCloze"
-//       ]),
-//       z.object({
-//          numQnsAttempted: z.number(),
-//          wrongQnNums: z.array(z.number()),
-//       }).strict()
-//    )
-// }).strict();
+export const UserProfileDataSchema = z.object({
+   email: z.string().email().nonempty(),
+   qnData: z.record(
+      z.object({
+         numQnsAttempted: z.number(),
+         wrongQnNums: z.array(z.number())
+      })
+   ),
+   clozeData: z.array(
+      z.object({
+         qnNum: z.number(),
+         correctAns: z.array(z.number())
+      })
+   ),
+   score: z.number(),
+   dateCreated: z.string().nonempty(),
+}).strict()
 
 export const AIDefinitionSchema = z.object({
    wordToDefine: z.string(),

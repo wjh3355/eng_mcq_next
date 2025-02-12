@@ -5,7 +5,7 @@ import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
-import { fetchNumQns } from "@/lib/mongodb/get-qns-server";
+import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
 
 type StaticParams = {
    category: QnCategory,

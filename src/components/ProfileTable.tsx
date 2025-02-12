@@ -21,17 +21,17 @@ import {
 import Link from "next/link";
 import { Info, Trash2 } from "lucide-react";
 
-import { sum } from "lodash";
+import { set, sum } from "lodash";
 import { UserProfileDocument } from "@/definitions";
-import axios, { AxiosError } from "axios";
 import { DateTime } from "luxon";
+import { resetUserData } from "@/lib/mongodb/user-server-actions";
+import toast from "react-hot-toast";
 
 export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
    const { qnData, clozeData, score, email, dateCreated } = user;
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
-   const [resetDataError, setResetDataError] = useState<string>("");
 
    function McqStats() {
       if (JSON.stringify(qnData) === "{}") {
@@ -199,12 +199,13 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                <Trash2 className="me-1" />
                <strong>Erase all data</strong>
             </Button>
-            <Link
+            {/* TODO: implement this */}
+            {/* <Link
                className="btn btn-warning d-flex align-items-center px-4"
                href="/profile/changePassword"
             >
                <strong>Change Password</strong>
-            </Link>
+            </Link> */}
          </div>
 
          <Modal
@@ -221,26 +222,21 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
                <p className="text-center mb-3">
                   Do you really want to erase all your question answering data?
-                  This <strong>cannot</strong> be undone.
+                  This <strong>cannot</strong> be undone!
                </p>
 
                <div className="d-flex justify-content-center">
                   <div className="hstack gap-3">
                      <Button
                         variant="light"
-                        onClick={() =>
-                           axios
-                              .post("/api/user/update-profile-data", {
-                                 email,
-                                 action: {
-                                    todo: "reset data",
-                                 },
+                        onClick={() => {
+                           resetUserData(email)
+                              .then(() => {
+                                 setShowCfmEraseData(false);
+                                 toast.success("Your data has been erased.");
                               })
-                              .then(res => window.location.reload())
-                              .catch((err: AxiosError<{ error: string }>) => {
-                                 setResetDataError(err.response?.data.error ?? "Unknown error occurred when resetting your data")
-                              })
-                        }
+                              .catch(() => toast.error("Failed to erase your data. Please try again later."));
+                        }}
                      >
                         Confirm Erase
                      </Button>
@@ -252,12 +248,6 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                      </Button>
                   </div>
                </div>
-
-               {resetDataError &&
-                  <Alert variant="danger">
-                     <strong>{resetDataError}. Please try again later.</strong>
-                  </Alert>
-               }
 
             </Modal.Body>
          </Modal>

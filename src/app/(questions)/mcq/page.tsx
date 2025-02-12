@@ -7,7 +7,7 @@ import React, { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import Container from "react-bootstrap/esm/Container";
-import { fetchNumQns } from "@/lib/mongodb/get-qns-server";
+import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
 
 export const dynamic = 'force-dynamic';
 

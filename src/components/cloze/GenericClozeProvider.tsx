@@ -1,27 +1,32 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { ClozeContextValue, ClozeObj, EMPTY_CLOZE_CONTEXT_VALUE, UserProfileDocument } from '@/definitions';
-import axios, { AxiosError } from "axios";
+import {
+   ClozeContextValue,
+   EMPTY_CLOZE_CONTEXT_VALUE,
+   UserProfileDocument,
+} from "@/definitions";
+import { fetchCloze, fetchDemoCloze } from "@/lib/mongodb/cloze-server-actions";
+import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
 
-export default function createGenericClozeProvider({
+export default function useGenericClozeProvider({
    user,
    qnNum,
-   isDemo
-}: { 
-   user: UserProfileDocument
-   qnNum: number,
-   isDemo: boolean
+   isDemo,
+}: {
+   user: UserProfileDocument;
+   qnNum: number;
+   isDemo: boolean;
 }) {
 
+   // create context, fallback is an empty context value
    const QnContext = createContext<ClozeContextValue>(EMPTY_CLOZE_CONTEXT_VALUE);
 
-   function useClozeContext() { 
-      return useContext(QnContext);
-   }
+   // create hook to use context
+   function useClozeContext() { return useContext(QnContext) }
 
+   // create provider component
    function ClozeProvider({ children }: { children: React.ReactNode }) {
-
       const [prevUserCorrectAns, setPrevUserCorrectAns] = useState<null | number[]>(null);
       const [passageTitle, setPassageTitle] = useState<string>("");
       const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
@@ -31,151 +36,125 @@ export default function createGenericClozeProvider({
 
       function handleCompletion(correctAns: number[]) {
 
+         // if demo, do not update user profile (there isnt one, email is empty)
          if (isDemo) {
             setPrevUserCorrectAns(correctAns);
             return;
          }
 
-         axios
-            .post(
-               "/api/user/update-profile-data",
-               {
-                  email: user.email,
-                  action: {
-                     todo: "update cloze",
-                     clozeQnNum: qnNum,
-                     correctAns
-                  }
-               }
+         // if not demo, update user profile with correct answer
+         updateUserProfile(user.email, {
+            todo: "update cloze",
+            clozeQnNum: qnNum,
+            correctAns,
+         }).catch((err) =>
+            setError(
+               err instanceof Error ? err.message : "An unknown error occurred"
             )
-            .then(() => {})
-            .catch((err: AxiosError<{ error: string }>) => 
-               setError(err.response?.data.error ?? "An unknown error occurred")
-            )
+         );
       }
 
       function handleReset() {
 
+         // if demo, set prevUserCorrectAns to null
          if (isDemo) {
             setPrevUserCorrectAns(null);
             return;
          }
 
-         axios
-            .post(
-               "/api/user/update-profile-data",
-               {
-                  email: user.email,
-                  action: {
-                     todo: "update cloze",
-                     clozeQnNum: qnNum,
-                     correctAns: null
-                  }
-               }
+         // if not demo, update user profile by deleting the cloze entry
+         updateUserProfile(user.email, {
+            todo: "update cloze",
+            clozeQnNum: qnNum,
+            correctAns: null,
+         }).catch((err) =>
+            setError(
+               err instanceof Error ? err.message : "An unknown error occurred"
             )
-            .then(() => window.location.reload())
-            .catch((err: AxiosError<{ error: string }>) => 
-               setError(err.response?.data.error ?? "An unknown error occurred")
-            )
+         );
       }
 
       useEffect(() => {
 
-         if (isDemo) {
+         const fetchData = async() => {
+            // if user is attempting demo, an empty user object is passed in --> correctAns is null
+            // if not, the actual user object is passed in --> correctAns for this cloze number is 
+            // either the user's previous correct answer or null if the user has not attempted the question before
+            const userDataForThisCloze = user.clozeData.find(cz => cz.qnNum === qnNum);
+            setPrevUserCorrectAns(userDataForThisCloze?.correctAns || null);
 
-            axios
-               .get("/api/qns/get-demo-cloze-qn")
-               .then(res => {
-                  const clozeObj: ClozeObj = res.data.clozeObj;
+            // if demo, fetch demo cloze (qnNum = 1), else fetch actual cloze based on qnNum
+            const clozePromise = isDemo ? fetchDemoCloze() : fetchCloze(qnNum);
 
-                  setWordsToTestArr(
-                     clozeObj.passage
-                        .match(/\{[^}]*\}/g)!
-                        .map(match => match
-                           .slice(1, -1)
-                           .split("/")
-                           .filter(Boolean)
-                        )
-                  );
-         
-                  setTextArr(
-                     clozeObj.passage
-                        .replace(/{.*?}/g, "BLANK")
-                        .split(/(BLANK|\|\|)/)
-                        .filter(Boolean)
-                  );
-         
-                  setPassageTitle(clozeObj.title);
-               })
-               .catch((err: AxiosError<{ error: string }>) => 
-                  setError(err.response?.data.error ?? "An unknown error occurred")
-               )
+            try {
 
-         } else {
+               // wait for cloze data to be fetched
+               const clozeObj = await clozePromise;
 
-            const userDataForCurrentCloze = user.clozeData.find(cz => cz.qnNum === qnNum);
-            setPrevUserCorrectAns(userDataForCurrentCloze?.correctAns || null);
-
-            axios
-               .get(
-                  "/api/qns/get-cloze-qn",
-                  { params: { qnNum } }
-               )
-               .then(res => {
-                  const clozeObj: ClozeObj = res.data.clozeObj;
+               // match all pairs of curly braces and extract the words to test (joined by "/")
+               // split the words by "/" and filter out empty strings
+               setWordsToTestArr(
+                  clozeObj.passage
+                     .match(/\{[^}]*\}/g)!
+                     .map((match) =>
+                        match.slice(1, -1).split("/").filter(Boolean)
+                     )
+               );
    
-                  setWordsToTestArr(
-                     clozeObj.passage
-                        .match(/\{[^}]*\}/g)!
-                        .map(match => match
-                           .slice(1, -1)
-                           .split("/")
-                           .filter(Boolean)
-                        )
-                  );
-         
-                  setTextArr(
-                     clozeObj.passage
-                        .replace(/{.*?}/g, "BLANK")
-                        .split(/(BLANK|\|\|)/)
-                        .filter(Boolean)
-                  );
-         
-                  setPassageTitle(clozeObj.title);
-               })
-               .catch((err: AxiosError<{ error: string }>) => 
-                  setError(err.response?.data.error ?? "An unknown error occurred")
-               )
+               // replace all curly braces with "BLANK"
+               // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
+               // "BLANK" and "||"" are included in the split array
+               // filter out empty strings
+               setTextArr(
+                  clozeObj.passage
+                     .replace(/{.*?}/g, "BLANK")
+                     .split(/(BLANK|\|\|)/)
+                     .filter(Boolean)
+               );
+   
+               // set the passage title
+               setPassageTitle(clozeObj.title);
+
+            } catch (err) {
+               setError(err instanceof Error ? err.message : "An unknown error occurred");
+            }
+
          }
 
-      }, [])
+         fetchData();
+         
+      }, []);
 
       useEffect(() => {
+         // if all data is loaded, set isLoading to false
+         // prevent loading spinner from showing when data is already loaded
          if (
-            passageTitle.length > 0
-            && textArr.length > 0
-            && wordsToTestArr.length > 0
-         ) setIsLoading(false);
-      }, [passageTitle, textArr, wordsToTestArr])
+            passageTitle.length > 0 &&
+            textArr.length > 0 &&
+            wordsToTestArr.length > 0
+         )
+            setIsLoading(false);
+      }, [passageTitle, textArr, wordsToTestArr]);
 
       return (
-         <QnContext.Provider value={{
-            isDemo,
-            prevUserCorrectAns,
-            wordsToTestArr,
-            textArr,
-            qnNum,
-            passageTitle,
-            isLoading,
-            error,
-            handleCompletion,
-            handleReset
-         }}>
+         <QnContext.Provider
+            value={{
+               isDemo,
+               prevUserCorrectAns,
+               wordsToTestArr,
+               textArr,
+               qnNum,
+               passageTitle,
+               isLoading,
+               error,
+               handleCompletion,
+               handleReset,
+            }}
+         >
             {children}
          </QnContext.Provider>
       );
    }
 
    return { useClozeContext, ClozeProvider };
-
 }

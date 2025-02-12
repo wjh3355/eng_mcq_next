@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 
-import createGenericMCQProvider from "./GenericMCQProvider";
+import useGenericMcqProvider from "./GenericMCQProvider";
 import GenericMCQLeft from "./GenericMCQLeft";
 import GenericMCQRight from "./GenericMCQRight";
 import GenericMCQEnd from "./GenericMCQEnd";
@@ -31,7 +31,8 @@ export default function MCQApp({
    isRedo: boolean
 }) {
 
-   const { MCQProvider, useMCQContext } = createGenericMCQProvider({
+   // initialize the MCQProvider with the appropriate context
+   const { MCQProvider, useMCQContext } = useGenericMcqProvider({
       qnCategory,
       qnNumArray,
       email,
@@ -39,6 +40,7 @@ export default function MCQApp({
       isRedo
    });
 
+   // ErrorContainer component to display error message (might replace with toast later)
    function ErrorContainer() {
       const { error } = useMCQContext();
 

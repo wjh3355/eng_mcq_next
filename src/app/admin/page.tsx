@@ -1,5 +1,5 @@
 import { QnCategory, QnCategoryUserData, QN_CATEGORIES_DATA } from "@/definitions";
-import { getAllUsersServer } from "@/lib/mongodb/get-user-server";
+import { fetchAllUsers } from "@/lib/mongodb/user-server-actions";
 import { DateTime } from "luxon";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
@@ -13,7 +13,7 @@ export default async function Admin_AllUsersPage() {
    const session = await auth();
    if (session?.user.role !== "admin") redirect("/");
 
-   const allUsersArray = await getAllUsersServer();
+   const allUsersArray = await fetchAllUsers();
 
    return (
       <Container>

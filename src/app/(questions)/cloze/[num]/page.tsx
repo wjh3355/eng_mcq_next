@@ -1,6 +1,6 @@
 import ClozeApp from "@/components/cloze/ClozeApp";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
-import { fetchNumQns } from "@/lib/mongodb/get-qns-server";
+import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
 import { range } from "lodash";
 
 export const dynamicParams = false;

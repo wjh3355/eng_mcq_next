@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { UserProfileDocument } from "@/definitions";
-import { getUserServer } from "../mongodb/get-user-server";
+import { fetchUser } from "../mongodb/user-server-actions";
 
 export async function checkAuthForRoute(): Promise<UserProfileDocument> {
 
@@ -11,7 +11,7 @@ export async function checkAuthForRoute(): Promise<UserProfileDocument> {
 
    if (!session) redirect("/");
 
-   const userDoc = await getUserServer({ email: session.user.email, type: "profile" })
+   const userDoc = await fetchUser(session.user.email, "profile");
 
-   return userDoc as UserProfileDocument;
+   return userDoc;
 }

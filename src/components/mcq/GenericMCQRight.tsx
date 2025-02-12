@@ -31,10 +31,12 @@ export default function GenericMCQRight({
 
    useEffect(() => {
       if (options.length !== 0) {
+         // shuffle the options if they are not empty
          setRandomisedOptions(shuffle(options));
       }
 
       return () => {
+         // reset the options when the component unmounts
          setRandomisedOptions([]);
          setIsAllDisabled(false);
          setSelectedOption(null);
@@ -45,11 +47,15 @@ export default function GenericMCQRight({
 
       return randomisedOptions.map((thisOption, idx) => {
 
+         // true if this option is the correct answer
          const isThisCorrectOption = thisOption === correctAns;
+         // true if this option is the selected option
          const isThisSelected = thisOption === selectedOption;
-
+         // mark as red when all options are disabled and this option is selected but is not the correct answer
          const isRed = isAllDisabled && isThisSelected && !isThisCorrectOption;
+         // mark as green if all options are disabled and this option is the correct answer (regardless of whether it is selected)
          const isGreen = isAllDisabled && isThisCorrectOption;
+         // mark as bolded if all options are disabled and this option is either the correct answer or the selected option
          const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
 
          return <MCQOption
@@ -58,7 +64,7 @@ export default function GenericMCQRight({
                onClick={async () => {
                   setSelectedOption(thisOption);
                   setIsAllDisabled(true);
-                  await handleOptionClick(isThisCorrectOption);
+                  handleOptionClick(isThisCorrectOption);
                }}
                $isRed={isRed}
                $isGreen={isGreen}
@@ -82,6 +88,7 @@ export default function GenericMCQRight({
 
    }
 
+   // if the end of the quiz has been reached, return null
    if (hasReachedEnd) return null;
 
    return (

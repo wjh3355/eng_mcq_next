@@ -7,7 +7,7 @@ import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_M
 import { fetchDemoMcq, fetchMcq } from "@/lib/mongodb/mcq-server-actions";
 import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
 
-export default function useGenericMcqProvider({
+export default function useGenericSpellingProvider({
    qnCategory,
    qnNumArray,
    email,
@@ -21,11 +21,8 @@ export default function useGenericMcqProvider({
    isRedo: boolean
 }) {
 
-   // toUseUserData is true if the category is not demo, email is not empty, and not redo
-   const toUseUserData: boolean = !(qnCategory === "demo" || email === "" || isRedo);
-
    // create context, fallback is an empty context value
-   const QnContext = createContext<MCQContextValue>(EMPTY_MCQ_CONTEXT_VALUE);
+   const QnContext = createContext();
 
    // create hook to use context
    function useMCQContext() { return useContext(QnContext) }

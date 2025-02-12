@@ -5,7 +5,7 @@ import Table from "react-bootstrap/Table";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import Container from "react-bootstrap/esm/Container";
-import { fetchAllCloze } from "@/lib/mongodb/get-qns-server";
+import { fetchAllCloze } from "@/lib/mongodb/cloze-server-actions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 
 export const dynamic = 'force-dynamic';

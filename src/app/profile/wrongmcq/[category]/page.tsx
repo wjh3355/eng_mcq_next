@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import Link from "next/link";
 
-import { fetchMcqQnArr } from "@/lib/mongodb/get-qns-server";
+import { fetchMcqQnArr } from "@/lib/mongodb/mcq-server-actions";
 import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, QnCategory } from "@/definitions";
 
