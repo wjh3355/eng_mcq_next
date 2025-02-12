@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/global.css";
 import { Inter } from 'next/font/google';
 
-import MainNavbar from "@/components/navbar/MainNavbar";
+import NavBar from "@/components/navbar/NavBar";
 import Footer from "@/components/Footer";
 
 import { SessionProvider } from "next-auth/react";
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" style={{height: "100%"}}>
          <body className={`${inter.className} antialiased`} style={{height: "100%", display: "flex", flexDirection: "column"}}>
             <SessionProvider>
-               <MainNavbar />
+               <NavBar />
                <main className="mb-4" style={{flex: "1"}}>
                   <Toaster/>
                   {children}

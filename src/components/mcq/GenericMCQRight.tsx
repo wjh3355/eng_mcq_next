@@ -43,7 +43,7 @@ export default function GenericMCQRight({
       }
    }, [options]);
 
-   function OptionsArr() { 
+   function OptionsArr() {
 
       return randomisedOptions.map((thisOption, idx) => {
 

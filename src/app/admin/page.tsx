@@ -7,8 +7,9 @@ import Col from "react-bootstrap/esm/Col";
 import Table from "react-bootstrap/esm/Table";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
-export default async function Admin_AllUsersPage() {
+export default async function AdminHomePage() {
 
    const session = await auth();
    if (session?.user.role !== "admin") redirect("/");
@@ -16,7 +17,7 @@ export default async function Admin_AllUsersPage() {
    const allUsersArray = await fetchAllUsers();
 
    return (
-      <Container>
+      <Container fluid>
 
          <Row className="my-3">
             <Col>
@@ -29,7 +30,7 @@ export default async function Admin_AllUsersPage() {
                <tr>
                   <th>#</th>
                   <th>Email</th>
-                  <th>Hashed password</th>
+                  <th>Password (Encrypted)</th>
                   <th>Role</th>
                   <th>Date Created</th>
                   <th>Is Suspended?</th>
@@ -75,6 +76,16 @@ export default async function Admin_AllUsersPage() {
                })}
             </tbody>
          </Table>
+
+         <Row className="my-3">
+            <Col>
+               <ul>
+                  <li>
+                     <Link href="/admin/create-new-unreg-user">Create new unregistered user</Link>
+                  </li>
+               </ul>
+            </Col>
+         </Row>
       </Container>
    );
 }

@@ -14,7 +14,7 @@ import { signOut, signIn } from "next-auth/react";
 import React from "react";
 import Spinner from "react-bootstrap/esm/Spinner";
 
-export default function MainNavbar() {
+export default function NavBar() {
    const { data: session, status } = useSession();
 
    function handleProtectedNavigation(e: React.MouseEvent) {
@@ -59,6 +59,7 @@ export default function MainNavbar() {
 
                         <Nav.Link as={Link} href="/mcq" onClick={handleProtectedNavigation}>MCQ Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
+                        <Nav.Link as={Link} href="/spelling" onClick={handleProtectedNavigation}>Spelling</Nav.Link>
                         <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Profile</Nav.Link>
 
                         {session.user.role === "admin" &&
