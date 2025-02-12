@@ -107,6 +107,12 @@ export const UserProfileDataSchema = z.object({
    dateCreated: z.string().nonempty(),
 }).strict()
 
+export const UserInviteSchema = z.object({
+   email: z.string().email().nonempty(),
+   token: z.string().nonempty(),
+   dateCreated: z.string().nonempty(),
+}).strict()
+
 export const AIDefinitionSchema = z.object({
    wordToDefine: z.string(),
    definitions: z.array(

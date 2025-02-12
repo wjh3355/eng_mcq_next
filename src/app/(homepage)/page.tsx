@@ -5,7 +5,7 @@ import Sunbirds from "@/components/homepg/Sunbirds";
 import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
 import Link from "next/link";
-import { CircleUserRound, FileText, NotebookPen } from "lucide-react";
+import { CircleUserRound, FileText, NotebookPen, SpellCheck2 } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -51,6 +51,13 @@ function LoggedInLinks() {
                href="/cloze"
             >
                <FileText className="me-2"/>Cloze Passages
+            </Link>
+
+            <Link
+               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+               href="/spelling"
+            >
+               <SpellCheck2 className="me-2"/>Spelling Questions
             </Link>
 
             <Link

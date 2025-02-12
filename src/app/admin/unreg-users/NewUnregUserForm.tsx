@@ -7,15 +7,12 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import BSForm from "react-bootstrap/Form";
 
-import axios, { AxiosError } from "axios";
-import { UserInviteDocument } from "@/definitions";
 import { z } from "zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Spinner from "react-bootstrap/esm/Spinner";
-import { DateTime } from "luxon";
 import toast from "react-hot-toast";
+import { createNewUnregUser } from "@/lib/mongodb/user-server-actions";
 
 type FormValues = { email: string };
 
@@ -25,52 +22,32 @@ const zodSchema = z.object({
 
 function ReactHookForm() {
 
-   const [message, setMessage] = useState<null | React.JSX.Element>(null);
-
    const { 
       register,
       handleSubmit,
       trigger,
+      reset,
       formState: { errors, isValid, isDirty, isSubmitting },
    } = useForm<FormValues>({ 
       resolver: zodResolver(zodSchema),
       defaultValues: { email: "" }
    })
-
-   async function attemptCreateNewUnregUser(data: FormValues) {
-      setMessage(null);
-
-      try {
-         const res = await axios.post("/api/user/create-new-unreg-user", { email: data.email.toLowerCase().trim() });
-   
-         const newInvite = res.data.newInvite as UserInviteDocument;
-         setMessage(
-            <p className="text-success">
-               Send this link to the new user to register their
-               account:
-               <br />
-               <strong>
-                  {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/{newInvite.token}
-               </strong>
-               <br/>
-               Invite created {DateTime.fromISO(newInvite.dateCreated).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}. Will not expire.
-            </p>
-         );
-         toast.success("Successfully created new user invite.");
-
-      } catch (error) {
-         if (error instanceof AxiosError) {
-            toast.error("Request error. Try again.");
-         } else {
-            toast.error("An unknown error occured. Please try again.");
-         }
-      }
-
-   };
    
    return (
       <BSForm 
-         onSubmit={handleSubmit(attemptCreateNewUnregUser)}
+         onSubmit={
+            handleSubmit(
+               (data: FormValues) => {
+                  const email = data.email.trim().toLowerCase();
+                  createNewUnregUser(email)
+                     .then(() => {
+                        toast.success("Successfully created new user invite for " + email, { duration: 5000 });
+                        reset();
+                     })
+                     .catch(err => toast.error(err instanceof Error ? err.message : "An unexpected error occured."));
+               }
+            )
+         }
          noValidate
       >
 
@@ -79,16 +56,11 @@ function ReactHookForm() {
             <BSForm.Control 
                {...register("email", { required: true })}
                type="email"
+               autoComplete="off"
                onBlur={() => trigger("email")}
             />
             <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
          </BSForm.Group>
-
-         {message &&
-            <div className="mb-3 text-danger">
-               {message}
-            </div>
-         }
 
          <div className="text-center d-flex flex-column align-items-center gap-2">
             <Button 
@@ -114,7 +86,7 @@ export default function NewUnregUserForm() {
       >
          <Row className="w-100 justify-content-center">
             <Col sm={10} md={8} lg={6}>
-               <Card className="p-4 shadow-sm">
+               <Card className="p-4 shadow-lg border-0">
                   <Card.Body>
                      <Card.Title className="mb-4 text-center">
                         Create New (Unregistered) User
