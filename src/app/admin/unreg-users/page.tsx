@@ -10,6 +10,7 @@ export default async function NewUnregUserFormServer() {
    if (session?.user.role !== "admin") redirect("/");
 
    const allInvites = await fetchAllInvites();
+   if ("error" in allInvites) return <div>{allInvites.error}</div>;
 
    return (
       <>

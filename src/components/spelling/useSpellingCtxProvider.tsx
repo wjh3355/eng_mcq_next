@@ -6,14 +6,21 @@ import { SpellingQnObj, EMPTY_SPELLING_QN_OBJ, SpellingContextValue, EMPTY_SPELL
 
 import { fetchSpelling } from "@/lib/mongodb/spelling-server-actions";
 import toast from "react-hot-toast";
+import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
 
-export default function useGenericSpellingProvider({ qnNumArray }: { qnNumArray: number[] }) {
+export default function useSpellingCtxProvider({ 
+   qnNumArray,
+   email
+}: { 
+   qnNumArray: number[],
+   email: string
+}) {
 
    // create context, fallback is an empty context value
-   const QnContext = createContext<SpellingContextValue>(EMPTY_SPELLING_CONTEXT_VALUE);
+   const ThisContext = createContext<SpellingContextValue>(EMPTY_SPELLING_CONTEXT_VALUE);
 
    // create hook to use context
-   function useSpellingContext() { return useContext(QnContext) }
+   function useSpellingContext() { return useContext(ThisContext) }
 
    // create provider component
    function SpellingProvider({ children }: { children: React.ReactNode }) {
@@ -48,15 +55,14 @@ export default function useGenericSpellingProvider({ qnNumArray }: { qnNumArray:
             }
          }
 
-         // if (toUseUserData && qnCategory !== "demo") {
-         //    // if not demo, update user profile with correct answer
-         //    updateUserProfile(email, {
-         //       todo: "update mcq",
-         //       mcqCategory: qnCategory,
-         //       mcqCatQnNum: qnObj.qnNum,
-         //       isCorrect: rw
-         //    }).catch(err => setError(err instanceof Error ? err.message : "An unknown error occurred"));
-         // }
+         // if email is not empty, update user profile with the user's answer
+         if (email) {
+            updateUserProfile(email, {
+               todo: "update spelling",
+               spellingQnNum: qnObj.qnNum,
+               isSpellingCorrect: rw
+            }).then(res => res.error && setError(res.error));
+         }
       }
 
       function redoSet() {
@@ -92,14 +98,17 @@ export default function useGenericSpellingProvider({ qnNumArray }: { qnNumArray:
                return;
             }
       
+            // fetch the next question using server action
+            // fetch the user's profile using server action
+            const spellingPromise = fetchSpelling(qnSequence[0]);
+            const userPromise = fetchUser(email, "profile");
+
             try {
-               // fetch the next question using server action
-               const spellingFetch = await fetchSpelling(qnSequence[0]);
+               // wait for both promises to resolve
+               const [spellingRes, userRes] = await Promise.all([spellingPromise, userPromise]);
 
-               // fake loading time
-               // await new Promise(resolve => setTimeout(resolve, 1000));
-
-               setQnObj(spellingFetch);
+               "error" in spellingRes ? setError(spellingRes.error) : setQnObj(spellingRes);
+               "error" in userRes ? setError(prev => prev + "; " + userRes.error) : setUserPoints(userRes.score);
             } catch (err) {
                setError(err instanceof Error ? err.message : "An unknown error occurred");
             }
@@ -115,7 +124,7 @@ export default function useGenericSpellingProvider({ qnNumArray }: { qnNumArray:
       }, [qnObj])
 
       return (
-         <QnContext.Provider value={{
+         <ThisContext.Provider value={{
             qnObj,
             isLoading,
             isCorrect,
@@ -131,7 +140,7 @@ export default function useGenericSpellingProvider({ qnNumArray }: { qnNumArray:
             redoSet
          }}>
             {children}
-         </QnContext.Provider>
+         </ThisContext.Provider>
       );
    }
 

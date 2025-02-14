@@ -1,12 +1,12 @@
 "use server";
 
-import { MCQQnObj, QnCategory } from "@/definitions";
+import { MCQQnObj, McqCategory } from "@/definitions";
 import client from "./db";
 import { McqObjSchema } from "../zod/zodSchemas";
 import { auth } from "@/auth";
 import { z } from "zod";
 
-export async function fetchMcqQnArr(collection: QnCategory | 'demo', qnNums: number[]) {
+export async function fetchMcqQnArr(collection: McqCategory | 'demo', qnNums: number[]) {
    try {
       const session = await auth();
 
@@ -35,15 +35,15 @@ export async function fetchMcqQnArr(collection: QnCategory | 'demo', qnNums: num
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch array of MCQ questions from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 };
 
-export async function fetchMcq(collection: QnCategory, qnNum: number) {
+export async function fetchMcq(collection: McqCategory, qnNum: number) {
    try {
       const session = await auth();
 
@@ -67,10 +67,10 @@ export async function fetchMcq(collection: QnCategory, qnNum: number) {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch MCQ question from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 };
@@ -95,10 +95,10 @@ export async function fetchDemoMcq(qnNum: number) {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch MCQ question from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 };

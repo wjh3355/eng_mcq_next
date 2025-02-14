@@ -7,6 +7,7 @@ import Skeleton from "react-loading-skeleton";
 import Container from "react-bootstrap/esm/Container";
 import { fetchAllCloze } from "@/lib/mongodb/cloze-server-actions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
+import toast from "react-hot-toast";
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +29,10 @@ export default async function ClozeHomePage() {
 
 async function ClozeTable() {
    const clozeObjArr = await fetchAllCloze();
+   if ("error" in clozeObjArr) {
+      toast.error(clozeObjArr.error);
+      return;
+   }
 
    return (
       <Row>

@@ -1,23 +1,24 @@
 "use server";
 
-import { newUserInvite, QnCategory, UserAuthDocument, UserInviteDocument, UserProfileDocument } from "@/definitions";
+import { newUserInvite, McqCategory, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ } from "@/definitions";
 import client from "./db";
 import { UserAuthDataSchema, UserInviteSchema, UserProfileDataSchema } from "../zod/zodSchemas";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { UpdateFilter } from "mongodb";
 
 export async function fetchUser(
    email: string,
    type: "auth"
-): Promise<UserAuthDocument>;
+): Promise<UserAuthDocument | { error: string }>;
 
 export async function fetchUser(
    email: string,
    type: "profile"
-): Promise<UserProfileDocument>;
+): Promise<UserProfileDocument | { error: string }>;
 
-export async function fetchUser(email: string, type: "auth" | "profile"): Promise<UserAuthDocument | UserProfileDocument> {
+export async function fetchUser(email: string, type: "auth" | "profile"): Promise<UserAuthDocument | UserProfileDocument | { error: string }> {
 
    try {
 
@@ -46,10 +47,10 @@ export async function fetchUser(email: string, type: "auth" | "profile"): Promis
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to fetch user ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 
@@ -98,10 +99,10 @@ export async function fetchAllUsers() {
    } catch (error) {
       if (error instanceof Error) {
          console.error("Unable to fetch all users:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }
@@ -110,13 +111,17 @@ export async function updateUserProfile(
    email: string,
    action: {
       todo: "update mcq",
-      mcqCategory: QnCategory,
+      mcqCategory: McqCategory,
       mcqCatQnNum: number,
-      isCorrect: boolean
+      isMcqCorrect: boolean
    } | {
       todo: "update cloze",
       clozeQnNum: number,
       correctAns: number[] | null
+   } | {
+      todo: "update spelling",
+      spellingQnNum: number,
+      isSpellingCorrect: boolean
    }
 ) {
    try {
@@ -126,45 +131,43 @@ export async function updateUserProfile(
 
       await client.connect();
       const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
-      const profile = await profileDb.findOne({ email }, { projection: { _id: 0 } })
+      const profile = await profileDb.findOne({ email })
       if (!profile) throw new Error(`User profile for ${email} not found`);
+
+      let updateToDo: UpdateFilter<UserProfileDocument> = {};
 
       switch (action.todo) {
 
          case "update mcq":
                
-            const { mcqCategory, mcqCatQnNum, isCorrect } = action;
+            const { mcqCategory, mcqCatQnNum, isMcqCorrect } = action;
 
-            const updateQuery: any = { 
-               $inc: { 
-                  [ `qnData.${mcqCategory}.numQnsAttempted` ]: 1 
-               } 
-            };
-      
-            if (isCorrect === false) {
-               updateQuery.$addToSet = { 
-                  [ `qnData.${mcqCategory}.wrongQnNums` ]: mcqCatQnNum 
-               }
-            } else if (isCorrect === true) {
-               updateQuery.$inc.score = 10
-            };
-      
-            const setQuery = {
-               $set: {
-                  [`qnData.${mcqCategory}`]: {
-                     numQnsAttempted: 1,
-                     wrongQnNums: isCorrect ? [] : [mcqCatQnNum]
-                  }
-               },
-               $inc: {
-                  score: isCorrect ? 10 : 0
-               }
-            }
-            
-            if (profile.qnData[mcqCategory as QnCategory] === undefined) {
-               await profileDb.updateOne({ email }, setQuery);
+            if (isMcqCorrect) {
+               updateToDo = { $inc: { [`qnData.${mcqCategory}.numQnsAttempted`]: 1, score: 10 } };
             } else {
-               await profileDb.updateOne({ email }, updateQuery);
+               updateToDo = { 
+                  $inc: { 
+                     [`qnData.${mcqCategory}.numQnsAttempted`]: 1 
+                  }, 
+                  $addToSet: { 
+                     [`qnData.${mcqCategory}.wrongQnNums`]: mcqCatQnNum 
+                  } 
+               };
+            }
+
+            break;
+         
+         case "update spelling":
+            
+            const { spellingQnNum, isSpellingCorrect } = action;
+
+            if (isSpellingCorrect) {
+               updateToDo = { $inc: { "spellingData.numQnsAttempted": 1, score: 10 } };
+            } else {
+               updateToDo = { 
+                  $inc: { "spellingData.numQnsAttempted": 1 }, 
+                  $addToSet: { "spellingData.wrongQnNums": spellingQnNum }
+               };
             }
 
             break;
@@ -174,23 +177,26 @@ export async function updateUserProfile(
             const { clozeQnNum, correctAns } = action
 
             if (correctAns) {
-               await profileDb.updateOne({ email }, { $push: { clozeData: { qnNum: clozeQnNum, correctAns } } } );
+               updateToDo = { $push: { clozeData: { qnNum: clozeQnNum, correctAns } } };
             } else {
-               await profileDb.updateOne( { email }, { $pull: { clozeData: { qnNum: clozeQnNum } } } );
+               updateToDo = { $pull: { clozeData: { qnNum: clozeQnNum } } };
             }
 
             break;
       
-         // no default case, action.todo already validated
       }
+
+      await profileDb.updateOne({ email }, updateToDo);
+
+      return { success: true };
 
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to update user profile for ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }
@@ -208,17 +214,19 @@ export async function resetUserData(email: string) {
       const profile = await profileDb.findOne({ email }, { projection: { _id: 0 } });
       if (!profile) throw new Error(`User profile for ${email} not found`);
 
-      await profileDb.updateOne({ email }, { $set: { qnData: {}, clozeData: [], score: 0 } });
+      await profileDb.updateOne({ email }, { $set: { ...RESET_PROFILE_FIELDS_OBJ } });
 
       revalidatePath("/profile");
+
+      return { success: true };
 
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to reset user data for ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }
@@ -248,18 +256,20 @@ export async function createNewUnregUser(email: string) {
       // revalidate unreg-users page
       revalidatePath("/admin/unreg-users");
 
+      return { success: true };
+
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to create new invite for ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }
 
-export async function fetchAllInvites(): Promise<UserInviteDocument[]> {
+export async function fetchAllInvites() {
    try {
 
       const session = await auth();
@@ -282,10 +292,10 @@ export async function fetchAllInvites(): Promise<UserInviteDocument[]> {
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to fetch invites:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }
@@ -297,6 +307,8 @@ export async function toggleSuspend(email: string, isSuspended: boolean) {
 
       if (session?.user.role !== "admin") throw new Error("Unauthorized");
 
+      if (session.user.email === email) throw new Error("Cannot suspend own account");
+
       await client.connect();
       const authDb = client.db("userDatas").collection<UserAuthDocument>("auth");
 
@@ -307,13 +319,15 @@ export async function toggleSuspend(email: string, isSuspended: boolean) {
 
       revalidatePath("/admin");
 
+      return { success: true };
+
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to toggle suspend for ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
    
@@ -342,13 +356,15 @@ export async function deleteUser(email: string) {
 
       revalidatePath("/admin");
 
+      return { success: true };
+
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to delete user ${email}:\n` + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }

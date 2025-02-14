@@ -8,22 +8,22 @@ import useGenericMcqProvider from "./GenericMCQProvider";
 import GenericMCQLeft from "./GenericMCQLeft";
 import GenericMCQRight from "./GenericMCQRight";
 import GenericMCQEnd from "./GenericMCQEnd";
-import { QnCategory } from '@/definitions';
+import { McqCategory } from '@/definitions';
 import DemoMCQLeft from "./DemoMCQLeft";
 import RedoMCQLeft from "./RedoMCQLeft";
-import GenericProgressBar from "./GenericProgressBar";
+import GenericProgressBar from "../GenericProgressBar";
 import Container from "react-bootstrap/esm/Container";
 import { TriangleAlert } from "lucide-react";
 
 export default function MCQApp({
-   qnCategory,
+   McqCategory,
    qnNumArray,
    email,
    title,
    isSetRandom,
    isRedo
 }: {
-   qnCategory: QnCategory | "demo",
+   McqCategory: McqCategory | "demo",
    qnNumArray: number[],
    email: string,
    title: string,
@@ -33,7 +33,7 @@ export default function MCQApp({
 
    // initialize the MCQProvider with the appropriate context
    const { MCQProvider, useMCQContext } = useGenericMcqProvider({
-      qnCategory,
+      McqCategory,
       qnNumArray,
       email,
       isSetRandom,
@@ -62,7 +62,7 @@ export default function MCQApp({
             </Col>
          </Row>
          <Row>
-            {qnCategory === "demo"
+            {McqCategory === "demo"
                ?  <DemoMCQLeft QnContextToUse={useMCQContext}/>
                :  (isRedo
                   ?  <RedoMCQLeft QnContextToUse={useMCQContext}/>

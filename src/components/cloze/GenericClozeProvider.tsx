@@ -47,11 +47,7 @@ export default function useGenericClozeProvider({
             todo: "update cloze",
             clozeQnNum: qnNum,
             correctAns,
-         }).catch((err) =>
-            setError(
-               err instanceof Error ? err.message : "An unknown error occurred"
-            )
-         );
+         }).then(res => res.error && setError(res.error));
       }
 
       function handleReset() {
@@ -67,11 +63,7 @@ export default function useGenericClozeProvider({
             todo: "update cloze",
             clozeQnNum: qnNum,
             correctAns: null,
-         }).catch((err) =>
-            setError(
-               err instanceof Error ? err.message : "An unknown error occurred"
-            )
-         );
+         }).then(res => res.error && setError(res.error));
       }
 
       useEffect(() => {
@@ -89,12 +81,18 @@ export default function useGenericClozeProvider({
             try {
 
                // wait for cloze data to be fetched
-               const clozeObj = await clozePromise;
+               const res = await clozePromise;
+
+               // if error, set error message
+               if ( "error" in res ) {
+                  setError(res.error);
+                  return;
+               }
 
                // match all pairs of curly braces and extract the words to test (joined by "/")
                // split the words by "/" and filter out empty strings
                setWordsToTestArr(
-                  clozeObj.passage
+                  res.passage
                      .match(/\{[^}]*\}/g)!
                      .map((match) =>
                         match.slice(1, -1).split("/").filter(Boolean)
@@ -106,14 +104,14 @@ export default function useGenericClozeProvider({
                // "BLANK" and "||"" are included in the split array
                // filter out empty strings
                setTextArr(
-                  clozeObj.passage
+                  res.passage
                      .replace(/{.*?}/g, "BLANK")
                      .split(/(BLANK|\|\|)/)
                      .filter(Boolean)
                );
    
                // set the passage title
-               setPassageTitle(clozeObj.title);
+               setPassageTitle(res.title);
 
             } catch (err) {
                setError(err instanceof Error ? err.message : "An unknown error occurred");

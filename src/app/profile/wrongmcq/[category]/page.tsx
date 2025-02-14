@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { fetchMcqQnArr } from "@/lib/mongodb/mcq-server-actions";
 import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
-import { QN_CATEGORIES_DATA, QnCategory } from "@/definitions";
+import { QN_CATEGORIES_DATA, McqCategory } from "@/definitions";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,7 +17,7 @@ import Container from "react-bootstrap/esm/Container";
 
 export const dynamic = 'force-dynamic';
 
-export default async function Page({ params }: { params: Promise<{ category: QnCategory }> }) {
+export default async function Page({ params }: { params: Promise<{ category: McqCategory }> }) {
 
    const user = await checkAuthForRoute();
    const { category } = await params;
@@ -40,10 +40,14 @@ export default async function Page({ params }: { params: Promise<{ category: QnC
    );
 }
 
-async function ShowEntriesWithPagination({ wrongQnNumsArr, category }: { wrongQnNumsArr: number[], category: QnCategory }) {
+async function ShowEntriesWithPagination({ wrongQnNumsArr, category }: { wrongQnNumsArr: number[], category: McqCategory }) {
+
+   const res = await fetchMcqQnArr(category, wrongQnNumsArr);
+   if ("error" in res) return <p>Error loading incorrect questions.</p>;
+
    try {
       return <>
-         <PaginatedDictEntries qnObjArr={await fetchMcqQnArr(category, wrongQnNumsArr)}/>
+         <PaginatedDictEntries qnObjArr={res}/>
          <Row className="my-4">
             <Col className="d-flex justify-content-end">
                <Link

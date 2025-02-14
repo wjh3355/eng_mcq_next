@@ -1,13 +1,14 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
-import { QnCategory, QN_CATEGORIES_DATA, QnCategoryUserData, qnCategoriesArray, UserProfileDocument } from "@/definitions"
+import { McqCategory, QN_CATEGORIES_DATA, McqCategoryUserData, qnCategoriesArray, UserProfileDocument } from "@/definitions"
 import Link from "next/link";
 import React, { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import Container from "react-bootstrap/esm/Container";
 import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
+import toast from "react-hot-toast";
 
 export const dynamic = 'force-dynamic';
 
@@ -41,8 +42,12 @@ export default async function MCQHomePage() {
    )
 }
 
-async function DisplayCategorySets({ category }: { category: QnCategory }) {
+async function DisplayCategorySets({ category }: { category: McqCategory }) {
    const totalNumQns = await fetchNumQns(category);
+   if (typeof totalNumQns !== "number") { 
+      toast.error(totalNumQns.error); 
+      return;
+   }
 
    const { setSize, categoryName } = QN_CATEGORIES_DATA[category];
    const numPossibleSets = Math.ceil(totalNumQns / setSize);
@@ -124,7 +129,7 @@ async function WrongQnsTable({ user }: { user: UserProfileDocument }) {
          </thead>
          <tbody>
             {
-               (Object.entries(qnData) as [ QnCategory, QnCategoryUserData ][])
+               (Object.entries(qnData) as [ McqCategory, McqCategoryUserData ][])
                   .filter(([_, { wrongQnNums }]) => wrongQnNums.length > 0)
                   .map(([cat, { wrongQnNums }], idx) => 
                      <tr key={idx}>

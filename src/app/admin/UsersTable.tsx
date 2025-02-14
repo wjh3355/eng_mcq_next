@@ -1,6 +1,6 @@
 "use client";
 
-import { QN_CATEGORIES_DATA, QnCategory, QnCategoryUserData, UserAuthDocument, UserProfileDocument } from "@/definitions";
+import { QN_CATEGORIES_DATA, McqCategory, McqCategoryUserData, UserAuthDocument, UserProfileDocument } from "@/definitions";
 import { deleteUser, toggleSuspend } from "@/lib/mongodb/user-server-actions";
 import { DateTime } from "luxon";
 import { useState } from "react";
@@ -29,14 +29,19 @@ export default function UsersTable(
                   <th>Is Suspended?</th>
                   <th>MCQ Data</th>
                   <th>Cloze Data</th>
+                  <th>Spelling Data</th>
                   <th>Points</th>
                   <th>Delete</th>
                </tr>
             </thead>
             <tbody>
-               {allUsersArray.map(([{ email, passwordHash, role, dateCreated, isSuspended }, {qnData, clozeData, score}], idx) => {
+               {allUsersArray.map((
+                  [
+                     { email, passwordHash, role, dateCreated, isSuspended }, 
+                     {qnData, clozeData, spellingData, score}
+                  ], idx) => {
 
-                  const qnDataAsArr = Object.entries(qnData) as [ QnCategory, QnCategoryUserData ][];
+                  const qnDataAsArr = Object.entries(qnData) as [ McqCategory, McqCategoryUserData ][];
 
                   return (
                      <tr key={idx}>
@@ -55,7 +60,13 @@ export default function UsersTable(
                               className="ms-3"
                               onClick={() => {
                                  toggleSuspend(email, !isSuspended)
-                                    .then(() => toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully`))
+                                    .then(res => {
+                                       if (res.error) {
+                                          toast.error(res.error);
+                                       } else {
+                                          toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully`)
+                                       }
+                                    })
                                     .catch(err => toast.error(err instanceof Error ? err.message : "An error occurred."));
                               }}
                            >
@@ -75,6 +86,11 @@ export default function UsersTable(
                                  {`Q${qnNum}: ${correctAns.length} / 15`}
                               </p>
                            )}
+                        </td>
+                        <td>
+                           {"numQnsAttempted" in spellingData && 
+                              `${spellingData.numQnsAttempted - spellingData.wrongQnNums.length} / ${spellingData.numQnsAttempted}`
+                           }
                         </td>
                         <td>{score}</td>
                         <td>
@@ -121,7 +137,13 @@ export default function UsersTable(
                            setUserEmailToDelete(null);
                            if (userEmailToDelete) {
                               deleteUser(userEmailToDelete)
-                                 .then(() => toast.success(`User ${userEmailToDelete} deleted successfully.`))
+                                 .then(res => {
+                                    if (res.error) {
+                                       toast.error(res.error);
+                                    } else {
+                                       toast.success(`User ${userEmailToDelete} deleted successfully.`)
+                                    }
+                                 })
                                  .catch(err => toast.error(err instanceof Error ? err.message : "An error occurred."));
                            }
                         }}

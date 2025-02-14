@@ -6,7 +6,7 @@ import { DEMO_DATA } from "@/definitions";
 export default function DemoQnsPage() {
 
    return <MCQApp
-      qnCategory={"demo"}
+      McqCategory={"demo"}
       qnNumArray={shuffle(range(...DEMO_DATA.qnNumRange))}
       email=""
       title={"Demo MCQ Questions"}

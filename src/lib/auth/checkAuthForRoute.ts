@@ -13,5 +13,7 @@ export async function checkAuthForRoute(): Promise<UserProfileDocument> {
 
    const userDoc = await fetchUser(session.user.email, "profile");
 
+   if ("error" in userDoc) redirect("/");
+
    return userDoc;
 }

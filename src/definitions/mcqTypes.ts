@@ -1,9 +1,9 @@
-import { QnCategory } from "./qnSetData"
+import { McqCategory } from "./qnSetData"
 
 export type MCQContextValue = {
    numQnsInSet: number,
    currNum: number,
-   qnCategory: QnCategory | "demo",
+   McqCategory: McqCategory | "demo",
    qnObj: MCQQnObj,
    wrongAnsArr: MCQQnObj[],
    error: string,
@@ -43,7 +43,7 @@ export const EMPTY_MCQ_QN_OBJ: MCQQnObj = {
 export const EMPTY_MCQ_CONTEXT_VALUE: MCQContextValue = {
    numQnsInSet: NaN,
    currNum: NaN,
-   qnCategory: "gep",
+   McqCategory: "gep",
    qnObj: EMPTY_MCQ_QN_OBJ,
    isLoading: true,
    isCorrect: null,

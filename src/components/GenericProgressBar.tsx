@@ -1,13 +1,13 @@
 "use client";
 
-import { MCQContextValue } from '@/definitions';
+import { MCQContextValue, SpellingContextValue } from '@/definitions';
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Col from "react-bootstrap/Col";
 
 export default function GenericProgressBar({
    QnContextToUse
 }: {
-   QnContextToUse: () => MCQContextValue
+   QnContextToUse: () => MCQContextValue | SpellingContextValue
 }) {
 
    const { thisSessionScore: [ numQnsCorrect, numQnsDone ], numQnsInSet, hasReachedEnd } = QnContextToUse();

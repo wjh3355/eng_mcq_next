@@ -1,8 +1,8 @@
-import { QnCategory } from "./qnSetData";
+import { McqCategory } from "./qnSetData";
 import { randomBytes } from "crypto";
 import { hashSync } from "bcryptjs";
 
-export type QnCategoryUserData = {
+export type McqCategoryUserData = {
    numQnsAttempted: number;
    wrongQnNums: number[];
 };
@@ -19,19 +19,28 @@ export type UserAuthDocument = {
 
 export type UserProfileDocument = {
    email: string;
-   qnData: Partial<Record<QnCategory, QnCategoryUserData>>;
+   qnData: Record<McqCategory, McqCategoryUserData>;
    clozeData: {
       qnNum: number;
       correctAns: number[];
    }[];
+   spellingData: McqCategoryUserData;
    score: number;
    dateCreated: string;
 };
 
 export const EMPTY_USER: UserProfileDocument = {
    email: "",
-   qnData: {},
+   qnData: {
+      gep: { numQnsAttempted: 0, wrongQnNums: [] },
+      phrasalVerbs: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleGrammar: { numQnsAttempted: 0, wrongQnNums: [] },
+      pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
+   },
    clozeData: [],
+   spellingData: { numQnsAttempted: 0, wrongQnNums: [] },
    score: NaN,
    dateCreated: ""
 }
@@ -66,13 +75,47 @@ export function newUserDocuments({
 
    const newProfileDoc: UserProfileDocument = {
       email,
-      qnData: {},
+      qnData: {
+         gep: { numQnsAttempted: 0, wrongQnNums: [] },
+         phrasalVerbs: { numQnsAttempted: 0, wrongQnNums: [] },
+         psleGrammar: { numQnsAttempted: 0, wrongQnNums: [] },
+         pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+         psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+         psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
+      },
       clozeData: [],
+      spellingData: { 
+         numQnsAttempted: 0, wrongQnNums: []
+      },
       score: 0,
       dateCreated: new Date().toISOString(),
    };
 
    return { newAuthDoc, newProfileDoc };
+}
+
+export const RESET_PROFILE_FIELDS_OBJ: {
+   qnData: Record<McqCategory, McqCategoryUserData>;
+   clozeData: {
+      qnNum: number;
+      correctAns: number[];
+   }[];
+   spellingData: McqCategoryUserData;
+   score: number;
+} = {
+   qnData: {
+      gep: { numQnsAttempted: 0, wrongQnNums: [] },
+      phrasalVerbs: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleGrammar: { numQnsAttempted: 0, wrongQnNums: [] },
+      pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
+      psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
+   },
+   clozeData: [],
+   spellingData: { 
+      numQnsAttempted: 0, wrongQnNums: []
+   },
+   score: 0
 }
 
 export function newUserInvite({

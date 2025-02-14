@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import Table from "react-bootstrap/Table";
-import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Modal from "react-bootstrap/Modal";
@@ -14,14 +13,14 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
 import {
-   QnCategory,
-   QnCategoryUserData,
+   McqCategory,
+   McqCategoryUserData,
    QN_CATEGORIES_DATA,
 } from "@/definitions";
 import Link from "next/link";
 import { Info, Trash2 } from "lucide-react";
 
-import { set, sum } from "lodash";
+import { sum } from "lodash";
 import { UserProfileDocument } from "@/definitions";
 import { DateTime } from "luxon";
 import { resetUserData } from "@/lib/mongodb/user-server-actions";
@@ -29,7 +28,7 @@ import toast from "react-hot-toast";
 
 export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
-   const { qnData, clozeData, score, email, dateCreated } = user;
+   const { qnData, clozeData, spellingData, score, email, dateCreated } = user;
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
 
@@ -39,8 +38,8 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
       }
 
       const dataAsArr = Object.entries(qnData) as [
-         QnCategory,
-         QnCategoryUserData
+         McqCategory,
+         McqCategoryUserData
       ][];
 
       const totalAttempted = sum(
@@ -131,14 +130,38 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
       );
    }
 
+   function SpellingStats() {
+      if (!("numQnsAttempted" in spellingData)) {
+         return <p>You have not attempted any spelling questions yet!</p>;
+      }
+
+      const { numQnsAttempted, wrongQnNums } = spellingData;
+ 
+      return (
+         <Table striped>
+            <thead>
+               <tr>
+                  <th>No. Correct</th>
+                  <th>No. Attempted</th>
+                  <th>View Incorrect</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>{numQnsAttempted - wrongQnNums.length}</td>
+                  <td>{numQnsAttempted}</td>
+                  <td>Coming soon...</td>
+               </tr>
+            </tbody>
+         </Table>
+      )
+   }
+
    return (
       <Container>
          <dl className="row">
             <dt className="col-sm-3">Email address</dt>
             <dd className="col-sm-9">{email}</dd>
-
-            {/* <dt className="col-sm-3">ID</dt>
-            <dd className="col-sm-9">{_id.toString()}</dd> */}
 
             <dt className="col-sm-3">Date created</dt>
             <dd className="col-sm-9">
@@ -186,6 +209,14 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                         <McqStats />
                      </Accordion.Body>
                   </Accordion.Item>
+                  <Accordion.Item eventKey="2">
+                     <Accordion.Header>
+                        <strong>Spelling Questions</strong>
+                     </Accordion.Header>
+                     <Accordion.Body>
+                        <SpellingStats />
+                     </Accordion.Body>
+                  </Accordion.Item>
                </Accordion>
             </Col>
          </Row>
@@ -231,9 +262,13 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                         variant="light"
                         onClick={() => {
                            resetUserData(email)
-                              .then(() => {
+                              .then(res => {
                                  setShowCfmEraseData(false);
-                                 toast.success("Your data has been erased.");
+                                 if (res.error) {
+                                    toast.error(res.error);
+                                 } else {
+                                    toast.success("Your data has been erased.");
+                                 }
                               })
                               .catch(() => toast.error("Failed to erase your data. Please try again later."));
                         }}

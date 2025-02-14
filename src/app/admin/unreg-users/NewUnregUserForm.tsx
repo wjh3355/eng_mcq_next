@@ -38,10 +38,16 @@ function ReactHookForm() {
          onSubmit={
             handleSubmit(
                (data: FormValues) => {
-                  const email = data.email.trim().toLowerCase();
-                  createNewUnregUser(email)
-                     .then(() => {
-                        toast.success("Successfully created new user invite for " + email, { duration: 5000 });
+
+                  const newEmail = data.email.trim().toLowerCase();
+
+                  createNewUnregUser(newEmail)
+                     .then(res => {
+                        if (res.error) {
+                           toast.error(res.error);
+                        } else{
+                           toast.success("Successfully created new user invite for " + newEmail, { duration: 5000 });
+                        }
                         reset();
                      })
                      .catch(err => toast.error(err instanceof Error ? err.message : "An unexpected error occured."));

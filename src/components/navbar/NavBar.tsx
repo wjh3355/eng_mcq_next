@@ -17,6 +17,7 @@ import Spinner from "react-bootstrap/esm/Spinner";
 export default function NavBar() {
    const { data: session, status } = useSession();
 
+   // dk why but this is necessary
    function handleProtectedNavigation(e: React.MouseEvent) {
       if (status !== "authenticated") {
          e.preventDefault();
@@ -24,6 +25,7 @@ export default function NavBar() {
       }
    }
 
+   // if the user is not authenticated, only show the home button
    if (status === "loading") {
       return (
          <Navbar expand="lg" bg="light" data-bs-theme="light">
@@ -36,6 +38,10 @@ export default function NavBar() {
       );
    }
 
+   // status === "authenticated" or "unauthenticated"
+   // if the user is authenticated, show the full navbar
+   // if the user is unauthenticated, show the home button and the login button
+   // if admin, show the admin portal button
    return (
       <Navbar expand="lg" bg="light" data-bs-theme="light">
          <Container fluid>
@@ -59,11 +65,11 @@ export default function NavBar() {
 
                         <Nav.Link as={Link} href="/mcq" onClick={handleProtectedNavigation}>MCQ Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
-                        <Nav.Link as={Link} href="/spelling" onClick={handleProtectedNavigation}>Spelling</Nav.Link>
-                        <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Profile</Nav.Link>
+                        <Nav.Link as={Link} href="/spelling" onClick={handleProtectedNavigation}>PSLE Spelling</Nav.Link>
+                        <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Your Profile</Nav.Link>
 
                         {session.user.role === "admin" &&
-                           <Nav.Link as={Link} href="/admin" className="text-danger">Admin</Nav.Link>
+                           <Nav.Link as={Link} href="/admin" className="text-danger fw-bold">Admin Portal</Nav.Link>
                         }
                         
                      </Nav>

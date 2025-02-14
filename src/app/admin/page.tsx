@@ -1,4 +1,4 @@
-import { QnCategory, QnCategoryUserData, QN_CATEGORIES_DATA } from "@/definitions";
+import { McqCategory, McqCategoryUserData, QN_CATEGORIES_DATA } from "@/definitions";
 import { fetchAllUsers } from "@/lib/mongodb/user-server-actions";
 import { DateTime } from "luxon";
 import Container from "react-bootstrap/esm/Container";
@@ -8,15 +8,15 @@ import Table from "react-bootstrap/esm/Table";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import Button from "react-bootstrap/esm/Button";
 import UsersTable from "./UsersTable";
+import Alert from "react-bootstrap/esm/Alert";
+import { Suspense } from "react";
+import Skeleton from "react-loading-skeleton";
 
 export default async function AdminHomePage() {
 
    const session = await auth();
    if (session?.user.role !== "admin") redirect("/");
-
-   const allUsersArray = await fetchAllUsers();
 
    return (
       <Container fluid>
@@ -27,6 +27,28 @@ export default async function AdminHomePage() {
             </Col>
          </Row>
 
+         <Suspense fallback={<Skeleton height={50}/>}>
+            <LoadAdmin/>
+         </Suspense>
+      </Container>
+   );
+}
+
+async function LoadAdmin() {
+
+   const allUsersArray = await fetchAllUsers();
+   if ("error" in allUsersArray) return (
+      <Container>
+         <Row>
+            <Col>
+               <Alert variant="danger" className="fw-bold">{allUsersArray.error}</Alert>
+            </Col>
+         </Row>
+      </Container>
+   );
+
+   return (
+      <>
          <UsersTable allUsersArray={allUsersArray} />
 
          <Row className="my-3">
@@ -34,6 +56,6 @@ export default async function AdminHomePage() {
                <Link href="/admin/unreg-users" className="btn btn-lg btn-success w-50">Unregistered Users</Link>
             </Col>
          </Row>
-      </Container>
-   );
+      </>
+   )
 }

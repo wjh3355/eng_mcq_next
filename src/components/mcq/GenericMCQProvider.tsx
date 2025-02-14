@@ -2,19 +2,19 @@
 
 import React, { createContext, useState, useEffect, useContext } from "react";
 
-import { QnCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from '@/definitions';
+import { McqCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_MCQ_QN_OBJ } from '@/definitions';
 
 import { fetchDemoMcq, fetchMcq } from "@/lib/mongodb/mcq-server-actions";
 import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
 
 export default function useGenericMcqProvider({
-   qnCategory,
+   McqCategory,
    qnNumArray,
    email,
    isSetRandom,
    isRedo
 }: {
-   qnCategory: QnCategory | "demo"
+   McqCategory: McqCategory | "demo"
    qnNumArray: number[],
    email: string,
    isSetRandom: boolean,
@@ -22,7 +22,7 @@ export default function useGenericMcqProvider({
 }) {
 
    // toUseUserData is true if the category is not demo, email is not empty, and not redo
-   const toUseUserData: boolean = !(qnCategory === "demo" || email === "" || isRedo);
+   const toUseUserData: boolean = !(McqCategory === "demo" || email === "" || isRedo);
 
    // create context, fallback is an empty context value
    const QnContext = createContext<MCQContextValue>(EMPTY_MCQ_CONTEXT_VALUE);
@@ -60,14 +60,14 @@ export default function useGenericMcqProvider({
             }
          }
 
-         if (toUseUserData && qnCategory !== "demo") {
+         if (toUseUserData && McqCategory !== "demo") {
             // if not demo, update user profile with correct answer
             updateUserProfile(email, {
                todo: "update mcq",
-               mcqCategory: qnCategory,
+               mcqCategory: McqCategory,
                mcqCatQnNum: qnObj.qnNum,
-               isCorrect: isCorr
-            }).catch(err => setError(err instanceof Error ? err.message : "An unknown error occurred"));
+               isMcqCorrect: isCorr
+            }).then(res => res.error && setError(res.error));
          }
       }
 
@@ -104,21 +104,22 @@ export default function useGenericMcqProvider({
             try {
                // run server actions:
                // if demo, fetch demo mcq (category is 'demo' which is fixed)
-               // else fetch actual mcq based on qnCategory and current question number (qnSequence[0])
-               const mcqFetch = qnCategory === "demo" 
+               // else fetch actual mcq based on McqCategory and current question number (qnSequence[0])
+               const mcqFetch = McqCategory === "demo" 
                   ? fetchDemoMcq(qnSequence[0]) 
-                  : fetchMcq(qnCategory, qnSequence[0]);
+                  : fetchMcq(McqCategory, qnSequence[0]);
       
                // if not demo, or email is not empty, or not redo, fetch user profile
                const userFetch = toUseUserData ? fetchUser(email, "profile") : Promise.resolve(null);
       
                // wait for both fetches to complete
-               const [mcq, usr] = await Promise.all([mcqFetch, userFetch]);
+               const [res1, usr] = await Promise.all([mcqFetch, userFetch]);
       
-               // set qnObj to the fetched mcq object
-               // if user is not null (tracked), set userPoints to the user's score
-               setQnObj(mcq);
-               if (usr) setUserPoints(usr.score);
+               // set qnObj to the fetched mcq object if no error
+               "error" in res1 ? setError(res1.error) : setQnObj(res1);
+               if (usr) {
+                  "error" in usr ? setError(usr.error) : setUserPoints(usr.score);
+               }
             } catch (err) {
                setError(err instanceof Error ? err.message : "An unknown error occurred");
             }
@@ -135,7 +136,7 @@ export default function useGenericMcqProvider({
 
       return (
          <QnContext.Provider value={{
-            qnCategory,
+            McqCategory,
             qnObj,
             isLoading,
             isCorrect,

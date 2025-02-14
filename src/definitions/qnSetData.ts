@@ -1,6 +1,6 @@
-export type QnCategory = 'gep' | 'phrasalVerbs' | 'psleWordsCloze' | 'psleWordsMcq' | 'pslePhrasesCloze' | 'psleGrammar';
+export type McqCategory = 'gep' | 'phrasalVerbs' | 'psleWordsCloze' | 'psleWordsMcq' | 'pslePhrasesCloze' | 'psleGrammar';
 
-export const qnCategoriesArray: QnCategory[] = [
+export const qnCategoriesArray: McqCategory[] = [
    "gep", "phrasalVerbs", "psleWordsCloze", "psleWordsMcq", "pslePhrasesCloze", "psleGrammar"
 ];
 
@@ -8,9 +8,9 @@ export const qnCategoriesArrayTuple = [
    "gep", "phrasalVerbs", "psleWordsCloze", "psleWordsMcq", "pslePhrasesCloze", "psleGrammar"
 ] as const;
 
-export type QnCategoryData = { categoryName: string; setSize: number };
+export type McqCategoryData = { categoryName: string; setSize: number };
 
-export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
+export const QN_CATEGORIES_DATA: Record<McqCategory, McqCategoryData> = {
 
    gep: {
       categoryName: "GEP Vocab MCQ",
@@ -46,7 +46,7 @@ export const QN_CATEGORIES_DATA: Record<QnCategory, QnCategoryData> = {
 export const DEMO_DATA: { qnNumRange: [number, number], getDemoQnCat: (param: number) => string } = {
    qnNumRange: [1, 61],
    getDemoQnCat(qnNum: number): string {
-      let cat: QnCategory;
+      let cat: McqCategory;
    
       if (qnNum >= 1 && qnNum <= 10) cat = "phrasalVerbs";
       else if (qnNum >= 11 && qnNum <= 30) cat = "pslePhrasesCloze";

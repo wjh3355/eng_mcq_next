@@ -1,14 +1,15 @@
 import MCQApp from "@/components/mcq/MCQApp";
-import { QN_CATEGORIES_DATA, qnCategoriesArray, QnCategory } from '@/definitions';
+import { QN_CATEGORIES_DATA, qnCategoriesArray, McqCategory } from '@/definitions';
 import { notFound } from "next/navigation";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import sampleSize from "lodash/sampleSize";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
+import toast from "react-hot-toast";
 
 type StaticParams = {
-   category: QnCategory,
+   category: McqCategory,
    setParam: string
 }
 
@@ -20,6 +21,7 @@ export async function generateStaticParams() {
    for (const category of qnCategoriesArray) {
       
       const totalNumQns = await fetchNumQns(category);
+      if (typeof totalNumQns !== "number") return [];
 
       const { setSize } = QN_CATEGORIES_DATA[category];
       const numPossibleSets = Math.ceil(totalNumQns / setSize);
@@ -44,6 +46,10 @@ export default async function MCQSetsPage({ params }: { params: Promise<StaticPa
    const { category, setParam } = await params;
    
    const totalNumQns = await fetchNumQns(category);
+   if (typeof totalNumQns !== "number") {
+      toast.error(totalNumQns.error);
+      return;
+   }   
 
    const allQnNumsRange = range(1, totalNumQns + 1);
 
@@ -81,7 +87,7 @@ export default async function MCQSetsPage({ params }: { params: Promise<StaticPa
    }
 
    return <MCQApp
-      qnCategory={category}
+      McqCategory={category}
       qnNumArray={qnNumArray}
       email={user.email}
       title={title}

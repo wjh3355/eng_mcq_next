@@ -1,9 +1,9 @@
 "use server";
 
-import { QnCategory } from "@/definitions";
+import { McqCategory } from "@/definitions";
 import client from "./db";
 
-export async function fetchNumQns(collection: QnCategory | "clozePassage"): Promise<number> {
+export async function fetchNumQns(collection: McqCategory | "clozePassage" | "spelling") {
    try {
 
       // no need to check for auth; already done in the server
@@ -19,10 +19,10 @@ export async function fetchNumQns(collection: QnCategory | "clozePassage"): Prom
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch number of questions from database:", error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 }

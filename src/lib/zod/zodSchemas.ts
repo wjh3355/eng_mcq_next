@@ -1,3 +1,4 @@
+import { qnCategoriesArrayTuple } from "@/definitions";
 import { z } from "zod";
 
 export const McqObjSchema = z
@@ -89,20 +90,28 @@ export const UserAuthDataSchema = z.object({
    isSuspended: z.boolean(),
 }).strict();
 
+const McqCategoryUserDataSchema = z.object({
+   numQnsAttempted: z.number(),
+   wrongQnNums: z.array(z.number()),
+})
+
 export const UserProfileDataSchema = z.object({
    email: z.string().email().nonempty(),
-   qnData: z.record(
-      z.object({
-         numQnsAttempted: z.number(),
-         wrongQnNums: z.array(z.number())
-      })
-   ),
+   qnData: z.object({
+      gep: McqCategoryUserDataSchema,
+      phrasalVerbs: McqCategoryUserDataSchema,
+      psleGrammar: McqCategoryUserDataSchema,
+      pslePhrasesCloze: McqCategoryUserDataSchema,
+      psleWordsCloze: McqCategoryUserDataSchema,
+      psleWordsMcq: McqCategoryUserDataSchema,
+   }),
    clozeData: z.array(
       z.object({
          qnNum: z.number(),
          correctAns: z.array(z.number())
       })
    ),
+   spellingData: McqCategoryUserDataSchema,
    score: z.number(),
    dateCreated: z.string().nonempty(),
 }).strict()

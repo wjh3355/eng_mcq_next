@@ -12,6 +12,7 @@ import { z } from "zod";
 import { BadgeInfo, BookText, CircleArrowRight, CircleCheck, CircleX } from "lucide-react";
 import { useState } from "react";
 import Modal from "react-bootstrap/esm/Modal";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 type FormField = { correctedWord: string }
 
@@ -25,6 +26,7 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
       currNum,
       handleAttempt,
       handleNextQnBtnClick,
+      userPoints,
       wrongAnsArr
    } = QnContextToUse();
 
@@ -45,6 +47,17 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
 
    if (hasReachedEnd) return null;
 
+   function ScoreComponent() {
+      return (
+         <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
+            {Number.isNaN(userPoints) 
+               ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
+               :  <span>Points: {userPoints}</span>
+            }
+         </div>
+      );
+   }
+
    return (
       <>
          <Col lg={8} md={7}>
@@ -58,7 +71,7 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
                }
             </Card>
             <section className="hstack gap-3 mb-3">
-               {/* <ScoreComponent/> */}
+               <ScoreComponent/>
 
                <button 
                   className="border-0 bg-transparent p-0 ms-auto"

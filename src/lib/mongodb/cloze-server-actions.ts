@@ -1,12 +1,11 @@
 "use server";
 
-import { ClozeObj } from "@/definitions";
 import client from "./db";
 import { ClozeObjSchema } from "../zod/zodSchemas";
 import { auth } from "@/auth";
 import { z } from "zod";
 
-export async function fetchCloze(qnNum: number): Promise<ClozeObj> {
+export async function fetchCloze(qnNum: number) {
    try {
       const session = await auth();
 
@@ -29,15 +28,15 @@ export async function fetchCloze(qnNum: number): Promise<ClozeObj> {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch cloze questions from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message };
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" };
       }
    }
 }
 
-export async function fetchDemoCloze(): Promise<ClozeObj> {
+export async function fetchDemoCloze() {
    try {
       await client.connect();
       const res = await client
@@ -56,15 +55,15 @@ export async function fetchDemoCloze(): Promise<ClozeObj> {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch cloze questions from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message };
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" };
       }
    }
 }
 
-export async function fetchAllCloze(): Promise<ClozeObj[]> {
+export async function fetchAllCloze() {
    try {
       const session = await auth();
 
@@ -87,10 +86,10 @@ export async function fetchAllCloze(): Promise<ClozeObj[]> {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch all cloze questions from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message };
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" };
       }
    }
 }

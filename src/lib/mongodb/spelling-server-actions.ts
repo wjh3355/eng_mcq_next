@@ -5,7 +5,7 @@ import { SpellingObjSchema } from "../zod/zodSchemas";
 import client from "./db";
 import { SpellingQnObj } from "@/definitions";
 
-export async function fetchSpelling(qnNum: number): Promise<SpellingQnObj> {
+export async function fetchSpelling(qnNum: number) {
 
    try {
       // check if user is authenticated
@@ -32,10 +32,10 @@ export async function fetchSpelling(qnNum: number): Promise<SpellingQnObj> {
    } catch (error: unknown) {
       if (error instanceof Error) {
          console.error("Unable to fetch MCQ question from database:\n" + error.message);
-         throw new Error(error.message);
+         return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
-         throw new Error("An unexpected error occured");
+         return { error: "Unexpected error occured" }
       }
    }
 };
