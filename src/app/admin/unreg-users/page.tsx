@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import NewUnregUserForm from "./NewUnregUserForm";
 import { redirect } from "next/navigation";
 import { fetchAllInvites } from "@/lib/mongodb/user-server-actions";
 import Invites from "./Invites";
@@ -12,10 +11,5 @@ export default async function NewUnregUserFormServer() {
    const allInvites = await fetchAllInvites();
    if ("error" in allInvites) return <div>{allInvites.error}</div>;
 
-   return (
-      <>
-         <NewUnregUserForm/>
-         <Invites allInvites={allInvites}/>
-      </>
-   )
+   return <Invites allInvites={allInvites}/>
 }

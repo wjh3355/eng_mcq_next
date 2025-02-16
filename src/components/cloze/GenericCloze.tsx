@@ -50,7 +50,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
    if (isLoading || (prevUserCorrectAns !== null && !isDemo)) return null;
 
-   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
       event.preventDefault();
 
       const newFormData = cloneDeep(formData);

@@ -29,7 +29,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SessionProvider>
                <NavBar />
                <main className="mb-4" style={{flex: "1"}}>
-                  <Toaster/>
+                  <Toaster
+                     position="top-center"
+                     reverseOrder={false}
+                     toastOptions={{
+                        duration: 6000,
+                        className: "p-3 fw-bold",
+                     }}
+                  />
                   {children}
                </main>
                <Footer />

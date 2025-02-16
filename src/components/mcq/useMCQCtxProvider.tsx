@@ -6,8 +6,9 @@ import { McqCategory, MCQContextValue, MCQQnObj, EMPTY_MCQ_CONTEXT_VALUE, EMPTY_
 
 import { fetchDemoMcq, fetchMcq } from "@/lib/mongodb/mcq-server-actions";
 import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
+import toast from "react-hot-toast";
 
-export default function useGenericMcqProvider({
+export default function useMCQCtxProvider({
    McqCategory,
    qnNumArray,
    email,
@@ -21,7 +22,7 @@ export default function useGenericMcqProvider({
    isRedo: boolean
 }) {
 
-   // toUseUserData is true if the category is not demo, email is not empty, and not redo
+   // toUseUserData is true if the category is not demo, email is not empty (precaution), and not using redo mode
    const toUseUserData: boolean = !(McqCategory === "demo" || email === "" || isRedo);
 
    // create context, fallback is an empty context value
@@ -33,6 +34,7 @@ export default function useGenericMcqProvider({
    // create provider component
    function MCQProvider({ children }: { children: React.ReactNode }) {
 
+      // all necessary states
       const [qnSequence, setQnSequence] = useState<number[]>(qnNumArray);
       const [qnObj, setQnObj] = useState<MCQQnObj>(EMPTY_MCQ_QN_OBJ);
       const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,12 +45,12 @@ export default function useGenericMcqProvider({
       const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
-      function handleOptionClick(isCorr: boolean) {
-         // if isCorrect is null, it means the user has not clicked any option yet
-         // so we set isCorrect to whether the user's answer is correct
-         setIsCorrect(isCorr);
+      function handleOptionClick(rw: boolean) {
+         // set isCorrect to whether the user's answer is correct (rw means right/wrong)
+         // (if isCorrect is null, user has not clicked any option yet)
+         setIsCorrect(rw);
 
-         if (isCorr) {
+         if (rw) {
             // if correct, increment both right answers count and total questions count
             setThisSessionScore(([right, tot]) => [right+1, tot+1]);
          } else {
@@ -62,12 +64,26 @@ export default function useGenericMcqProvider({
 
          if (toUseUserData && McqCategory !== "demo") {
             // if not demo, update user profile with correct answer
+            // todo states that the user is updating mcq, mcqCategory is the category of the mcq (gep etc...)
+            // in all cases, increment numQnsAttempted
+            // if correct, increment score by 10
+            // if wrong, add the question to wrongAnsArr
             updateUserProfile(email, {
                todo: "update mcq",
                mcqCategory: McqCategory,
                mcqCatQnNum: qnObj.qnNum,
-               isMcqCorrect: isCorr
-            }).then(res => res.error && setError(res.error));
+               isMcqCorrect: rw
+            })
+            .then(res => {
+               if (res.error) {
+                  toast.error(res.error, { duration: 6000 });
+                  return;
+               };
+               // if no error, and the user was correct, 
+               // we increment the userPoints state by 10
+               // should always match the user's score in the database (by right)
+               if (rw) setUserPoints(prev => prev + 10);
+            });
          }
       }
 
@@ -91,6 +107,23 @@ export default function useGenericMcqProvider({
       }
 
       useEffect(() => {
+         // if user data has to be used and updated, 
+         // fetch user profile to get user points.
+         // only need to run once at the start,
+         // then we can just update the userPoints state
+         if (toUseUserData) {
+            fetchUser(email, "profile")
+            .then(res => {
+               if ("error" in res) {
+                  toast.error(res.error, { duration: 6000 });
+                  return;
+               }
+               setUserPoints(res.score);
+            });
+         }
+      }, [])
+
+      useEffect(() => {
          const fetchData = async() => {
             // set qnObj to an empty object
             setQnObj(EMPTY_MCQ_QN_OBJ);
@@ -102,26 +135,17 @@ export default function useGenericMcqProvider({
             }
       
             try {
-               // run server actions:
+               // run server action:
                // if demo, fetch demo mcq (category is 'demo' which is fixed)
                // else fetch actual mcq based on McqCategory and current question number (qnSequence[0])
-               const mcqFetch = McqCategory === "demo" 
+               const res = await (McqCategory === "demo" 
                   ? fetchDemoMcq(qnSequence[0]) 
-                  : fetchMcq(McqCategory, qnSequence[0]);
-      
-               // if not demo, or email is not empty, or not redo, fetch user profile
-               const userFetch = toUseUserData ? fetchUser(email, "profile") : Promise.resolve(null);
-      
-               // wait for both fetches to complete
-               const [res1, usr] = await Promise.all([mcqFetch, userFetch]);
-      
+                  : fetchMcq(McqCategory, qnSequence[0]));
+            
                // set qnObj to the fetched mcq object if no error
-               "error" in res1 ? setError(res1.error) : setQnObj(res1);
-               if (usr) {
-                  "error" in usr ? setError(usr.error) : setUserPoints(usr.score);
-               }
+               "error" in res ? toast.error(res.error, { duration: 6000 }) : setQnObj(res);
             } catch (err) {
-               setError(err instanceof Error ? err.message : "An unknown error occurred");
+               toast.error(err instanceof Error ? err.message : "An unknown error occurred", { duration: 6000 });
             }
          };
 
@@ -129,8 +153,10 @@ export default function useGenericMcqProvider({
       }, [qnSequence])
 
       useEffect(() => {
-         // if qnNum is not NaN, it means the qnObj has been set
+         // if qnNum is not NaN, it means the qnObj has been set (not the empty one)
          // so we set isLoading to false
+         // this is to prevent an empty question from being displayed
+         // however, it seems people hate multiple useEffects for some reason (???) idk
          if (!Number.isNaN(qnObj.qnNum)) setIsLoading(false);
       }, [qnObj])
 

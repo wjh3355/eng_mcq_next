@@ -34,7 +34,7 @@ export async function fetchMcqQnArr(collection: McqCategory | 'demo', qnNums: nu
 
    } catch (error: unknown) {
       if (error instanceof Error) {
-         console.error("Unable to fetch array of MCQ questions from database:\n" + error.message);
+         console.error("Unable to fetch array of MCQ questions from database: " + error.message);
          return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
@@ -61,16 +61,16 @@ export async function fetchMcq(collection: McqCategory, qnNum: number) {
       const zr = McqObjSchema.safeParse(res);
 
       if (!zr.success) throw new Error("Type validation failed: " + zr.error);
-
+      
       return zr.data;
 
    } catch (error: unknown) {
       if (error instanceof Error) {
-         console.error("Unable to fetch MCQ question from database:\n" + error.message);
-         return { error: error.message }
+         console.error("Unable to fetch MCQ question(s) from database: " + error.message);
+         return { error: "Could not fetch MCQ question(s) from database due to: " + error.message }
       } else {
-         console.error("An unexpected error occured:", error);
-         return { error: "Unexpected error occured" }
+         console.error("Unexpected error occured while fetching MCQ question(s): ", error);
+         return { error: "Unable to fetch MCQ questions. Try again later." }
       }
    }
 };

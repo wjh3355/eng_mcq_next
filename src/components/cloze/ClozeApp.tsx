@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 
-import useGenericClozeProvider from "./GenericClozeProvider";
+import useClozeCtxProvider from "./useClozeCtxProvider";
 import GenericCloze from "./GenericCloze";
 import GenericClozeCompleted from "./GenericClozeCompleted";
 import Skeleton from "react-loading-skeleton";
@@ -24,7 +24,7 @@ export default function ClozeApp({
    mainTitle: string
 }) {
 
-   const { ClozeProvider, useClozeContext } = useGenericClozeProvider({
+   const { ClozeProvider, useClozeContext } = useClozeCtxProvider({
       user,
       qnNum,
       isDemo

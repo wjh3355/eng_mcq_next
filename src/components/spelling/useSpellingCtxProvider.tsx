@@ -47,7 +47,7 @@ export default function useSpellingCtxProvider({
             setThisSessionScore(([right, tot]) => [right+1, tot+1]);
          } else {
             // if wrong, increment total questions count only
-            toast.error("Sorry, that was incorrect.", { duration: 3000 });
+            toast.error("Sorry, that was incorrect. Try the next question.", { duration: 3000 });
             setThisSessionScore(([right, tot]) => [right, tot+1]);
             // if the question is not already in wrongAnsArr, add it
             if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
@@ -57,11 +57,25 @@ export default function useSpellingCtxProvider({
 
          // if email is not empty, update user profile with the user's answer
          if (email) {
+            // todo states that the user is updating spelling
+            // in all cases, increment numQnsAttempted
+            // if correct, increment score by 10
+            // if wrong, add the question to wrongAnsArr
             updateUserProfile(email, {
                todo: "update spelling",
                spellingQnNum: qnObj.qnNum,
                isSpellingCorrect: rw
-            }).then(res => res.error && setError(res.error));
+            })
+            .then(res => {
+               if (res.error) {
+                  toast.error(res.error, { duration: 6000 });
+                  return;
+               };
+               // if no error, and the user was correct, 
+               // we increment the userPoints state by 10
+               // should always match the user's score in the database (by right)
+               if (rw) setUserPoints(prev => prev + 10);
+            });
          }
       }
 
@@ -85,6 +99,22 @@ export default function useSpellingCtxProvider({
       }
 
       useEffect(() => {
+         // if user data has to be used and updated, 
+         // fetch user profile to get user points.
+         // only need to run once at the start,
+         // then we can just update the userPoints state
+         if (email) {
+            fetchUser(email, "profile").then(res => {
+               if ("error" in res) {
+                  toast.error(res.error, { duration: 6000 });
+                  return;
+               }
+               setUserPoints(res.score);
+            });
+         }
+      }, [])
+
+      useEffect(() => {
          // listens to changes in qnSequence,
          // fetches the next question (qnSequence[0]) when qnSequence changes
 
@@ -97,18 +127,14 @@ export default function useSpellingCtxProvider({
                setHasReachedEnd(true);
                return;
             }
-      
-            // fetch the next question using server action
-            // fetch the user's profile using server action
-            const spellingPromise = fetchSpelling(qnSequence[0]);
-            const userPromise = fetchUser(email, "profile");
 
             try {
-               // wait for both promises to resolve
-               const [spellingRes, userRes] = await Promise.all([spellingPromise, userPromise]);
-
-               "error" in spellingRes ? setError(spellingRes.error) : setQnObj(spellingRes);
-               "error" in userRes ? setError(prev => prev + "; " + userRes.error) : setUserPoints(userRes.score);
+               // run server action:
+               // fetch spelling qn based on current question number (qnSequence[0])
+               const res = await fetchSpelling(qnSequence[0]);
+            
+               // set qnObj to the fetched mcq object if no error
+               "error" in res ? toast.error(res.error, { duration: 6000 }) : setQnObj(res);
             } catch (err) {
                setError(err instanceof Error ? err.message : "An unknown error occurred");
             }
@@ -118,8 +144,10 @@ export default function useSpellingCtxProvider({
       }, [qnSequence])
 
       useEffect(() => {
-         // if qnNum is not NaN, it means the qnObj has been set
+         // if qnNum is not NaN, it means the qnObj has been set (not the empty one)
          // so we set isLoading to false
+         // this is to prevent an empty question from being displayed
+         // however, it seems people hate multiple useEffects for some reason (???) idk
          if (!Number.isNaN(qnObj.qnNum)) setIsLoading(false);
       }, [qnObj])
 

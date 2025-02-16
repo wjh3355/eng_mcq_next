@@ -9,7 +9,7 @@ import {
 import { fetchCloze, fetchDemoCloze } from "@/lib/mongodb/cloze-server-actions";
 import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
 
-export default function useGenericClozeProvider({
+export default function useClozeCtxProvider({
    user,
    qnNum,
    isDemo,

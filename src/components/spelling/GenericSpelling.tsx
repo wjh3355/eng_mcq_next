@@ -9,14 +9,15 @@ import Skeleton from "react-loading-skeleton";
 import styled, { keyframes } from "styled-components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { BadgeInfo, BookText, CircleArrowRight, CircleCheck, CircleX } from "lucide-react";
-import { useState } from "react";
+import { BadgeInfo, BookText, CircleArrowRight, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/esm/Modal";
 import Spinner from "react-bootstrap/esm/Spinner";
+import toast from "react-hot-toast";
 
 type FormField = { correctedWord: string }
 
-export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: () => SpellingContextValue }) {
+export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
 
    const {
       qnObj,
@@ -34,16 +35,26 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
+   const [numAttempts, setNumAttempts] = useState(0);
+   const [isCheckBtnCooldown, setIsCheckBtnCooldown] = useState(false);
 
    const { 
       register,
       handleSubmit,
       reset,
+      setFocus,
       formState: { isValid }
    } = useForm<FormField>({
       resolver: zodResolver(z.object({ correctedWord: z.string().nonempty() })),
       defaultValues: { correctedWord: "" },
    })
+
+   useEffect(() => {
+      if (!isLoading) {
+         setFocus("correctedWord");
+         setNumAttempts(0);
+      }
+   }, [setFocus, isLoading]);
 
    if (hasReachedEnd) return null;
 
@@ -58,10 +69,27 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
       );
    }
 
+   function handler(data: FormField) {
+      const isCorrect = data.correctedWord.trim() === correctAns;
+      if (!isCorrect && numAttempts === 0) {
+         // first wrong attempt: 
+         // show toast and set numAttempts to 1
+         // create 3 second cooldown for check button
+         toast.error("Sorry, that was incorrect. You have one more attempt. \n\nNote that the answer is case-sensitive.", { duration: 3000 });
+         setNumAttempts(1);
+
+         setIsCheckBtnCooldown(true);
+         setTimeout(() => setIsCheckBtnCooldown(false), 3000);
+
+         return;
+      }
+      handleAttempt(isCorrect);
+   }
+
    return (
       <>
          <Col lg={8} md={7}>
-            <Card body className="mb-3">
+            <Card body className="mb-3 shadow border-0">
                {isLoading 
                   ?  <Skeleton height="24px" />
                   :  <TypingAnim
@@ -93,72 +121,68 @@ export default function GenericSpelling({ QnContextToUse }: {  QnContextToUse: (
          </Col>
 
          <Col lg={4} md={5}>
-            <section className="vstack gap-3">
-
-               <div>The misspelled word should be:</div>
-
-               <form 
-                  onSubmit={
-                     handleSubmit(
-                        (data: FormField) => handleAttempt(
-                           data.correctedWord.trim().toLowerCase() === correctAns
-                        )
-                     )
-                  }
-                  onKeyDown={(e) => {
-                     if (e.key === "Enter") e.preventDefault();
-                  }}
-               >
-                  <input 
+            <form 
+               onSubmit={handleSubmit(handler)}
+               onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
+               }}
+               className="border-0 shadow rounded-2 p-3"
+            >
+               <label className="text-center">
+                  The underlined word should be:
+                  <SpellingInput 
                      {...register("correctedWord")}
                      type="text"
                      disabled={isLoading || isCorrect !== null}
-                     autoFocus={true}
                      autoComplete="off"
+                     $isCorrect={isCorrect}
                   />
+               </label>
 
-                  {/* { isCorrect === true && 
-                     <CircleCheck
-                        className="text-success"
-                        size={22} 
-                        strokeWidth={3}
-                     /> 
-                  }
-                  { isCorrect === false &&
-                     <CircleX 
-                        className="text-danger"
-                        size={22} 
-                        strokeWidth={3}
-                     /> 
-                  } */}
-
+               <div className="hstack gap-2 mt-2">
                   <Button
-                     variant="danger"
+                     onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                           e.preventDefault();
+                           e.currentTarget.click();
+                           // the button can be clicked using "enter"
+                           // but not the input field
+                           // more user friendly for keyboard users
+                        }
+                     }}
+                     className="d-flex align-items-center justify-content-center w-50"
+                     variant="secondary"
                      type="submit"
-                     disabled={!isValid || isCorrect !== null}
+                     disabled={!isValid || isCorrect !== null || isCheckBtnCooldown}
                   >
-                     Check
+                     Check<Search size={22} strokeWidth={2} className="ms-1"/>
                   </Button>
-               </form>
+                  <Button
+                     onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                           e.preventDefault();
+                           e.currentTarget.click();
+                           // the button can be clicked using "enter"
+                        }
+                     }}
+                     disabled={isCorrect === null}
+                     className="d-flex align-items-center justify-content-center w-50"
+                     onClick={() => {
+                        reset();
+                        handleNextQnBtnClick();
+                     }}
+                  >
+                     <strong>Next</strong><CircleArrowRight size={22} strokeWidth={2} className="ms-1"/>
+                  </Button>
+               </div>
 
-               <Button
-                  disabled={isCorrect === null}
-                  className="d-flex align-items-center justify-content-center"
-                  onClick={() => {
-                     reset();
-                     handleNextQnBtnClick();
-                  }}
-               >
-                  <strong>Next&nbsp;</strong><CircleArrowRight size={22} strokeWidth={2}/>
-               </Button>
-
-            </section>
+            </form>
          </Col>
 
          <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(!isExplShown)}>
-            <Modal.Header closeButton><Modal.Title className="fs-5">Definition</Modal.Title></Modal.Header>
+            <Modal.Header closeButton><Modal.Title className="fs-5">{correctAns}</Modal.Title></Modal.Header>
             <Modal.Body>
-               {exp}{" "}({type})
+               {exp}
             </Modal.Body>
          </Modal>
 
@@ -211,12 +235,20 @@ function TypingAnim({
    );
 };
 
-const SpellingInput = styled.input`
+const SpellingInput = styled.input<{
+   $isCorrect: boolean | null;
+}>`
    width: 250px;
-   height: 35px;
+   height: 40px;
    text-align: center;
    border: 2px solid lightgray;
    border-radius: 5px;
+   background-color: white;
+   font-size: 18px;
+   &:disabled {
+      ${({$isCorrect}) => $isCorrect === true && "color: green; font-weight: bold; border-color: green;"}
+      ${({$isCorrect}) => $isCorrect === false && "color: rgb(190, 44, 44); font-weight: bold; border-color: rgb(190, 44, 44);"}
+   }
 `;
 
 const TypingAnimContainer = styled.div`

@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 
-import useGenericMcqProvider from "./GenericMCQProvider";
+import useMCQCtxProvider from "./useMCQCtxProvider";
 import GenericMCQLeft from "./GenericMCQLeft";
 import GenericMCQRight from "./GenericMCQRight";
 import GenericMCQEnd from "./GenericMCQEnd";
@@ -32,7 +32,7 @@ export default function MCQApp({
 }) {
 
    // initialize the MCQProvider with the appropriate context
-   const { MCQProvider, useMCQContext } = useGenericMcqProvider({
+   const { MCQProvider, useMCQContext } = useMCQCtxProvider({
       McqCategory,
       qnNumArray,
       email,
@@ -48,7 +48,7 @@ export default function MCQApp({
 
       return (
          <Alert variant="danger" dismissible className="d-flex align-items-center">
-            <TriangleAlert />&nbsp;<strong>Error: {error}</strong>
+            <TriangleAlert />&nbsp;<strong>{error}</strong>
          </Alert>
       );
    }

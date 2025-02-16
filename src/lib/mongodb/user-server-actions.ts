@@ -192,11 +192,11 @@ export async function updateUserProfile(
 
    } catch (error) {
       if (error instanceof Error) {
-         console.error(`Unable to update user profile for ${email}:\n` + error.message);
-         return { error: error.message }
+         console.error(`Unable to update user profile for ${email}: ` + error.message);
+         return { error: "Could not update user profile due to: " + error.message }
       } else {
-         console.error("An unexpected error occured:", error);
-         return { error: "Unexpected error occured" }
+         console.error(`Unexpected error occured while updating user profile for ${email}: ` + error);
+         return { error: `Unable to update user profile for ${email}. Try again later.` }
       }
    }
 }
@@ -216,8 +216,6 @@ export async function resetUserData(email: string) {
 
       await profileDb.updateOne({ email }, { $set: { ...RESET_PROFILE_FIELDS_OBJ } });
 
-      revalidatePath("/profile");
-
       return { success: true };
 
    } catch (error) {
@@ -228,6 +226,8 @@ export async function resetUserData(email: string) {
          console.error("An unexpected error occured:", error);
          return { error: "Unexpected error occured" }
       }
+   } finally {
+      revalidatePath("/profile");
    }
 }
 
@@ -253,9 +253,6 @@ export async function createNewUnregUser(email: string) {
       const newInvite = newUserInvite({ email });
       await db.collection("unregistered").insertOne(newInvite);
 
-      // revalidate unreg-users page
-      revalidatePath("/admin/unreg-users");
-
       return { success: true };
 
    } catch (error) {
@@ -266,6 +263,8 @@ export async function createNewUnregUser(email: string) {
          console.error("An unexpected error occured:", error);
          return { error: "Unexpected error occured" }
       }
+   } finally {
+      revalidatePath("/admin/unreg-users");
    }
 }
 
@@ -317,8 +316,6 @@ export async function toggleSuspend(email: string, isSuspended: boolean) {
 
       await authDb.updateOne({ email }, { $set: { isSuspended } });
 
-      revalidatePath("/admin");
-
       return { success: true };
 
    } catch (error) {
@@ -329,6 +326,8 @@ export async function toggleSuspend(email: string, isSuspended: boolean) {
          console.error("An unexpected error occured:", error);
          return { error: "Unexpected error occured" }
       }
+   } finally {
+      revalidatePath("/admin");
    }
    
 }
@@ -354,8 +353,6 @@ export async function deleteUser(email: string) {
       await authDb.deleteOne({ email });
       await profileDb.deleteOne({ email });
 
-      revalidatePath("/admin");
-
       return { success: true };
 
    } catch (error) {
@@ -366,5 +363,7 @@ export async function deleteUser(email: string) {
          console.error("An unexpected error occured:", error);
          return { error: "Unexpected error occured" }
       }
+   } finally {
+      revalidatePath("/admin");
    }
 }
