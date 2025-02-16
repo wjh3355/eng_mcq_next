@@ -101,7 +101,7 @@ async function DisplayCategorySets({ category }: { category: McqCategory }) {
    )
 
    return (
-      <div className="card h-100 bg-light">
+      <div className="card h-100 bg-light border-0 shadow">
          <div className="card-header">{categoryName}</div>
          <div className="card-body">
             <ul>
@@ -120,7 +120,7 @@ async function WrongQnsTable({ user }: { user: UserProfileDocument }) {
 
    return <Col xl={6} lg={8} md={10} className="mx-auto">
       <h5 className="m-0 text-center">Redo Wrong Questions</h5>
-      <Table striped>
+      <Table striped className="shadow">
          <thead>
             <tr>
                <th>Category</th>

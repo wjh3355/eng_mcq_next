@@ -53,6 +53,7 @@ export default function useMCQCtxProvider({
          if (rw) {
             // if correct, increment both right answers count and total questions count
             setThisSessionScore(([right, tot]) => [right+1, tot+1]);
+            toast.success("Correct! Well done.", { duration: 2000 });
          } else {
             // if wrong, increment total questions count only
             setThisSessionScore(([right, tot]) => [right, tot+1]);
@@ -60,6 +61,7 @@ export default function useMCQCtxProvider({
             if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
                setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
             }
+            toast.error("Sorry, that was incorrect.", { duration: 2000 });
          }
 
          if (toUseUserData && McqCategory !== "demo") {

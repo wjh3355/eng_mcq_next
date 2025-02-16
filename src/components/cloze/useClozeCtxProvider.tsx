@@ -8,6 +8,7 @@ import {
 } from "@/definitions";
 import { fetchCloze, fetchDemoCloze } from "@/lib/mongodb/cloze-server-actions";
 import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
+import toast from "react-hot-toast";
 
 export default function useClozeCtxProvider({
    user,
@@ -42,6 +43,22 @@ export default function useClozeCtxProvider({
             return;
          }
 
+         if (correctAns.length >= 8) {
+            toast.success(
+               isDemo
+                  ? "Hooray! You passed. You may check the correct answers below."
+                  : "Hooray! You passed. Refresh the page to see the correct answers.", 
+               { duration: 8000 }
+            );
+         } else {
+            toast.error(
+               isDemo 
+                  ? "Sorry, you did not pass. You may check the correct answers below." 
+                  : "Sorry, you did not pass. Refresh the page to see the correct answers.", 
+               { duration: 8000 }
+            );
+         }
+
          // if not demo, update user profile with correct answer
          updateUserProfile(user.email, {
             todo: "update cloze",
@@ -63,7 +80,13 @@ export default function useClozeCtxProvider({
             todo: "update cloze",
             clozeQnNum: qnNum,
             correctAns: null,
-         }).then(res => res.error && setError(res.error));
+         })
+         .then(
+            res => {
+               res.error && setError(res.error);
+               window.location.reload();
+            }
+         );
       }
 
       useEffect(() => {

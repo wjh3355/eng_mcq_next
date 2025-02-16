@@ -39,7 +39,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
    function ScoreComponent() {
       return (
          <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-            {Number.isNaN(userPoints) 
+            {Number.isNaN(userPoints)
                ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
                :  <span>Points: {userPoints}</span>
             }
@@ -49,7 +49,7 @@ export default function GenericMCQLeft({ QnContextToUse }: { QnContextToUse: () 
 
    return (
       <Col lg={8} md={7}>
-         <Card body className="mb-3">
+         <Card body className="mb-3 shadow border-0">
             {isLoading 
                ?  <Skeleton height="24px" />
                :  <MCQQnSentence sentence={sentence} wordToTest={wordToTest} num={currNum}/>

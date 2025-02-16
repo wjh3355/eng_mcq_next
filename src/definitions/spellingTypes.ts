@@ -45,3 +45,5 @@ export const EMPTY_SPELLING_CONTEXT_VALUE: SpellingContextValue = {
    handleNextQnBtnClick() {},
    redoSet() {}
 }
+
+export const SPELLING_SET_SIZE = 25;

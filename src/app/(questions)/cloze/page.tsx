@@ -37,7 +37,7 @@ async function ClozeTable() {
    return (
       <Row>
          <Col xl={6} lg={8} md={10} className="mx-auto">
-            <Table striped>
+            <Table striped className="shadow">
                <tbody>
                   {clozeObjArr.map(({ qnNum, title }) => 
                      <tr key={qnNum}>

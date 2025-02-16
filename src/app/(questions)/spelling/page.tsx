@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 import { fetchNumQns } from "@/lib/mongodb/shared-server-actions";
 import toast from "react-hot-toast";
+import { SPELLING_SET_SIZE } from "@/definitions";
 
 export default async function SpellingHomePage() {
    await checkAuthForRoute();
@@ -37,9 +38,7 @@ async function DisplaySpellingSets() {
       return;
    }
 
-   const setSize = 50;
-
-   const numPossibleSets = Math.ceil(totalNumQns / setSize);
+   const numPossibleSets = Math.ceil(totalNumQns / SPELLING_SET_SIZE);
 
    const links: React.JSX.Element[] = [];
 
@@ -47,9 +46,9 @@ async function DisplaySpellingSets() {
       links.push(
          <li key={setNum}>
             <Link href={`/spelling/${setNum}`}>
-               {`Set ${setNum} (${(setNum-1)*setSize + 1} to ${
-                  setNum*setSize <= totalNumQns
-                  ?  setNum*setSize
+               {`Set ${setNum} (${(setNum-1)*SPELLING_SET_SIZE + 1} to ${
+                  setNum*SPELLING_SET_SIZE <= totalNumQns
+                  ?  setNum*SPELLING_SET_SIZE
                   :  totalNumQns
                })`}
             </Link>
@@ -66,7 +65,7 @@ async function DisplaySpellingSets() {
    )
 
    return (
-      <div className="card h-100 bg-light">
+      <div className="card h-100 bg-light border-0 shadow">
          <div className="card-body">
             <ul>
                {links}

@@ -10,8 +10,6 @@ import { MCQContextValue } from '@/definitions';
 import MCQOption from "./MCQOption";
 import Skeleton from "react-loading-skeleton";
 
-import { CircleCheck, CircleX } from 'lucide-react';
-
 export default function GenericMCQRight({
    QnContextToUse
 }: {
@@ -37,11 +35,15 @@ export default function GenericMCQRight({
 
       return () => {
          // reset the options when the component unmounts
+         console.log("AAAAAAAAAAAAAAAAAAAAADSADSDSADSD")
          setRandomisedOptions([]);
          setIsAllDisabled(false);
          setSelectedOption(null);
       }
    }, [options]);
+
+   // if the end of the quiz has been reached, return null
+   if (hasReachedEnd) return null;
 
    function OptionsArr() {
 
@@ -49,11 +51,11 @@ export default function GenericMCQRight({
 
          // true if this option is the correct answer
          const isThisCorrectOption = thisOption === correctAns;
-         // true if this option is the selected option
+         // true if this option has been selected
          const isThisSelected = thisOption === selectedOption;
-         // mark as red when all options are disabled and this option is selected but is not the correct answer
+         // mark option as red when all options are disabled and this option is selected but is not the correct answer
          const isRed = isAllDisabled && isThisSelected && !isThisCorrectOption;
-         // mark as green if all options are disabled and this option is the correct answer (regardless of whether it is selected)
+         // mark option as green if all options are disabled and this option is the correct answer (regardless of whether it is selected)
          const isGreen = isAllDisabled && isThisCorrectOption;
          // mark as bolded if all options are disabled and this option is either the correct answer or the selected option
          const isBolded = isAllDisabled && (isThisCorrectOption || isThisSelected);
@@ -72,24 +74,11 @@ export default function GenericMCQRight({
 
             >
                {thisOption}
-               { isGreen && <CircleCheck 
-                     size={22} 
-                     strokeWidth={3}
-                     style={{position: "absolute", right: "3%"}}
-                  /> }
-               { isRed && <CircleX 
-                     size={22} 
-                     strokeWidth={3}
-                     style={{position: "absolute", right: "3%"}}
-                  /> }
          </MCQOption>
       
       });
 
    }
-
-   // if the end of the quiz has been reached, return null
-   if (hasReachedEnd) return null;
 
    return (
       <Col lg={4} md={5}>

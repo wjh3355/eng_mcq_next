@@ -15,7 +15,7 @@ import Modal from "react-bootstrap/esm/Modal";
 import Spinner from "react-bootstrap/esm/Spinner";
 import toast from "react-hot-toast";
 
-type FormField = { correctedWord: string }
+type SentenceFormFields = { correctedWord: string }
 
 export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
 
@@ -44,7 +44,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
       reset,
       setFocus,
       formState: { isValid }
-   } = useForm<FormField>({
+   } = useForm<SentenceFormFields>({
       resolver: zodResolver(z.object({ correctedWord: z.string().nonempty() })),
       defaultValues: { correctedWord: "" },
    })
@@ -69,7 +69,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
       );
    }
 
-   function handler(data: FormField) {
+   function handler(data: SentenceFormFields) {
       const isCorrect = data.correctedWord.trim() === correctAns;
       if (!isCorrect && numAttempts === 0) {
          // first wrong attempt: 

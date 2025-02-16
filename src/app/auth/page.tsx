@@ -86,6 +86,7 @@ function ReactHookForm() {
                {...register("email", { required: true })}
                type="email"
                onBlur={() => trigger("email")}
+               autoFocus={true}
             />
             <BSForm.Text className="text-danger">{errors.email?.message}</BSForm.Text>
          </BSForm.Group>

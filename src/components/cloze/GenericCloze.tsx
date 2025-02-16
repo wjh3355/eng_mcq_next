@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
 import ClozeInput from "./ClozeInput";
 import cloneDeep from "lodash/cloneDeep";
 import { ClozeContextValue, ClozeFormData } from '@/definitions';
 import Card from "react-bootstrap/Card";
+import toast from "react-hot-toast";
 
 export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
@@ -23,8 +23,8 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
    const [formData, setFormData] = useState<ClozeFormData>({});
    const [score, setScore] = useState<number>(0);
    const [numTriesLeft, setNumTriesLeft] = useState<number>(3);
-   const [hasAttempted, setHasAttempted] = useState<boolean>(false);
-   const [animateWrong, setAnimateWrong] = useState<boolean>(false);
+   const [isSubmitBtnCooldown, setIsSubmitBtnCooldown] = useState(false);
+   const [hasAttempted, setHasAttempted] = useState(false);
 
    useEffect(() => {
       if (isLoading) return;
@@ -71,9 +71,6 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
       setFormData(newFormData);
 
-      setAnimateWrong(true);
-      setTimeout(() => setAnimateWrong(false), 400);
-
       if (numTriesLeft === 1 || correctAns.length >= 8) {
 
          setNumTriesLeft(prev => prev - 1);
@@ -83,7 +80,9 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
       } else {
 
          setNumTriesLeft(prev => prev - 1);
-         
+         toast.error(`Sorry, you did not pass.\n\nGet at least 8 blanks correct. You have ${numTriesLeft-1} attempt(s) left.`, { duration: 5000 });
+         setIsSubmitBtnCooldown(true);
+         setTimeout(() => setIsSubmitBtnCooldown(false), 3000);
       }
    }
 
@@ -147,7 +146,6 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
                      onKeyDown={handleKeypress}
 
                      $isCorrect={isCorrect}
-                     $animate={animateWrong && (isCorrect === false)}
                   />
                </span>
             );
@@ -164,22 +162,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
       formattedParagraphs.push(currArray);
 
       return formattedParagraphs;
-   })()
-
-   function ClozeAlert() {
-      if (isDemo) {
-         return <Alert variant="info">
-            Get at least 8 / 15 blanks correct.
-         </Alert>
-      } else {
-         return <Alert variant="info">
-            {hasAttempted
-               ? "Refresh the page to see the correct answers."
-               : "Get at least 8 / 15 blanks correct."
-            }
-         </Alert>;
-      }
-   }
+   })();
 
    function AnswersForDemo() {
       if (isDemo && prevUserCorrectAns !== null) {
@@ -203,8 +186,6 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
    return (
       <section>
-         
-         <ClozeAlert/>
 
          <form onSubmit={handleFormSubmit} >
 
@@ -225,10 +206,10 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
                   <Button 
                      type="submit"
                      variant="danger"
-                     disabled={hasAttempted || isLoading}
+                     disabled={hasAttempted || isLoading || isSubmitBtnCooldown}
                      className="fw-bold px-4"
                   >
-                     Submit&nbsp;{`(${numTriesLeft} ${numTriesLeft === 1 ? "try" : "tries"} left)`}
+                     {`Submit: ${numTriesLeft} attempt(s) left`}
                   </Button>
 
                   <Button 
