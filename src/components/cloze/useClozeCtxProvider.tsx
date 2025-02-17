@@ -9,6 +9,7 @@ import {
 import { fetchCloze, fetchDemoCloze } from "@/lib/mongodb/cloze-server-actions";
 import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
+import { Info } from "lucide-react";
 
 export default function useClozeCtxProvider({
    user,
@@ -40,31 +41,26 @@ export default function useClozeCtxProvider({
          // if demo, do not update user profile (there isnt one, email is empty)
          if (isDemo) {
             setPrevUserCorrectAns(correctAns);
+            if (correctAns.length >= 8) {
+               toast.success("Hooray! You passed. You may check the correct answers below.");
+            } else {
+               toast.error("Sorry, you did not pass. You may check the correct answers below.");
+            }
             return;
          }
 
+         // if not demo, update user profile with correct answer
          if (correctAns.length >= 8) {
-            toast.success(
-               isDemo
-                  ? "Hooray! You passed. You may check the correct answers below."
-                  : "Hooray! You passed. Refresh the page to see the correct answers.", 
-               { duration: 8000 }
-            );
+            toast.success("Hooray! You passed. Refresh the page to see the correct answers.");
          } else {
-            toast.error(
-               isDemo 
-                  ? "Sorry, you did not pass. You may check the correct answers below." 
-                  : "Sorry, you did not pass. Refresh the page to see the correct answers.", 
-               { duration: 8000 }
-            );
+            toast.error("Sorry, you did not pass. Refresh the page to see the correct answers.");
          }
 
-         // if not demo, update user profile with correct answer
          updateUserProfile(user.email, {
             todo: "update cloze",
             clozeQnNum: qnNum,
             correctAns,
-         }).then(res => res.error && setError(res.error));
+         }).then(res => res.error && toast.error(res.error));
       }
 
       function handleReset() {
@@ -141,6 +137,12 @@ export default function useClozeCtxProvider({
             }
 
          }
+
+         toast.custom(
+            <span className="border-0 shadow rounded-3 p-3 bg-white fw-bold d-flex align-items-center"> 
+               <Info color="#009300" className="me-1"/>Get at least 8 out of 15 blanks correct to pass.
+            </span>
+         );
 
          fetchData();
          

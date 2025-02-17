@@ -58,7 +58,7 @@ function ReactHookForm() {
 
          reset();
 
-         toast.success("Password reset successfully! You may now login with your new password.", { duration: 7000 });
+         toast.success("Password reset successfully! You may now login with your new password.");
          
       } catch (error) {
          if (error instanceof AxiosError) {

@@ -33,8 +33,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                      position="top-center"
                      reverseOrder={false}
                      toastOptions={{
-                        duration: 6000,
-                        className: "p-3 fw-bold",
+                        duration: 4000,
+                        className: "px-3 py-2 fw-bold",
+
+                        success: {
+                           style: {
+                              border: "2px solid green",
+                           }
+                        },
+
+                        error: {
+                           style: {
+                              border: "2px solid rgb(190, 44, 44)",
+                           }
+                        }
                      }}
                   />
                   {children}

@@ -63,7 +63,7 @@ export default function Invites({ allInvites }: { allInvites: UserInviteDocument
                                           if (res.error) {
                                              toast.error(res.error);
                                           } else{
-                                             toast.success("Successfully created new user invite for " + newEmail, { duration: 5000 });
+                                             toast.success("Successfully created new user invite for " + newEmail);
                                           }
                                           reset();
                                        })

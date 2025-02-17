@@ -75,7 +75,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
          // first wrong attempt: 
          // show toast and set numAttempts to 1
          // create 3 second cooldown for check button
-         toast.error("Sorry, that was incorrect. You have one more attempt. \n\nNote that the answer is case-sensitive.", { duration: 3000 });
+         toast.error("Sorry, that was incorrect. You have one more attempt. \n\nNote that the answer is case-sensitive.");
          setNumAttempts(1);
 
          setIsCheckBtnCooldown(true);

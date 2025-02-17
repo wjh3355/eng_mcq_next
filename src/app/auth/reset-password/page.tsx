@@ -48,7 +48,6 @@ function ReactHookForm() {
                <p>If your email is registered with us, you will receive a password reset link.</p>                  
                <p className="mb-0">Please check your spam folder too.</p>
             </div>,
-            { duration: 7000}
          );
 
       } catch (error) {

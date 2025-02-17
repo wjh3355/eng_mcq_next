@@ -43,11 +43,11 @@ export default function useSpellingCtxProvider({
 
          if (rw) {
             // if correct, increment both right answers count and total questions count
-            toast.success("Correct! Well done.", { duration: 3000 });
+            toast.success("Correct! Well done.");
             setThisSessionScore(([right, tot]) => [right+1, tot+1]);
          } else {
             // if wrong, increment total questions count only
-            toast.error("Sorry, that was incorrect. Try the next question.", { duration: 3000 });
+            toast.error("Sorry, that was incorrect. Try the next question.");
             setThisSessionScore(([right, tot]) => [right, tot+1]);
             // if the question is not already in wrongAnsArr, add it
             if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
@@ -68,7 +68,7 @@ export default function useSpellingCtxProvider({
             })
             .then(res => {
                if (res.error) {
-                  toast.error(res.error, { duration: 6000 });
+                  toast.error(res.error);
                   return;
                };
                // if no error, and the user was correct, 
@@ -106,7 +106,7 @@ export default function useSpellingCtxProvider({
          if (email) {
             fetchUser(email, "profile").then(res => {
                if ("error" in res) {
-                  toast.error(res.error, { duration: 6000 });
+                  toast.error(res.error);
                   return;
                }
                setUserPoints(res.score);
@@ -134,7 +134,7 @@ export default function useSpellingCtxProvider({
                const res = await fetchSpelling(qnSequence[0]);
             
                // set qnObj to the fetched mcq object if no error
-               "error" in res ? toast.error(res.error, { duration: 6000 }) : setQnObj(res);
+               "error" in res ? toast.error(res.error) : setQnObj(res);
             } catch (err) {
                setError(err instanceof Error ? err.message : "An unknown error occurred");
             }

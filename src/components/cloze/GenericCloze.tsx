@@ -80,7 +80,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
       } else {
 
          setNumTriesLeft(prev => prev - 1);
-         toast.error(`Sorry, you did not pass.\n\nGet at least 8 blanks correct. You have ${numTriesLeft-1} attempt(s) left.`, { duration: 5000 });
+         toast.error(`Sorry, you did not pass.\n\nGet at least 8 blanks correct. You have ${numTriesLeft-1} attempt(s) left.`);
          setIsSubmitBtnCooldown(true);
          setTimeout(() => setIsSubmitBtnCooldown(false), 3000);
       }

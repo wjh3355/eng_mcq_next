@@ -53,7 +53,7 @@ export default function useMCQCtxProvider({
          if (rw) {
             // if correct, increment both right answers count and total questions count
             setThisSessionScore(([right, tot]) => [right+1, tot+1]);
-            toast.success("Correct! Well done.", { duration: 2000 });
+            toast.success("Correct! Well done.");
          } else {
             // if wrong, increment total questions count only
             setThisSessionScore(([right, tot]) => [right, tot+1]);
@@ -61,7 +61,7 @@ export default function useMCQCtxProvider({
             if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
                setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
             }
-            toast.error("Sorry, that was incorrect.", { duration: 2000 });
+            toast.error("Sorry, that was incorrect.");
          }
 
          if (toUseUserData && McqCategory !== "demo") {
@@ -78,7 +78,7 @@ export default function useMCQCtxProvider({
             })
             .then(res => {
                if (res.error) {
-                  toast.error(res.error, { duration: 6000 });
+                  toast.error(res.error);
                   return;
                };
                // if no error, and the user was correct, 
@@ -117,7 +117,7 @@ export default function useMCQCtxProvider({
             fetchUser(email, "profile")
             .then(res => {
                if ("error" in res) {
-                  toast.error(res.error, { duration: 6000 });
+                  toast.error(res.error);
                   return;
                }
                setUserPoints(res.score);
@@ -145,9 +145,9 @@ export default function useMCQCtxProvider({
                   : fetchMcq(McqCategory, qnSequence[0]));
             
                // set qnObj to the fetched mcq object if no error
-               "error" in res ? toast.error(res.error, { duration: 6000 }) : setQnObj(res);
+               "error" in res ? toast.error(res.error) : setQnObj(res);
             } catch (err) {
-               toast.error(err instanceof Error ? err.message : "An unknown error occurred", { duration: 6000 });
+               toast.error(err instanceof Error ? err.message : "An unknown error occurred");
             }
          };
 

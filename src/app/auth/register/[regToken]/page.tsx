@@ -77,7 +77,7 @@ function ReactHookForm() {
                   <p>If you have already registered, please <Link href="/auth">Log In</Link>.</p>
                   <p>If you do intend to register, please check your email and registration link. Make sure you have an internet connection.</p>
                </div>,
-               { duration: 7000, style: { width: "1000px" } },
+               { style: { width: "1000px" } },
             );
          } else {
             toast.error("An unknown error occured. Please try again.");

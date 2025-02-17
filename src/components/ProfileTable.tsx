@@ -192,7 +192,7 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
          <Row>
             <Col xl={8} lg={10} className="mx-auto">
-               <Accordion alwaysOpen>
+               <Accordion alwaysOpen className="shadow-lg">
                   <Accordion.Item eventKey="0">
                      <Accordion.Header>
                         <strong>Cloze</strong>
