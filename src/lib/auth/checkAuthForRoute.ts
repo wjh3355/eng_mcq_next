@@ -11,9 +11,9 @@ export async function checkAuthForRoute(): Promise<UserProfileDocument> {
 
    if (!session) redirect("/");
 
-   const userDoc = await fetchUser(session.user.email, "profile");
+   const res = await fetchUser(session.user.email, "profile");
 
-   if ("error" in userDoc) redirect("/");
+   if ("error" in res) redirect("/");
 
-   return userDoc;
+   return res;
 }

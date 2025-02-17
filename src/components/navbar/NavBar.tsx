@@ -19,7 +19,7 @@ export default function NavBar() {
 
    // dk why but this is necessary
    function handleProtectedNavigation(e: React.MouseEvent) {
-      if (status !== "authenticated") {
+      if (status === "loading") {
          e.preventDefault();
          return;
       }
