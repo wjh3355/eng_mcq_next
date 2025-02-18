@@ -13,7 +13,6 @@ import { BadgeInfo, BookText, CircleArrowRight, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/esm/Modal";
 import Spinner from "react-bootstrap/esm/Spinner";
-import toast from "react-hot-toast";
 
 type SentenceFormFields = { correctedWord: string }
 
@@ -35,8 +34,6 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
-   const [numAttempts, setNumAttempts] = useState(0);
-   const [isCheckBtnCooldown, setIsCheckBtnCooldown] = useState(false);
 
    const { 
       register,
@@ -50,10 +47,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
    })
 
    useEffect(() => {
-      if (!isLoading) {
-         setFocus("correctedWord");
-         setNumAttempts(0);
-      }
+      if (!isLoading) setFocus("correctedWord");
    }, [setFocus, isLoading]);
 
    if (hasReachedEnd) return null;
@@ -71,18 +65,6 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
 
    function handler(data: SentenceFormFields) {
       const isCorrect = data.correctedWord.trim() === correctAns;
-      if (!isCorrect && numAttempts === 0) {
-         // first wrong attempt: 
-         // show toast and set numAttempts to 1
-         // create 3 second cooldown for check button
-         toast.error("Sorry, that was incorrect. You have one more attempt. \n\nNote that the answer is case-sensitive.");
-         setNumAttempts(1);
-
-         setIsCheckBtnCooldown(true);
-         setTimeout(() => setIsCheckBtnCooldown(false), 3000);
-
-         return;
-      }
       handleAttempt(isCorrect);
    }
 
@@ -153,7 +135,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
                      className="d-flex align-items-center justify-content-center w-50"
                      variant="secondary"
                      type="submit"
-                     disabled={!isValid || isCorrect !== null || isCheckBtnCooldown}
+                     disabled={!isValid || isCorrect !== null}
                   >
                      Check<Search size={22} strokeWidth={2} className="ms-1"/>
                   </Button>
