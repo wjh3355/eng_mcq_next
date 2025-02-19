@@ -97,11 +97,8 @@ export default function ResetPasswordForm() {
    return (
       <>
          <Container>
-            <Alert variant="danger" className="mt-3">
-               <strong>IMPORTANT:</strong> Due to a migration of authentication software, if you are an existing user, please reset your password using your email below. We apologize for the inconvenience.
-               <br/>
-               <br/>
-               If you have already reset your password, please log in as usual.
+            <Alert variant="info border-0 shadow" className="mt-3">
+               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to reset their password using the form below before logging in. We apologise for any inconvenience caused.
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">

@@ -23,7 +23,7 @@ export default function Footer() {
             <Col md={4} className="mb-3">
                <h6>Contact Info</h6>
                <ul className="list-unstyled text-secondary m-0">
-                  Email: <Link href="mailto:sunbirdenglish.sg@gmail.com">sunbirdenglish.sg@gmail.com</Link>
+                  Email: <Link href="mailto:contact@sunbirdenglish.com">contact@sunbirdenglish.com</Link>
                </ul>
             </Col>
          </Row>

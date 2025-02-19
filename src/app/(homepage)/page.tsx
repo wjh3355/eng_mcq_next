@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
 import Sunbirds from "@/components/homepg/Sunbirds";
 import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
@@ -18,6 +19,9 @@ export default async function Page() {
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">Revise for the PSLE English Paper</h5>
+               <Alert variant="info border-0 shadow" className="mt-3">
+                  ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to <Link href="/auth/reset-password">reset their password</Link> before logging in. We apologise for any inconvenience caused.
+               </Alert>
             </Col>
          </Row>
 
@@ -67,10 +71,6 @@ function LoggedInLinks() {
                <CircleUserRound className="me-2"/>Your Profile
             </Link>
          </div>
-
-         <h4 className="text-center mt-4 text-danger fw-bold">🎉✨ Sunbird English wishes all users a happy 2025 🎉✨</h4>
-
-         <p className="text-center mt-3">Note: this website URL has moved permanently from <strong>eng-mcq-next.vercel.app</strong> to <strong>sunbirdenglish.com</strong>. If you are still using the old URL, you will be automatically redirected to the new one.</p>
       </>
    )
 }

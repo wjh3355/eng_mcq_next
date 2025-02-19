@@ -66,6 +66,7 @@ function ReactHookForm() {
                   toast.error("An unknown error occured. Please try again.");
                   break;
             }
+            toast.error("If you are an existing user, please reset your password.\n\nIf you have already done so, you may log in as usual.");
          } else {
             reset();
             toast.success("Welcome! Redirecting...");
@@ -118,7 +119,7 @@ function ReactHookForm() {
             >
                {isSubmitting ? <Spinner size="sm"/> : "Sign In"}
             </Button>
-            <Link href="/auth/reset-password">Forgot password?</Link>
+            <Link href="/auth/reset-password">Reset Password</Link>
          </div>
 
       </BSForm>
@@ -130,8 +131,8 @@ export default function SignInForm() {
    return (
       <>
          <Container>
-            <Alert variant="danger" className="mt-3">
-               <strong>IMPORTANT:</strong> Due to a migration of authentication software, if you are an existing user, you are required to <Link href="/auth/reset-password">reset your password</Link> before logging in. We apologize for the inconvenience.
+            <Alert variant="info border-0 shadow" className="mt-3">
+               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to <Link href="/auth/reset-password">reset their password</Link> before logging in. We apologise for any inconvenience caused.
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">
