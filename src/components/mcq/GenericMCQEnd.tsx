@@ -30,7 +30,7 @@ export default function GenericMCQEnd({ QnContextToUse }: { QnContextToUse: () =
    return (
       <>
          <Col lg={8} className="mx-auto">
-            <Card body>
+            <Card body className='shadow-lg border-0'>
                <div className="vstack gap-4 p-3">
 
                   <CircleCheckBig size={48} className="text-primary mx-auto"/>

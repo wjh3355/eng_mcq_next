@@ -10,15 +10,20 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
-import { RotateCcw, BookText, CircleCheckBig } from "lucide-react";
+import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
-export default function GenericSpellingEnd({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
+export default function SpellingEndUI({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
+
+   const router = useRouter();
 
    const { 
       hasReachedEnd,
       thisSessionScore: [numCorrect, numTotal],
       wrongAnsArr,
       redoSet,
+      isRandom,
+      setInfo: [setNum, numTotalSets]
    } = QnContextToUse();
 
    const [isReviewShown, setIsReviewShown] = useState(false);
@@ -28,22 +33,45 @@ export default function GenericSpellingEnd({ QnContextToUse }: { QnContextToUse:
    return (
       <>
          <Col lg={8} className="mx-auto">
-            <Card body>
+            <Card body className='shadow-lg border-0'>
                <div className="vstack gap-4 p-3">
 
                   <CircleCheckBig size={48} className="text-primary mx-auto"/>
 
-                  <h4 className="text-center">You reached the end of this set</h4>
+                  <h4 className="text-center">You reached the end of set {setNum}</h4>
 
                   <div className="d-flex justify-content-center hstack gap-3">
                      <Button
                         size="lg"
-                        variant="danger"
+                        variant="outline-danger"
                         className="d-flex align-items-center"
                         onClick={() => redoSet()}
                      >
-                        <RotateCcw/>&nbsp;Redo This Set
+                        <RotateCcw className='me-1'/>Redo this set
                      </Button>
+                     {isRandom
+                        ?
+                           <Button
+                              size="lg"
+                              variant="secondary"
+                              className="d-flex align-items-center"
+                              onClick={() => window.location.reload()}
+                           >
+                              <Lightbulb/>&nbsp;New Random Set
+                           </Button>
+                        :
+                           <Button
+                              size="lg"
+                              variant="success"
+                              className="d-flex align-items-center"
+                              onClick={() => router.push(setNum === numTotalSets ? "/spelling" : `/spelling/${setNum + 1}`)}
+                           >
+                              {setNum === numTotalSets
+                                 ?  "Return to all sets"
+                                 :  `Next: set ${setNum + 1}`
+                              }
+                           </Button>
+                     }
                   </div>
 
                   <Container>

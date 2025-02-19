@@ -64,5 +64,7 @@ export default async function SpellingSetsPage({ params }: { params: Promise<{ s
       email={user.email}
       qnNumArray={qnNumArray}
       title={title}
+      setInfo={[setAsInteger, numPossibleSets]}
+      isRandom={setParam === "random"}
    />
 }

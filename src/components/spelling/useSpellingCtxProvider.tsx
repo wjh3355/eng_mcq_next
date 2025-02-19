@@ -10,10 +10,14 @@ import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions"
 
 export default function useSpellingCtxProvider({ 
    qnNumArray,
-   email
+   email,
+   setInfo,
+   isRandom
 }: { 
    qnNumArray: number[],
-   email: string
+   email: string,
+   setInfo: [number, number],
+   isRandom: boolean
 }) {
 
    // create context, fallback is an empty context value
@@ -32,7 +36,6 @@ export default function useSpellingCtxProvider({
       const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
       const [userPoints, setUserPoints] = useState<number>(NaN);
       const [wrongAnsArr, setWrongAnsArr] = useState<SpellingQnObj[]>([]);
-      const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
       function handleAttempt(rw: boolean) {
@@ -136,7 +139,7 @@ export default function useSpellingCtxProvider({
                // set qnObj to the fetched mcq object if no error
                "error" in res ? toast.error(res.error) : setQnObj(res);
             } catch (err) {
-               setError(err instanceof Error ? err.message : "An unknown error occurred");
+               toast.error(err instanceof Error ? err.message : "An unknown error occurred");
             }
          };
 
@@ -160,9 +163,10 @@ export default function useSpellingCtxProvider({
             userPoints,
             wrongAnsArr,
             hasReachedEnd,
-            error,
+            isRandom,
             numQnsInSet: qnNumArray.length,
             currNum: qnNumArray.length - qnSequence.length + 1,
+            setInfo,
             handleAttempt,
             handleNextQnBtnClick,
             redoSet

@@ -16,7 +16,7 @@ import Spinner from "react-bootstrap/esm/Spinner";
 
 type SentenceFormFields = { correctedWord: string }
 
-export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
+export default function SpellingUI({ QnContextToUse }: { QnContextToUse: () => SpellingContextValue }) {
 
    const {
       qnObj,
@@ -162,7 +162,7 @@ export default function GenericSpelling({ QnContextToUse }: { QnContextToUse: ()
          </Col>
 
          <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(!isExplShown)}>
-            <Modal.Header closeButton><Modal.Title className="fs-5">{correctAns}</Modal.Title></Modal.Header>
+            <Modal.Header closeButton><Modal.Title className="fs-5">Correct spelling: {correctAns}</Modal.Title></Modal.Header>
             <Modal.Body>
                {exp}
             </Modal.Body>

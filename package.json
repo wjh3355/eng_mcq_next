@@ -11,7 +11,8 @@
       "checkcloze": "npx tsx private/checkCloze.ts",
       "checkspelling": "npx tsx private/checkSpelling.ts",
       "updateqn": "npx tsx private/updateQn.ts",
-      "doThis": "npx tsx private/doThis.ts"
+      "doThis": "npx tsx private/doThis.ts",
+      "newUser": "npx tsx private/newUser.ts"
    },
    "dependencies": {
       "@babel/core": "^7.25.2",

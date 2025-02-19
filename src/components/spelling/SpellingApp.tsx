@@ -7,47 +7,37 @@ import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/esm/Container";
 import { TriangleAlert } from "lucide-react";
 import useSpellingCtxProvider from "./useSpellingCtxProvider";
-import GenericSpelling from "./GenericSpelling";
-import GenericSpellingEnd from "./GenericSpellingEnd";
+import SpellingUI from "./SpellingUI";
+import SpellingEndUI from "./SpellingEndUI";
 import GenericProgressBar from "../GenericProgressBar";
 
 export default function SpellingApp({
    email,
    qnNumArray,
-   title
+   title,
+   setInfo,
+   isRandom,
 }: {
    email: string,
    qnNumArray: number[]
    title: string
+   setInfo: [number, number]
+   isRandom: boolean
 }) {
 
    // initialize the SpellingProvider with the appropriate context
-   const { SpellingProvider, useSpellingContext } = useSpellingCtxProvider({ qnNumArray, email });
-
-   // Component to display error message (might replace with toast later)
-   function ErrorContainer() {
-      const { error } = useSpellingContext();
-
-      if (!error) return;
-
-      return (
-         <Alert variant="danger" dismissible className="d-flex align-items-center">
-            <TriangleAlert />&nbsp;<strong>Error: {error}</strong>
-         </Alert>
-      );
-   }
+   const { SpellingProvider, useSpellingContext } = useSpellingCtxProvider({ qnNumArray, email, setInfo, isRandom });
 
    return <Container>
       <SpellingProvider>
          <Row className="my-3">
             <Col>
-               <ErrorContainer/>
                <h5 className="text-center m-0">{title}</h5>
             </Col>
          </Row>
          <Row>
-            <GenericSpelling QnContextToUse={useSpellingContext}/>
-            <GenericSpellingEnd QnContextToUse={useSpellingContext}/>
+            <SpellingUI QnContextToUse={useSpellingContext}/>
+            <SpellingEndUI QnContextToUse={useSpellingContext}/>
             <GenericProgressBar QnContextToUse={useSpellingContext}/>
          </Row>
       </SpellingProvider>
