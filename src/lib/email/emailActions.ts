@@ -30,9 +30,9 @@ export async function sendPasswordResetEmail(userEmail: string, resetToken: stri
                <div>
                   <p>Hi ${userEmail},</p>
                   <br/>
-                  <p>We received a password reset request for your account on sunbirdenglish.com. To proceed, please click the link below:</p>
+                  <p>We received a password reset request for your account on sunbirdenglish.com. 我们刚收到您的账户密码重置要求。 To proceed, please click the link below: 要继续，请点击以下的链接：</p>
                   <a href="${resetLink}">${resetLink}</a>
-                  <p>If you didn't request for a password reset, you may ignore this email. Your password will remain unchanged.</p>
+                  <p>If you didn't request for a password reset, you may ignore this email. Your password will remain unchanged. 若您没要求重置密码，可忽略此邮件。</p>
                   <p>For security reasons, this link will expire at ${DateTime.fromISO(tokenExpiryDate).toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY)}. If you require assistance, feel free to contact support at contact@sunbirdenglish.com. Please do not reply to this email.</p>
                   <br/>
                </div>

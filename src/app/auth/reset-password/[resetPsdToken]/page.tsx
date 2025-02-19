@@ -57,8 +57,8 @@ function ReactHookForm() {
          )
 
          reset();
-
-         toast.success("Password reset successfully! You may now login with your new password.");
+         // added chinese for all the fucking PRCs
+         toast.success("Password reset successfully! You may now login with your new password. 成功重置密码！您现在可使用新密码登录。");
          
       } catch (error) {
          if (error instanceof AxiosError) {

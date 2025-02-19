@@ -46,7 +46,8 @@ function ReactHookForm() {
          toast.success(
             <div>
                <p>If your email is registered with us, you will receive a password reset link.</p>                  
-               <p className="mb-0">Please check your spam folder too.</p>
+               <p>Please check your spam folder too.</p>
+               <p>若您的电邮已注册，您将会收到重设密码专用链接。请检查您的垃圾邮件文件夹。</p>
             </div>,
          );
 
@@ -98,7 +99,7 @@ export default function ResetPasswordForm() {
       <>
          <Container>
             <Alert variant="info border-0 shadow" className="mt-3">
-               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to reset their password using the form below before logging in. We apologise for any inconvenience caused.
+               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to reset their password using the form below before logging in. We apologise for any inconvenience caused. 若您是现有用户，请在登录前使用以下表格重设密码。我们为此给您带来的不便致以歉意。
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">
