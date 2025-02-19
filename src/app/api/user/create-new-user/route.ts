@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
          );
       }
 
+      console.log(validationRes.data);
       const { email, password, token } = validationRes.data;
 
       await client.connect();
@@ -63,6 +64,9 @@ export async function POST(req: NextRequest) {
 
       // check if all operations were successful, return appropriate response
       if (createAuthRes.acknowledged && createProfileRes.acknowledged && deleteRes.acknowledged) {
+         console.log(
+            `New user registered: ${email} on ${new Date().toLocaleString()}`
+         );
          return NextResponse.json(
             { success: true },
             { status: 200 }

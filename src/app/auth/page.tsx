@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 import Link from "next/link";
 import { z } from "zod";
@@ -28,8 +27,6 @@ const zodSchema = z.object({
 })
 
 function ReactHookForm() {
-
-   const router = useRouter();
 
    const { 
       register,
@@ -49,8 +46,6 @@ function ReactHookForm() {
             email: data.email.toLowerCase().trim(),
             password: data.password.trim(),
             rememberMe: true,
-
-            redirect: false,
          });
 
          if (res?.error) {
@@ -67,12 +62,8 @@ function ReactHookForm() {
                   break;
             }
             toast.error("If you are an existing user, please reset your password.\n\nIf you have already done so, you may log in as usual.");
-         } else {
-            reset();
-            toast.success("Welcome! Redirecting...");
-            await new Promise((r) => setTimeout(r, 500));
-            router.push("/");
-         }
+         } 
+
       } catch (e) {
          toast.error("An unknown error occured. Please try again.");
       }

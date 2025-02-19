@@ -66,6 +66,7 @@ function ReactHookForm() {
          await signIn("credentials", {
             email: data.email.toLowerCase().trim(),
             password: data.password.trim(),
+            rememberMe: false,
             redirectTo: "/"
          })
          
