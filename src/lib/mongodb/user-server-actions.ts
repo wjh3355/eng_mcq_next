@@ -216,6 +216,7 @@ export async function resetUserData(email: string) {
 
       await profileDb.updateOne({ email }, { $set: { ...RESET_PROFILE_FIELDS_OBJ } });
 
+      console.log(`User ${email} has just reset their data from their profile page.`);
       return { success: true };
 
    } catch (error) {
@@ -231,12 +232,12 @@ export async function resetUserData(email: string) {
    }
 }
 
-export async function createNewUnregUser(email: string) {
+export async function createNewInvite(email: string) {
    
    try {
 
+      // check if user is admin
       const session = await auth();
-
       if (session?.user.role !== "admin") throw new Error("Unauthorized");
 
       await client.connect();
@@ -253,11 +254,44 @@ export async function createNewUnregUser(email: string) {
       const newInvite = newUserInvite({ email });
       await db.collection("unregistered").insertOne(newInvite);
 
+      console.log(`New invite has been created for ${email}.`);
       return { success: true };
 
    } catch (error) {
       if (error instanceof Error) {
          console.error(`Unable to create new invite for ${email}:\n` + error.message);
+         return { error: error.message }
+      } else {
+         console.error("An unexpected error occured:", error);
+         return { error: "Unexpected error occured" }
+      }
+   } finally {
+      revalidatePath("/admin/unreg-users");
+   }
+}
+
+export async function deleteInvite(email: string) {
+   try {
+
+      // check if user is admin
+      const session = await auth();
+      if (session?.user.role !== "admin") throw new Error("Unauthorized");
+
+      // find and delete user invite
+      await client.connect();
+      const invites = client.db("userDatas").collection<UserInviteDocument>("unregistered");
+
+      const invite = await invites.findOne({ email }, { projection: { _id: 0 } });
+      if (!invite) throw new Error("Invite not found");
+
+      await invites.deleteOne({ email });
+
+      console.log(`Invite for ${email} has just been deleted.`);
+      return { success: true };
+
+   } catch (error) {
+      if (error instanceof Error) {
+         console.error(`Unable to delete invite for ${email}:\n` + error.message);
          return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);
@@ -316,6 +350,7 @@ export async function toggleSuspend(email: string, isSuspended: boolean) {
 
       await authDb.updateOne({ email }, { $set: { isSuspended } });
 
+      console.log(`User ${email} has just been ${isSuspended ? "suspended" : "unsuspended"}.`);
       return { success: true };
 
    } catch (error) {
@@ -353,6 +388,7 @@ export async function deleteUser(email: string) {
       await authDb.deleteOne({ email });
       await profileDb.deleteOne({ email });
 
+      console.log(`User ${email} has just been deleted.`);
       return { success: true };
 
    } catch (error) {

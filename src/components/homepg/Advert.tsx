@@ -65,14 +65,6 @@ export default function Advert() {
                </Link>.
             </Col>
          </Row>
-         <Row>
-            <Col>
-               Request access to all features
-               <Link href="https://englishtutor.kinde.com/knock-knock" className="mx-1">
-                  here.
-               </Link>
-            </Col>
-         </Row>
       </>
    );
 }

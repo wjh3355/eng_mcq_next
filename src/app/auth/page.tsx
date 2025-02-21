@@ -138,7 +138,7 @@ export default function SignInForm() {
       <>
          <Container>
             <Alert variant="info border-0 shadow" className="mt-3">
-               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to <Link href="/auth/reset-password">reset their password</Link> before logging in. We apologise for any inconvenience caused. 若您是现有用户，请在登录前使用以下表格<Link href="/auth/reset-password">重设密码</Link>。我们为此给您带来的不便致以歉意。
+               ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to <Link href="/auth/reset-password">reset their password</Link> before logging in. We apologise for any inconvenience caused. 若您是现有用户，请在登录前<Link href="/auth/reset-password">重设密码</Link>。我们为此给您带来的不便致以歉意。
             </Alert>
          </Container>
          <Container fluid className="d-flex align-items-center justify-content-center py-3">

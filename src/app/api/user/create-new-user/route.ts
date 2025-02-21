@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
          );
       }
 
-      console.log(validationRes.data);
       const { email, password, token } = validationRes.data;
 
       await client.connect();

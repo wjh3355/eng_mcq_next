@@ -35,7 +35,6 @@ export default function GenericMCQRight({
 
       return () => {
          // reset the options when the component unmounts
-         console.log("AAAAAAAAAAAAAAAAAAAAADSADSDSADSD")
          setRandomisedOptions([]);
          setIsAllDisabled(false);
          setSelectedOption(null);

@@ -44,7 +44,7 @@ export async function sendPasswordResetEmail(userEmail: string, resetToken: stri
       };
       
       const res = await trans.sendMail(mailOptions);
-      console.log("Password Reset link email sent: " + res.response);
+      console.log(`User ${userEmail} requested for password reset. Email sent: ${res.response}`);
    } catch (error) {
       console.error("Error sending email: " + error);
    }
@@ -73,7 +73,7 @@ export async function sendResetPasswordUpdateEmail(userEmail: string) {
       };
       
       const res = await trans.sendMail(mailOptions);
-      console.log("Password reset notification email sent: " + res.response);
+      console.log(`User ${userEmail} has just reset their password. Notification email sent: ${res.response}`);
    } catch (error) {
       console.error("Error sending email: " + error);
    }
@@ -101,7 +101,7 @@ export async function sendAccountRegisteredEmail(userEmail: string) {
       };
       
       const res = await trans.sendMail(mailOptions);
-      console.log("Password reset notification email sent: " + res.response);
+      console.log(`${userEmail}'s account has been created. Notification email sent: ${res.response}`);
    } catch (error) {
       console.error("Error sending email: " + error);
    }

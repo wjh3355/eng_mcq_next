@@ -18,7 +18,7 @@ export default function UsersTable(
 
    return (
       <>
-         <Table striped="columns" responsive>
+         <Table striped="columns" responsive style={{fontSize: "12px"}}>
             <thead>
                <tr>
                   <th>#</th>
@@ -26,11 +26,11 @@ export default function UsersTable(
                   <th>Password (Encrypted)</th>
                   <th>Role</th>
                   <th>Date Created</th>
-                  <th>Is Suspended?</th>
                   <th>MCQ Data</th>
                   <th>Cloze Data</th>
                   <th>Spelling Data</th>
                   <th>Points</th>
+                  <th>Is Suspended?</th>
                   <th>Delete</th>
                </tr>
             </thead>
@@ -53,6 +53,26 @@ export default function UsersTable(
                         </td>
                         <td>{DateTime.fromISO(dateCreated).toISODate()}</td>
                         <td>
+                           {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
+                              <div key={cat}>
+                                 {`${QN_CATEGORIES_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
+                              </div>
+                           )}
+                        </td>
+                        <td>
+                           {clozeData.map(({qnNum, correctAns}) => 
+                              <div key={qnNum}>
+                                 {`Cloze ${qnNum}: ${correctAns.length} / 15`}
+                              </div>
+                           )}
+                        </td>
+                        <td>
+                           {"numQnsAttempted" in spellingData && 
+                              `${spellingData.numQnsAttempted - spellingData.wrongQnNums.length} / ${spellingData.numQnsAttempted}`
+                           }
+                        </td>
+                        <td>{score}</td>
+                        <td>
                            <span className={isSuspended ? "text-danger fw-bold" : ""}>{isSuspended ? "Yes" : "No"}</span>
                            <Button 
                               variant={isSuspended ? "success" : "warning"} 
@@ -73,26 +93,6 @@ export default function UsersTable(
                               {isSuspended ? "Unsuspend User" : "Suspend User"}
                            </Button>
                         </td>
-                        <td>
-                           {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
-                              <p key={cat}>
-                                 {`${QN_CATEGORIES_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
-                              </p>
-                           )}
-                        </td>
-                        <td>
-                           {clozeData.map(({qnNum, correctAns}) => 
-                              <p key={qnNum}>
-                                 {`Q${qnNum}: ${correctAns.length} / 15`}
-                              </p>
-                           )}
-                        </td>
-                        <td>
-                           {"numQnsAttempted" in spellingData && 
-                              `${spellingData.numQnsAttempted - spellingData.wrongQnNums.length} / ${spellingData.numQnsAttempted}`
-                           }
-                        </td>
-                        <td>{score}</td>
                         <td>
                            <Button 
                               variant="danger" 
@@ -125,6 +125,8 @@ export default function UsersTable(
                   Do you really want to delete the user <u>{userEmailToDelete}</u>?
                   <br/>
                   <strong className="text-danger">This cannot be undone!</strong>
+                  <br/>
+                  If he/she wishes to rejoin, a new invite is required.
                </p>
 
                <div className="d-flex justify-content-center">

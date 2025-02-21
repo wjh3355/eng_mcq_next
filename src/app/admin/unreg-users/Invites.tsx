@@ -12,7 +12,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import { createNewUnregUser } from "@/lib/mongodb/user-server-actions";
+import { createNewInvite, deleteInvite } from "@/lib/mongodb/user-server-actions";
 
 import { UserInviteDocument } from "@/definitions";
 import Table from "react-bootstrap/esm/Table";
@@ -58,7 +58,7 @@ export default function Invites({ allInvites }: { allInvites: UserInviteDocument
 
                                     const newEmail = data.email.trim().toLowerCase();
 
-                                    createNewUnregUser(newEmail)
+                                    createNewInvite(newEmail)
                                        .then(res => {
                                           if (res.error) {
                                              toast.error(res.error);
@@ -106,27 +106,50 @@ export default function Invites({ allInvites }: { allInvites: UserInviteDocument
          <Container>
             <Card className="shadow-lg border-0">
                <Card.Body>
-                  <Table striped>
+                  <Table striped style={{fontSize: "12px"}}>
                      <thead>
                         <tr>
                            <th>Email</th>
                            <th>Date Created</th>
-                           <th>Unique Invite Link</th>
+                           <th colSpan={2}>Unique Invite Link</th>
                         </tr>
                      </thead>
                      <tbody>
-                        {allInvites.map((invite) => (
-                           <tr key={invite.email}>
-                              <td>{invite.email}</td>
+                        {allInvites.map(({ email, dateCreated, token }) => (
+                           <tr key={email}>
+                              <td>{email}</td>
                               <td>
-                                 {DateTime.fromISO(invite.dateCreated).toISODate()}
+                                 {DateTime.fromISO(dateCreated).toISODate()}
                               </td>
                               <td style={{ maxWidth: "400px" }}>
-                                 {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/
-                                 {invite.token}
+                                 {process.env.NEXT_PUBLIC_BASE_URL}/auth/register/{token}
+                              </td>
+                              <td>
+                                 <Button
+                                    variant="danger"
+                                    size="sm"
+                                    onClick={() => {
+                                       deleteInvite(email)
+                                       .then(res => {
+                                          if (res.error) {
+                                             toast.error(res.error);
+                                          } else {
+                                             toast.success(`Invite for ${email} deleted successfully`);
+                                          }
+                                       })
+                                       .catch(err => toast.error(err instanceof Error ? err.message : "An error occurred."));
+                                    }}
+                                 >
+                                    Delete
+                                 </Button>
                               </td>
                            </tr>
                         ))}
+                        <tr>
+                           <td colSpan={4} className="text-center text-secondary fst-italic">
+                              Invites will appear here
+                           </td>
+                        </tr>
                      </tbody>
                   </Table>
                </Card.Body>
