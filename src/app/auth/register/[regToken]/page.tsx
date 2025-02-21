@@ -57,9 +57,9 @@ function ReactHookForm() {
             }
          )
 
-         toast.success("Account created successfully! Logging you in...");
-
          reset();
+
+         toast.success("Your account was succesfully created. You now have access to all features. Logging in...");
 
          await new Promise(resolve => setTimeout(resolve, 500));
 

@@ -9,7 +9,7 @@ import pic3 from "../../../public/C.jpg";
 export default function Sunbirds() {
    const birdPics = [pic1, pic2, pic3];
    return (
-      <Carousel interval={3000} controls={false}>
+      <Carousel interval={3000} controls={false} className="shadow">
          {birdPics.map((href, idx) =>             
             <Carousel.Item key={idx}>
                <Image

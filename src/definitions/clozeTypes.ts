@@ -12,7 +12,6 @@ export type ClozeContextValue = {
    qnNum: number,
    passageTitle: string,
    isLoading: boolean,
-   error: string,
    handleCompletion: (correctAns: number[]) => void,
    handleReset: () => void
 }
@@ -25,7 +24,6 @@ export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
    qnNum: NaN,
    passageTitle: "",
    isLoading: true,
-   error: "",
    handleCompletion() {},
    handleReset() {}
 }

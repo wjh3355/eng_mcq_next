@@ -8,7 +8,7 @@ import { ClozeContextValue, ClozeFormData } from '@/definitions';
 import Card from "react-bootstrap/Card";
 import toast from "react-hot-toast";
 
-export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
+export default function ClozeAttemptUI({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
    const {
       wordsToTestArr,
@@ -166,7 +166,7 @@ export default function GenericCloze({ QnContextToUse }: { QnContextToUse: () =>
 
    function AnswersForDemo() {
       if (isDemo && prevUserCorrectAns !== null) {
-         return <Card className="mt-3 border-2 border-success">
+         return <Card className="mt-3 border-2 border-success shadow">
             <Card.Header>Answers</Card.Header>
             <Card.Body>
                <div className="text-center">

@@ -19,6 +19,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { z } from "zod";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const zodSchema = z.object({
    email: z.string().nonempty({ message: "Required" }).email({ message: "Invalid email" }),
@@ -27,6 +28,8 @@ const zodSchema = z.object({
 })
 
 function ReactHookForm() {
+
+   const router = useRouter();
 
    const { 
       register,
@@ -42,13 +45,19 @@ function ReactHookForm() {
    async function attemptLogIn(data: LoginFormFields) {
 
       try {
+         // start sign-in sequence
+         // don't auto redirect
          const res = await signIn("credentials", {
             email: data.email.toLowerCase().trim(),
             password: data.password.trim(),
             rememberMe: true,
+
+            redirect: false,
          });
 
          if (res?.error) {
+            // handle error (codes defined in auth.ts)
+            // remind user to reset password if necessary
             switch (res.code) {
                case "1":
                   toast.error("Sorry, your email or password was incorrect.");
@@ -62,7 +71,13 @@ function ReactHookForm() {
                   break;
             }
             toast.error("If you are an existing user, please reset your password.\n\nIf you have already done so, you may log in as usual.");
-         } 
+            return;
+         }
+
+         // success: redirect to dashboard
+         reset();
+         router.push("/");
+         toast.success(`Welcome, ${data.email.toLowerCase().trim()}`);
 
       } catch (e) {
          toast.error("An unknown error occured. Please try again.");

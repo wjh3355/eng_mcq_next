@@ -34,7 +34,6 @@ export default function useClozeCtxProvider({
       const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
       const [textArr, setTextArr] = useState<string[]>([]);
       const [isLoading, setIsLoading] = useState<boolean>(true);
-      const [error, setError] = useState<string>("");
 
       function handleCompletion(correctAns: number[]) {
 
@@ -79,7 +78,10 @@ export default function useClozeCtxProvider({
          })
          .then(
             res => {
-               res.error && setError(res.error);
+               if ("error" in res) {
+                  toast.error(res.error);
+                  return;
+               }
                window.location.reload();
             }
          );
@@ -88,11 +90,21 @@ export default function useClozeCtxProvider({
       useEffect(() => {
 
          const fetchData = async() => {
-            // if user is attempting demo, an empty user object is passed in --> correctAns is null
-            // if not, the actual user object is passed in --> correctAns for this cloze number is 
-            // either the user's previous correct answer or null if the user has not attempted the question before
-            const userDataForThisCloze = user.clozeData.find(cz => cz.qnNum === qnNum);
-            setPrevUserCorrectAns(userDataForThisCloze?.correctAns || null);
+            // if user is attempting demo, an empty user object is passed in --> no cloze data.
+            // if not, the actual user object is passed in --> cloze data is present if they have attempted the cloze, else no cloze data.
+            const hasUserDoneCloze = user.clozeData.some(cz => cz.qnNum === qnNum);
+
+            if (hasUserDoneCloze) {
+               const userDataForThisCloze = user.clozeData.find(cz => cz.qnNum === qnNum)!;
+               setPrevUserCorrectAns(userDataForThisCloze.correctAns);
+            } else {
+               setPrevUserCorrectAns(null);
+               toast.custom(
+                  <span className="border-0 shadow rounded-3 p-3 bg-white fw-bold d-flex align-items-center"> 
+                     <Info color="#009300" className="me-1"/>Get at least 8 out of 15 blanks correct to pass.
+                  </span>
+               );
+            }
 
             // if demo, fetch demo cloze (qnNum = 1), else fetch actual cloze based on qnNum
             const clozePromise = isDemo ? fetchDemoCloze() : fetchCloze(qnNum);
@@ -102,9 +114,9 @@ export default function useClozeCtxProvider({
                // wait for cloze data to be fetched
                const res = await clozePromise;
 
-               // if error, set error message
+               // if error, show error message
                if ( "error" in res ) {
-                  setError(res.error);
+                  toast.error(res.error);
                   return;
                }
 
@@ -133,16 +145,10 @@ export default function useClozeCtxProvider({
                setPassageTitle(res.title);
 
             } catch (err) {
-               setError(err instanceof Error ? err.message : "An unknown error occurred");
+               toast.error(err instanceof Error ? err.message : "An unknown error occurred");
             }
 
          }
-
-         toast.custom(
-            <span className="border-0 shadow rounded-3 p-3 bg-white fw-bold d-flex align-items-center"> 
-               <Info color="#009300" className="me-1"/>Get at least 8 out of 15 blanks correct to pass.
-            </span>
-         );
 
          fetchData();
          
@@ -169,7 +175,6 @@ export default function useClozeCtxProvider({
                qnNum,
                passageTitle,
                isLoading,
-               error,
                handleCompletion,
                handleReset,
             }}

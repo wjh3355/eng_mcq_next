@@ -2,15 +2,13 @@
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
 
 import useClozeCtxProvider from "./useClozeCtxProvider";
-import GenericCloze from "./GenericCloze";
-import GenericClozeCompleted from "./GenericClozeCompleted";
+import ClozeAttemptUI from "./ClozeAttemptUI";
+import ClozeCompletedUI from "./ClozeCompletedUI";
 import Skeleton from "react-loading-skeleton";
 import { UserProfileDocument } from "@/definitions";
 import Container from "react-bootstrap/esm/Container";
-import { TriangleAlert } from "lucide-react";
 
 export default function ClozeApp({
    user,
@@ -40,29 +38,16 @@ export default function ClozeApp({
       }
    }
 
-   function ErrorContainer() {
-      const { error } = useClozeContext();
-
-      if (!error) return;
-
-      return (
-         <Alert variant="danger" dismissible className="d-flex align-items-center">
-            <TriangleAlert />&nbsp;<strong>Error: {error}</strong>
-         </Alert>
-      );
-   }
-
    return <Container>
       <ClozeProvider>
          <Row className="my-3">
             <Col>
-               <ErrorContainer/>
                <h5 className="text-center m-0">{mainTitle}</h5>
             </Col>
          </Row>
          <ClozeLoadingSkeleton/>
-         <GenericCloze QnContextToUse={useClozeContext}/>
-         <GenericClozeCompleted QnContextToUse={useClozeContext}/>
+         <ClozeAttemptUI QnContextToUse={useClozeContext}/>
+         <ClozeCompletedUI QnContextToUse={useClozeContext}/>
       </ClozeProvider>
    </Container>
 }

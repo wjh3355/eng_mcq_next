@@ -42,7 +42,6 @@ export default function useMCQCtxProvider({
       const [thisSessionScore, setThisSessionScore] = useState<[number, number]>([0, 0]);
       const [userPoints, setUserPoints] = useState<number>(NaN);
       const [wrongAnsArr, setWrongAnsArr] = useState<MCQQnObj[]>([]);
-      const [error, setError] = useState<string>("");
       const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
       function handleOptionClick(rw: boolean) {
@@ -173,7 +172,6 @@ export default function useMCQCtxProvider({
             wrongAnsArr,
             hasReachedEnd,
             isSetRandom,
-            error,
             numQnsInSet: qnNumArray.length,
             currNum: qnNumArray.length - qnSequence.length + 1,
             handleOptionClick,

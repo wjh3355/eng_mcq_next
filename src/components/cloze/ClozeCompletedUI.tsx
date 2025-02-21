@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 
-export default function GenericClozeCompleted({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
+export default function ClozeCompletedUI({ QnContextToUse }: { QnContextToUse: () => ClozeContextValue }) {
 
    const {
       wordsToTestArr,

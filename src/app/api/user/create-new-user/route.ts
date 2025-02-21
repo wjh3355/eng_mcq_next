@@ -28,15 +28,16 @@ export async function POST(req: NextRequest) {
 
       await client.connect();
       const db = client.db("userDatas");
+
       // first check if user already exists in `auth` collection (already registered)
-      // BAD: might let malicious users know if an email is already registered!
-      // to change in the future
-      if (await db.collection("auth").findOne({ email })) {
-         return NextResponse.json(
-            { error: "User is already registered" },
-            { status: 400 }
-         );
-      }
+      // though this might let malicious users know which emails are already registered
+      // to change in the future?
+      // if (await db.collection("auth").findOne({ email })) {
+      //    return NextResponse.json(
+      //       { error: "User is already registered" },
+      //       { status: 400 }
+      //    );
+      // }
 
       // next check if token exists
       const pendingUser = await db.collection("unregistered").findOne({ email, token });
@@ -49,6 +50,8 @@ export async function POST(req: NextRequest) {
 
       // if token is valid, create new auth and profile docs for new user
       // password hashing is done in the newUserDocuments function
+      // so we just pass in the raw one
+      // role = "user" by default (no admins)
       const { newAuthDoc, newProfileDoc } = newUserDocuments({ 
          email, 
          password, 
@@ -59,14 +62,12 @@ export async function POST(req: NextRequest) {
       const createAuthRes = await db.collection("auth").insertOne(newAuthDoc);
       const createProfileRes = await db.collection("profile").insertOne(newProfileDoc);
 
-      // delete unregistered user
+      // delete invite
       const deleteRes = await db.collection("unregistered").deleteOne({ _id: pendingUser._id });
 
       // check if all operations were successful, return appropriate response
       if (createAuthRes.acknowledged && createProfileRes.acknowledged && deleteRes.acknowledged) {
-         console.log(
-            `New user registered: ${email} on ${new Date().toLocaleString()}`
-         );
+         console.log(`New user successfully registered: ${email} on ${new Date().toLocaleString()}`);
          return NextResponse.json(
             { success: true },
             { status: 200 }
