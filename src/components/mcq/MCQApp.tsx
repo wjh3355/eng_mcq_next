@@ -2,7 +2,6 @@
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
 
 import useMCQCtxProvider from "./useMCQCtxProvider";
 import GenericMCQLeft from "./GenericMCQLeft";
@@ -13,7 +12,6 @@ import DemoMCQLeft from "./DemoMCQLeft";
 import RedoMCQLeft from "./RedoMCQLeft";
 import GenericProgressBar from "../GenericProgressBar";
 import Container from "react-bootstrap/esm/Container";
-import { TriangleAlert } from "lucide-react";
 
 export default function MCQApp({
    McqCategory,
@@ -40,24 +38,10 @@ export default function MCQApp({
       isRedo
    });
 
-   // ErrorContainer component to display error message (might replace with toast later)
-   function ErrorContainer() {
-      const { error } = useMCQContext();
-
-      if (!error) return;
-
-      return (
-         <Alert variant="danger" dismissible className="d-flex align-items-center">
-            <TriangleAlert />&nbsp;<strong>{error}</strong>
-         </Alert>
-      );
-   }
-
    return <Container>
       <MCQProvider>
          <Row className="my-3">
             <Col>
-               <ErrorContainer/>
                <h5 className="text-center m-0">{title}</h5>
             </Col>
          </Row>
