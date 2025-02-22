@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
    try {
 
       // check params
-      // should never actually fail since the params are validated client-side
       const validationRes = reqSchema.safeParse(await req.json());
       if (!validationRes.success) {
          return NextResponse.json(
@@ -34,7 +33,7 @@ export async function POST(req: NextRequest) {
          { projection: { _id: 0 } }
       ) as unknown as UserAuthDocument | null;
 
-      // if user does not exist, still return success 
+      // if user does not exist, return success at this point
       // (to prevent malicious users from knowing if an email is registered)
       if (!userIfAny) return NextResponse.json({ success: true }, { status: 200 });
 

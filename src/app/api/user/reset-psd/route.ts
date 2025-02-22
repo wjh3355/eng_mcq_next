@@ -6,20 +6,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const reqSchema = z.object({
-   newPassword: z.string().nonempty(),
-   token: z.string().nonempty(),
+   newPassword: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
+   token: z.string().regex(/^[0-9a-fA-F]{100}$/),
 })
 
 // NOTE: no emails are handled here, this prevents brute forcing reset token
 // even if token is found, attacker won't know which account password got reset
-// user will be notified of password reset.
+// user will be notified of password reset via email
 
 export async function POST(req: NextRequest) {
    
    try {
       
-      // check params
-      // this should never throw an error since validation is done client side
+      // check params for security
       const validationRes = reqSchema.safeParse(await req.json());
       if (!validationRes.success) {
          return NextResponse.json(

@@ -5,16 +5,15 @@ import { z } from "zod";
 
 const reqSchema = z.object({
    email: z.string().nonempty().email(),
-   password: z.string().nonempty(),
-   token: z.string().nonempty()
+   password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/),
+   token: z.string().regex(/^[0-9a-fA-F]{100}$/)
 })
 
 export async function POST(req: NextRequest) {
    
    try {
 
-      // check params
-      // should never actually fail since the params are validated client-side
+      // check params again for security
       const validationRes = reqSchema.safeParse(await req.json());
       if (!validationRes.success) {
          return NextResponse.json(
@@ -28,17 +27,7 @@ export async function POST(req: NextRequest) {
       await client.connect();
       const db = client.db("userDatas");
 
-      // first check if user already exists in `auth` collection (already registered)
-      // though this might let malicious users know which emails are already registered
-      // to change in the future?
-      // if (await db.collection("auth").findOne({ email })) {
-      //    return NextResponse.json(
-      //       { error: "User is already registered" },
-      //       { status: 400 }
-      //    );
-      // }
-
-      // next check if token exists
+      // check if token exists
       const pendingUser = await db.collection("unregistered").findOne({ email, token });
       if (!pendingUser) {
          return NextResponse.json(

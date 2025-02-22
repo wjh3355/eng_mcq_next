@@ -24,7 +24,11 @@ export async function fetchUser(email: string, type: "auth" | "profile"): Promis
 
       const session = await auth();
 
-      if (!session) throw new Error("Unauthorized");
+      if (!session || session.user.email !== email) throw new Error("Unauthorized");
+
+      const _zr = z.string().email().safeParse(email);
+
+      if (!_zr.success) throw new Error("Invalid params");
 
       await client.connect();
    
@@ -32,7 +36,7 @@ export async function fetchUser(email: string, type: "auth" | "profile"): Promis
          .db("userDatas")
          .collection(type)
          .findOne(
-         { email },
+         { email: _zr.data },
          { projection: { _id: 0 } }
       );
    
