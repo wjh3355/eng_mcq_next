@@ -6,7 +6,7 @@ import Sunbirds from "@/components/homepg/Sunbirds";
 import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
 import Link from "next/link";
-import { CircleUserRound, FileText, NotebookPen, SpellCheck2 } from "lucide-react";
+import { CircleUserRound, FileText, NotebookPen, SpellCheck2, WholeWord } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -62,6 +62,13 @@ function LoggedInLinks() {
                href="/spelling"
             >
                <SpellCheck2 className="me-2"/>Spelling Questions
+            </Link>
+
+            <Link
+               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+               href="/definitions"
+            >
+               <WholeWord className="me-2"/>Definitions Questions
             </Link>
 
             <Link

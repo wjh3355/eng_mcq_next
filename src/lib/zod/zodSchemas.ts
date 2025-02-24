@@ -39,8 +39,8 @@ export const McqObjSchema = z
 export const ClozeObjSchema = z
    .object({
       qnNum: z.number(),
-      title: z.string(),
-      passage: z.string(),
+      title: z.string().nonempty(),
+      passage: z.string().nonempty(),
    })
    .strict()
    .refine(
@@ -74,11 +74,29 @@ export const SpellingObjSchema = z
    .object({
       qnNum: z.number(),
       sentence: z.string().regex(/\[[^\[\]]+\]/),
-      correctAns: z.string(),
-      type: z.string(),
-      exp: z.string(),
+      correctAns: z.string().nonempty(),
+      type: z.string().nonempty(),
+      exp: z.string().nonempty(),
    })
    .strict();
+
+export const DefinitionObjSchema = z
+   .object({
+      qnNum: z.number(),
+      definitionToTest: z.string(),
+      options: z.array(z.string().nonempty()).length(4),
+      correctAns: z.string().nonempty(),
+      type: z.string(),
+   })
+   .strict()
+   .refine((data) => data.options.includes(data.correctAns), {
+      message: "correctAns not in options",
+      path: ["correctAns"],
+   })
+   .refine((data) => new Set(data.options).size === 4, {
+      message: "options must be unique",
+      path: ["options"],
+   });
 
 export const UserAuthDataSchema = z.object({
    email: z.string().email().nonempty(),

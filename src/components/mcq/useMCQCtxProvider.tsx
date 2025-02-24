@@ -96,6 +96,7 @@ export default function useMCQCtxProvider({
          setIsLoading(true);
          setHasReachedEnd(false);
          setQnSequence(qnNumArray);
+         toast.success("Questions reset");
       }
       
       function handleNextQnBtnClick() {
@@ -125,6 +126,9 @@ export default function useMCQCtxProvider({
       }, [])
 
       useEffect(() => {
+         // listens to changes in qnSequence,
+         // fetches the next question (qnSequence[0]) when qnSequence changes
+
          const fetchData = async() => {
             // set qnObj to an empty object
             setQnObj(EMPTY_MCQ_QN_OBJ);

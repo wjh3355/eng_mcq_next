@@ -90,6 +90,7 @@ export default function useSpellingCtxProvider({
          setIsLoading(true);
          setHasReachedEnd(false);
          setQnSequence(qnNumArray);
+         toast.success("Questions reset");
       }
       
       function handleNextQnBtnClick() {
@@ -136,7 +137,7 @@ export default function useSpellingCtxProvider({
                // fetch spelling qn based on current question number (qnSequence[0])
                const res = await fetchSpelling(qnSequence[0]);
             
-               // set qnObj to the fetched mcq object if no error
+               // set qnObj to the fetched object if no error
                "error" in res ? toast.error(res.error) : setQnObj(res);
             } catch (err) {
                toast.error(err instanceof Error ? err.message : "An unknown error occurred");

@@ -1,4 +1,4 @@
-import { McqCategory } from "./qnSetData";
+import { McqCategory } from "./qnTypes/qnSetData";
 import { randomBytes } from "crypto";
 import { hashSync } from "bcryptjs";
 

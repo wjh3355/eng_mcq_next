@@ -3,10 +3,8 @@
 import { McqCategory } from "@/definitions";
 import client from "./db";
 
-export async function fetchNumQns(collection: McqCategory | "clozePassage" | "spelling") {
+export async function fetchNumQns(collection: McqCategory | "clozePassage" | "spelling" | "definition") {
    try {
-
-      // no need to check for auth; already done in the server
 
       await client.connect();
       const numOfQns = await client

@@ -66,6 +66,7 @@ export default function NavBar() {
                         <Nav.Link as={Link} href="/mcq" onClick={handleProtectedNavigation}>MCQ Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
                         <Nav.Link as={Link} href="/spelling" onClick={handleProtectedNavigation}>PSLE Spelling</Nav.Link>
+                        <Nav.Link as={Link} href="/definitions" onClick={handleProtectedNavigation}>Definitions</Nav.Link>
                         <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Your Profile</Nav.Link>
 
                         {session.user.role === "admin" &&

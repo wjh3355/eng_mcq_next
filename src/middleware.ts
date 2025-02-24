@@ -5,7 +5,9 @@ const protectedPaths = [
    "/cloze",
    "/mcq",
    "/profile",
-   "/test"
+   "/test",
+   "/spelling",
+   "/definitions"
 ]
 
 export default auth(req => {

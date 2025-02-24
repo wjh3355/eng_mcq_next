@@ -1,11 +1,10 @@
 "use server";
 
 import { auth } from "@/auth";
-import { SpellingObjSchema } from "../zod/zodSchemas";
+import { DefinitionObjSchema } from "../zod/zodSchemas";
 import client from "./db";
-import { SpellingQnObj } from "@/definitions";
 
-export async function fetchSpelling(qnNum: number) {
+export async function fetchDefinition(qnNum: number) {
 
    try {
       // check if user is authenticated
@@ -18,20 +17,20 @@ export async function fetchSpelling(qnNum: number) {
       await client.connect();
       const res = await client
          .db("english_questions")
-         .collection("spelling")
+         .collection("definition")
          .findOne({ qnNum }, { projection: { _id: 0 } });
-      if (!res) throw new Error(`Cannot find spelling Q${qnNum}`);
+      if (!res) throw new Error(`Cannot find definition Q${qnNum}`);
 
       // validate the response
-      const zr = SpellingObjSchema.safeParse(res);
+      const zr = DefinitionObjSchema.safeParse(res);
       if (!zr.success) throw new Error("Type validation failed: " + zr.error);
 
-      // return the data (will be of type SpellingQnObj)
+      // return the data (will be of type DefinitionQnObj)
       return zr.data;
 
    } catch (error: unknown) {
       if (error instanceof Error) {
-         console.error("Unable to fetch spelling question from database:\n" + error.message);
+         console.error("Unable to fetch definition question from database:\n" + error.message);
          return { error: error.message }
       } else {
          console.error("An unexpected error occured:", error);

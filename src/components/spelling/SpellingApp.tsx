@@ -29,17 +29,17 @@ export default function SpellingApp({
    const { SpellingProvider, useSpellingContext } = useSpellingCtxProvider({ qnNumArray, email, setInfo, isRandom });
 
    return <Container>
-      <SpellingProvider>
-         <Row className="my-3">
-            <Col>
-               <h5 className="text-center m-0">{title}</h5>
-            </Col>
-         </Row>
-         <Row>
+      <Row className="my-3">
+         <Col>
+            <h5 className="text-center m-0">{title}</h5>
+         </Col>
+      </Row>
+      <Row>
+         <SpellingProvider>
             <SpellingUI QnContextToUse={useSpellingContext}/>
             <SpellingEndUI QnContextToUse={useSpellingContext}/>
             <GenericProgressBar QnContextToUse={useSpellingContext}/>
-         </Row>
-      </SpellingProvider>
+         </SpellingProvider>
+      </Row>
    </Container>
 }
