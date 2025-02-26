@@ -9,15 +9,19 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import { RotateCcw, BookText, CircleCheckBig } from "lucide-react";
-import { useDefinitionContext } from "./DefinitionContext";
+import { DefinitionProps } from "@/definitions";
 
-export default function DefinitionEndUI() {
+export default function DefinitionEndUI({ 
+   props 
+}: { 
+   props: DefinitionProps
+}) {
 
    const { 
       setInfo: { hasReachedEnd },
       userInfo: { numCorrect, numAttempted, wrongAnsArr },
       callbacks: { redoSet },
-   } = useDefinitionContext();
+   } = props;
 
    const [isReviewShown, setIsReviewShown] = useState(false);
 

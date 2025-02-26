@@ -7,16 +7,16 @@ import { useEffect, useState } from "react";
 
 import MCQOption from "../mcq/MCQOption";
 import Skeleton from "react-loading-skeleton";
-import { useDefinitionContext } from "./DefinitionContext";
+import { DefinitionProps } from "@/definitions";
 
-export default function DefinitionRightPart() {
+export default function DefinitionRightPart({ props }: { props: DefinitionProps}) {
 
    const {
       isLoading,
       qnObj: { options, correctAns }, 
       callbacks: { handleOptionClick },
       setInfo: { hasReachedEnd }
-   } = useDefinitionContext();
+   } = props;
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
    const [isAllDisabled, setIsAllDisabled] = useState<boolean>(false);

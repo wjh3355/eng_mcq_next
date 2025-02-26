@@ -1,4 +1,4 @@
-export type DefinitionContextValue = {
+export type DefinitionProps = {
    qnObj: DefinitionQnObj,
    isLoading: boolean,
    setInfo: {
@@ -36,24 +36,4 @@ export const EMPTY_DEFINITION_QN_OBJ: DefinitionQnObj = {
    type: ""
 }
 
-export const EMPTY_DEFINITION_CONTEXT_VALUE: DefinitionContextValue = {
-   qnObj: EMPTY_DEFINITION_QN_OBJ,
-   isLoading: true,
-   setInfo: {
-      numQnsInSet: NaN,
-      currQnNum: NaN,
-      hasReachedEnd: false,
-   },
-   userInfo: {
-      userPoints: NaN,
-      numCorrect: NaN,
-      numAttempted: NaN,
-      isCorrect: null,
-      wrongAnsArr: [],
-   },
-   callbacks: {
-      handleOptionClick() {},
-      handleNextQnBtnClick() {},
-      redoSet() {}
-   }
-}
+export const DEFINITION_SET_SIZE = 30;

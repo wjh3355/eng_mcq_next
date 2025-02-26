@@ -2,14 +2,14 @@
 
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Col from "react-bootstrap/Col";
-import { useDefinitionContext } from './DefinitionContext';
+import { DefinitionProps } from "@/definitions";
 
-export default function DefinitionProgressBar() {
+export default function DefinitionProgressBar({ props }: { props: DefinitionProps}) {
 
    const { 
       setInfo: { hasReachedEnd, numQnsInSet },
       userInfo: { numAttempted, numCorrect }
-   } = useDefinitionContext();
+   } = props;
 
    if (hasReachedEnd) return null;
 

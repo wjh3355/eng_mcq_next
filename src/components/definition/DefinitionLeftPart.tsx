@@ -10,10 +10,10 @@ import Spinner from "react-bootstrap/Spinner";
 
 import Skeleton from "react-loading-skeleton";
 import { BookText, CircleArrowRight } from "lucide-react";
-import { useDefinitionContext } from "./DefinitionContext";
 import styled, { keyframes } from "styled-components";
+import { DefinitionProps } from "@/definitions";
 
-export default function DefinitionLeftPart() {
+export default function DefinitionLeftPart({ props }: { props: DefinitionProps}) {
 
    const {
       callbacks: { handleNextQnBtnClick },
@@ -21,7 +21,7 @@ export default function DefinitionLeftPart() {
       setInfo: { hasReachedEnd, currQnNum },
       qnObj: { definitionToTest },
       isLoading,
-   } = useDefinitionContext();
+   } = props;
 
    const [isReviewShown, setIsReviewShown] = useState(false);
 

@@ -4,11 +4,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 import Container from "react-bootstrap/esm/Container";
-import DefinitionProvider from "./DefinitionContext";
 import DefinitionLeftPart from "./DefinitionLeftPart";
 import DefinitionRightPart from "./DefinitionRightPart";
 import DefinitionEndUI from "./DefinitionEndUI";
 import DefinitionProgressBar from "./DefinitionProgressBar";
+import useDefinition from "./useDefinition";
 
 export default function DefinitionApp({
    qnNumArray,
@@ -20,6 +20,8 @@ export default function DefinitionApp({
    title: string,
 }) {
 
+   const props = useDefinition({ qnNumArray, email });
+
    return <Container>
       <Row className="my-3">
          <Col>
@@ -27,17 +29,10 @@ export default function DefinitionApp({
          </Col>
       </Row>
       <Row>
-         <DefinitionProvider 
-            qnNumArray={qnNumArray} 
-            email={email}
-         >
-            <DefinitionLeftPart/>
-            <DefinitionRightPart/>
-            <DefinitionEndUI
-               
-            />
-            <DefinitionProgressBar/>
-         </DefinitionProvider>
+         <DefinitionLeftPart props={props}/>
+         <DefinitionRightPart props={props}/>
+         <DefinitionEndUI props={props}/>
+         <DefinitionProgressBar props={props}/>
       </Row>
    </Container>
 }

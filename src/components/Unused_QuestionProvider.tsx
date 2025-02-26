@@ -1,50 +1,51 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 
-import { DefinitionContextValue, EMPTY_DEFINITION_CONTEXT_VALUE, EMPTY_DEFINITION_QN_OBJ, DefinitionQnObj } from "@/definitions";
+import { Question, EMPTY_QUESTION, QuestionCategories, QuestionContextVal } from "@/definitions";
 
 import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
-import { fetchDefinition } from "@/lib/mongodb/definition-server-actions";
+import { fetchQuestion } from "@/lib/mongodb/new-server-action";
 
 // create context, fallback is an empty context value
-const ThisContext = createContext<DefinitionContextValue>(EMPTY_DEFINITION_CONTEXT_VALUE);
+const QuestionContext = createContext<QuestionContextVal | null>(null);
 
 // create hook to use context
-export function useDefinitionContext() {
-   const ctx = useContext(ThisContext);
+export function useQuestionContext() {
+   const ctx = useContext(QuestionContext);
 
-   if (ctx === EMPTY_DEFINITION_CONTEXT_VALUE) {
-      throw new Error("useDefinitionContext must be used within a DefinitionProvider")
+   if (ctx === null) {
+      throw new Error("useQuestionContext must be used within a QuestionProvider!")
    };
 
    return ctx;
 }
 
-// create provider component
-export default function DefinitionProvider({
+export default function QuestionProvider({ 
+   qnCategory,
    qnNumArray,
    email,
    children
-}: {
+}: { 
+   qnCategory: QuestionCategories,
    qnNumArray: number[],
    email: string,
    children: React.ReactNode
-}) {
+}): React.ReactNode {
 
    // all necessary states
    const [qnSequence, setQnSequence] = useState<number[]>(qnNumArray);
-   const [qnObj, setQnObj] = useState<DefinitionQnObj>(EMPTY_DEFINITION_QN_OBJ);
+   const [qnObj, setQnObj] = useState<Question>(EMPTY_QUESTION);
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
    const [numCorrect, setNumCorrect] = useState<number>(0);
    const [numAttempted, setNumAttempted] = useState<number>(0);
    const [userPoints, setUserPoints] = useState<number>(NaN);
-   const [wrongAnsArr, setWrongAnsArr] = useState<DefinitionQnObj[]>([]);
+   const [wronglyAnswered, setWronglyAnswered] = useState<Question[]>([]);
    const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
-   function handleOptionClick(rw: boolean) {
+   function handleAttempt(rw: boolean) {
       // set isCorrect to whether the user's answer is correct (rw means right/wrong)
       // (if isCorrect is null, user has not clicked any option yet)
       setIsCorrect(rw);
@@ -57,15 +58,14 @@ export default function DefinitionProvider({
       } else {
          // if wrong, increment total attempted count only
          setNumAttempted(prev => prev + 1);
-         // if the question is not already in wrongAnsArr, add it
-         if (!wrongAnsArr.some(existingQnObj => existingQnObj.qnNum === qnObj.qnNum)) {
-            setWrongAnsArr(prevArr => [qnObj, ...prevArr]);
-         }
+         // add the question to wronglyAnswered
+         setWronglyAnswered(prev => [...prev, qnObj]);
+
          toast.error("Sorry, that was incorrect.");
       }
 
-      // if email is not empty, update user profile with the user's answer
-      if (email) {
+      // if email is not empty, and not doing demo, update user profile with the user's answer
+      if (email && qnCategory !== "demo") {
          // todo states that the user is updating spelling
          // in all cases, increment numQnsAttempted
          // if correct, increment score by 10
@@ -90,7 +90,7 @@ export default function DefinitionProvider({
 
    function redoSet() {
       // reset all states to initial values
-      setWrongAnsArr([]);
+      setWronglyAnswered([]);
       setNumAttempted(0);
       setNumCorrect(0);
       setIsCorrect(null);
@@ -114,7 +114,7 @@ export default function DefinitionProvider({
       // fetch user profile to get user points.
       // only need to run once at the start,
       // then we can just update the userPoints state
-      if (email) {
+      if (email && qnCategory !== "demo") {
          fetchUser(email, "profile").then(res => {
             if ("error" in res) {
                toast.error(res.error);
@@ -131,7 +131,7 @@ export default function DefinitionProvider({
 
       const fetchData = async() => {
          // set qnObj to an empty object
-         setQnObj(EMPTY_DEFINITION_QN_OBJ);
+         setQnObj(EMPTY_QUESTION);
    
          if (qnSequence.length === 0) {
             // if there are no more questions to fetch, set hasReachedEnd to true and return
@@ -141,8 +141,8 @@ export default function DefinitionProvider({
 
          try {
             // run server action:
-            // fetch spelling qn based on current question number (qnSequence[0])
-            const res = await fetchDefinition(qnSequence[0]);
+            // fetch qn based on category (which is the mongo collection) and current question number (qnSequence[0])
+            const res = await fetchQuestion(qnCategory, qnSequence[0]);
          
             // set qnObj to the fetched mcq object if no error
             "error" in res ? toast.error(res.error) : setQnObj(res);
@@ -163,47 +163,50 @@ export default function DefinitionProvider({
    }, [qnObj])
 
    return (
-      <ThisContext.Provider value={{
-         // the actual question object
-         qnObj,
-
-         // loading state
-         isLoading,
-
-         setInfo: {
-            // number of questions in the set
-            numQnsInSet: qnNumArray.length,
-            // current question number (whether attempted or not)
-            currQnNum: qnNumArray.length - qnSequence.length + 1,
-            // whether the user has reached the end of the set
-            hasReachedEnd,
-         },
-
-         userInfo: {
-            // user's points from db
-            userPoints,
-            // number of questions the user has gotten correct
-            numCorrect,
-            // number of questions the user has attempted
-            numAttempted,
-            // current answer state
-            isCorrect,
-            // array of questions the user has gotten wrong
-            wrongAnsArr,
-         },
-
-         callbacks: {
-            // callback when user clicks an option
-            handleOptionClick,
-            // callback when user clicks next question
-            handleNextQnBtnClick,
-            // callback when user clicks on the redo button at the end
-            redoSet
-         }
-
-      }}>
+      <QuestionContext.Provider
+         value={{
+            // the category of the question set
+            qnCategory,
+      
+            // the actual question object
+            qnObj,
+      
+            // loading state
+            isLoading,
+      
+            setInfo: {
+               // number of questions in the set
+               numQnsInSet: qnNumArray.length,
+               // current question number (whether attempted or not)
+               currQnNum: qnNumArray.length - qnSequence.length + 1,
+               // whether the user has reached the end of the set
+               hasReachedEnd,
+            },
+      
+            userInfo: {
+               // user's points from db
+               userPoints,
+               // number of questions the user has gotten correct
+               numCorrect,
+               // number of questions the user has attempted
+               numAttempted,
+               // current answer state
+               isCorrect,
+               // array of questions the user has gotten wrong
+               wronglyAnswered,
+            },
+      
+            callbacks: {
+               // callback when user clicks an option
+               handleAttempt,
+               // callback when user clicks next question
+               handleNextQnBtnClick,
+               // callback when user clicks on the redo button at the end
+               redoSet
+            }
+         }}
+      >
          {children}
-      </ThisContext.Provider>
+      </QuestionContext.Provider>
    );
-
 }
