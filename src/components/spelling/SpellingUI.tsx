@@ -105,9 +105,6 @@ export default function SpellingUI({ QnContextToUse }: { QnContextToUse: () => S
          <Col lg={4} md={5}>
             <form 
                onSubmit={handleSubmit(handler)}
-               onKeyDown={(e) => {
-                  if (e.key === "Enter") e.preventDefault();
-               }}
                className="border-0 shadow rounded-2 p-3"
             >
                <label className="text-center">

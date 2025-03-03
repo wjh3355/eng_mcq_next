@@ -1,6 +1,6 @@
 import Row from "react-bootstrap/Row";
 import { Suspense } from "react";
-import ProfileTable from "../../components/ProfileTable";
+import ProfileTable from "@/components/ProfileTable";
 import Skeleton from "react-loading-skeleton";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { UserProfileDocument } from "@/definitions";

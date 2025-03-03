@@ -2,11 +2,11 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 
-import { Question, EMPTY_QUESTION, QuestionCategories, QuestionContextVal } from "@/definitions";
+import { Question, EMPTY_QUESTION, Collections, QuestionContextVal } from "@/definitions";
 
 import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
-import { fetchQuestion } from "@/lib/mongodb/new-server-action";
+import { fetchQuestion, incrementUserScore } from "@/lib/mongodb/new-server-action";
 
 // create context, fallback is an empty context value
 const QuestionContext = createContext<QuestionContextVal | null>(null);
@@ -16,19 +16,19 @@ export function useQuestionContext() {
    const ctx = useContext(QuestionContext);
 
    if (ctx === null) {
-      throw new Error("useQuestionContext must be used within a QuestionProvider!")
+      throw new Error("useQuestionContext must be used within a QuestionProvider")
    };
 
    return ctx;
 }
 
-export default function QuestionProvider({ 
-   qnCategory,
+export function QuestionProvider({ 
+   collection,
    qnNumArray,
    email,
    children
 }: { 
-   qnCategory: QuestionCategories,
+   collection: Collections,
    qnNumArray: number[],
    email: string,
    children: React.ReactNode
@@ -64,27 +64,25 @@ export default function QuestionProvider({
          toast.error("Sorry, that was incorrect.");
       }
 
-      // if email is not empty, and not doing demo, update user profile with the user's answer
-      if (email && qnCategory !== "demo") {
-         // todo states that the user is updating spelling
-         // in all cases, increment numQnsAttempted
-         // if correct, increment score by 10
-         // if wrong, add the question to wrongAnsArr
-         // updateUserProfile(email, {
-         //    todo: "update spelling",
-         //    spellingQnNum: qnObj.qnNum,
-         //    isSpellingCorrect: rw
-         // })
-         // .then(res => {
-         //    if (res.error) {
-         //       toast.error(res.error);
-         //       return;
-         //    };
-         //    // if no error, and the user was correct, 
-         //    // we increment the userPoints state by 10
-         //    // should always match the user's score in the database (by right)
-         //    if (rw) setUserPoints(prev => prev + 10);
-         // });
+      // if email is not empty, and not doing demo, update user profile
+      if (email && collection !== "demo") {
+         if (rw) {
+            // increment score by 10 if user was correct
+            incrementUserScore(email)
+            .then(res => {
+               if (res.error) {
+                  toast.error(res.error);
+                  return;
+               };
+               // if no error, and the user was correct, 
+               // we increment the userPoints state by 10
+               // should always match the user's score in the database (by right)
+               setUserPoints(prev => prev + 10);
+            });
+            // TODO: track correctly answered questions.
+         } else {
+            // TODO: track wrongly answered questions.
+         }
       }
    }
 
@@ -114,7 +112,7 @@ export default function QuestionProvider({
       // fetch user profile to get user points.
       // only need to run once at the start,
       // then we can just update the userPoints state
-      if (email && qnCategory !== "demo") {
+      if (email && collection !== "demo") {
          fetchUser(email, "profile").then(res => {
             if ("error" in res) {
                toast.error(res.error);
@@ -142,10 +140,17 @@ export default function QuestionProvider({
          try {
             // run server action:
             // fetch qn based on category (which is the mongo collection) and current question number (qnSequence[0])
-            const res = await fetchQuestion(qnCategory, qnSequence[0]);
+            const res = await fetchQuestion(collection, qnSequence[0]);
+
+            if (process.env.NODE_ENV === "development") {
+               // fake delay for development purposes
+               await new Promise(r => setTimeout(r, 500));
+            }
+
+            console.log(res);
          
             // set qnObj to the fetched mcq object if no error
-            "error" in res ? toast.error(res.error) : setQnObj(res);
+            "error" in res ? toast.error(res.error) : setQnObj(res[0]);
          } catch (err) {
             toast.error(err instanceof Error ? err.message : "An unknown error occurred");
          }
@@ -166,7 +171,7 @@ export default function QuestionProvider({
       <QuestionContext.Provider
          value={{
             // the category of the question set
-            qnCategory,
+            collection,
       
             // the actual question object
             qnObj,

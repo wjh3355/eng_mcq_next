@@ -45,7 +45,7 @@ function LoggedInLinks() {
          <div className="d-flex flex-column gap-3 mt-3">
             <Link
                className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-               href="/mcq"
+               href="/questions"
             >
                <NotebookPen className="me-2"/>MCQ Questions
             </Link>
@@ -55,20 +55,6 @@ function LoggedInLinks() {
                href="/cloze"
             >
                <FileText className="me-2"/>Cloze Passages
-            </Link>
-
-            <Link
-               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-               href="/spelling"
-            >
-               <SpellCheck2 className="me-2"/>Spelling Questions
-            </Link>
-
-            <Link
-               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
-               href="/definitions"
-            >
-               <WholeWord className="me-2"/>Definitions Questions
             </Link>
 
             <Link

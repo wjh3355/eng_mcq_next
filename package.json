@@ -7,11 +7,8 @@
       "build": "next build",
       "start": "next start",
       "lint": "next lint",
-      "checkmcq": "npx tsx private/checkMcq.ts",
-      "checkcloze": "npx tsx private/checkCloze.ts",
-      "checkspelling": "npx tsx private/checkSpelling.ts",
-      "updateqn": "npx tsx private/updateQn.ts",
-      "doThis": "npx tsx private/doThis.ts",
+      "vet": "npx tsx private/vetFiles.ts",
+      "updateqn": "npx tsx private/update.ts",
       "newUser": "npx tsx private/newUser.ts"
    },
    "dependencies": {
