@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 import { fetchMcqQnArr } from "@/lib/mongodb/mcq-server-actions";
-import PaginatedDictEntries from "@/components/dict/PaginatedDictEntries";
+import PaginatedDictEntries from "@/components/old/PaginatedDictEntries";
 import { QN_CATEGORIES_DATA, McqCategory } from "@/definitions";
 
 import Row from "react-bootstrap/Row";

@@ -146,8 +146,6 @@ export function QuestionProvider({
                // fake delay for development purposes
                await new Promise(r => setTimeout(r, 500));
             }
-
-            console.log(res);
          
             // set qnObj to the fetched mcq object if no error
             "error" in res ? toast.error(res.error) : setQnObj(res[0]);

@@ -1,5 +1,5 @@
 import { MCQQnObj } from '@/definitions';
-import MCQReviewSentence from "../mcq/MCQReviewSentence";
+import MCQReviewSentence from './MCQReviewSentence';
 import Badge from "react-bootstrap/Badge";
 
 export default function DictionaryEntry({ 

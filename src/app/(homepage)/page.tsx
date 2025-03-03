@@ -47,7 +47,7 @@ function LoggedInLinks() {
                className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
                href="/questions"
             >
-               <NotebookPen className="me-2"/>MCQ Questions
+               <NotebookPen className="me-2"/>Questions
             </Link>
 
             <Link

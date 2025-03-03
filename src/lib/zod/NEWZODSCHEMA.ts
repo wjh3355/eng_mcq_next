@@ -1,3 +1,4 @@
+import { questionCategoriesTuple } from "@/definitions";
 import { z } from "zod";
 
 // there are 4 types of questions: meaning, spelling, definition, blank
@@ -141,3 +142,8 @@ export const QuestionSchema = z
    }, {
       message: "blank question is wrongly typed",
    });
+
+export const CollectionsSchema = z.enum(
+   questionCategoriesTuple, 
+   { message: "invalid collection name" }
+);

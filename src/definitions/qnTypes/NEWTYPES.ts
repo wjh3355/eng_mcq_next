@@ -19,6 +19,43 @@ export const questionCategoriesTuple = [
    "gep", "phrasalVerbs", "psleWordsCloze", "psleWordsMcq", "pslePhrasesCloze", "psleGrammar", "spelling", "definition", "demo", "test"
 ] as const;
 
+export function getDemoQnCat(qnNum: number): string {
+   
+   let cat: Collections;
+
+   switch (Math.floor((qnNum-1) / 5)) {
+      case 0:
+         cat = "gep";
+         break;
+      case 1:
+         cat = "phrasalVerbs";
+         break;
+      case 2:
+         cat = "psleWordsCloze";
+         break;
+      case 3:
+         cat = "psleWordsMcq";
+         break;
+      case 4:
+         cat = "pslePhrasesCloze"
+         break;
+      case 5:
+         cat = "psleGrammar";
+         break;
+      case 6:
+         cat = "spelling";
+         break;
+      case 7:
+         cat = "definition";
+         break;
+      default:
+         cat = "gep";
+         break;
+   }
+
+   return QUESTION_CATEGORIES_DATA[cat].categoryName;
+}
+
 export const QUESTION_CATEGORIES_DATA: Record<Collections, { categoryName: string; setSize: number }> = {
 
    gep: {

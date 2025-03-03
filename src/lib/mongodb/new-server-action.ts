@@ -8,9 +8,11 @@ import { z } from "zod";
 
 export async function fetchQuestion(collection: Collections, ...qnNum: number[]) {
    try {
-      const session = await auth();
 
-      if (!session) throw new Error("Unauthorised");
+      if (collection !== 'demo') {
+         const session = await auth();
+         if (!session) throw new Error("Unauthorised");
+      }
      
       await client.connect();
       

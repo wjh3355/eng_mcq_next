@@ -1,16 +1,25 @@
-import MCQApp from "@/components/mcq/MCQApp";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
-import { DEMO_DATA } from "@/definitions";
+import QuestionApp from "@/components/question/QuestionApp";
+import { fetchNumOfQnsInCollection } from "@/lib/mongodb/new-server-action";
+import toast from "react-hot-toast";
 
-export default function DemoQnsPage() {
+export default async function DemoQnsPage() {
 
-   return <MCQApp
-      McqCategory={"demo"}
-      qnNumArray={shuffle(range(...DEMO_DATA.qnNumRange))}
-      email=""
-      title={"Demo MCQ Questions"}
-      isSetRandom={false}
-      isRedo={false}
+   const numOfDemoQns = await fetchNumOfQnsInCollection("demo");
+   if (typeof numOfDemoQns !== 'number') {
+      toast.error(numOfDemoQns.error);
+      return;
+   }
+
+   const qnNumArray = shuffle(range(1, numOfDemoQns + 1));
+
+   return <QuestionApp
+      collection='demo'
+      qnNumArray={qnNumArray}
+      email=''
+      title={'Demo Questions'}
+      nextSetNum={null}
+      isThisSetRandom={false}
    />
 }

@@ -14,6 +14,7 @@ import { useQuestionContext } from "./QuestionProvider";
 import QuestionSentenceDisp from "./QuestionSentenceDisp";
 import QuestionExplanation from "./QuestionExplanation";
 import QuestionPaginatedExplanation from "./QuestionPaginatedExplanation";
+import { getDemoQnCat } from "@/definitions";
 
 export default function QuestionLeftUI() {
 
@@ -28,6 +29,7 @@ export default function QuestionLeftUI() {
 
    const [isReviewShown, setIsReviewShown] = useState(false);
    const [isExplShown, setIsExplShown] = useState(false);
+   const [isHelpShown, setIsHelpShown] = useState(false);
 
    if (hasReachedEnd) return null;
 
@@ -46,10 +48,21 @@ export default function QuestionLeftUI() {
 
    return (
       <Col lg={8} md={7}>
-         <Card body className="mb-3 shadow border-0">
+         <Card className="mb-3 shadow border-0">
             {isLoading 
-               ?  <Skeleton height="24px" />
-               :  <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+               ?  <Card.Body><Skeleton height="24px" /></Card.Body>
+               :  (
+                  collection === 'demo'
+                  ?  <>
+                        <Card.Header>
+                           <small>From {getDemoQnCat(qnObj.qnNum)}</small>
+                        </Card.Header>
+                        <Card.Body>
+                           <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+                        </Card.Body>
+                     </>
+                  : <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+               )
             }
          </Card>
 
@@ -57,8 +70,17 @@ export default function QuestionLeftUI() {
 
             <ScoreComponent/>
 
+            <div className="ms-auto"/>
+
+            {
+               collection === 'demo' && 
+               <Button variant="link" className="p-0" onClick={() => setIsHelpShown(true)}>
+                  Help
+               </Button>
+            }
+
             <button 
-               className="border-0 bg-transparent p-0 ms-auto"
+               className="border-0 bg-transparent p-0"
                disabled={isCorrect === null}
                onClick={() => setIsExplShown(!isExplShown)}
             >
@@ -92,6 +114,29 @@ export default function QuestionLeftUI() {
          <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(!isExplShown)}>
             <Modal.Header closeButton><Modal.Title className="fs-5">Explanation</Modal.Title></Modal.Header>
             <Modal.Body><QuestionExplanation qnObj={qnObj}/></Modal.Body>
+         </Modal>
+
+         <Modal size="lg" centered show={isHelpShown} onHide={() => setIsHelpShown(false)}>
+            <Modal.Header closeButton><Modal.Title className="fs-5">Help</Modal.Title></Modal.Header>
+            <Modal.Body style={{textAlign: "justify", lineHeight: "25px"}}>
+               <p>You will be presented with a series of questions that test vocabulary, grammar or spelling.</p>
+               <ul>
+                  <li>If there is a <strong>bolded</strong> word or phrase in the sentence, choose the option closest in meaning to it.</li>
+                  <li>If there is a <u>blank</u> in the sentence, choose the option that best fits the blank.</li>
+                  <li>If there is a <strong>misspelled</strong> word in the sentence, input the correct word. This is case sensitive.</li>
+               </ul>
+               <p>
+                  The <BadgeInfo size={21} strokeWidth={2}/> icon displays an explanation of the word/phrase tested in the question, while <BookText size={21} strokeWidth={2}/> keeps track of all the questions you answered wrongly. Clicking
+                  <Button 
+                     variant="primary"
+                     size="sm"
+                     className="d-inline mx-2"
+                  >
+                     Next&nbsp;<CircleArrowRight size={20} strokeWidth={2} className="my-auto"/>
+                  </Button>
+                  displays the next question (once you answered the current one).
+               </p>
+            </Modal.Body>
          </Modal>
       </Col>
    );
