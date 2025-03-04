@@ -97,9 +97,6 @@ export async function fetchAllCloze() {
 
 export async function fetchNumClozes() {
    try {
-      const session = await auth();
-
-      if (!session) throw new Error("Unauthorised");
   
       await client.connect();
       
