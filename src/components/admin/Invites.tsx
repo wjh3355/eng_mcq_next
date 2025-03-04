@@ -60,8 +60,8 @@ export default function Invites({ allInvites }: { allInvites: UserInviteDocument
 
                                     createNewInvite(newEmail)
                                        .then(res => {
-                                          if (res.error) {
-                                             toast.error(res.error);
+                                          if (res.error!) {
+                                             toast.error(res.error!);
                                           } else{
                                              toast.success("Successfully created new user invite for " + newEmail);
                                           }
@@ -131,8 +131,8 @@ export default function Invites({ allInvites }: { allInvites: UserInviteDocument
                                     onClick={() => {
                                        deleteInvite(email)
                                        .then(res => {
-                                          if (res.error) {
-                                             toast.error(res.error);
+                                          if (res.error!) {
+                                             toast.error(res.error!);
                                           } else {
                                              toast.success(`Invite for ${email} deleted successfully`);
                                           }

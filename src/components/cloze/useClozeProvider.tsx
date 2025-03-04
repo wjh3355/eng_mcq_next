@@ -54,7 +54,7 @@ export default function useClozeProvider({
       })
       .then(res => {
          if ("error" in res) {
-            toast.error(res.error);
+            toast.error(res.error!);
             return;
          }
       });
@@ -77,7 +77,7 @@ export default function useClozeProvider({
       .then(
          res => {
             if ("error" in res) {
-               toast.error(res.error);
+               toast.error(res.error!);
                return;
             }
             window.location.reload();
@@ -114,7 +114,7 @@ export default function useClozeProvider({
 
             // if error, show error message
             if ( "error" in res ) {
-               toast.error(res.error);
+               toast.error(res.error!);
                return;
             }
 

@@ -75,8 +75,8 @@ export default function UsersTable(
                               onClick={() => {
                                  toggleSuspend(email, !isSuspended)
                                     .then(res => {
-                                       if (res.error) {
-                                          toast.error(res.error);
+                                       if (res.error!) {
+                                          toast.error(res.error!);
                                        } else {
                                           toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully`)
                                        }
@@ -134,8 +134,8 @@ export default function UsersTable(
                            if (userEmailToDelete) {
                               deleteUser(userEmailToDelete)
                                  .then(res => {
-                                    if (res.error) {
-                                       toast.error(res.error);
+                                    if (res.error!) {
+                                       toast.error(res.error!);
                                     } else {
                                        toast.success(`User ${userEmailToDelete} deleted successfully.`)
                                     }

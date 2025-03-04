@@ -76,8 +76,8 @@ export function QuestionProvider({
             wrongQnNum: rw ? null : qnObj.qnNum,
          })
          .then(res => {
-            if (res.error) {
-               toast.error(res.error);
+            if (res.error!) {
+               toast.error(res.error!);
                return;
             };
             // if no error, and the user was correct, 
@@ -118,7 +118,7 @@ export function QuestionProvider({
       if (email && collection !== "demo") {
          fetchUser(email, "profile").then(res => {
             if ("error" in res) {
-               toast.error(res.error);
+               toast.error(res.error!);
                return;
             }
             setUserPoints(res.score);
@@ -151,7 +151,7 @@ export function QuestionProvider({
             }
          
             // set qnObj to the fetched mcq object if no error
-            "error" in res ? toast.error(res.error) : setQnObj(res[0]);
+            "error" in res ? toast.error(res.error!) : setQnObj(res[0]);
          } catch (err) {
             toast.error(err instanceof Error ? err.message : "An unknown error occurred");
          }

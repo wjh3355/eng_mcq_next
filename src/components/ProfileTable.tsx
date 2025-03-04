@@ -234,8 +234,8 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                            resetUserData(email)
                               .then(res => {
                                  setShowCfmEraseData(false);
-                                 if (res.error) {
-                                    toast.error(res.error);
+                                 if (res.error!) {
+                                    toast.error(res.error!);
                                  } else {
                                     toast.success("Your data has been erased.");
                                  }
