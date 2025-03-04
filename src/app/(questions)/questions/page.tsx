@@ -2,7 +2,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {
    Collections,
-   QUESTION_CATEGORIES_DATA,
+   QN_COL_DATA,
    questionCategoriesArray,
 } from "@/definitions";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import Container from "react-bootstrap/esm/Container";
 import toast from "react-hot-toast";
-import { fetchNumOfQnsInCollection } from "@/lib/mongodb/new-server-action";
+import { fetchNumOfQnsInCollection } from "@/lib/mongodb/question-server-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +54,7 @@ async function DisplayCategorySets({ collection }: { collection: Collections }) 
    }
 
    // get number of questions in a set
-   const { setSize, categoryName } = QUESTION_CATEGORIES_DATA[collection];
+   const { setSize, categoryName } = QN_COL_DATA[collection];
 
    // calculate number of possible sets
    // eg. if 123 questions and setSize = 50

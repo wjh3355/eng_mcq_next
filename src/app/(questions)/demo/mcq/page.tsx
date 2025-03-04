@@ -1,7 +1,7 @@
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import QuestionApp from "@/components/question/QuestionApp";
-import { fetchNumOfQnsInCollection } from "@/lib/mongodb/new-server-action";
+import { fetchNumOfQnsInCollection } from "@/lib/mongodb/question-server-actions";
 import toast from "react-hot-toast";
 
 export default async function DemoQnsPage() {

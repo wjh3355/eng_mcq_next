@@ -53,10 +53,10 @@ export function getDemoQnCat(qnNum: number): string {
          break;
    }
 
-   return QUESTION_CATEGORIES_DATA[cat].categoryName;
+   return QN_COL_DATA[cat].categoryName;
 }
 
-export const QUESTION_CATEGORIES_DATA: Record<Collections, { categoryName: string; setSize: number }> = {
+export const QN_COL_DATA: Record<Collections, { categoryName: string; setSize: number }> = {
 
    gep: {
       categoryName: "GEP Vocab MCQ",

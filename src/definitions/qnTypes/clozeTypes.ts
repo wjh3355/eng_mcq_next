@@ -1,10 +1,10 @@
-export type ClozeObj = {
+export type Cloze = {
    qnNum: number,
    title: string,
    passage: string
 }
 
-export type ClozeContextValue = {
+export type ClozeProps = {
    isDemo: boolean
    prevUserCorrectAns: null | number[],
    wordsToTestArr: string[][],
@@ -14,18 +14,6 @@ export type ClozeContextValue = {
    isLoading: boolean,
    handleCompletion: (correctAns: number[]) => void,
    handleReset: () => void
-}
-
-export const EMPTY_CLOZE_CONTEXT_VALUE: ClozeContextValue = {
-   isDemo: false,
-   prevUserCorrectAns: null,
-   wordsToTestArr: [],
-   textArr: [],
-   qnNum: NaN,
-   passageTitle: "",
-   isLoading: true,
-   handleCompletion() {},
-   handleReset() {}
 }
 
 export type ClozeFormData = Record<

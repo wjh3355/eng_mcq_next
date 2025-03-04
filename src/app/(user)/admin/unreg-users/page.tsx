@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { fetchAllInvites } from "@/lib/mongodb/user-server-actions";
-import Invites from "./Invites";
+import Invites from "../../../../components/admin/Invites";
 
 export default async function NewUnregUserFormServer() {
 

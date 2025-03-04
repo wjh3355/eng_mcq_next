@@ -1,4 +1,3 @@
-import { qnCategoriesArrayTuple } from "@/definitions";
 import { z } from "zod";
 
 export const McqObjSchema = z
@@ -36,7 +35,7 @@ export const McqObjSchema = z
       }
    );
 
-export const ClozeObjSchema = z
+export const ClozeSchema = z
    .object({
       qnNum: z.number(),
       title: z.string().nonempty(),
@@ -122,6 +121,10 @@ export const UserProfileDataSchema = z.object({
       pslePhrasesCloze: McqCategoryUserDataSchema,
       psleWordsCloze: McqCategoryUserDataSchema,
       psleWordsMcq: McqCategoryUserDataSchema,
+      spelling: McqCategoryUserDataSchema,
+      definition: McqCategoryUserDataSchema,
+      demo: McqCategoryUserDataSchema,
+      test: McqCategoryUserDataSchema
    }),
    clozeData: z.array(
       z.object({
@@ -129,7 +132,6 @@ export const UserProfileDataSchema = z.object({
          correctAns: z.array(z.number())
       })
    ),
-   spellingData: McqCategoryUserDataSchema,
    score: z.number(),
    dateCreated: z.string().nonempty(),
 }).strict()

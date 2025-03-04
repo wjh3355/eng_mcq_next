@@ -63,7 +63,7 @@ export default function NavBar() {
                   {status === "authenticated" && 
                      <Nav>
 
-                        <Nav.Link as={Link} href="/mcq" onClick={handleProtectedNavigation}>Questions</Nav.Link>
+                        <Nav.Link as={Link} href="/questions" onClick={handleProtectedNavigation}>Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
                         <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Your Profile</Nav.Link>
 

@@ -61,30 +61,4 @@ export async function fetchNumOfQnsInCollection(collection: Collections) {
          return { error: "Unexpected error occured" }
       }
    }
-}
-
-export async function incrementUserScore(email: string) {
-   try {
-
-      const session = await auth();
-      if (!session) throw new Error("Unauthorized");
-
-      await client.connect();
-      const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
-      const profile = await profileDb.findOne({ email })
-      if (!profile) throw new Error(`User profile for ${email} not found`);
-
-      await profileDb.updateOne({ email }, { $inc: { score: 10 } });
-
-      return { success: true };
-
-   } catch (error) {
-      if (error instanceof Error) {
-         console.error(`Unable to update user profile for ${email}: ` + error.message);
-         return { error: "Could not update user profile due to: " + error.message }
-      } else {
-         console.error(`Unexpected error occured while updating user profile for ${email}: ` + error);
-         return { error: `Unable to update user profile for ${email}. Try again later.` }
-      }
-   }
-}
+};

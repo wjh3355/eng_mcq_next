@@ -4,9 +4,9 @@ import { useState, useEffect, createContext, useContext } from "react";
 
 import { Question, EMPTY_QUESTION, Collections, QuestionContextVal } from "@/definitions";
 
-import { fetchUser, updateUserProfile } from "@/lib/mongodb/user-server-actions";
+import { fetchUser, updateUserQuestionsData } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
-import { fetchQuestion, incrementUserScore } from "@/lib/mongodb/new-server-action";
+import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 
 // create context, fallback is an empty context value
 const QuestionContext = createContext<QuestionContextVal | null>(null);
@@ -66,23 +66,26 @@ export function QuestionProvider({
 
       // if email is not empty, and not doing demo, update user profile
       if (email && collection !== "demo") {
-         if (rw) {
-            // increment score by 10 if user was correct
-            incrementUserScore(email)
-            .then(res => {
-               if (res.error) {
-                  toast.error(res.error);
-                  return;
-               };
-               // if no error, and the user was correct, 
-               // we increment the userPoints state by 10
-               // should always match the user's score in the database (by right)
-               setUserPoints(prev => prev + 10);
-            });
-            // TODO: track correctly answered questions.
-         } else {
-            // TODO: track wrongly answered questions.
-         }
+
+         // run server action to update user's question data
+         // increment score by 10 if user was correct
+         // add the question number to wrongQnNums if user was wrong
+         updateUserQuestionsData({
+            email,
+            collection,
+            wrongQnNum: rw ? null : qnObj.qnNum,
+         })
+         .then(res => {
+            if (res.error) {
+               toast.error(res.error);
+               return;
+            };
+            // if no error, and the user was correct, 
+            // we increment the userPoints state by 10
+            // should always match the user's score in the database (by right)
+            if (rw) setUserPoints(prev => prev + 10);
+         });
+
       }
    }
 

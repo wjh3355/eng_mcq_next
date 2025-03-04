@@ -1,8 +1,39 @@
-import { McqCategory } from "./qnTypes/qnSetData";
 import { randomBytes } from "crypto";
 import { hashSync } from "bcryptjs";
+import { Collections } from "./qnTypes/questionTypes";
 
-export type McqCategoryUserData = {
+// example user AUTH document
+// {
+//    "_id": {
+//      "$oid": "67a40697f1085810c051cc6f"
+//    },
+//    "email": "jhwang0324@gmail.com",
+//    "passwordHash": "$2a$12$XTGlQRISa.Jv2VMYLQukKeVtXeIS/dHdhgtIfEs.fXWVxMQNEodL6",
+//    "role": "admin",
+//    "psdResetToken": null,
+//    "psdResetTokenExpiry": null,
+//    "dateCreated": "2025-02-06T00:47:16.104Z",
+//    "isSuspended": false
+// }
+
+// example user PROFILE document
+// {
+//    "_id": {
+//      "$oid": "67a40697f1085810c051cc89"
+//    },
+//    "email": "jhwang0324@gmail.com",
+//    "qnData": {
+//      "gep": {
+//        "numQnsAttempted": 0,
+//        "wrongQnNums": []
+//      } ... etc
+//    },
+//    "clozeData": [],
+//    "score": 60,
+//    "dateCreated": "2025-02-06T00:47:16.104Z"
+// }
+
+export type QnCollectionUserDat = {
    numQnsAttempted: number;
    wrongQnNums: number[];
 };
@@ -19,12 +50,11 @@ export type UserAuthDocument = {
 
 export type UserProfileDocument = {
    email: string;
-   qnData: Record<McqCategory, McqCategoryUserData>;
+   qnData: Record<Collections, QnCollectionUserDat>;
    clozeData: {
       qnNum: number;
       correctAns: number[];
    }[];
-   spellingData: McqCategoryUserData;
    score: number;
    dateCreated: string;
 };
@@ -38,10 +68,13 @@ export const EMPTY_USER: UserProfileDocument = {
       pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
       psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
       psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
+      spelling: { numQnsAttempted: 0, wrongQnNums: [] },
+      definition: { numQnsAttempted: 0, wrongQnNums: [] },
+      demo: { numQnsAttempted: 0, wrongQnNums: [] },
+      test: { numQnsAttempted: 0, wrongQnNums: [] },
    },
    clozeData: [],
-   spellingData: { numQnsAttempted: 0, wrongQnNums: [] },
-   score: NaN,
+   score: 0,
    dateCreated: ""
 }
 
@@ -74,55 +107,21 @@ export function newUserDocuments({
    };
 
    const newProfileDoc: UserProfileDocument = {
+      ...EMPTY_USER,
       email,
-      qnData: {
-         gep: { numQnsAttempted: 0, wrongQnNums: [] },
-         phrasalVerbs: { numQnsAttempted: 0, wrongQnNums: [] },
-         psleGrammar: { numQnsAttempted: 0, wrongQnNums: [] },
-         pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
-         psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
-         psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
-      },
-      clozeData: [],
-      spellingData: { 
-         numQnsAttempted: 0, wrongQnNums: []
-      },
-      score: 0,
       dateCreated: new Date().toISOString(),
    };
 
    return { newAuthDoc, newProfileDoc };
 }
 
-export const RESET_PROFILE_FIELDS_OBJ: {
-   qnData: Record<McqCategory, McqCategoryUserData>;
-   clozeData: {
-      qnNum: number;
-      correctAns: number[];
-   }[];
-   spellingData: McqCategoryUserData;
-   score: number;
-} = {
-   qnData: {
-      gep: { numQnsAttempted: 0, wrongQnNums: [] },
-      phrasalVerbs: { numQnsAttempted: 0, wrongQnNums: [] },
-      psleGrammar: { numQnsAttempted: 0, wrongQnNums: [] },
-      pslePhrasesCloze: { numQnsAttempted: 0, wrongQnNums: [] },
-      psleWordsCloze: { numQnsAttempted: 0, wrongQnNums: [] },
-      psleWordsMcq: { numQnsAttempted: 0, wrongQnNums: [] },
-   },
-   clozeData: [],
-   spellingData: { 
-      numQnsAttempted: 0, wrongQnNums: []
-   },
-   score: 0
+export const RESET_PROFILE_FIELDS_OBJ: Partial<UserProfileDocument> = {
+   qnData: EMPTY_USER.qnData,
+   clozeData: EMPTY_USER.clozeData,
+   score: EMPTY_USER.score
 }
 
-export function newUserInvite({
-   email
-}: {
-   email: string
-}): UserInviteDocument {
+export function newUserInvite({ email }: { email: string }): UserInviteDocument {
    return {
       email,
       token: randomBytes(50).toString("hex"),

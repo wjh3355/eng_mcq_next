@@ -1,14 +1,11 @@
-import { McqCategory, McqCategoryUserData, QN_CATEGORIES_DATA } from "@/definitions";
 import { fetchAllUsers } from "@/lib/mongodb/user-server-actions";
-import { DateTime } from "luxon";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
-import Table from "react-bootstrap/esm/Table";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import UsersTable from "./UsersTable";
+import UsersTable from "../../../components/admin/UsersTable";
 import Alert from "react-bootstrap/esm/Alert";
 import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";

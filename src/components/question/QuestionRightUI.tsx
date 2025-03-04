@@ -12,7 +12,7 @@ import { Search } from "lucide-react";
 import shuffle from "lodash/shuffle";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import MCQOption from "../old/MCQOption";
+import MCQOption from "./MCQOption";
 import { useQuestionContext } from "./QuestionProvider";
 
 type SentenceFormFields = { correctedWord: string }

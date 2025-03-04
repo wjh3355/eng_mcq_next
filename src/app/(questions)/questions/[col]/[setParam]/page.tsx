@@ -1,7 +1,7 @@
 import QuestionApp from "@/components/question/QuestionApp";
-import { Collections, QUESTION_CATEGORIES_DATA, questionCategoriesTuple } from "@/definitions";
+import { Collections, QN_COL_DATA, questionCategoriesTuple } from "@/definitions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
-import { fetchNumOfQnsInCollection } from "@/lib/mongodb/new-server-action";
+import { fetchNumOfQnsInCollection } from "@/lib/mongodb/question-server-actions";
 import { inRange, range, sampleSize, shuffle } from "lodash";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -28,7 +28,7 @@ export async function generateStaticParams() {
       // total num of qns in collection
       if (typeof totalNumQns !== "number") return [];
 
-      const { setSize } = QUESTION_CATEGORIES_DATA[col];
+      const { setSize } = QN_COL_DATA[col];
       // 100, 50 or 30 etc
    
       const numPossibleSets = Math.ceil(totalNumQns / setSize);
@@ -63,7 +63,7 @@ export default async function TEST_QuestionSetsPage({ params }: { params: Promis
    const allQnNumsRange = range(1, totalNumQns + 1);
 
    // get category data
-   const { setSize, categoryName } = QUESTION_CATEGORIES_DATA[col];
+   const { setSize, categoryName } = QN_COL_DATA[col];
 
    // get number of possible sets
    // eg. if 123 questions and setSize = 50

@@ -1,6 +1,6 @@
 "use client";
 
-import { QN_CATEGORIES_DATA, McqCategory, McqCategoryUserData, UserAuthDocument, UserProfileDocument } from "@/definitions";
+import { QnCollectionUserDat, UserAuthDocument, UserProfileDocument, Collections, QN_COL_DATA } from "@/definitions";
 import { deleteUser, toggleSuspend } from "@/lib/mongodb/user-server-actions";
 import { DateTime } from "luxon";
 import { useState } from "react";
@@ -28,7 +28,6 @@ export default function UsersTable(
                   <th>Date Created</th>
                   <th>MCQ Data</th>
                   <th>Cloze Data</th>
-                  <th>Spelling Data</th>
                   <th>Points</th>
                   <th>Is Suspended?</th>
                   <th>Delete</th>
@@ -38,10 +37,10 @@ export default function UsersTable(
                {allUsersArray.map((
                   [
                      { email, passwordHash, role, dateCreated, isSuspended }, 
-                     {qnData, clozeData, spellingData, score}
+                     {qnData, clozeData, score}
                   ], idx) => {
 
-                  const qnDataAsArr = Object.entries(qnData) as [ McqCategory, McqCategoryUserData ][];
+                  const qnDataAsArr = Object.entries(qnData) as [ Collections, QnCollectionUserDat ][];
 
                   return (
                      <tr key={idx}>
@@ -55,7 +54,7 @@ export default function UsersTable(
                         <td>
                            {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
                               <div key={cat}>
-                                 {`${QN_CATEGORIES_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
+                                 {`${QN_COL_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
                               </div>
                            )}
                         </td>
@@ -65,11 +64,6 @@ export default function UsersTable(
                                  {`Cloze ${qnNum}: ${correctAns.length} / 15`}
                               </div>
                            )}
-                        </td>
-                        <td>
-                           {"numQnsAttempted" in spellingData && 
-                              `${spellingData.numQnsAttempted - spellingData.wrongQnNums.length} / ${spellingData.numQnsAttempted}`
-                           }
                         </td>
                         <td>{score}</td>
                         <td>

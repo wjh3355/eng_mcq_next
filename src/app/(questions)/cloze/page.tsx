@@ -28,9 +28,9 @@ export default async function ClozeHomePage() {
 }
 
 async function ClozeTable() {
-   const clozeObjArr = await fetchAllCloze();
-   if ("error" in clozeObjArr) {
-      toast.error(clozeObjArr.error);
+   const ClozeArr = await fetchAllCloze();
+   if ("error" in ClozeArr) {
+      toast.error(ClozeArr.error);
       return;
    }
 
@@ -39,7 +39,7 @@ async function ClozeTable() {
          <Col xl={6} lg={8} md={10} className="mx-auto">
             <Table striped className="shadow">
                <tbody>
-                  {clozeObjArr.map(({ qnNum, title }) => 
+                  {ClozeArr.map(({ qnNum, title }) => 
                      <tr key={qnNum}>
                         <td>
                            <Link href={`/cloze/${qnNum}`}>

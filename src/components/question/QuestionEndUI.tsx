@@ -71,13 +71,13 @@ export default function QuestionEndUI({
                         nextSetNum
                            ?  <Link
                                  className="btn btn-secondary"
-                                 href={`/TODO/${nextSetNum}`}
+                                 href={`/questions/${collection}/${nextSetNum}`}
                               >
                                  Next Set
                               </Link>
                            :  collection !== "demo" && <Link
                                  className="btn btn-secondary"
-                                 href={`/TODO`}
+                                 href={`/questions`}
                               >
                                  Back to Set List
                               </Link>

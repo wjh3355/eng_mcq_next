@@ -1,12 +1,11 @@
 "use server";
 
-import { newUserInvite, McqCategory, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ } from "@/definitions";
+import { newUserInvite, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ, Collections } from "@/definitions";
 import client from "./db";
 import { UserAuthDataSchema, UserInviteSchema, UserProfileDataSchema } from "../zod/zodSchemas";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
-import { UpdateFilter } from "mongodb";
 
 export async function fetchUser(
    email: string,
@@ -46,7 +45,7 @@ export async function fetchUser(email: string, type: "auth" | "profile"): Promis
 
       if (!zr.success) throw new Error("Type validation failed: " + zr.error);
 
-      return zr.data;
+      return zr.data as UserAuthDocument | UserProfileDocument;
 
    } catch (error) {
       if (error instanceof Error) {
@@ -111,99 +110,93 @@ export async function fetchAllUsers() {
    }
 }
 
-export async function updateUserProfile(
-   email: string,
-   action: {
-      todo: "update mcq",
-      mcqCategory: McqCategory,
-      mcqCatQnNum: number,
-      isMcqCorrect: boolean
-   } | {
-      todo: "update cloze",
-      clozeQnNum: number,
-      correctAns: number[] | null
-   } | {
-      todo: "update spelling",
-      spellingQnNum: number,
-      isSpellingCorrect: boolean
-   }
-) {
+export async function updateUserQuestionsData({
+   email,
+   collection,
+   wrongQnNum,
+}: {
+   email: string
+   collection: Collections
+   wrongQnNum: number | null
+}) {
    try {
 
       const session = await auth();
       if (!session) throw new Error("Unauthorized");
 
       await client.connect();
-      const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
-      const profile = await profileDb.findOne({ email })
+      const profiles = client.db("userDatas").collection<UserProfileDocument>("profile");
+      const profile = await profiles.findOne({ email })
       if (!profile) throw new Error(`User profile for ${email} not found`);
 
-      let updateToDo: UpdateFilter<UserProfileDocument> = {};
-
-      switch (action.todo) {
-
-         case "update mcq":
-               
-            const { mcqCategory, mcqCatQnNum, isMcqCorrect } = action;
-
-            if (isMcqCorrect) {
-               updateToDo = { $inc: { [`qnData.${mcqCategory}.numQnsAttempted`]: 1, score: 10 } };
-            } else {
-               updateToDo = { 
-                  $inc: { 
-                     [`qnData.${mcqCategory}.numQnsAttempted`]: 1 
-                  }, 
-                  $addToSet: { 
-                     [`qnData.${mcqCategory}.wrongQnNums`]: mcqCatQnNum 
-                  } 
-               };
-            }
-
-            break;
-         
-         case "update spelling":
-            
-            const { spellingQnNum, isSpellingCorrect } = action;
-
-            if (isSpellingCorrect) {
-               updateToDo = { $inc: { "spellingData.numQnsAttempted": 1, score: 10 } };
-            } else {
-               updateToDo = { 
-                  $inc: { "spellingData.numQnsAttempted": 1 }, 
-                  $addToSet: { "spellingData.wrongQnNums": spellingQnNum }
-               };
-            }
-
-            break;
-         
-         case "update cloze": 
-
-            const { clozeQnNum, correctAns } = action
-
-            if (correctAns) {
-               updateToDo = { $push: { clozeData: { qnNum: clozeQnNum, correctAns } } };
-            } else {
-               updateToDo = { $pull: { clozeData: { qnNum: clozeQnNum } } };
-            }
-
-            break;
-      
-      }
-
-      await profileDb.updateOne({ email }, updateToDo);
+      await profiles.updateOne({ email }, {
+         $inc: { 
+            [`qnData.${collection}.numQnsAttempted`]: 1,
+            score: wrongQnNum ? 0 : 10
+         },
+         $addToSet: wrongQnNum ? { [`qnData.${collection}.wrongQnNums`]: wrongQnNum } : {}
+      });
 
       return { success: true };
 
    } catch (error) {
       if (error instanceof Error) {
-         console.error(`Unable to update user profile for ${email}: ` + error.message);
-         return { error: "Could not update user profile due to: " + error.message }
+         console.error(`Unable to update user question data for ${email}: ` + error.message);
+         return { error: "Could not update user question data due to: " + error.message }
       } else {
-         console.error(`Unexpected error occured while updating user profile for ${email}: ` + error);
-         return { error: `Unable to update user profile for ${email}. Try again later.` }
+         console.error(`Unexpected error occured while updating user question data for ${email}: ` + error);
+         return { error: `Unable to update user question data for ${email}. Try again later.` }
       }
    }
 }
+
+export async function updateUserClozeData({
+   email,
+   clozeNum,
+   correctAnsArray,
+}: {
+   email: string
+   clozeNum: number
+   correctAnsArray: number[] | null
+}) {
+   try {
+
+      const session = await auth();
+      if (!session) throw new Error("Unauthorized");
+
+      await client.connect();
+      const profiles = client.db("userDatas").collection<UserProfileDocument>("profile");
+      const profile = await profiles.findOne({ email })
+      if (!profile) throw new Error(`User profile for ${email} not found`);
+
+      if (correctAnsArray) {
+         await profiles.updateOne({ email }, {
+            $push: { 
+               clozeData: { qnNum: clozeNum, correctAns: correctAnsArray }
+            },
+            $inc: { score: 10*correctAnsArray.length }
+         });
+      } else {
+         await profiles.updateOne({ email }, {
+            $pull: { 
+               clozeData: { qnNum: clozeNum }
+            },
+         });
+      }
+
+      return { success: true };
+
+   } catch (error) {
+      if (error instanceof Error) {
+         console.error(`Unable to update user question data for ${email}: ` + error.message);
+         return { error: "Could not update user question data due to: " + error.message }
+      } else {
+         console.error(`Unexpected error occured while updating user question data for ${email}: ` + error);
+         return { error: `Unable to update user question data for ${email}. Try again later.` }
+      }
+   }
+}
+
 
 export async function resetUserData(email: string) {
 

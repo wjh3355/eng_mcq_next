@@ -3,7 +3,7 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import useClozeCtxProvider from "./useClozeCtxProvider";
+import useClozeProvider from "./useClozeProvider";
 import ClozeAttemptUI from "./ClozeAttemptUI";
 import ClozeCompletedUI from "./ClozeCompletedUI";
 import Skeleton from "react-loading-skeleton";
@@ -22,14 +22,14 @@ export default function ClozeApp({
    mainTitle: string
 }) {
 
-   const { ClozeProvider, useClozeContext } = useClozeCtxProvider({
+   const props = useClozeProvider({
       user,
       qnNum,
       isDemo
    });
 
    function ClozeLoadingSkeleton() {
-      const { isLoading } = useClozeContext();
+      const { isLoading } = props;
 
       if (isLoading) {
          return <Skeleton height={30}/>;
@@ -39,15 +39,13 @@ export default function ClozeApp({
    }
 
    return <Container>
-      <ClozeProvider>
-         <Row className="my-3">
-            <Col>
-               <h5 className="text-center m-0">{mainTitle}</h5>
-            </Col>
-         </Row>
-         <ClozeLoadingSkeleton/>
-         <ClozeAttemptUI QnContextToUse={useClozeContext}/>
-         <ClozeCompletedUI QnContextToUse={useClozeContext}/>
-      </ClozeProvider>
+      <Row className="my-3">
+         <Col>
+            <h5 className="text-center m-0">{mainTitle}</h5>
+         </Col>
+      </Row>
+      <ClozeLoadingSkeleton/>
+      <ClozeAttemptUI props={props}/>
+      <ClozeCompletedUI props={props}/>
    </Container>
 }

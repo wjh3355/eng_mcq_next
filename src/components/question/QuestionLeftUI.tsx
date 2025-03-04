@@ -61,7 +61,9 @@ export default function QuestionLeftUI() {
                            <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
                         </Card.Body>
                      </>
-                  : <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+                  :  <Card.Body>
+                        <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+                     </Card.Body>
                )
             }
          </Card>

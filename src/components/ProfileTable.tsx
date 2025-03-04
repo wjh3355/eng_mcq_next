@@ -13,9 +13,9 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
 import {
-   McqCategory,
-   McqCategoryUserData,
-   QN_CATEGORIES_DATA,
+   QnCollectionUserDat,
+   Collections,
+   QN_COL_DATA,
 } from "@/definitions";
 import Link from "next/link";
 import { Info, Trash2 } from "lucide-react";
@@ -28,7 +28,7 @@ import toast from "react-hot-toast";
 
 export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
-   const { qnData, clozeData, spellingData, score, email, dateCreated } = user;
+   const { qnData, clozeData, score, email, dateCreated } = user;
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
 
@@ -38,8 +38,8 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
       }
 
       const dataAsArr = Object.entries(qnData) as [
-         McqCategory,
-         McqCategoryUserData
+         Collections,
+         QnCollectionUserDat
       ][];
 
       const totalAttempted = sum(
@@ -65,24 +65,29 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                   </tr>
                </thead>
                <tbody>
-                  {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => (
-                     <tr key={cat}>
-                        <td>{QN_CATEGORIES_DATA[cat].categoryName}</td>
-                        <td>{numQnsAttempted - wrongQnNums.length}</td>
-                        <td>{numQnsAttempted}</td>
-                        <td>
-                           <Link
-                              href={`/profile/wrongmcq/${cat}`}
-                              className={
-                                 "fw-bold btn btn-primary btn-sm px-3 " +
-                                 (wrongQnNums.length === 0 ? "disabled" : "")
-                              }
-                           >
-                              View
-                           </Link>
-                        </td>
-                     </tr>
-                  ))}
+                  {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => {
+
+                     if (!numQnsAttempted) return;
+
+                     return (
+                        <tr key={cat}>
+                           <td>{QN_COL_DATA[cat].categoryName}</td>
+                           <td>{numQnsAttempted - wrongQnNums.length}</td>
+                           <td>{numQnsAttempted}</td>
+                           <td>
+                              <Link
+                                 href={`/profile/wrongmcq/${cat}`}
+                                 className={
+                                    "fw-bold btn btn-primary btn-sm px-3 " +
+                                    (wrongQnNums.length === 0 ? "disabled" : "")
+                                 }
+                              >
+                                 View
+                              </Link>
+                           </td>
+                        </tr>
+                     )
+                  })}
                </tbody>
             </Table>
 
@@ -130,33 +135,6 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
       );
    }
 
-   function SpellingStats() {
-      if (!("numQnsAttempted" in spellingData)) {
-         return <p>You have not attempted any spelling questions yet!</p>;
-      }
-
-      const { numQnsAttempted, wrongQnNums } = spellingData;
- 
-      return (
-         <Table striped>
-            <thead>
-               <tr>
-                  <th>No. Correct</th>
-                  <th>No. Attempted</th>
-                  <th>View Incorrect</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>{numQnsAttempted - wrongQnNums.length}</td>
-                  <td>{numQnsAttempted}</td>
-                  <td>Coming soon...</td>
-               </tr>
-            </tbody>
-         </Table>
-      )
-   }
-
    return (
       <Container>
          <dl className="row">
@@ -175,7 +153,7 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                   overlay={
                      <Popover>
                         <Popover.Body className="fs-6">
-                           Every correct MCQ question answered earns you{" "}
+                           Every correct question or cloze blank answered earns you{" "}
                            <strong>10</strong> points.
                         </Popover.Body>
                      </Popover>
@@ -203,18 +181,10 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                   </Accordion.Item>
                   <Accordion.Item eventKey="1">
                      <Accordion.Header>
-                        <strong>MCQ Questions</strong>
+                        <strong>Questions</strong>
                      </Accordion.Header>
                      <Accordion.Body>
                         <McqStats />
-                     </Accordion.Body>
-                  </Accordion.Item>
-                  <Accordion.Item eventKey="2">
-                     <Accordion.Header>
-                        <strong>Spelling Questions</strong>
-                     </Accordion.Header>
-                     <Accordion.Body>
-                        <SpellingStats />
                      </Accordion.Body>
                   </Accordion.Item>
                </Accordion>

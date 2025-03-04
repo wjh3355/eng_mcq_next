@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/global.css";
 import { Inter } from 'next/font/google';
 
-import NavBar from "@/components/navbar/NavBar";
+import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 
 import { SessionProvider } from "next-auth/react";
