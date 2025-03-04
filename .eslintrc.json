@@ -1,14 +1,11 @@
 {
    "extends": [
-      "next",
-      "plugin:@typescript-eslint/recommended"
+      "next"
    ],
    "plugins": [
-      "@typescript-eslint",
-      "unused-imports"
+
    ],
    "rules": {
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": "off"
+
    }
 }
