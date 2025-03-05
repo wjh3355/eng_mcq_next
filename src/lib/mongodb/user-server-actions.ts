@@ -197,7 +197,6 @@ export async function updateUserClozeData({
    }
 }
 
-
 export async function resetUserData(email: string) {
 
    try {

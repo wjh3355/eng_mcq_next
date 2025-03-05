@@ -5,7 +5,7 @@ import {
    ClozeProps,
    UserProfileDocument,
 } from "@/definitions";
-import { fetchCloze, fetchDemoCloze } from "@/lib/mongodb/cloze-server-actions";
+import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
 // import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
 import { Info } from "lucide-react";
@@ -104,8 +104,8 @@ export default function useClozeProvider({
             );
          }
 
-         // if demo, fetch demo cloze (qnNum = 1), else fetch actual cloze based on qnNum
-         const clozePromise = isDemo ? fetchDemoCloze() : fetchCloze(qnNum);
+         // fetch cloze based on qnNum
+         const clozePromise = fetchCloze(qnNum);
 
          try {
 
@@ -130,7 +130,7 @@ export default function useClozeProvider({
 
             // replace all curly braces with "BLANK"
             // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
-            // "BLANK" and "||"" are included in the split array
+            // "BLANK" and "||" are included in the split array
             // filter out empty strings
             setTextArr(
                res.passage
