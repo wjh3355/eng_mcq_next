@@ -1,12 +1,12 @@
 "use client";
 
-import { ClozeProps } from '@/definitions'
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import { useClozeContext } from './useClozeProvider';
 
-export default function ClozeCompletedUI({ props }: { props: ClozeProps }) {
+export default function ClozeCompletedUI() {
 
    const {
       wordsToTestArr,
@@ -16,7 +16,7 @@ export default function ClozeCompletedUI({ props }: { props: ClozeProps }) {
       isLoading,
       handleReset,
       isDemo
-   } = props;
+   } = useClozeContext();
 
    useEffect(() => {
       if (isLoading) return;

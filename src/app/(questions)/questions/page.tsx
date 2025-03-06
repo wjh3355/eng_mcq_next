@@ -11,7 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import Container from "react-bootstrap/esm/Container";
 import toast from "react-hot-toast";
-import { fetchNumOfQnsInCollection } from "@/lib/mongodb/question-server-actions";
+import { fetchNumQuestions } from "@/lib/mongodb/question-server-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,7 @@ async function DisplayCategorySets({ collection }: { collection: Collections }) 
    if (collection === "demo" || collection === "test") return;
 
    // get number of questions in collection
-   const numQnsInCollection = await fetchNumOfQnsInCollection(collection);
+   const numQnsInCollection = await fetchNumQuestions(collection);
    if (typeof numQnsInCollection !== "number") {
       toast.error(numQnsInCollection.error);
       return;

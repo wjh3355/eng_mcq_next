@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import ClozeInput from "./ClozeInput";
 import cloneDeep from "lodash/cloneDeep";
-import { ClozeProps, ClozeFormData } from '@/definitions';
+import type { ClozeFormData } from '@/definitions';
 import Card from "react-bootstrap/Card";
 import toast from "react-hot-toast";
+import { useClozeContext } from "./useClozeProvider";
 
-export default function ClozeAttemptUI({ props }: { props: ClozeProps }) {
+export default function ClozeAttemptUI() {
 
    const {
       wordsToTestArr,
@@ -18,7 +19,7 @@ export default function ClozeAttemptUI({ props }: { props: ClozeProps }) {
       prevUserCorrectAns,
       handleCompletion,
       isDemo
-   } = props;
+   } = useClozeContext();
 
    const [formData, setFormData] = useState<ClozeFormData>({});
    const [score, setScore] = useState<number>(0);

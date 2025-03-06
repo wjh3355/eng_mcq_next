@@ -4,7 +4,7 @@ export type Cloze = {
    passage: string
 }
 
-export type ClozeProps = {
+export type ClozeContextVal = {
    isDemo: boolean
    prevUserCorrectAns: null | number[],
    wordsToTestArr: string[][],

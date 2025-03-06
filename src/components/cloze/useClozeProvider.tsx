@@ -1,25 +1,40 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import {
-   ClozeProps,
+   ClozeContextVal,
    UserProfileDocument,
 } from "@/definitions";
 import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
-// import { updateUserProfile } from "@/lib/mongodb/user-server-actions";
 import toast from "react-hot-toast";
 import { Info } from "lucide-react";
 import { updateUserClozeData } from "@/lib/mongodb/user-server-actions";
 
-export default function useClozeProvider({
+// create context, fallback is an empty context value
+const ClozeContext = createContext<ClozeContextVal | null>(null);
+
+// create hook to use context
+export function useClozeContext() {
+   const ctx = useContext(ClozeContext);
+
+   if (ctx === null) {
+      throw new Error("useClozeContext must be used within a ClozeProvider")
+   };
+
+   return ctx;
+}
+
+export function ClozeProvider({
    user,
    qnNum,
    isDemo,
+   children
 }: {
    user: UserProfileDocument;
    qnNum: number;
    isDemo: boolean;
-}): ClozeProps {
+   children: React.ReactNode;
+}): React.ReactNode {
 
    const [prevUserCorrectAns, setPrevUserCorrectAns] = useState<null | number[]>(null);
    const [passageTitle, setPassageTitle] = useState<string>("");
@@ -163,16 +178,21 @@ export default function useClozeProvider({
          setIsLoading(false);
    }, [passageTitle, textArr, wordsToTestArr]);
 
-   return {
-      isDemo,
-      prevUserCorrectAns,
-      wordsToTestArr,
-      textArr,
-      qnNum,
-      passageTitle,
-      isLoading,
-      handleCompletion,
-      handleReset,
-   };
-
+   return (
+      <ClozeContext.Provider
+         value={{
+            isDemo,
+            prevUserCorrectAns,
+            wordsToTestArr,
+            textArr,
+            qnNum,
+            passageTitle,
+            isLoading,
+            handleCompletion,
+            handleReset,
+         }}
+      >
+         {children}
+      </ClozeContext.Provider>
+   )
 }

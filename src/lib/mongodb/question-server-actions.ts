@@ -41,7 +41,7 @@ export async function fetchQuestion(collection: Collections, ...qnNum: number[])
    }
 };
 
-export async function fetchNumOfQnsInCollection(collection: Collections) {
+export async function fetchNumQuestions(collection: Collections) {
    try {
 
       await client.connect();

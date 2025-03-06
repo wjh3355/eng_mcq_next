@@ -35,9 +35,6 @@ export default function QuestionExplanation({ qnObj, num }: { qnObj: Question, n
                <div className="border-start border-5 border-dark ps-2">
                   {def}
                </div>
-               <div className="p-2 fst-italic bg-secondary bg-opacity-10">
-                  {sentence}
-               </div>
             </div>
          );
       case "definition":

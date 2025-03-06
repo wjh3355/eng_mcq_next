@@ -1,7 +1,7 @@
 import QuestionApp from "@/components/question/QuestionApp";
 import { Collections, QN_COL_DATA, questionCategoriesTuple } from "@/definitions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
-import { fetchNumOfQnsInCollection } from "@/lib/mongodb/question-server-actions";
+import { fetchNumQuestions } from "@/lib/mongodb/question-server-actions";
 import { inRange, range, sampleSize, shuffle } from "lodash";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
       // col = "gep", "phrasalVerbs" ... "definition"
       // no "demo" here. will be in another route
       
-      const totalNumQns = await fetchNumOfQnsInCollection(col);
+      const totalNumQns = await fetchNumQuestions(col);
       // total num of qns in collection
       if (typeof totalNumQns !== "number") return [];
 
@@ -53,7 +53,7 @@ export default async function TEST_QuestionSetsPage({ params }: { params: Promis
    const { col, setParam } = await params;
 
    // get number of questions in collection
-   const totalNumQns = await fetchNumOfQnsInCollection(col);
+   const totalNumQns = await fetchNumQuestions(col);
    if (typeof totalNumQns !== "number") {
       toast.error(totalNumQns.error);
       return;
