@@ -16,14 +16,70 @@ import QuestionExplanation from "./QuestionExplanation";
 import QuestionPaginatedExplanation from "./QuestionPaginatedExplanation";
 import { getDemoQnCat } from "@/definitions";
 
+function SentenceCard() {
+   const {
+      collection,
+      isLoading,
+      qnObj,
+      setInfo: { currQnNum }
+   } = useQuestionContext();
+
+   if (isLoading) return (
+      <Card className="mb-3 shadow border-0">
+         <Card.Body>
+            <Skeleton height="24px"/>
+         </Card.Body>
+      </Card>
+   );
+
+   if (collection === 'demo') {
+      return (
+         <Card className="mb-3 shadow border-0">
+            <Card.Header>
+               <small>From {getDemoQnCat(qnObj.qnNum)}</small>
+            </Card.Header>
+            <Card.Body>
+               <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+            </Card.Body>
+         </Card>
+      );
+   } else {
+      return (
+         <Card className="mb-3 shadow border-0">
+            <Card.Body>
+               <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
+            </Card.Body>
+         </Card>
+      );
+   }
+}
+
+function ScoreComponent() {
+
+   const {
+      collection,
+      userInfo: { userPoints }
+   } = useQuestionContext();
+
+   if (collection === "demo") return null;
+
+   return (
+      <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
+         {Number.isNaN(userPoints)
+            ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
+            :  <span>Points: {userPoints}</span>
+         }
+      </div>
+   );
+}
+
 export default function QuestionLeftUI() {
 
    const {
       collection,
       qnObj,
-      isLoading,
-      setInfo: { currQnNum, hasReachedEnd },
-      userInfo: { userPoints, isCorrect, wronglyAnswered },
+      setInfo: { hasReachedEnd },
+      userInfo: { isCorrect, wronglyAnswered },
       callbacks: { handleNextQnBtnClick }
    } = useQuestionContext();
 
@@ -33,40 +89,10 @@ export default function QuestionLeftUI() {
 
    if (hasReachedEnd) return null;
 
-   function ScoreComponent() {
-      if (collection === "demo") return null;
-
-      return (
-         <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
-            {Number.isNaN(userPoints)
-               ?  <Spinner animation="border" size="sm" className="mx-4" variant="secondary"/> 
-               :  <span>Points: {userPoints}</span>
-            }
-         </div>
-      );
-   }
-
    return (
       <Col lg={8} md={7}>
-         <Card className="mb-3 shadow border-0">
-            {isLoading 
-               ?  <Card.Body><Skeleton height="24px" /></Card.Body>
-               :  (
-                  collection === 'demo'
-                  ?  <>
-                        <Card.Header>
-                           <small>From {getDemoQnCat(qnObj.qnNum)}</small>
-                        </Card.Header>
-                        <Card.Body>
-                           <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
-                        </Card.Body>
-                     </>
-                  :  <Card.Body>
-                        <QuestionSentenceDisp qnObj={qnObj} num={currQnNum}/>
-                     </Card.Body>
-               )
-            }
-         </Card>
+
+         <SentenceCard/>
 
          <section className="hstack gap-3 mb-3">
 

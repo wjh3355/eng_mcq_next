@@ -19,9 +19,9 @@ export default async function Page() {
          <Row className="my-3">
             <Col>
                <h5 className="m-0 text-center">Revise for the PSLE English Paper</h5>
-               <Alert variant="info border-0 shadow" className="mt-3">
+               {/* <Alert variant="info border-0 shadow" className="mt-3">
                   ⚠️ <strong>Notice:</strong> With effect from 19th February 2025, the authentication system will be overhauled. Existing users are required to <Link href="/auth/reset-password">reset their password</Link> before logging in. We apologise for any inconvenience caused. 若您是现有用户，请在登录前<Link href="/auth/reset-password">重设密码</Link>。我们为此给您带来的不便致以歉意。
-               </Alert>
+               </Alert> */}
             </Col>
          </Row>
 

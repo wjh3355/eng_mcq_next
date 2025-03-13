@@ -4,7 +4,7 @@ import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-import { useClozeContext } from './useClozeProvider';
+import { useClozeContext } from './ClozeProvider';
 
 export default function ClozeCompletedUI() {
 

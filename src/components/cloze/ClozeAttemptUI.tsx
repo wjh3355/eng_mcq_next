@@ -7,7 +7,7 @@ import cloneDeep from "lodash/cloneDeep";
 import type { ClozeFormData } from '@/definitions';
 import Card from "react-bootstrap/Card";
 import toast from "react-hot-toast";
-import { useClozeContext } from "./useClozeProvider";
+import { useClozeContext } from "./ClozeProvider";
 
 export default function ClozeAttemptUI() {
 

@@ -3,7 +3,7 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import { ClozeProvider, useClozeContext } from "./useClozeProvider";
+import { ClozeProvider, useClozeContext } from "./ClozeProvider";
 import ClozeAttemptUI from "./ClozeAttemptUI";
 import ClozeCompletedUI from "./ClozeCompletedUI";
 import Skeleton from "react-loading-skeleton";

@@ -8,7 +8,7 @@ import { fetchUser, updateUserQuestionsData } from "@/lib/mongodb/user-server-ac
 import toast from "react-hot-toast";
 import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 
-// create context, fallback is an empty context value
+// create context, fallback is null (which will throw error)
 const QuestionContext = createContext<QuestionContextVal | null>(null);
 
 // create hook to use context

@@ -9,13 +9,14 @@ export default function QuestionSentenceDisp({ qnObj, num }: { qnObj: Question, 
    switch (kindOfQn) {
       case "meaning":
       case "spelling":
-         const idxsToBeBolded = [...sentence.matchAll(new RegExp(wordToTest!, 'g'))]
-            .map(match => match.index)
-            .reduce<number[]>((acc, curr) => [...acc, ...range(curr, curr + wordToTest!.length)], []);
+
+         const regex = new RegExp(`\\b${wordToTest!}\\b`);
+         const matchIdx = regex.exec(sentence)!.index;
+         const indexes = range(matchIdx, matchIdx + wordToTest!.length);
 
          return <TypingAnim 
             sentence={sentence}
-            boldRange={idxsToBeBolded}
+            boldRange={indexes}
             num={num}
          />;
       case "definition":
