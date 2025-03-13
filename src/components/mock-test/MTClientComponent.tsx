@@ -134,6 +134,8 @@ export default function MTClientComponent({
       return pageNumbers;
    });
 
+   PageNums.displayName = 'PageNums';
+
    // =======================
    // ACTUAL RETURN COMPONENT
    // =======================
