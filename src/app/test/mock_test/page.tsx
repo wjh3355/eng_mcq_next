@@ -1,6 +1,8 @@
 import MockTest from "@/components/mock-test/MockTest";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function Page() {
    return (
       <MockTest
