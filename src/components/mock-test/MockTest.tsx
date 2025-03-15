@@ -2,14 +2,24 @@ import { Cloze, Collections, Question } from "@/definitions";
 import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
 import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 import MTClientComponent from "./MTClientComponent";
+import Container from "react-bootstrap/esm/Container";
+import Row from "react-bootstrap/esm/Row";
+import Col from "react-bootstrap/esm/Col";
 
 type MockTestProps = {
    questions: Partial<Record<Collections, number[]>>
    clozeNum: number;
 }
 
-export default async function MockTest(props: MockTestProps) {
-   const { questions, clozeNum } = props;
+export default async function MockTest({
+   questions,
+   clozeNum,
+   mockTestNum,
+}: {
+   questions: Partial<Record<Collections, number[]>>
+   clozeNum: number;
+   mockTestNum: number;
+}) {
 
    let questionObjsArray: Question[] = [];
    let clozeObj: Cloze | { error: string } = { error: "Cloze not found" };
@@ -30,8 +40,17 @@ export default async function MockTest(props: MockTestProps) {
       throw new Error(clozeObj.error);
    }
 
-   return <MTClientComponent
-      questions={questionObjsArray}
-      cloze={clozeObj}
-   />
+   return (
+      <Container>
+         <Row className="my-3">
+            <Col>
+               <h5 className="m-0 text-center">Mock Test {mockTestNum}</h5>
+            </Col>
+         </Row>
+         <MTClientComponent
+            questions={questionObjsArray}
+            cloze={clozeObj}
+         />
+      </Container>
+   )
 }

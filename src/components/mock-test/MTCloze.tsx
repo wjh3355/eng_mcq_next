@@ -1,24 +1,29 @@
 "use client";
 
 import Col from "react-bootstrap/esm/Col";
-import { ClozeBlankState } from "./MTClientComponent";
 import styled from "styled-components";
+import { useMockTestContext } from "./MTProvider";
+import Button from "react-bootstrap/esm/Button";
+import { RotateCcw } from "lucide-react";
 
-export function MTCloze({
-   clozePassageArray,
-   clozeState,
-   handlePreviousClick,
-   handleClozeInputUpdate,
-   handleResetCloze,
-   hasBeenSubmitted,
-}: {
-   clozePassageArray: string[];
-   clozeState: ClozeBlankState[];
-   handlePreviousClick: () => void;
-   handleClozeInputUpdate: (e: React.ChangeEvent<HTMLInputElement>) => void;
-   handleResetCloze: () => void;
-   hasBeenSubmitted: boolean;
-}) {
+export default function MTCloze() {
+
+   const {
+      clozePassageArray,
+      testStates,
+      isMTSubmitted,
+      handleReset,
+      handleResetAllCloze,
+      handleTouched,
+      currUserPage,
+      totalNumOfPages
+   } = useMockTestContext();
+
+   // cloze is the last page
+   if (currUserPage !== totalNumOfPages) return null;
+
+   // get only the cloze states
+   const clozeTestStates = testStates.filter(ts => ts.type === "cloze blank");
 
    // get the paragraph to render
    const paragraphToRender: (string | React.JSX.Element)[][] = (() => {
@@ -43,20 +48,39 @@ export function MTCloze({
          // increment the blankCountr
          } else if (fragment === "BLANK") {
 
-            const { mockTestQnNum, answer, status } = clozeState[blankCountr];
+            const { qnIndex, answer, status } = clozeTestStates[blankCountr];
+
+            // determine the style of the input field
+            // default: not submitted yet, or submitted but was blank
+            // red: incorrect answer
+            // green: correct answer
+            let style: 'red' | 'green' | 'default' = 'default';
+            if (!isMTSubmitted || status === 'incorrect' && !answer) {
+               style = 'default';
+            } else if (status === 'correct') {
+               style = 'green';
+            } else if (status === 'incorrect') {
+               style = 'red';
+            }
 
             currArray.push(
                <label key={blankCountr}>
-                  <strong>(Q{mockTestQnNum})</strong>&nbsp;
+                  <strong>Q{qnIndex+1}.</strong>&nbsp;
                   <MTClozeInput
-                     disabled={status === "correct" || status === "incorrect"}
-                     $status={status}
-                     autoFocus={blankCountr === 0}
-                     autoComplete="off"
                      type="text"
+                     autoComplete="off"
+                     disabled={isMTSubmitted}
+                     $style={style}
+                     autoFocus={blankCountr === 0}
                      name={blankCountr.toString()}
                      value={answer}
-                     onChange={handleClozeInputUpdate}
+                     onChange={(e) => {
+                        if (e.target.value) {
+                           handleTouched(qnIndex, e.target.value);
+                        } else {
+                           handleReset(qnIndex);
+                        }
+                     }}
                   />
                </label>
             );
@@ -77,32 +101,42 @@ export function MTCloze({
    })();
 
    return (
-      <>
-         <Col xs={12}>
+      <Col xs={12}>
+         <section className="border-0 shadow rounded-4 p-3">
             <article style={{lineHeight: "40px", textAlign: "justify"}}>
                {paragraphToRender.map((paraArr, idx) => 
-                  <p key={idx}>{paraArr}</p>)
+                  <p key={idx} className="mb-5">{paraArr}</p>)
                }
             </article>
-         </Col>
-         <Col>
-            <button onClick={handleResetCloze} disabled={hasBeenSubmitted} >Reset</button>
-            <button onClick={handlePreviousClick}>Previous</button>
-            <button disabled>Next</button>
-         </Col>
-      </>
+            <div className="d-flex justify-content-center">
+               {isMTSubmitted
+                  ?  <small className="border border-3 rounded-4 p-2">
+                        Cloze Score: {clozeTestStates.filter(cs => cs.status === "correct").length} / 15
+                     </small>
+                  :  <Button 
+                        onClick={handleResetAllCloze}
+                        className="d-flex align-items-center"
+                     >
+                        <RotateCcw size={20}/>&nbsp;Reset Blanks
+                     </Button>
+               }
+            </div>
+         </section>
+      </Col>
    );
 }
 
 const MTClozeInput = styled.input<{
-   $status: "correct" | "incorrect" | "not done" | "done";
+   $style: "red" | "green" | "default";
 }>`
    width: 130px;
    height: 32px;
    text-align: center;
-   border: 2px solid;
-
-   border-color: ${({$status}) => $status === "correct" ? "green" : ($status === "incorrect" ? "rgb(190, 44, 44)" : "lightGray")};
-   color: ${({$status}) => $status === "correct" ? "green" : ($status === "incorrect" ? "rgb(190, 44, 44)" : "default")};
-   font-weight: ${({$status}) => $status === "correct" || $status === "incorrect" ? "bold" : "default"};
+   border: 2px solid lightgray;
+   border-radius: 5px;
+   background-color: white;
+   &:disabled {
+      ${({$style}) => $style === "green" && "color: green; font-weight: bold; border-color: green;"}
+      ${({$style}) => $style === "red" && "color: rgb(190, 44, 44); font-weight: bold; border-color: rgb(190, 44, 44);"}
+   }
 `;

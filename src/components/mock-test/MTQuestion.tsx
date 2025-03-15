@@ -1,165 +1,224 @@
 "use client";
 
-import { Question } from "@/definitions";
-import { QuestionState } from "./MTClientComponent";
+import { ChangeEvent } from "react";
 import Col from "react-bootstrap/esm/Col";
 import Card from "react-bootstrap/esm/Card";
 import styled from "styled-components";
 
+import { MTState } from "@/definitions";
+import { useMockTestContext } from "./MTProvider";
 
-function SentenceDisp({ qnObj, num }: { qnObj: Question, num: number }) {
-   const { kindOfQn, sentence, wordToTest, def } = qnObj;
+function SentenceDisp({ thisQnState }: { thisQnState: MTState }) {
+
+   if (thisQnState.type !== "question") return null;
+
+   const { kindOfQn, sentence, wordToTest, def } = thisQnState.qnObj;
 
    switch (kindOfQn) {
       case "meaning":
       case "spelling":
 
          const [bef, aft] = sentence.split(new RegExp(`\\b${wordToTest!}\\b`));
-         return <><strong>{`Q${num}. `}</strong>{bef}<strong>{wordToTest}</strong>{aft}</>;
+         return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{bef}<strong>{wordToTest}</strong>{aft}</>;
 
-      case "definition": return <><strong>{`Q${num}. `}</strong>{def}</>;
+      case "definition": return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{def}</>;
 
-      case "blank": return <><strong>{`Q${num}. `}</strong>{sentence}</>;
+      case "blank": return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{sentence}</>;
 
       default: throw new Error("Invalid question kind");
    }
 };
 
-export default function MTQuestion({
+function MTQuestionAnswer({
    thisQnState,
-   currentPage,
-   handleNextClick,
-   handlePreviousClick,
-   handleQuestionTouched,
-   handleQnReset,
-   hasBeenSubmitted
+   isMTSubmitted,
+   handleTouched,
+   handleReset
 }: {
-   thisQnState: QuestionState;
-   currentPage: number;
-   handleNextClick: () => void;
-   handlePreviousClick: () => void;
-   handleQuestionTouched: (newAns: string) => void;
-   handleQnReset: () => void;
-   hasBeenSubmitted: boolean;
+   thisQnState: MTState;
+   isMTSubmitted: boolean;
+   handleTouched: (n: number, v: string) => void;
+   handleReset: (n: number) => void;
 }) {
 
-   const {
-      mockTestQnNum,
-      qnObj,
-      answer,
-      status
-   } = thisQnState;
+   if (thisQnState.type !== "question") return null;
 
-   const {
-      kindOfQn,
-      options,
-      correctAns
-   } = qnObj;
+   // qnObj.kindOfQn === "spelling" requires an input field
+   // others require radio buttons
+   if (thisQnState.qnObj.kindOfQn === "spelling") {
 
-   // only display the question if it is the current page
-   if (currentPage !== mockTestQnNum) return null;
+      const { status, qnIndex, answer } = thisQnState;
+
+      // initial answer is empty string
+      // if user types something, 
+      // set the answer and status to "done"
+      // if user deletes everything, 
+      // reset the answer and status to "not done"
+
+      // determine the style of the input field
+      // default: not submitted yet, or submitted but was blank
+      // red: incorrect answer
+      // green: correct answer
+      let style: 'red' | 'green' | 'default' = 'default';
+      if (!isMTSubmitted || status === 'incorrect' && !answer) {
+         style = 'default';
+      } else if (status === 'correct') {
+         style = 'green';
+      } else if (status === 'incorrect') {
+         style = 'red';
+      }
+
+      return (
+         <div>
+            <small className="text-muted">The correct word should be:&ensp;</small>
+            <MTSpellingInput
+               disabled={isMTSubmitted}
+               $style={style}
+               type="text"
+               value={answer}
+               autoComplete="off"
+               autoFocus={true}
+               onChange={e => {
+                  if (e.target.value) {
+                     handleTouched(qnIndex, e.target.value);
+                  } else {
+                     handleReset(qnIndex);
+                  }
+               }}
+            />
+         </div>
+      );
+
+   } else {
+
+      const { status, qnIndex, answer, qnObj } = thisQnState;
+
+      // qnObj.kindOfQn === "meaning" or "blank" only
+
+      const arrayOfRadioButtons = qnObj.options!.map(thisOption => {
+
+         const isGreen = status === "correct" && answer === thisOption;
+
+         const isRed = status === "incorrect" && answer === thisOption;
+
+         // if there isnt anything selected and the user selects an option, 
+         // set the answer and status to "done"
+         // if an option is already selected and the user selects something else,
+         // set the answer and status to "done" for the new option
+         // (handled by handleQuestionTouched)
+         
+         // if the user selects the same option again, 
+         // reset the answer and status to "not done"
+         // (handled by handleQuestionReset)
+
+
+         // at first answer = "" so
+         // check is false for all
+         // when user selects an option,
+         // answer === option for that option only
+         // so that one is checked
+
+         return (
+            <label 
+               key={thisOption} 
+               className={`d-block ${isGreen ? "text-success fw-bold" : isRed ? "text-danger fw-bold" : ""}`}
+            >
+               <input
+                  id={thisOption}
+                  type="radio"
+                  name="options"
+                  disabled={isMTSubmitted}
+                  value={thisOption}
+                  checked={answer === thisOption}
+                  onChange={e => handleTouched(qnIndex, e.target.value)}
+                  onClick={e => (answer === (e.target as HTMLInputElement).value) && handleReset(qnIndex)}
+               />
+               &nbsp;{thisOption}
+            </label>
+         )
+      })
+
+      return (
+         <div className="mx-auto">
+            <small className="text-muted">
+               {thisQnState.qnObj.kindOfQn === "meaning" && "Select the word that matches the meaning:"}
+               {thisQnState.qnObj.kindOfQn === "blank" && "Select the best word for the blank:"}
+            </small>
+            {arrayOfRadioButtons}
+         </div>
+      );
+   }
+}
+
+function SubmittedText({
+   isSubmitted,
+   thisQnState
+}: {
+   isSubmitted: boolean;
+   thisQnState: MTState;
+}) {
+
+   if (!isSubmitted) return null;
+
+   let text: React.ReactNode;
+
+   if (thisQnState.status === "correct") {
+      text = <small className="text-success fw-bold">Correct!</small>;
+   } else if (thisQnState.status === "incorrect") {
+      if (thisQnState.answer) {
+         text = <small className="text-danger fw-bold">Incorrect!</small>;
+      } else {
+         text = <small className="text-danger fw-bold">You did not attempt.</small>;
+      }
+   }
+
+   return <div className="mt-2 mx-auto">{text}</div>
+}
+
+export default function MTQuestion() {
+   const { 
+      testStates,
+      currUserPage,
+      handleTouched,
+      handleReset,
+      isMTSubmitted
+   } = useMockTestContext();
+
+   // find the state for the current question displayed, if any
+   // if currUserPage is 1, corresponding qnIndex is 0
+   const displayedQnState = testStates.find(st => st.type === "question" && currUserPage - 1 === st.qnIndex);
+
+   if (!displayedQnState || displayedQnState.type !== "question") return null;
 
    return (
       <>
          <Col lg={8} md={7}>
             <Card className="mb-3 shadow border-0">
                <Card.Body>
-                  <SentenceDisp qnObj={qnObj} num={mockTestQnNum}/>
+                  <SentenceDisp thisQnState={displayedQnState}/>
                </Card.Body>
             </Card>
          </Col>
-         <Col lg={4} md={5}>
-
-            {
-               kindOfQn === "spelling"
-
-               ?  <label>
-                     The correct spelling should be:
-                     <MTSpellingInput
-                        disabled={hasBeenSubmitted}
-                        $status={status}
-                        type="text"
-                        value={answer}
-                        autoComplete="off"
-                        autoFocus={true}
-                        onChange={(e) => e.target.value 
-                           ?  handleQuestionTouched(e.target.value) 
-                           :  handleQnReset()
-                           // initial answer is empty string
-                           // if user types something, 
-                           // set the answer and status to "done"
-                           // if user deletes everything, 
-                           // reset the answer and status to "not done"
-                        }
-                        aria-label={`Answer for question ${mockTestQnNum}`}
-                     />
-                  </label>
-
-               :  options!.map((option, idx) =>
-                     <label 
-                        key={idx} 
-                        className={`d-block ${hasBeenSubmitted && option === correctAns && "text-success fw-bold"} ${hasBeenSubmitted && answer === option && option !== correctAns && "text-danger fw-bold"}`}
-                     >
-                        <input
-                           disabled={hasBeenSubmitted}
-                           type="radio"
-                           id={option}
-                           name="options"
-                           value={option}
-                           checked={answer === option}
-                           onChange={(e) => handleQuestionTouched(e.target.value)}
-                           onClick={(e) => 
-                              (answer === (e.target as HTMLInputElement).value) && handleQnReset()
-                              // if there isnt anything selected and the user selects an option, 
-                              // set the answer and status to "done"
-                              // if an option is already selected and the user selects something else,
-                              // set the answer and status to "done" for the new option
-                              // if the user selects the same option again, 
-                              // reset the answer and status to "not done"
-
-                              // at first answer = ""
-                              // check is false for all
-                              // when user selects an option,
-                              // answer === option for that option only
-                              // so that one is checked
-                           }
-                           aria-label={`Answer for question ${mockTestQnNum}`}
-                        />
-                        &nbsp;{option}
-                     </label>
-                  )
-            }
-
-            <div>
-               {hasBeenSubmitted && status === "correct" && <small className="text-success fw-bold">Correct!</small>}
-               {hasBeenSubmitted && status === "incorrect" && (
-                  answer
-                  ?  <small className="text-danger fw-bold">Incorrect!</small>
-                  :  <small className="text-danger fw-bold">Did not attempt!</small>
-               )}
-            </div>
-
-         </Col>
-         <Col>
-            <button
-               disabled={currentPage === 1}
-               onClick={handlePreviousClick}
-            >
-               Previous
-            </button>
-            <button
-               onClick={handleNextClick}
-            >
-               Next
-            </button>
+         <Col lg={4} md={5} className="d-flex flex-column">
+            <Card body className="shadow border-0">
+               <MTQuestionAnswer
+                  thisQnState={displayedQnState}
+                  isMTSubmitted={isMTSubmitted}
+                  handleTouched={handleTouched}
+                  handleReset={handleReset}
+               />
+               <SubmittedText
+                  isSubmitted={isMTSubmitted}
+                  thisQnState={displayedQnState}
+                  />
+            </Card>
          </Col>
       </>
    );
-
 }
 
 const MTSpellingInput = styled.input<{
-   $status: "correct" | "incorrect" | "not done" | "done";
+   $style: "red" | "green" | "default";
 }>`
    width: 250px;
    height: 40px;
@@ -169,7 +228,7 @@ const MTSpellingInput = styled.input<{
    background-color: white;
    font-size: 18px;
    &:disabled {
-      ${({$status}) => $status === "correct" && "color: green; font-weight: bold; border-color: green;"}
-      ${({$status}) => $status === "incorrect" && "color: rgb(190, 44, 44); font-weight: bold; border-color: rgb(190, 44, 44);"}
+      ${({$style}) => $style === "green" && "color: green; font-weight: bold; border-color: green;"}
+      ${({$style}) => $style === "red" && "color: rgb(190, 44, 44); font-weight: bold; border-color: rgb(190, 44, 44);"}
    }
 `;
