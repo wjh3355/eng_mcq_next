@@ -1,5 +1,4 @@
 import shuffle from "lodash/shuffle";
-import range from "lodash/range";
 import QuestionApp from "@/components/question/QuestionApp";
 import { fetchNumQuestions } from "@/lib/mongodb/question-server-actions";
 import toast from "react-hot-toast";
@@ -12,7 +11,7 @@ export default async function DemoQnsPage() {
       return;
    }
 
-   const qnNumArray = shuffle(range(1, numOfDemoQns + 1));
+   const qnNumArray = shuffle(Array.from({ length: numOfDemoQns }, (_, i) => i + 1));
 
    return <QuestionApp
       collection='demo'

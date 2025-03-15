@@ -154,7 +154,7 @@ export default function MTPagination() {
          <Modal size="lg" centered show={isCfmSubmitShow} onHide={() => setIsCfmSubmitShow(false)} backdrop="static">
             <Modal.Header><Modal.Title className="fs-5">Submit Mock Test</Modal.Title></Modal.Header>
             <Modal.Body>
-               <p className="text-center mb-3">Are you sure you want to submit the mock test? Some questions might be blank (in blue)</p>
+               <p className="text-center mb-3">Are you sure you want to submit the mock test?</p>
 
                <div className="d-flex justify-content-center gap-3">
                   <Button 

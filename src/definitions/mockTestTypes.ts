@@ -34,3 +34,13 @@ export type MTContextValue = {
    handleReset: (n: number) => void;
    handleResetAllCloze: () => void;
 }
+
+export type MTDataType = {
+   mockTestNumber: number;
+   psleGrammar: number[];
+   psleWordsCloze: number[];
+   phrasalVerbs: number[];
+   psleWordsMcq: number[];
+   spelling: number[];
+   clozePassage: number
+}

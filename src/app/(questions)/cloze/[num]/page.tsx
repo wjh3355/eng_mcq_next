@@ -1,7 +1,6 @@
 import ClozeApp from "@/components/cloze/ClozeApp";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { fetchNumClozes } from "@/lib/mongodb/cloze-server-actions";
-import { range } from "lodash";
 
 export const dynamicParams = false;
 
@@ -13,7 +12,7 @@ export async function generateStaticParams() {
       return [];
    }
 
-   return range(1, numOfClozes+1)
+   return Array.from({ length: numOfClozes }, (_, i) => i + 1)
       .map(clozeNum => ({ num: clozeNum.toString() }));
 }
 

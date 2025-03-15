@@ -1,5 +1,4 @@
 import styled, { keyframes } from "styled-components";
-import range from "lodash/range";
 import { Question } from "@/definitions";
 
 export default function QuestionSentenceDisp({ qnObj, num }: { qnObj: Question, num: number }) {
@@ -12,7 +11,7 @@ export default function QuestionSentenceDisp({ qnObj, num }: { qnObj: Question, 
 
          const regex = new RegExp(`\\b${wordToTest!}\\b`);
          const matchIdx = regex.exec(sentence)!.index;
-         const indexes = range(matchIdx, matchIdx + wordToTest!.length);
+         const indexes = Array.from({ length: wordToTest!.length }, (_, i) => matchIdx + i);
 
          return <TypingAnim 
             sentence={sentence}

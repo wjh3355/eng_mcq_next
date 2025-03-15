@@ -1,40 +1,5 @@
 import { z } from "zod";
 
-export const McqObjSchema = z
-   .object({
-      qnNum: z.number(),
-      sentence: z.string().nonempty(),
-      wordToTest: z.union([z.string().nonempty(), z.null()]),
-      options: z.array(z.string().nonempty()).length(4),
-      correctAns: z.string().nonempty(),
-      rootWord: z.string().nonempty(),
-      type: z.string().nonempty(),
-      def: z.string().nonempty(),
-   })
-   .strict()
-   .refine((data) => data.options.includes(data.correctAns), {
-      message: "correctAns not in options",
-      path: ["correctAns"],
-   })
-   .refine((data) => new Set(data.options).size === 4, {
-      message: "options must be unique",
-      path: ["options"],
-   })
-   .refine(
-      ({ sentence, wordToTest }) =>
-         wordToTest !== null ? sentence.includes(wordToTest) : true,
-      {
-         message: "type is find synonym but wordToTest not in sentence",
-      }
-   )
-   .refine(
-      ({ sentence, wordToTest }) =>
-         wordToTest === null ? sentence.includes("_") : true,
-      {
-         message: "type is fill in the blank but sentence does not contain '_'s",
-      }
-   );
-
 export const ClozeSchema = z
    .object({
       qnNum: z.number(),
@@ -68,34 +33,6 @@ export const ClozeSchema = z
          path: ["passage"],
       }
    );
-
-export const SpellingObjSchema = z
-   .object({
-      qnNum: z.number(),
-      sentence: z.string().regex(/\[[^\[\]]+\]/),
-      correctAns: z.string().nonempty(),
-      type: z.string().nonempty(),
-      exp: z.string().nonempty(),
-   })
-   .strict();
-
-export const DefinitionObjSchema = z
-   .object({
-      qnNum: z.number(),
-      definitionToTest: z.string(),
-      options: z.array(z.string().nonempty()).length(4),
-      correctAns: z.string().nonempty(),
-      type: z.string(),
-   })
-   .strict()
-   .refine((data) => data.options.includes(data.correctAns), {
-      message: "correctAns not in options",
-      path: ["correctAns"],
-   })
-   .refine((data) => new Set(data.options).size === 4, {
-      message: "options must be unique",
-      path: ["options"],
-   });
 
 export const UserAuthDataSchema = z.object({
    email: z.string().email().nonempty(),

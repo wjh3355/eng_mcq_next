@@ -147,3 +147,14 @@ export const CollectionsSchema = z.enum(
    questionCategoriesTuple, 
    { message: "invalid collection name" }
 );
+
+export const MTDataSchema = z
+   .object({
+      mockTestNumber: z.number(),
+      psleGrammar: z.array(z.number()),
+      psleWordsCloze: z.array(z.number()),
+      phrasalVerbs: z.array(z.number()),
+      psleWordsMcq: z.array(z.number()),
+      spelling: z.array(z.number()),
+      clozePassage: z.number()
+   })

@@ -2,7 +2,7 @@ import QuestionApp from "@/components/question/QuestionApp";
 import { Collections, QN_COL_DATA, questionCategoriesTuple } from "@/definitions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { fetchNumQuestions } from "@/lib/mongodb/question-server-actions";
-import { inRange, range, sampleSize, shuffle } from "lodash";
+import { inRange, sampleSize, shuffle } from "lodash";
 import { notFound } from "next/navigation";
 import React from "react";
 import toast from "react-hot-toast";
@@ -36,7 +36,9 @@ export async function generateStaticParams() {
       // we get 2 sets of 50, 1 set of 23
       // total 3
 
-      const setParamForCat = range(1, numPossibleSets+1).map(num => num.toString());
+      const setParamForCat = Array
+         .from({ length: numPossibleSets }, (_, i) => i + 1)
+         .map(num => num.toString());
       // if there are 5 sets, we get ["1", "2", "3", "4", "5"]
 
       setParamForCat.push("random", "in-order");
@@ -60,7 +62,7 @@ export default async function TEST_QuestionSetsPage({ params }: { params: Promis
    };
 
    // get all question numbers ([1, 2, 3, 4, 5 ... totalNumQns])
-   const allQnNumsRange = range(1, totalNumQns + 1);
+   const allQnNumsRange = Array.from({ length: totalNumQns }, (_, i) => i + 1);
 
    // get category data
    const { setSize, categoryName } = QN_COL_DATA[col];

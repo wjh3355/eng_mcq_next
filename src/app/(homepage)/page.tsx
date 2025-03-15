@@ -6,7 +6,7 @@ import Sunbirds from "@/components/homepg/Sunbirds";
 import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
 import Link from "next/link";
-import { CircleUserRound, FileText, NotebookPen, SpellCheck2, WholeWord } from "lucide-react";
+import { CircleUserRound, FileText, FlaskConical, NotebookPen, SpellCheck2, WholeWord } from "lucide-react";
 
 export const revalidate = 3600;
 
@@ -55,6 +55,13 @@ function LoggedInLinks() {
                href="/cloze"
             >
                <FileText className="me-2"/>Cloze Passages
+            </Link>
+
+            <Link
+               className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
+               href="/mock_test"
+            >
+               <FlaskConical className="me-2"/>Mock Tests
             </Link>
 
             <Link
