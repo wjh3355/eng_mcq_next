@@ -1,4 +1,4 @@
-import { Question } from "./qnTypes/questionTypes";
+import { Collections, Question } from "./qnTypes/questionTypes";
 
 export type MTState = 
   | {
@@ -37,10 +37,6 @@ export type MTContextValue = {
 
 export type MTDataType = {
    mockTestNumber: number;
-   psleGrammar: number[];
-   psleWordsCloze: number[];
-   phrasalVerbs: number[];
-   psleWordsMcq: number[];
-   spelling: number[];
+   qnNums: Partial<Record<Collections, number[]>>;
    clozePassage: number
 }

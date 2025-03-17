@@ -57,6 +57,8 @@ import { z } from "zod";
 // only wordToTest is null
 // correctAns must be in options
 // options must be unique
+// there can be more than 1 group of underscores 
+// but each group must have exactly 10
 // {
 //    "kindOfQn": "blank",
 //    "qnNum": 1,
@@ -137,7 +139,8 @@ export const QuestionSchema = z
          data.wordToTest === null &&
          data.options !== null &&
          new Set(data.options).size === 4 && 
-         data.rootWord !== null
+         data.rootWord !== null &&
+         data.sentence.match(/_+/g)?.every(grp => grp.length === 10)
       )
    }, {
       message: "blank question is wrongly typed",
@@ -148,13 +151,21 @@ export const CollectionsSchema = z.enum(
    { message: "invalid collection name" }
 );
 
+// {
+//    "mockTestNumber": 10,
+//    "qnNums": {
+//       "psleGrammar": [76, 96, 87, 16, 52, 51, 29, 26, 34, 99],
+//       "psleWordsCloze": [163, 104, 179],
+//       "phrasalVerbs": [332, 358],
+//       "psleWordsMcq": [22, 150, 25, 188, 185],
+//       "spelling": [92, 104, 146, 22, 43, 90, 198, 10, 87, 152, 195, 54],
+//    },
+//    "clozePassage": 10
+// }
+
 export const MTDataSchema = z
    .object({
       mockTestNumber: z.number(),
-      psleGrammar: z.array(z.number()),
-      psleWordsCloze: z.array(z.number()),
-      phrasalVerbs: z.array(z.number()),
-      psleWordsMcq: z.array(z.number()),
-      spelling: z.array(z.number()),
+      qnNums: z.record(CollectionsSchema, z.array(z.number()).optional()),
       clozePassage: z.number()
    })

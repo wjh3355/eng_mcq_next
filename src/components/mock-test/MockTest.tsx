@@ -15,31 +15,25 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
 
    if ("error" in mockTestData) return;
 
-   const {
-      mockTestNumber,
-      psleGrammar,
-      psleWordsCloze,
-      psleWordsMcq,
-      phrasalVerbs,
-      spelling,
-      clozePassage,
-   } = mockTestData;
+   const { mockTestNumber, qnNums, clozePassage } = mockTestData;
 
-   let questionObjsArray: Question[] = [];
+   let qnsArray: Question[] = [];
    let clozeObj: Cloze | { error: string } = { error: "Cloze not found" };
 
-   for (const [collection, qnNums] of Object.entries({
-      psleGrammar,
-      psleWordsCloze,
-      psleWordsMcq,
-      phrasalVerbs,
-      spelling
-   }) as [Collections, number[]][]) {
-      const questionsInThisCollection = await fetchQuestion(collection, ...qnNums);
-      if ("error" in questionsInThisCollection) {
-         throw new Error(questionsInThisCollection.error);
+   for (const [collection, collectionQnNums] of Object.entries(qnNums) as [Collections, number[]][]) {
+      const qnsInThisCol = await fetchQuestion(collection, ...collectionQnNums);
+      
+      if ("error" in qnsInThisCol) {
+         throw new Error(qnsInThisCol.error);
       }
-      questionObjsArray.push(...questionsInThisCollection);
+
+      // collectionQnNums.forEach(qn => {
+      //    if (!qnsInThisCol.some(qnObj => qnObj.qnNum === qn)) {
+      //       console.log(`Question ${qn} was not found in ${collection}`);
+      //    }
+      // })
+
+      qnsArray.push(...qnsInThisCol);
    }
 
    if (clozePassage) {
@@ -58,7 +52,7 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
             </Col>
          </Row>
          <MTClientComponent
-            questions={questionObjsArray}
+            questions={qnsArray}
             cloze={clozeObj}
          />
       </Container>

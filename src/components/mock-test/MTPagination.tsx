@@ -2,12 +2,92 @@
 
 import React, { memo } from "react";
 import { useMockTestContext } from "./MTProvider";
-import DropdownButton from "react-bootstrap/esm/DropdownButton";
 import Button from "react-bootstrap/esm/Button";
 import { ArrowLeftCircle, ArrowRightCircle } from "lucide-react";
 import Collapse from "react-bootstrap/esm/Collapse";
-import Card from "react-bootstrap/esm/Card";
 import Modal from "react-bootstrap/esm/Modal";
+import { MTState } from "@/definitions";
+
+const PageNums = memo(({
+   totalNumOfPages,
+   testStates,
+   handlePaginationClick,
+   currUserPage
+}: {
+   totalNumOfPages: number,
+   testStates: MTState[],
+   handlePaginationClick: (n: number) => void,
+   currUserPage: number
+}) => {
+   // Pagination
+
+   const pageNumbers: React.ReactNode[] = [];
+   for (let thisPage = 1; thisPage <= totalNumOfPages; thisPage++) {
+
+      if (thisPage !== totalNumOfPages) {
+         // for questions
+
+         let bgColour = '';
+         switch (testStates[thisPage-1].status) {
+            case "not done":
+               bgColour = 'lightgray';
+               break;
+            case "done":
+               bgColour = 'lightblue';
+               break;
+            case "correct":
+               bgColour = 'lightgreen';
+               break;
+            case "incorrect":
+               bgColour = 'orangered';
+               break;
+         }
+
+         pageNumbers.push(
+            <button
+               key={thisPage}
+               style={{ width: "28px", height: "28px", backgroundColor: bgColour, fontSize: "12px"}}
+               onClick={() => handlePaginationClick(thisPage)}
+               className={'' + (currUserPage === thisPage ? 'fw-bold text-decoration-underline' : '')}
+            >
+               {thisPage}
+            </button>
+         );
+      } else {
+         // for cloze
+
+         const clozeTestStates = testStates.filter(ts => ts.type === "cloze blank");
+
+         // if none attempted: lightgray
+         // if at least one attempted: lightblue
+         // if 8 or more correct: lightgreen
+         // if less than 8 correct: orangered
+         let bgColour = '';
+         if (clozeTestStates.some(thisClozeState => thisClozeState.status === "not done")) {
+            bgColour = 'lightgray';
+         } else if (clozeTestStates.some(thisClozeState => thisClozeState.status === "done")) {
+            bgColour = 'lightblue';
+         } else if (clozeTestStates.filter(thisClozeState => thisClozeState.status === "correct").length >= 8) {
+            bgColour = 'lightgreen';
+         } else {
+            bgColour = 'orangered';
+         }
+
+         pageNumbers.push(
+            <button
+               key={thisPage}
+               style={{ height: "28px", backgroundColor: bgColour, fontSize: "12px" }}
+               onClick={() => handlePaginationClick(thisPage)}
+               className={'' + (currUserPage === thisPage ? 'fw-bold text-decoration-underline' : '')}
+            >
+               Cloze
+            </button>
+         );
+      }
+
+   }
+   return pageNumbers;
+});
 
 export default function MTPagination() {
 
@@ -25,79 +105,6 @@ export default function MTPagination() {
 
    const [isPgNumsShow, setIsPgNumsShow] = React.useState<boolean>(false);
    const [isCfmSubmitShow, setIsCfmSubmitShow] = React.useState<boolean>(false);
-
-   const PageNums = memo(() => {
-      // Pagination
-
-      const pageNumbers: React.ReactNode[] = [];
-      for (let thisPage = 1; thisPage <= totalNumOfPages; thisPage++) {
-
-         if (thisPage !== totalNumOfPages) {
-            // for questions
-
-            let bgColour = '';
-            switch (testStates[thisPage-1].status) {
-               case "not done":
-                  bgColour = 'lightgray';
-                  break;
-               case "done":
-                  bgColour = 'lightblue';
-                  break;
-               case "correct":
-                  bgColour = 'lightgreen';
-                  break;
-               case "incorrect":
-                  bgColour = 'orangered';
-                  break;
-            }
-
-            pageNumbers.push(
-               <button
-                  key={thisPage}
-                  style={{ width: "28px", height: "28px", backgroundColor: bgColour, fontSize: "12px"}}
-                  onClick={() => handlePaginationClick(thisPage)}
-                  className={'' + (currUserPage === thisPage ? 'fw-bold text-decoration-underline' : '')}
-               >
-                  {thisPage}
-               </button>
-            );
-         } else {
-            // for cloze
-
-            const clozeTestStates = testStates.filter(ts => ts.type === "cloze blank");
-
-            // if none attempted: lightgray
-            // if at least one attempted: lightblue
-            // if 8 or more correct: lightgreen
-            // if less than 8 correct: orangered
-            let bgColour = '';
-            if (clozeTestStates.some(thisClozeState => thisClozeState.status === "not done")) {
-               bgColour = 'lightgray';
-            } else if (clozeTestStates.some(thisClozeState => thisClozeState.status === "done")) {
-               bgColour = 'lightblue';
-            } else if (clozeTestStates.filter(thisClozeState => thisClozeState.status === "correct").length >= 8) {
-               bgColour = 'lightgreen';
-            } else {
-               bgColour = 'orangered';
-            }
-
-            pageNumbers.push(
-               <button
-                  key={thisPage}
-                  style={{ height: "28px", backgroundColor: bgColour, fontSize: "12px" }}
-                  onClick={() => handlePaginationClick(thisPage)}
-                  className={'' + (currUserPage === thisPage ? 'fw-bold text-decoration-underline' : '')}
-               >
-                  Cloze
-               </button>
-            );
-         }
-
-      }
-      return pageNumbers;
-   });
-
-   PageNums.displayName = 'PageNums';
 
    return (
       <>
@@ -129,7 +136,12 @@ export default function MTPagination() {
          <Collapse in={isPgNumsShow}>
             <div>
                <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-                  <PageNums/>
+                  <PageNums
+                     totalNumOfPages={totalNumOfPages}
+                     testStates={testStates}
+                     handlePaginationClick={handlePaginationClick}
+                     currUserPage={currUserPage}
+                  />
                </div>
             </div>
          </Collapse>
