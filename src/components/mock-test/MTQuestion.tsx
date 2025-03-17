@@ -69,8 +69,10 @@ function MTQuestionAnswer({
       }
 
       return (
-         <div>
-            <small className="text-muted">The correct word should be:&ensp;</small>
+         <>
+            <small className="text-muted mb-2 mx-auto">
+               The correct word should be:&ensp;
+            </small>
             <MTSpellingInput
                disabled={isMTSubmitted}
                $style={style}
@@ -86,7 +88,7 @@ function MTQuestionAnswer({
                   }
                }}
             />
-         </div>
+         </>
       );
 
    } else {
@@ -139,13 +141,15 @@ function MTQuestionAnswer({
       })
 
       return (
-         <div className="mx-auto">
-            <small className="text-muted">
+         <>
+            <small className="text-muted mb-2 mx-auto">
                {thisQnState.qnObj.kindOfQn === "meaning" && "Select the word that matches the meaning:"}
                {thisQnState.qnObj.kindOfQn === "blank" && "Select the best word for the blank:"}
             </small>
-            {arrayOfRadioButtons}
-         </div>
+            <div>
+               {arrayOfRadioButtons}
+            </div>
+         </>
       );
    }
 }
@@ -199,18 +203,17 @@ export default function MTQuestion() {
                </Card.Body>
             </Card>
          </Col>
-         <Col lg={4} md={5} className="d-flex flex-column">
+         <Col lg={4} md={5}>
             <Card body className="shadow border-0">
-               <MTQuestionAnswer
-                  thisQnState={displayedQnState}
-                  isMTSubmitted={isMTSubmitted}
-                  handleTouched={handleTouched}
-                  handleReset={handleReset}
-               />
-               <SubmittedText
-                  isSubmitted={isMTSubmitted}
-                  thisQnState={displayedQnState}
+               <div className="d-flex flex-column justify-content-left">
+                  <MTQuestionAnswer
+                     thisQnState={displayedQnState}
+                     isMTSubmitted={isMTSubmitted}
+                     handleTouched={handleTouched}
+                     handleReset={handleReset}
                   />
+                  <SubmittedText isSubmitted={isMTSubmitted} thisQnState={displayedQnState}/>
+               </div>
             </Card>
          </Col>
       </>
@@ -222,6 +225,8 @@ const MTSpellingInput = styled.input<{
 }>`
    width: 250px;
    height: 40px;
+   margin-left: auto;
+   margin-right: auto;
    text-align: center;
    border: 2px solid lightgray;
    border-radius: 5px;
