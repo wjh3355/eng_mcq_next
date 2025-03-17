@@ -1,4 +1,4 @@
-import { Cloze, Collections, MTDataType, Question } from "@/definitions";
+import { Cloze, Collections, Question } from "@/definitions";
 import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
 import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 import MTClientComponent from "./MTClientComponent";
@@ -43,6 +43,9 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
    if ("error" in clozeObj) {
       throw new Error(clozeObj.error);
    }
+
+   console.log(qnsArray);
+   console.log(clozeObj);
 
    return (
       <Container>

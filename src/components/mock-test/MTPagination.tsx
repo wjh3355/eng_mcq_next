@@ -8,7 +8,7 @@ import Collapse from "react-bootstrap/esm/Collapse";
 import Modal from "react-bootstrap/esm/Modal";
 import { MTState } from "@/definitions";
 
-const PageNums = memo(({
+const PageNums = memo(function PageNums({
    totalNumOfPages,
    testStates,
    handlePaginationClick,
@@ -18,8 +18,7 @@ const PageNums = memo(({
    testStates: MTState[],
    handlePaginationClick: (n: number) => void,
    currUserPage: number
-}) => {
-   // Pagination
+}) {
 
    const pageNumbers: React.ReactNode[] = [];
    for (let thisPage = 1; thisPage <= totalNumOfPages; thisPage++) {
