@@ -201,6 +201,8 @@ export async function resetUserData(email: string) {
 
    try {
 
+      throw new Error("This function has been disabled by the administrator.");
+
       const session = await auth();
 
       if (!session) throw new Error("Unauthorized");

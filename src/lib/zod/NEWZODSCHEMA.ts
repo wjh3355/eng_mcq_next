@@ -59,6 +59,7 @@ import { z } from "zod";
 // options must be unique
 // there can be more than 1 group of underscores 
 // but each group must have exactly 10
+// NOT IMPLEMENTED YET (TODO)
 // {
 //    "kindOfQn": "blank",
 //    "qnNum": 1,
@@ -139,8 +140,8 @@ export const QuestionSchema = z
          data.wordToTest === null &&
          data.options !== null &&
          new Set(data.options).size === 4 && 
-         data.rootWord !== null &&
-         data.sentence.match(/_+/g)?.every(grp => grp.length === 10)
+         data.rootWord !== null
+         // data.sentence.match(/_+/g)?.every(grp => grp.length === 10)
       )
    }, {
       message: "blank question is wrongly typed",
