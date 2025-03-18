@@ -1,5 +1,5 @@
 import { MTDataType } from "@/definitions";
-import { MTDataSchema } from "../zod/NEWZODSCHEMA";
+import { MTDataSchema } from "../zod/qns-cloze-schemas";
 import client from "./db";
 
 export async function fetchMockTestData(num: number) {

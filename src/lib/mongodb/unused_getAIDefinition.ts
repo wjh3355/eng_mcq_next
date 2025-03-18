@@ -1,6 +1,6 @@
 "use server";
 
-import { AIDefinitionSchema } from "@/lib/zod/zodSchemas";
+import { AIDefinitionSchema } from "@/lib/zod/user-data-schemas";
 import { AIDefinition } from "@/definitions";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";

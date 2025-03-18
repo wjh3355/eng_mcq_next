@@ -152,6 +152,38 @@ export const CollectionsSchema = z.enum(
    { message: "invalid collection name" }
 );
 
+export const ClozeSchema = z
+   .object({
+      qnNum: z.number(),
+      title: z.string().nonempty(),
+      passage: z.string().nonempty(),
+   })
+   .strict()
+   .refine(
+      (data) => {
+         const passage = data.passage;
+
+         // Regular expression to find all { ... } pairs in the passage
+         const correctAnswers = [...passage.matchAll(/{([^}]*)}/g)].map(
+            (match) => match[1]
+         );
+
+         // Check if there are exactly 15
+         if (correctAnswers.length !== 15) return false;
+
+         for (const correctAnswerString of correctAnswers) {
+            if (!correctAnswerString) return false;
+            if (correctAnswerString.split("/").some((ans) => !ans))
+               return false;
+         }
+
+         return true;
+      },
+      {
+         message: "cloze question is wrongly typed",
+      }
+   );
+
 // {
 //    "mockTestNumber": 10,
 //    "qnNums": {

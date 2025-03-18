@@ -1,7 +1,7 @@
 "use server";
 
 import client from "./db";
-import { ClozeSchema } from "../zod/zodSchemas";
+import { ClozeSchema } from "../zod/qns-cloze-schemas";
 import { auth } from "@/auth";
 import { z } from "zod";
 import { Cloze } from "@/definitions";

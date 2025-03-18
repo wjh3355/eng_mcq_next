@@ -2,7 +2,7 @@
 
 import { newUserInvite, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ, Collections } from "@/definitions";
 import client from "./db";
-import { UserAuthDataSchema, UserInviteSchema, UserProfileDataSchema } from "../zod/zodSchemas";
+import { UserAuthDataSchema, UserInviteSchema, UserProfileDataSchema } from "../zod/user-data-schemas";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";

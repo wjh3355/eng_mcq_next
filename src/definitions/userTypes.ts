@@ -55,6 +55,16 @@ export type UserProfileDocument = {
       qnNum: number;
       correctAns: number[];
    }[];
+   mockTestData?: {
+      mockTestNumber: number;
+      score: number;
+      correctQuestions: Partial<Record<Collections, number[]>>;
+      incorrectQuestions: Partial<Record<Collections, number[]>>;
+      clozeData: {
+         clozeNum: number;
+         correctAns: number[];
+      }
+   }[];
    score: number;
    dateCreated: string;
 };

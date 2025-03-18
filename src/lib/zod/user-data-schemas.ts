@@ -1,38 +1,6 @@
 import { z } from "zod";
-
-export const ClozeSchema = z
-   .object({
-      qnNum: z.number(),
-      title: z.string().nonempty(),
-      passage: z.string().nonempty(),
-   })
-   .strict()
-   .refine(
-      (data) => {
-         const passage = data.passage;
-
-         // Regular expression to find all { ... } pairs in the passage
-         const correctAnswers = [...passage.matchAll(/{([^}]*)}/g)].map(
-            (match) => match[1]
-         );
-
-         // Check if there are exactly 15
-         if (correctAnswers.length !== 15) return false;
-
-         for (const correctAnswerString of correctAnswers) {
-            if (!correctAnswerString) return false;
-            if (correctAnswerString.split("/").some((ans) => !ans))
-               return false;
-         }
-
-         return true;
-      },
-      {
-         message:
-            "The passage must contain exactly 15 pairs of { ... }, each enclosing non-empty answers separated by a /",
-         path: ["passage"],
-      }
-   );
+import { CollectionsSchema } from "./qns-cloze-schemas";
+import { questionCategoriesTuple } from "@/definitions";
 
 export const UserAuthDataSchema = z.object({
    email: z.string().email().nonempty(),
@@ -47,17 +15,17 @@ export const UserAuthDataSchema = z.object({
 const McqCategoryUserDataSchema = z.object({
    numQnsAttempted: z.number(),
    wrongQnNums: z.array(z.number()),
-})
+}).strict();
 
 export const UserProfileDataSchema = z.object({
    email: z.string().email().nonempty(),
    qnData: z.object({
       gep: McqCategoryUserDataSchema,
       phrasalVerbs: McqCategoryUserDataSchema,
-      psleGrammar: McqCategoryUserDataSchema,
-      pslePhrasesCloze: McqCategoryUserDataSchema,
       psleWordsCloze: McqCategoryUserDataSchema,
       psleWordsMcq: McqCategoryUserDataSchema,
+      pslePhrasesCloze: McqCategoryUserDataSchema,
+      psleGrammar: McqCategoryUserDataSchema,
       spelling: McqCategoryUserDataSchema,
       definition: McqCategoryUserDataSchema,
       demo: McqCategoryUserDataSchema,
@@ -71,7 +39,9 @@ export const UserProfileDataSchema = z.object({
    ),
    score: z.number(),
    dateCreated: z.string().nonempty(),
-}).strict()
+})
+
+// may add more fields later, so not .strict()
 
 export const UserInviteSchema = z.object({
    email: z.string().email().nonempty(),
