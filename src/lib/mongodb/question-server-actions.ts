@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { Question, Collections, UserProfileDocument } from "@/definitions";
+import { Question, Collections } from "@/definitions";
 import client from "./db";
 import { QuestionSchema } from "../zod/qns-cloze-schemas";
 import { z } from "zod";

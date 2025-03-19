@@ -19,13 +19,13 @@ export async function generateStaticParams() {
 }
 
 export default async function IndividualMockTestPage({ params }: { params: Promise<{ num: string }> }) {
-   await checkAuthForRoute();
+   const user = await checkAuthForRoute();
 
    const MTnum = parseInt((await params).num, 10);
 
    return (
       <Suspense fallback={<Skeleton height={50}/>}>
-         <MockTest MTnum={MTnum}/>
+         <MockTest MTnum={MTnum} user={user} />
       </Suspense>
    )
 }

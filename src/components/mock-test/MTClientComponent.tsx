@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Cloze, Question } from "@/definitions";
+import { Cloze, Collections, Question, UserProfileDocument } from "@/definitions";
 
 import Row from "react-bootstrap/esm/Row";
 
@@ -14,9 +14,13 @@ import MTPagination from "./MTPagination";
 export default function MTClientComponent({
    questions,
    cloze,
+   user,
+   MTnum
 }: {
-   questions: Question[];
+   questions: Partial<Record<Collections, Question[]>>;
    cloze: Cloze;
+   user: UserProfileDocument;
+   MTnum: number;
 }) {
 
    return (
@@ -24,6 +28,8 @@ export default function MTClientComponent({
          <MockTestProvider
             questions={questions}
             cloze={cloze}
+            user={user}
+            MTnum={MTnum}
          >
             <Row className="mb-3">
                <MTQuestion/>

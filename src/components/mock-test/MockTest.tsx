@@ -1,4 +1,4 @@
-import { Cloze, Collections, Question } from "@/definitions";
+import { Cloze, Collections, Question, UserProfileDocument } from "@/definitions";
 import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
 import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 import MTClientComponent from "./MTClientComponent";
@@ -7,7 +7,7 @@ import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import { fetchMockTestData } from "@/lib/mongodb/mt-server-actions";
 
-export default async function MockTest({ MTnum }: { MTnum: number }) {
+export default async function MockTest({ MTnum, user }: { MTnum: number, user: UserProfileDocument }) {
 
    await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -17,7 +17,7 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
 
    const { mockTestNumber, qnNums, clozePassage } = mockTestData;
 
-   let qnsArray: Question[] = [];
+   let questions: Partial<Record<Collections, Question[]>> = {};
    let clozeObj: Cloze | { error: string } = { error: "Cloze not found" };
 
    for (const [collection, collectionQnNums] of Object.entries(qnNums) as [Collections, number[]][]) {
@@ -25,15 +25,9 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
       
       if ("error" in qnsInThisCol) {
          throw new Error(qnsInThisCol.error);
-      }
+      } 
 
-      // collectionQnNums.forEach(qn => {
-      //    if (!qnsInThisCol.some(qnObj => qnObj.qnNum === qn)) {
-      //       console.log(`Question ${qn} was not found in ${collection}`);
-      //    }
-      // })
-
-      qnsArray.push(...qnsInThisCol);
+      questions[collection] = qnsInThisCol;
    }
 
    if (clozePassage) {
@@ -44,9 +38,6 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
       throw new Error(clozeObj.error);
    }
 
-   console.log(qnsArray);
-   console.log(clozeObj);
-
    return (
       <Container>
          <Row className="my-3">
@@ -55,8 +46,10 @@ export default async function MockTest({ MTnum }: { MTnum: number }) {
             </Col>
          </Row>
          <MTClientComponent
-            questions={qnsArray}
+            MTnum={MTnum}
+            questions={questions}
             cloze={clozeObj}
+            user={user}
          />
       </Container>
    )

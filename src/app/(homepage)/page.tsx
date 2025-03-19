@@ -57,12 +57,12 @@ function LoggedInLinks() {
                <FileText className="me-2"/>Cloze Passages
             </Link>
 
-            <Link
+            {/* <Link
                className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
                href="/mock_test"
             >
                <FlaskConical className="me-2"/>Mock Tests
-            </Link>
+            </Link> */}
 
             <Link
                className="btn btn-lg btn-success d-flex align-items-center justify-content-center"

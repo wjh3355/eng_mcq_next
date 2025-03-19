@@ -4,6 +4,7 @@ export type MTState =
   | {
    qnIndex: number;
    type: "question";
+   collection: Collections;
    qnObj: Question;
    answer: string;
    status: "not done" | "done" | "correct" | "incorrect";

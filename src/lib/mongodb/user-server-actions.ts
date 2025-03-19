@@ -1,6 +1,6 @@
 "use server";
 
-import { newUserInvite, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ, Collections } from "@/definitions";
+import { newUserInvite, UserAuthDocument, UserInviteDocument, UserProfileDocument, RESET_PROFILE_FIELDS_OBJ, Collections, MockTestUserDat } from "@/definitions";
 import client from "./db";
 import { UserAuthDataSchema, UserInviteSchema, UserProfileDataSchema } from "../zod/user-data-schemas";
 import { z } from "zod";
@@ -193,6 +193,44 @@ export async function updateUserClozeData({
       } else {
          console.error(`Unexpected error occured while updating user question data for ${email}: ` + error);
          return { error: `Unable to update user question data for ${email}. Try again later.` }
+      }
+   }
+}
+
+export async function updateUserMockTestData({
+   email,
+   MTnum,
+   newMTUserDat
+}: {
+   email: string
+   MTnum: number
+   newMTUserDat: MockTestUserDat | null;
+}) {
+   try {
+
+      const session = await auth();
+      if (!session) throw new Error("Unauthorized");
+
+      await client.connect();
+      const profiles = client.db("userDatas").collection<UserProfileDocument>("profile");
+      const profile = await profiles.findOne({ email })
+      if (!profile) throw new Error(`User profile for ${email} not found`);
+
+      // fake delay
+
+      console.log(newMTUserDat);
+
+      await new Promise(r => setTimeout(r, 1000));
+
+      return { success: true };
+
+   } catch (error) {
+      if (error instanceof Error) {
+         console.error(`Unable to update user mock test data for ${email}: ` + error.message);
+         return { error: "Could not update user mock test data due to: " + error.message }
+      } else {
+         console.error(`Unexpected error occured while updating user mock test data for ${email}: ` + error);
+         return { error: `Unable to update user mock test data for ${email}. Try again later.` }
       }
    }
 }

@@ -38,6 +38,17 @@ export type QnCollectionUserDat = {
    wrongQnNums: number[];
 };
 
+export type MockTestUserDat = {
+   mockTestNumber: number;
+   score: number;
+   wrongQuestions: { col: Collections, qnNum: number, userWrongAns: string }[];
+   clozeData: {
+      blankNum: number,
+      ans: string,
+      isCorrect: boolean
+   }[];
+}
+
 export type UserAuthDocument = {
    email: string;
    passwordHash: string;
@@ -55,16 +66,7 @@ export type UserProfileDocument = {
       qnNum: number;
       correctAns: number[];
    }[];
-   mockTestData?: {
-      mockTestNumber: number;
-      score: number;
-      correctQuestions: Partial<Record<Collections, number[]>>;
-      incorrectQuestions: Partial<Record<Collections, number[]>>;
-      clozeData: {
-         clozeNum: number;
-         correctAns: number[];
-      }
-   }[];
+   mockTestData?: MockTestUserDat[];
    score: number;
    dateCreated: string;
 };
