@@ -9,8 +9,6 @@ import { fetchMockTestData } from "@/lib/mongodb/mt-server-actions";
 
 export default async function MockTest({ MTnum, user }: { MTnum: number, user: UserProfileDocument }) {
 
-   await new Promise(resolve => setTimeout(resolve, 1000));
-
    const mockTestData = await fetchMockTestData(MTnum);
 
    if ("error" in mockTestData) return;

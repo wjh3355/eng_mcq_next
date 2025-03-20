@@ -12,7 +12,7 @@ const PageNums = memo(function PageNums({
    totalNumOfPages,
    testStates,
    handlePaginationClick,
-   currUserPage
+   currUserPage,
 }: {
    totalNumOfPages: number,
    testStates: MTState[],
@@ -59,15 +59,18 @@ const PageNums = memo(function PageNums({
 
          // if none attempted: lightgray
          // if at least one attempted: lightblue
-         // if 8 or more correct: lightgreen
-         // if less than 8 correct: orangered
+         // if all correct: lightgreen
+         // if some correct: yellow
+         // if none correct: orangered
          let bgColour = '';
          if (clozeTestStates.some(thisClozeState => thisClozeState.status === "not done")) {
             bgColour = 'lightgray';
          } else if (clozeTestStates.some(thisClozeState => thisClozeState.status === "done")) {
             bgColour = 'lightblue';
-         } else if (clozeTestStates.filter(thisClozeState => thisClozeState.status === "correct").length >= 8) {
+         } else if (clozeTestStates.every(thisClozeState => thisClozeState.status === "correct")) {
             bgColour = 'lightgreen';
+         } else if (clozeTestStates.some(thisClozeState => thisClozeState.status === "correct")){
+            bgColour = 'yellow';
          } else {
             bgColour = 'orangered';
          }
@@ -96,6 +99,7 @@ export default function MTPagination() {
       handleNextPgClick,
       handlePrevPgClick,
       handlePaginationClick,
+      resetMockTest,
       currUserPage,
       submitMockTest,
       isMTSubmitted,
@@ -145,22 +149,32 @@ export default function MTPagination() {
             </div>
          </Collapse>
 
-         <div className="d-flex justify-content-center">
-            <Button
-               variant="danger"
-               size="lg"
-               onClick={() => setIsCfmSubmitShow(true)}
-               disabled={isMTSubmitted}
-            >
-               Submit
-            </Button>
-         </div>
+         <div className="mt-3 d-flex flex-column">
          {
-            isMTSubmitted &&
-            <div className="mt-3 d-flex">
-               <p className="fs-5 mx-auto border border-4 rounded-4 p-3 border-warning fw-bold">Final Score: {finalScore} / {testStates.length}</p>
-            </div>
+            isMTSubmitted 
+            ?  <>
+                  <p className="fs-5 border border-4 rounded-4 p-3 border-warning fw-bold mx-auto">
+                     Final Score: {finalScore} / {testStates.length}
+                  </p>
+                  <Button
+                     variant="warning"
+                     className="mx-auto"
+                     size="sm"
+                     onClick={() => resetMockTest()}
+                  >
+                  Reset Mock Test
+                  </Button>
+               </>
+            :  <Button
+                  variant="danger"
+                  size="lg"
+                  className="mx-auto"
+                  onClick={() => setIsCfmSubmitShow(true)}
+               >
+                  Submit
+               </Button>
          }
+         </div>
 
          <Modal size="lg" centered show={isCfmSubmitShow} onHide={() => setIsCfmSubmitShow(false)} backdrop="static">
             <Modal.Header><Modal.Title className="fs-5">Submit Mock Test</Modal.Title></Modal.Header>

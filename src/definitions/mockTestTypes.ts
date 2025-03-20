@@ -34,6 +34,7 @@ export type MTContextValue = {
    handleTouched: (n: number, v: string) => void;
    handleReset: (n: number) => void;
    handleResetAllCloze: () => void;
+   resetMockTest: () => void;
 }
 
 export type MTDataType = {

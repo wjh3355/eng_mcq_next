@@ -138,7 +138,7 @@ export default function MockTestProvider({
          const initClozeState = clozeCorrectAnsArray.map<MTState>((correctAnsArray, idx) => {
 
             // check if this cloze blank is among the correct cloze blanks
-            const wrongClozeBlankData = prevUserClozeData?.find(dat => dat.blankNum = idx)!;
+            const wrongClozeBlankData = prevUserClozeData?.find(dat => dat.blankNum === idx)!;
 
             return {
                qnIndex: idx+flattenedQuestions.length,
@@ -271,9 +271,32 @@ export default function MockTestProvider({
             return;
          }
 
-         toast.success("Mock test submitted successfully.");
+         toast.success(
+            `Mock test submitted successfully. You scored ${mtScore} / ${submittedTestState.length}`, 
+            { duration: 8000 }
+         );
          
       });
+   }
+
+   // ===================================
+   // HANDLER FUNCTION TO RESET MOCK TEST
+   // ===================================
+
+   function resetMockTest() {
+      updateUserMockTestData({ email: user.email, MTnum, newMTUserDat: null })
+      .then(res => {
+         if ("error" in res) {
+            toast.error(res.error!);
+            return;
+         }
+
+         toast.success("Mock test reset successfully.");
+
+         return new Promise(r => setTimeout(r, 1000))
+      })
+      .then(res => window.location.reload());
+      ;
    }
 
    return (
@@ -297,6 +320,7 @@ export default function MockTestProvider({
             handleTouched,
             handleReset,
             handleResetAllCloze,
+            resetMockTest,
          }}
       >
          {children}

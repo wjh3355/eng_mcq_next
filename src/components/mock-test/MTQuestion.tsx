@@ -1,12 +1,16 @@
 "use client";
 
-import { ChangeEvent } from "react";
+import { useState } from "react";
 import Col from "react-bootstrap/esm/Col";
 import Card from "react-bootstrap/esm/Card";
 import styled from "styled-components";
 
 import { MTState } from "@/definitions";
 import { useMockTestContext } from "./MTProvider";
+import Button from "react-bootstrap/esm/Button";
+import Modal from "react-bootstrap/esm/Modal";
+import QuestionExplanation from "../question/QuestionExplanation";
+import { CircleCheck, CircleX } from "lucide-react";
 
 function SentenceDisp({ thisQnState }: { thisQnState: MTState }) {
 
@@ -73,21 +77,29 @@ function MTQuestionAnswer({
             <small className="text-muted mb-2 mx-auto">
                The correct word should be:&ensp;
             </small>
-            <MTSpellingInput
-               disabled={isMTSubmitted}
-               $style={style}
-               type="text"
-               value={answer}
-               autoComplete="off"
-               autoFocus={true}
-               onChange={e => {
-                  if (e.target.value) {
-                     handleTouched(qnIndex, e.target.value);
-                  } else {
-                     handleReset(qnIndex);
-                  }
-               }}
-            />
+            <div className="position-relative mx-auto">
+               <MTSpellingInput
+                  disabled={isMTSubmitted}
+                  $style={style}
+                  type="text"
+                  value={answer}
+                  autoComplete="off"
+                  autoFocus={true}
+                  onChange={e => {
+                     if (e.target.value) {
+                        handleTouched(qnIndex, e.target.value);
+                     } else {
+                        handleReset(qnIndex);
+                     }
+                  }}
+               />
+               {status === 'correct' && 
+                  <CircleCheck size={20} strokeWidth={3} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'green' }}/>
+               }
+               {status === 'incorrect' && answer && 
+                  <CircleX size={20} strokeWidth={3} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: 'rgb(190, 44, 44)' }}/>
+               }
+            </div>
          </>
       );
 
@@ -123,7 +135,7 @@ function MTQuestionAnswer({
          return (
             <label 
                key={thisOption} 
-               className={`d-block ${isGreen ? "text-success fw-bold" : isRed ? "text-danger fw-bold" : ""}`}
+               className={`d-block d-flex align-items-center ${isGreen ? "text-success fw-bold" : isRed ? "text-danger fw-bold" : ""}`}
             >
                <input
                   id={thisOption}
@@ -135,7 +147,10 @@ function MTQuestionAnswer({
                   onChange={e => handleTouched(qnIndex, e.target.value)}
                   onClick={e => (answer === (e.target as HTMLInputElement).value) && handleReset(qnIndex)}
                />
-               &nbsp;{thisOption}
+               &nbsp;
+               {thisOption}
+               &nbsp;
+               {isGreen ? <CircleCheck size={17} strokeWidth={3}/> : isRed ? <CircleX size={17} strokeWidth={3}/> : ""}
             </label>
          )
       })
@@ -154,32 +169,8 @@ function MTQuestionAnswer({
    }
 }
 
-function SubmittedText({
-   isSubmitted,
-   thisQnState
-}: {
-   isSubmitted: boolean;
-   thisQnState: MTState;
-}) {
-
-   if (!isSubmitted) return null;
-
-   let text: React.ReactNode;
-
-   if (thisQnState.status === "correct") {
-      text = <small className="text-success fw-bold">Correct!</small>;
-   } else if (thisQnState.status === "incorrect") {
-      if (thisQnState.answer) {
-         text = <small className="text-danger fw-bold">Incorrect!</small>;
-      } else {
-         text = <small className="text-danger fw-bold">You did not attempt.</small>;
-      }
-   }
-
-   return <div className="mt-2 mx-auto">{text}</div>
-}
-
 export default function MTQuestion() {
+
    const { 
       testStates,
       currUserPage,
@@ -187,6 +178,8 @@ export default function MTQuestion() {
       handleReset,
       isMTSubmitted
    } = useMockTestContext();
+
+   const [isExplShown, setIsExplShown] = useState<boolean>(false);
 
    // find the state for the current question displayed, if any
    // if currUserPage is 1, corresponding qnIndex is 0
@@ -203,19 +196,36 @@ export default function MTQuestion() {
                </Card.Body>
             </Card>
          </Col>
+
          <Col lg={4} md={5}>
             <Card body className="shadow border-0">
                <div className="d-flex flex-column justify-content-left">
+
                   <MTQuestionAnswer
                      thisQnState={displayedQnState}
                      isMTSubmitted={isMTSubmitted}
                      handleTouched={handleTouched}
                      handleReset={handleReset}
                   />
-                  <SubmittedText isSubmitted={isMTSubmitted} thisQnState={displayedQnState}/>
+
+                  {displayedQnState.status === "incorrect" && !displayedQnState.answer &&
+                     <small className="text-danger fw-bold mx-auto d-flex align-items-center mt-2"><CircleX size={17} strokeWidth={3}/>&nbsp;You did not attempt this question.</small>
+                  }
+
+                  {isMTSubmitted &&
+                     <Button size="sm" className="mx-auto mt-2" variant="outline-info" onClick={() => setIsExplShown(true)}>
+                        Explanation
+                     </Button>
+                  }
+
                </div>
             </Card>
          </Col>
+
+         <Modal size="lg" centered show={isExplShown} onHide={() => setIsExplShown(false)}>
+            <Modal.Header closeButton><Modal.Title className="fs-5">Explanation</Modal.Title></Modal.Header>
+            <Modal.Body><QuestionExplanation qnObj={displayedQnState.qnObj}/></Modal.Body>
+         </Modal>
       </>
    );
 }

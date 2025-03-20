@@ -171,7 +171,7 @@ export async function updateUserClozeData({
 
       if (correctAnsArray) {
          await profiles.updateOne({ email }, {
-            $push: { 
+            $addToSet: { 
                clozeData: { qnNum: clozeNum, correctAns: correctAnsArray }
             },
             $inc: { score: 10*correctAnsArray.length }
@@ -216,11 +216,19 @@ export async function updateUserMockTestData({
       const profile = await profiles.findOne({ email })
       if (!profile) throw new Error(`User profile for ${email} not found`);
 
-      // fake delay
-
-      console.log(newMTUserDat);
-
-      await new Promise(r => setTimeout(r, 1000));
+      if (newMTUserDat) {
+         await profiles.updateOne({ email }, {
+            $addToSet: { 
+               mockTestData: newMTUserDat
+            }
+         });
+      } else {
+         await profiles.updateOne({ email }, {
+            $pull: { 
+               mockTestData: { mockTestNumber: MTnum }
+            },
+         });
+      }
 
       return { success: true };
 

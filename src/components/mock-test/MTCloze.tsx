@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useMockTestContext } from "./MTProvider";
 import Button from "react-bootstrap/esm/Button";
 import { RotateCcw } from "lucide-react";
+import Card from "react-bootstrap/esm/Card";
+import Row from "react-bootstrap/esm/Row";
 
 export default function MTCloze() {
 
@@ -108,14 +110,22 @@ export default function MTCloze() {
                   <p key={idx} className="mb-5">{paraArr}</p>)
                }
             </article>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center flex-column">
                {isMTSubmitted
-                  ?  <small className="border border-3 rounded-4 p-2">
-                        Cloze Score: {clozeTestStates.filter(cs => cs.status === "correct").length} / 15
-                     </small>
+                  ?  <>
+                        <small className="border border-3 rounded-4 p-2 mx-auto">
+                           Cloze Score: {clozeTestStates.filter(cs => cs.status === "correct").length} / 15
+                        </small>
+                        <Card className="mt-3 border-2 border-success shadow w-75 mx-auto">
+                           <Card.Header>Answers</Card.Header>
+                           <Card.Body>
+                              <ClozeAnswersColumnList clozeTestStates={clozeTestStates}/>
+                           </Card.Body>
+                        </Card>
+                     </>
                   :  <Button 
                         onClick={handleResetAllCloze}
-                        className="d-flex align-items-center"
+                        className="d-flex align-items-center mx-auto"
                      >
                         <RotateCcw size={20}/>&nbsp;Reset Blanks
                      </Button>
@@ -124,6 +134,43 @@ export default function MTCloze() {
          </section>
       </Col>
    );
+}
+
+function ClozeAnswersColumnList({
+   clozeTestStates
+}: {
+   clozeTestStates: {
+      qnIndex: number;
+      type: "cloze blank";
+      clozeBlankCorrectAns: string[];
+      answer: string;
+      status: "not done" | "done" | "correct" | "incorrect";
+   }[]
+}) {
+   const maxPerColumn = 5;
+
+   const colCount = Math.ceil(clozeTestStates.length / maxPerColumn);
+
+   const cols = [];
+   for (let i = 0; i < colCount; i++) {
+      const columnItems = clozeTestStates.slice(i * maxPerColumn, Math.min((i + 1) * maxPerColumn, clozeTestStates.length))
+      cols.push(columnItems);
+   }
+
+   return (
+      <Row className="d-flex justify-content-center">
+         {cols.map((items, idx) => 
+            <Col sm={6} md={4} lg={3} key={idx}>
+               {items.map((cts, idx) => 
+                  <div key={cts.qnIndex}>
+                     {`Q${cts.qnIndex+1}. ${cts.clozeBlankCorrectAns.join("/")}`}
+                  </div>
+               )}
+            </Col>
+         )}  
+      </Row>
+   )
+
 }
 
 const MTClozeInput = styled.input<{

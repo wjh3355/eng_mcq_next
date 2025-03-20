@@ -13,7 +13,6 @@ const MCQOption = styled.button<{
    justify-content: center;
    align-items: center;
    background-color: white;
-   position: relative;
    
    border-color: ${({ $isRed, $isGreen }) => 
       $isGreen ? "green" : ($isRed ? "rgb(190, 44, 44)" : "default")};

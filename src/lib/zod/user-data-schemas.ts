@@ -37,8 +37,28 @@ export const UserProfileDataSchema = z.object({
          correctAns: z.array(z.number())
       })
    ),
+   mockTestData: z.array(
+      z.object({
+         mockTestNumber: z.number(),
+         score: z.number(),
+         wrongQuestions: z.array(
+            z.object({
+               col: CollectionsSchema,
+               qnNum: z.number(),
+               userWrongAns: z.string()
+            })
+         ),
+         clozeData: z.array(
+            z.object({
+               blankNum: z.number(),
+               ans: z.string(),
+               isCorrect: z.boolean()
+            })
+         )
+      })
+   ).optional(),
    score: z.number(),
-   dateCreated: z.string().nonempty(),
+   dateCreated: z.string().nonempty()
 })
 
 // may add more fields later, so not .strict()
