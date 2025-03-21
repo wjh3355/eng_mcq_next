@@ -29,6 +29,7 @@ import { Collections } from "./qnTypes/questionTypes";
 //      } ... etc
 //    },
 //    "clozeData": [],
+//    "mockTestData": [],
 //    "score": 60,
 //    "dateCreated": "2025-02-06T00:47:16.104Z"
 // }
@@ -37,6 +38,11 @@ export type QnCollectionUserDat = {
    numQnsAttempted: number;
    wrongQnNums: number[];
 };
+
+export type ClozeUserDat = {
+   qnNum: number;
+   correctAns: number[];
+}
 
 export type MockTestUserDat = {
    mockTestNumber: number;
@@ -62,11 +68,8 @@ export type UserAuthDocument = {
 export type UserProfileDocument = {
    email: string;
    qnData: Record<Collections, QnCollectionUserDat>;
-   clozeData: {
-      qnNum: number;
-      correctAns: number[];
-   }[];
-   mockTestData?: MockTestUserDat[];
+   clozeData: ClozeUserDat[];
+   mockTestData: MockTestUserDat[];
    score: number;
    dateCreated: string;
 };
@@ -86,6 +89,7 @@ export const EMPTY_USER: UserProfileDocument = {
       test: { numQnsAttempted: 0, wrongQnNums: [] },
    },
    clozeData: [],
+   mockTestData: [],
    score: 0,
    dateCreated: ""
 }

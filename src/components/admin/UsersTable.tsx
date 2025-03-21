@@ -18,90 +18,103 @@ export default function UsersTable(
 
    return (
       <>
-         <Table striped="columns" responsive style={{fontSize: "12px"}}>
-            <thead>
-               <tr>
-                  <th>#</th>
-                  <th>Email</th>
-                  <th>Password (Encrypted)</th>
-                  <th>Role</th>
-                  <th>Date Created</th>
-                  <th>MCQ Data</th>
-                  <th>Cloze Data</th>
-                  <th>Points</th>
-                  <th>Is Suspended?</th>
-                  <th>Delete</th>
-               </tr>
-            </thead>
-            <tbody>
-               {allUsersArray.map((
-                  [
-                     { email, passwordHash, role, dateCreated, isSuspended }, 
-                     {qnData, clozeData, score}
-                  ], idx) => {
+         <div style={{ overflowX: 'scroll', maxWidth: '100%', display: 'block', whiteSpace: 'nowrap' }}>
+            <Table striped="columns" style={{ fontSize: "13px" }}>
+               <thead>
+                  <tr>
+                     <th>#</th>
+                     <th>Email</th>
+                     <th>Password (Encrypted)</th>
+                     <th>Role</th>
+                     <th>Date Created</th>
+                     <th>Questions Data</th>
+                     <th>Cloze Data</th>
+                     <th>Mock Test Data</th>
+                     <th>Accumulated Points</th>
+                     <th>Is Suspended?</th>
+                     <th>Delete</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {allUsersArray.map((
 
-                  const qnDataAsArr = Object.entries(qnData) as [ Collections, QnCollectionUserDat ][];
+                     [
+                        { email, passwordHash, role, dateCreated, isSuspended }, 
+                        { qnData, clozeData, mockTestData, score }
+                     ],
 
-                  return (
-                     <tr key={idx}>
-                        <td>{idx + 1}</td>
-                        <td>{email}</td>
-                        <td>{passwordHash.slice(7, 20) + "..."}</td>
-                        <td>
-                           <span className={role === "admin" ? "text-primary fw-bold" : ""}>{role}</span>
-                        </td>
-                        <td>{DateTime.fromISO(dateCreated).toISODate()}</td>
-                        <td>
-                           {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
-                              <div key={cat}>
-                                 {`${QN_COL_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
-                              </div>
-                           )}
-                        </td>
-                        <td>
-                           {clozeData.map(({qnNum, correctAns}) => 
-                              <div key={qnNum}>
-                                 {`Cloze ${qnNum}: ${correctAns.length} / 15`}
-                              </div>
-                           )}
-                        </td>
-                        <td>{score}</td>
-                        <td>
-                           <span className={isSuspended ? "text-danger fw-bold" : ""}>{isSuspended ? "Yes" : "No"}</span>
-                           <Button 
-                              variant={isSuspended ? "success" : "warning"} 
-                              size="sm"
-                              className="ms-3"
-                              onClick={() => {
-                                 toggleSuspend(email, !isSuspended)
-                                    .then(res => {
-                                       if (res.error!) {
-                                          toast.error(res.error!);
-                                       } else {
-                                          toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully`)
-                                       }
-                                    })
-                                    .catch(err => toast.error(err instanceof Error ? err.message : "An error occurred."));
-                              }}
-                           >
-                              {isSuspended ? "Unsuspend User" : "Suspend User"}
-                           </Button>
-                        </td>
-                        <td>
-                           <Button 
-                              variant="danger" 
-                              size="sm"
-                              onClick={() => {
-                                 setShowCfmDelete(true);
-                                 setUserEmailToDelete(email);
-                              }}
-                           >Delete User</Button>
-                        </td>
-                     </tr>
-                  );
-               })}
-            </tbody>
-         </Table>
+                     idx) => {
+
+                     const qnDataAsArr = Object.entries(qnData) as [ Collections, QnCollectionUserDat ][];
+
+                     return (
+                        <tr key={email}>
+                           <td>{idx + 1}</td>
+                           <td>{email}</td>
+                           <td>{passwordHash.slice(7, 25) + "..."}</td>
+                           <td>
+                              <span className={role === "admin" ? "text-primary fw-bold" : ""}>{role}</span>
+                           </td>
+                           <td>{DateTime.fromISO(dateCreated).toISODate()}</td>
+                           <td>
+                              {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
+                                 <div key={cat}>
+                                    {`${QN_COL_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
+                                 </div>
+                              )}
+                           </td>
+                           <td>
+                              {clozeData.sort((a, b) => a.qnNum - b.qnNum).map(({qnNum, correctAns}) => 
+                                 <div key={qnNum}>
+                                    {`Cloze ${qnNum}: ${correctAns.length} / 15`}
+                                 </div>
+                              )}
+                           </td>
+                           <td>
+                              {mockTestData.sort((a, b) => a.mockTestNumber - b.mockTestNumber).map(({mockTestNumber, score}) => 
+                                 <div key={mockTestNumber}>
+                                    {`Mock Test ${mockTestNumber}: ${score} / 47`}
+                                 </div>
+                              )}
+                           </td>
+                           <td>{score}</td>
+                           <td>
+                              <span className={isSuspended ? "text-danger fw-bold" : ""}>{isSuspended ? "Yes" : "No"}</span>
+                              <Button 
+                                 variant={isSuspended ? "success" : "warning"} 
+                                 size="sm"
+                                 className="ms-3"
+                                 onClick={() => {
+                                    toggleSuspend(email, !isSuspended)
+                                       .then(res => {
+                                          if (res.error!) {
+                                             toast.error(res.error!);
+                                          } else {
+                                             toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully`)
+                                          }
+                                       })
+                                       .catch(err => toast.error(err instanceof Error ? err.message : "An error occurred."));
+                                 }}
+                              >
+                                 {isSuspended ? "Unsuspend User" : "Suspend User"}
+                              </Button>
+                           </td>
+                           <td>
+                              <Button 
+                                 variant="danger" 
+                                 size="sm"
+                                 onClick={() => {
+                                    setShowCfmDelete(true);
+                                    setUserEmailToDelete(email);
+                                 }}
+                              >Delete User</Button>
+                           </td>
+                        </tr>
+                     );
+                  })}
+               </tbody>
+            </Table>
+         </div>
          
          <Modal
             size="lg"

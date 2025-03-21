@@ -96,6 +96,7 @@ export default function MTPagination() {
    const {
       totalNumOfPages,
       testStates,
+      maximumMTScore,
       handleNextPgClick,
       handlePrevPgClick,
       handlePaginationClick,
@@ -103,7 +104,7 @@ export default function MTPagination() {
       currUserPage,
       submitMockTest,
       isMTSubmitted,
-      finalScore
+      finalMTScore
    } = useMockTestContext();
 
    const [isPgNumsShow, setIsPgNumsShow] = React.useState<boolean>(false);
@@ -154,7 +155,7 @@ export default function MTPagination() {
             isMTSubmitted 
             ?  <>
                   <p className="fs-5 border border-4 rounded-4 p-3 border-warning fw-bold mx-auto">
-                     Final Score: {finalScore} / {testStates.length}
+                     Final Score: {finalMTScore} / {maximumMTScore}
                   </p>
                   <Button
                      variant="warning"
@@ -168,7 +169,7 @@ export default function MTPagination() {
             :  <Button
                   variant="danger"
                   size="lg"
-                  className="mx-auto"
+                  className="mx-auto px-5 fw-bold"
                   onClick={() => setIsCfmSubmitShow(true)}
                >
                   Submit

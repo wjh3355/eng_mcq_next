@@ -16,6 +16,8 @@ import {
    QnCollectionUserDat,
    Collections,
    QN_COL_DATA,
+   MockTestUserDat,
+   ClozeUserDat,
 } from "@/definitions";
 import Link from "next/link";
 import { Info, Trash2 } from "lucide-react";
@@ -28,112 +30,9 @@ import toast from "react-hot-toast";
 
 export default function ProfileTable({ user }: { user: UserProfileDocument }) {
 
-   const { qnData, clozeData, score, email, dateCreated } = user;
+   const { qnData, clozeData, score, email, dateCreated, mockTestData } = user;
 
    const [showCfmEraseData, setShowCfmEraseData] = useState<boolean>(false);
-
-   function McqStats() {
-      if (JSON.stringify(qnData) === "{}") {
-         return <p>You have not attempted any MCQ questions yet!</p>;
-      }
-
-      const dataAsArr = Object.entries(qnData) as [
-         Collections,
-         QnCollectionUserDat
-      ][];
-
-      const totalAttempted = sum(
-         dataAsArr.map(([_, dat]) => dat.numQnsAttempted)
-      );
-      const totalWrong = sum(
-         dataAsArr.map(([_, dat]) => dat.wrongQnNums.length)
-      );
-      const totalCorrect = totalAttempted - totalWrong;
-      const totalPercentCorrect = Math.round(
-         (totalCorrect * 100) / totalAttempted
-      );
-
-      return (
-         <>
-            <Table striped>
-               <thead>
-                  <tr>
-                     <th>Category</th>
-                     <th>No. Correct</th>
-                     <th>No. Attempted</th>
-                     <th>View Incorrect</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => {
-
-                     if (!numQnsAttempted) return;
-
-                     return (
-                        <tr key={cat}>
-                           <td>{QN_COL_DATA[cat].categoryName}</td>
-                           <td>{numQnsAttempted - wrongQnNums.length}</td>
-                           <td>{numQnsAttempted}</td>
-                           <td>
-                              <Link
-                                 href={`/profile/wrongmcq/${cat}`}
-                                 className={
-                                    "fw-bold btn btn-primary btn-sm px-3 " +
-                                    (wrongQnNums.length === 0 ? "disabled" : "")
-                                 }
-                              >
-                                 View
-                              </Link>
-                           </td>
-                        </tr>
-                     )
-                  })}
-               </tbody>
-            </Table>
-
-            <div className="text-center">
-               Overall score:&nbsp;
-               <strong>
-                  {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
-               </strong>
-            </div>
-         </>
-      );
-   }
-
-   function ClozeStats() {
-      if (clozeData.length === 0) {
-         return <p>You have not attempted any Cloze questions yet!</p>;
-      }
-
-      return (
-         <Table striped>
-            <thead>
-               <tr>
-                  <th>Cloze No.</th>
-                  <th>Score</th>
-                  <th>View Cloze</th>
-               </tr>
-            </thead>
-            <tbody>
-               {clozeData.map(({ qnNum, correctAns }) => (
-                  <tr key={qnNum}>
-                     <td>{`Q${qnNum}`}</td>
-                     <td>{`${correctAns.length} / 15`}</td>
-                     <td>
-                        <Link
-                           href={`/cloze/${qnNum}`}
-                           className="btn btn-primary btn-sm px-3 fw-bold"
-                        >
-                           View
-                        </Link>
-                     </td>
-                  </tr>
-               ))}
-            </tbody>
-         </Table>
-      );
-   }
 
    return (
       <Container>
@@ -173,18 +72,26 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                <Accordion alwaysOpen className="shadow-lg">
                   <Accordion.Item eventKey="0">
                      <Accordion.Header>
-                        <strong>Cloze</strong>
+                        <strong>Questions</strong>
                      </Accordion.Header>
                      <Accordion.Body>
-                        <ClozeStats />
+                        <McqStats qnData={qnData}/>
                      </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="1">
                      <Accordion.Header>
-                        <strong>Questions</strong>
+                        <strong>Clozes</strong>
                      </Accordion.Header>
                      <Accordion.Body>
-                        <McqStats />
+                        <ClozeStats clozeData={clozeData}/>
+                     </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="2">
+                     <Accordion.Header>
+                        <strong>Mock Tests</strong>
+                     </Accordion.Header>
+                     <Accordion.Body>
+                        <MockTestStats mockTestData={mockTestData}/>
                      </Accordion.Body>
                   </Accordion.Item>
                </Accordion>
@@ -257,12 +164,155 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
             </Modal.Body>
          </Modal>
 
-         <p
-            className="text-light"
-            style={{ color: "rgb(255, 255, 255)", fontSize: "10px" }}
-         >
-            {JSON.stringify(user)}
-         </p>
       </Container>
+   );
+}
+
+function McqStats({
+   qnData
+}: {
+   qnData: Record<Collections, QnCollectionUserDat>
+}) {
+   if (JSON.stringify(qnData) === "{}") {
+      return <p>You have not attempted any MCQ questions yet!</p>;
+   }
+
+   const dataAsArr = Object.entries(qnData) as [
+      Collections,
+      QnCollectionUserDat
+   ][];
+
+   const totalAttempted = sum(
+      dataAsArr.map(([_, dat]) => dat.numQnsAttempted)
+   );
+   const totalWrong = sum(
+      dataAsArr.map(([_, dat]) => dat.wrongQnNums.length)
+   );
+   const totalCorrect = totalAttempted - totalWrong;
+   const totalPercentCorrect = Math.round(
+      (totalCorrect * 100) / totalAttempted
+   );
+
+   return (
+      <>
+         <Table striped>
+            <thead>
+               <tr>
+                  <th>Category</th>
+                  <th>No. Correct</th>
+                  <th>No. Attempted</th>
+                  <th>View Incorrect</th>
+               </tr>
+            </thead>
+            <tbody>
+               {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => {
+
+                  if (!numQnsAttempted) return;
+
+                  return (
+                     <tr key={cat}>
+                        <td>{QN_COL_DATA[cat].categoryName}</td>
+                        <td>{numQnsAttempted - wrongQnNums.length}</td>
+                        <td>{numQnsAttempted}</td>
+                        <td>
+                           <Link
+                              href={`/profile/wrongmcq/${cat}`}
+                              className={
+                                 "fw-bold btn btn-primary btn-sm px-3 " +
+                                 (wrongQnNums.length === 0 ? "disabled" : "")
+                              }
+                           >
+                              View
+                           </Link>
+                        </td>
+                     </tr>
+                  )
+               })}
+            </tbody>
+         </Table>
+
+         <div className="text-center">
+            Overall score:&nbsp;
+            <strong>
+               {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
+            </strong>
+         </div>
+      </>
+   );
+}
+
+function ClozeStats({
+   clozeData
+}: {
+   clozeData: ClozeUserDat[]
+}) {
+   if (clozeData.length === 0) {
+      return <p>You have not attempted any Cloze passages yet!</p>;
+   }
+
+   return (
+      <Table striped>
+         <thead>
+            <tr>
+               <th>Cloze No.</th>
+               <th>Score</th>
+               <th>View Cloze</th>
+            </tr>
+         </thead>
+         <tbody>
+            {clozeData.sort((a, b) => a.qnNum - b.qnNum).map(({ qnNum, correctAns }) => (
+               <tr key={qnNum}>
+                  <td>{`Q${qnNum}`}</td>
+                  <td>{`${correctAns.length} / 15`}</td>
+                  <td>
+                     <Link
+                        href={`/cloze/${qnNum}`}
+                        className="btn btn-primary btn-sm px-3 fw-bold"
+                     >
+                        View
+                     </Link>
+                  </td>
+               </tr>
+            ))}
+         </tbody>
+      </Table>
+   );
+}
+
+function MockTestStats({
+   mockTestData
+}: {
+   mockTestData: MockTestUserDat[]
+}) {
+   if (mockTestData.length === 0) {
+      return <p>You have not attempted any mock tests yet!</p>;
+   }
+
+   return (
+      <Table striped>
+         <thead>
+            <tr>
+               <th>Mock Test No.</th>
+               <th>Score</th>
+               <th>View Mock Test</th>
+            </tr>
+         </thead>
+         <tbody>
+            {mockTestData.sort((a, b) => a.mockTestNumber - b.mockTestNumber).map(({ mockTestNumber, score }) => (
+               <tr key={mockTestNumber}>
+                  <td>{mockTestNumber}</td>
+                  <td>{`${score} / 47`}</td>
+                  <td>
+                     <Link
+                        href={`/mock_test/${mockTestNumber}`}
+                        className="btn btn-primary btn-sm px-3 fw-bold"
+                     >
+                        View
+                     </Link>
+                  </td>
+               </tr>
+            ))}
+         </tbody>
+      </Table>
    );
 }

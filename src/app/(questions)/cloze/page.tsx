@@ -8,12 +8,13 @@ import Container from "react-bootstrap/esm/Container";
 import { fetchAllCloze } from "@/lib/mongodb/cloze-server-actions";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import toast from "react-hot-toast";
+import { ClozeUserDat } from "@/definitions";
 
 export const dynamic = 'force-dynamic';
 
 export default async function ClozeHomePage() {
 
-   await checkAuthForRoute();
+   const { clozeData } = await checkAuthForRoute();
 
    return (
       <Container>
@@ -21,13 +22,13 @@ export default async function ClozeHomePage() {
             <h5 className="m-0 text-center">Comprehension Cloze</h5>
          </Row>
          <Suspense fallback={<Skeleton height={40}/>}>
-            <ClozeTable/>
+            <ClozeTable clozeData={clozeData}/>
          </Suspense>
       </Container>
    );
 }
 
-async function ClozeTable() {
+async function ClozeTable({ clozeData }: { clozeData: ClozeUserDat[] }) {
    const ClozeArr = await fetchAllCloze();
    if ("error" in ClozeArr) {
       toast.error(ClozeArr.error);
@@ -43,7 +44,7 @@ async function ClozeTable() {
                      <tr key={qnNum}>
                         <td>
                            <Link href={`/cloze/${qnNum}`}>
-                              #{qnNum}&nbsp;{title}
+                              {`${qnNum}: ${title} ${clozeData.some(cz => cz.qnNum === qnNum) ? '✅' : ''}`}
                            </Link>
                         </td>
                      </tr>

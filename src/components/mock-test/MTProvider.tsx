@@ -35,6 +35,8 @@ export default function MockTestProvider({
 
    const flattenedQuestions = (Object.entries(questions) as [ Collections, Question[] ][]).flatMap(([col, qns]) => qns.map(qn => ({ col, qn })));
 
+   const numOfQuestions = flattenedQuestions.length;
+
    // ======================================
    // GET USER DATA FOR THIS MTEST IF EXISTS
    // ======================================
@@ -58,6 +60,9 @@ export default function MockTestProvider({
       .map((match) =>
          match.slice(1, -1).split("/").filter(Boolean)
       );
+   
+   // there MUST be 15 blanks
+   if (clozeCorrectAnsArray.length !== 15) throw new Error(`Cloze should have 15 blanks, instead got ${clozeCorrectAnsArray.length}`);
 
    // replace all curly braces with "BLANK"
    // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
@@ -90,7 +95,7 @@ export default function MockTestProvider({
          }));
    
          const initClozeState = clozeCorrectAnsArray.map<MTState>((correctAnsArray, idx) => ({
-            qnIndex: idx+flattenedQuestions.length,
+            qnIndex: idx+numOfQuestions,
             type: "cloze blank",
             clozeBlankCorrectAns: correctAnsArray,
             answer: "",
@@ -141,7 +146,7 @@ export default function MockTestProvider({
             const wrongClozeBlankData = prevUserClozeData?.find(dat => dat.blankNum === idx)!;
 
             return {
-               qnIndex: idx+flattenedQuestions.length,
+               qnIndex: idx+numOfQuestions,
                type: "cloze blank",
                clozeBlankCorrectAns: correctAnsArray,
                answer: wrongClozeBlankData.ans,
@@ -156,7 +161,10 @@ export default function MockTestProvider({
    })());
 
    // total length: number of questions + cloze (which is 1 page)
-   const totalNumOfPages = flattenedQuestions.length + 1;
+   const totalNumOfPages = numOfQuestions + 1;
+
+   // maximum score: number of questions (each 1 mark) + 15 (cloze is 15 marks)
+   const maximumMTScore = numOfQuestions + clozeCorrectAnsArray.length;
 
    // state for the current page user can see
    // 1 <= currUserPage <= totalNumOfPages
@@ -167,7 +175,7 @@ export default function MockTestProvider({
    const [isMTSubmitted, setIsMTSubmitted] = useState<boolean>(userRecordForThisMT ? true : false);
 
    // final score (out of num questions + 15 (for the cloze))
-   const [finalScore, setFinalScore] = useState<number>(prevUserScore || 0);
+   const [finalMTScore, setFinalMTScore] = useState<number>(prevUserScore || 0);
 
    // =================================
    // HANDLER FUNCTIONS FOR PAGE CHANGE
@@ -240,7 +248,7 @@ export default function MockTestProvider({
          }
       })
 
-      setFinalScore(mtScore);
+      setFinalMTScore(mtScore);
       setIsMTSubmitted(true);
       setTestStates(submittedTestState);
 
@@ -272,7 +280,7 @@ export default function MockTestProvider({
          }
 
          toast.success(
-            `Mock test submitted successfully. You scored ${mtScore} / ${submittedTestState.length}`, 
+            `Mock test submitted successfully. You scored ${mtScore} / ${maximumMTScore}`, 
             { duration: 8000 }
          );
          
@@ -303,6 +311,7 @@ export default function MockTestProvider({
       <MTContext.Provider
          value={{
             testStates,
+            maximumMTScore,
 
             clozePassageArray,
             
@@ -314,7 +323,7 @@ export default function MockTestProvider({
             handlePaginationClick,
          
             isMTSubmitted,
-            finalScore,
+            finalMTScore,
          
             submitMockTest,
             handleTouched,

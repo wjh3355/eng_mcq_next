@@ -63,7 +63,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                // check if user is suspended, if so, throw error code 2
                if (user.isSuspended) throw new CustomCredentialsError("2");
 
-               const maxAge = rememberMe === "true" ? 30 * 24 * 60 * 60 : 24 * 60 * 60; // 30 days or 1 day
+               const maxAge = rememberMe === "true" ? 1 * 24 * 60 * 60 : 6 * 60 * 60; // 2 days or 6 hours
 
                return { ...user, maxAge };
 

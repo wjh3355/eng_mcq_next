@@ -8,12 +8,13 @@ import Container from "react-bootstrap/esm/Container";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import toast from "react-hot-toast";
 import { fetchNumMockTests } from "@/lib/mongodb/mt-server-actions";
+import { MockTestUserDat } from "@/definitions";
 
 export const dynamic = 'force-dynamic';
 
 export default async function MockTestsHomePage() {
 
-   await checkAuthForRoute();
+   const { mockTestData } = await checkAuthForRoute();
 
    return (
       <Container>
@@ -21,13 +22,13 @@ export default async function MockTestsHomePage() {
             <h5 className="m-0 text-center">Mock Tests</h5>
          </Row>
          <Suspense fallback={<Skeleton height={40}/>}>
-            <MockTestsTable/>
+            <MockTestsTable mockTestData={mockTestData}/>
          </Suspense>
       </Container>
    );
 }
 
-async function MockTestsTable() {
+async function MockTestsTable({ mockTestData }: { mockTestData: MockTestUserDat[] }) {
    const numMT = await fetchNumMockTests();
    if (typeof numMT !== "number") {
       toast.error(numMT.error);
@@ -43,7 +44,7 @@ async function MockTestsTable() {
                      <tr key={i+1}>
                         <td>
                            <Link href={`/mock_test/${i+1}`}>
-                              Mock Test {i+1}
+                              {`Mock Test ${i+1} ${mockTestData.some(mt => mt.mockTestNumber === i+1) ? '✅' : ''}`}
                            </Link>
                         </td>
                      </tr>

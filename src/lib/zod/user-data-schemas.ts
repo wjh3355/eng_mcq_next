@@ -56,12 +56,10 @@ export const UserProfileDataSchema = z.object({
             })
          )
       })
-   ).optional(),
+   ),
    score: z.number(),
-   dateCreated: z.string().nonempty()
-})
-
-// may add more fields later, so not .strict()
+   dateCreated: z.string().nonempty(),
+}).strict()
 
 export const UserInviteSchema = z.object({
    email: z.string().email().nonempty(),

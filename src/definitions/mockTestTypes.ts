@@ -18,6 +18,7 @@ export type MTState =
 
 export type MTContextValue = {
    testStates: MTState[];
+   maximumMTScore: number;
 
    clozePassageArray: string[];
    
@@ -28,7 +29,7 @@ export type MTContextValue = {
    handlePaginationClick: (n: number) => void;
 
    isMTSubmitted: boolean;
-   finalScore: number;
+   finalMTScore: number;
 
    submitMockTest: () => void;
    handleTouched: (n: number, v: string) => void;
