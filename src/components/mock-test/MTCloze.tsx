@@ -1,12 +1,10 @@
 "use client";
 
 import Col from "react-bootstrap/esm/Col";
-import styled from "styled-components";
 import { useMockTestContext } from "./MTProvider";
 import Button from "react-bootstrap/esm/Button";
 import { RotateCcw } from "lucide-react";
-import Card from "react-bootstrap/esm/Card";
-import Row from "react-bootstrap/esm/Row";
+import ClozeInput from "../cloze/ClozeInput";
 
 export default function MTCloze() {
 
@@ -72,7 +70,7 @@ export default function MTCloze() {
                <span key={`blank-${blankCountr}`} className="d-inline-block">
                   <strong>Q{qnIndex+1}.</strong>&nbsp;
                   <span className="d-inline-flex align-items-center position-relative">
-                     <MTClozeInput
+                     <ClozeInput
                         type="text"
                         autoComplete="off"
                         disabled={isMTSubmitted}
@@ -139,7 +137,7 @@ export default function MTCloze() {
                }}
             >
                {paragraphToRender.map((paraArr, idx) => 
-                  <p key={idx} className="mb-5">{paraArr}</p>)
+                  <p key={idx} className={idx !== paragraphToRender.length - 1 ? "mb-5" : ""}>{paraArr}</p>)
                }
             </article>
             <div className="d-flex justify-content-center flex-column">
@@ -159,19 +157,3 @@ export default function MTCloze() {
       </Col>
    );
 }
-
-const MTClozeInput = styled.input<{
-   $style: "red" | "green" | "default";
-}>`
-   width: 130px;
-   height: 32px;
-   text-align: center;
-   border: 2px solid lightgray;
-   border-radius: 5px;
-   background-color: white;
-   margin: 0;
-   &:disabled {
-      ${({$style}) => $style === "green" && "color: green; font-weight: bold; border-color: green;"}
-      ${({$style}) => $style === "red" && "color: rgb(190, 44, 44); font-weight: bold; border-color: rgb(190, 44, 44);"}
-   }
-`;

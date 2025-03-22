@@ -1,6 +1,6 @@
 import ClozeApp from "@/components/cloze/ClozeApp";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
-import { fetchNumClozes } from "@/lib/mongodb/cloze-server-actions";
+import { fetchCloze, fetchNumClozes } from "@/lib/mongodb/cloze-server-actions";
 
 export const dynamicParams = false;
 
@@ -21,10 +21,16 @@ export default async function IndividualClozePage({ params }: { params: Promise<
 
    const qnNumInt = parseInt((await params).num, 10);
 
+   const cloze = await fetchCloze(qnNumInt);
+
+   // TODO: make error handling more graceful!!
+   if ('error' in cloze) {
+      return null;
+   }
+
    return <ClozeApp 
       user={user} 
-      qnNum={qnNumInt}
       isDemo={false}
-      mainTitle={`Comprehension Cloze - Q${qnNumInt}`}
+      cloze={cloze}
    />
 }

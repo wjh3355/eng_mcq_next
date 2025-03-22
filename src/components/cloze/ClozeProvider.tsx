@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import {
+   Cloze,
+   ClozeBlankState,
    ClozeContextVal,
    UserProfileDocument,
 } from "@/definitions";
-import { fetchCloze } from "@/lib/mongodb/cloze-server-actions";
 import toast from "react-hot-toast";
-import { Info } from "lucide-react";
 import { updateUserClozeData } from "@/lib/mongodb/user-server-actions";
 
 // create context, fallback is an empty context value
@@ -26,170 +26,228 @@ export function useClozeContext() {
 
 export function ClozeProvider({
    user,
-   qnNum,
+   cloze,
    isDemo,
    children
 }: {
    user: UserProfileDocument;
-   qnNum: number;
+   cloze: Cloze;
    isDemo: boolean;
    children: React.ReactNode;
 }): React.ReactNode {
 
-   const [prevUserCorrectAns, setPrevUserCorrectAns] = useState<null | number[]>(null);
-   const [passageTitle, setPassageTitle] = useState<string>("");
-   const [wordsToTestArr, setWordsToTestArr] = useState<string[][]>([]);
-   const [textArr, setTextArr] = useState<string[]>([]);
-   const [isLoading, setIsLoading] = useState<boolean>(true);
+   
+   // match all pairs of curly braces and extract the words to test (joined by "/")
+   // split the words by "/" and filter out empty strings
+   const clozeCorrectAnsArray = cloze.passage
+      .match(/\{[^}]*\}/g)!
+      .map((match) =>
+         match.slice(1, -1).split("/").filter(Boolean)
+      );
 
-   function handleCompletion(correctAns: number[]) {
+   // replace all curly braces with "BLANK"
+   // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
+   // "BLANK" and "||" are included in the split array
+   // filter out empty strings
+   const clozePassageArray = cloze.passage
+      .replace(/{.*?}/g, "BLANK")
+      .split(/(BLANK|\|\|)/)
+      .filter(Boolean);
+   
+   // get cloze title
+   const clozeTitle = cloze.title;
 
-      // if demo, do not update user profile (there isnt one, email is empty)
-      if (isDemo) {
-         setPrevUserCorrectAns(correctAns);
-         if (correctAns.length >= 8) {
-            toast.success("Hooray! You passed. You may check the correct answers below.");
+   // if user is attempting demo, an empty user object is passed in --> no cloze data.
+   // if not, the actual user object is passed in --> cloze data is present if they have attempted the cloze, else no cloze data.
+   const userRecordForThisCloze = user.clozeData.find(cd => cd.qnNum === cloze.qnNum);
+   const {
+      correctAns: prevUserCorrectAnsArr
+   } = userRecordForThisCloze || {}
+
+   useEffect(() => {
+      if (!userRecordForThisCloze) {
+         toast("Get 8 or more blanks correct. You have 3 tries.");
+      }
+   }, [])
+
+   // =================
+   // INITIALISE STATES
+   // =================
+
+   // cloze state
+   const [clozeState, setClozeState] = useState<ClozeBlankState[]>((() => {
+         
+         if (!userRecordForThisCloze) {
+   
+            // user has not done this cloze before
+            // initialise all answers as "", and all statuses as "not submitted"
+
+            return clozeCorrectAnsArray.map<ClozeBlankState>((correctAnsArray, idx) => ({
+               blankIdx: idx,
+               blankCorrectAns: correctAnsArray,
+               answer: "",
+               status: "not submitted"
+            }));
+   
          } else {
-            toast.error("Sorry, you did not pass. You may check the correct answers below.");
-         }
-         return;
-      }
+   
+            // user has done this cloze before
+            // initialise all answers as the user's previous answers, and all statuses as "done"
+      
+            return clozeCorrectAnsArray.map<ClozeBlankState>((correctAnsArray, idx) => {
 
-      // if not demo, update user profile with correct answer
-      if (correctAns.length >= 8) {
-         toast.success("Hooray! You passed. Refresh the page to see the correct answers.");
-      } else {
-         toast.error("Sorry, you did not pass. Refresh the page to see the correct answers.");
-      }
+               const wasCorrect = prevUserCorrectAnsArr?.includes(idx);
 
-      updateUserClozeData({
-         email: user.email,
-         clozeNum: qnNum,
-         correctAnsArray: correctAns,
-      })
-      .then(res => {
-         if ("error" in res) {
-            toast.error(res.error!);
-            return;
+               return {
+                  blankIdx: idx,
+                  blankCorrectAns: correctAnsArray,
+                  answer: "",
+                  status: wasCorrect ? 'correct' : 'incorrect'
+               }
+            });
+            
          }
-      });
+   
+      })()
+   );
+
+   // score out of 15
+   const [score, setScore] = useState<number>(prevUserCorrectAnsArr?.length || 0);
+
+   // was cloze submitted
+   const [isClozeSubmitted, setIsClozeSubmitted] = useState<boolean>(!!userRecordForThisCloze);
+
+   // attempts left (initially 3)
+   const [triesLeft, setTriesLeft] = useState<number>(3);
+
+   // =================
+   // UTILITY FUNCTIONS
+   // =================
+
+   function handleBlankUpdate(idx: number, newAns: string) {
+      setClozeState(cs => cs.map(cs => 
+         cs.blankIdx === idx ? {...cs, answer: newAns } : cs
+      ));
    }
 
-   function handleReset() {
+   function handleResetAllBlanks() {
+      setClozeState(cs => cs.map(cs => ({...cs, answer: "" }) ));
+   }
 
-      // if demo, set prevUserCorrectAns to null
-      if (isDemo) {
-         setPrevUserCorrectAns(null);
-         return;
+   function submitCloze() {
+     
+      // set each blank's status to "correct" / "incorrect" 
+      let clozeScore = 0;
+
+      const submittedClozeState: ClozeBlankState[] = clozeState.map(cs => {
+
+         const trimmedAns = cs.answer.trim();
+         const rw = cs.blankCorrectAns.includes(trimmedAns);
+      
+         if (rw) clozeScore++;
+
+         return { ...cs, answer: trimmedAns, status: rw ? "correct" : "incorrect" };
+      })
+
+      if (triesLeft === 1 || clozeScore >= 8) {
+
+         // submit the cloze if user has run out of tries
+         // or has gotten 8 or more correct (pass)
+
+         setIsClozeSubmitted(true);
+         setScore(clozeScore);
+         setClozeState(submittedClozeState);
+
+         if (!isDemo) {
+
+            const correctAnsArray = submittedClozeState.reduce<number[]>((acc, cs, idx) => {
+               if (cs.status === "correct") acc.push(idx);
+               return acc;
+            }, []);
+
+            updateUserClozeData({
+               email: user.email,
+               clozeNum: cloze.qnNum,
+               correctAnsArray
+            })
+            .then(res => {
+               if ("error" in res) {
+                  toast.error(res.error!);
+                  return;
+               }
+   
+               toast.success(
+                  `Cloze ${cloze.qnNum} was submitted. You scored ${clozeScore} / 15.`, 
+                  { duration: 8000 }
+               );
+   
+            });
+
+         } else {
+            toast.success(
+               `Cloze passage submitted. You scored ${clozeScore} / 15.`, 
+               { duration: 8000 }
+            );
+         }
+
+      } else {
+
+         // decrement triesLeft
+
+         const newTriesLeft = triesLeft - 1;
+
+         setClozeState(submittedClozeState);
+         setTriesLeft(newTriesLeft);
+
+         toast.error(
+            `Sorry, you did not pass. Get 8 or more blanks correct. You have ${newTriesLeft} tries left.`, 
+            { duration: 8000 }
+         );
+
       }
 
-      // if not demo, update user profile by deleting the cloze entry
-      updateUserClozeData({
-         email: user.email,
-         clozeNum: qnNum,
-         correctAnsArray: null,
-      })
-      .then(
-         res => {
+   }
+
+   function resetCloze() {
+
+      if (!isDemo) {
+
+         updateUserClozeData({
+            email: user.email,
+            clozeNum: cloze.qnNum,
+            correctAnsArray: null,
+         })
+         .then(res => {
             if ("error" in res) {
                toast.error(res.error!);
                return;
             }
-            window.location.reload();
-         }
-      );
-   }
 
-   useEffect(() => {
+            toast.success(`Cloze ${cloze.qnNum} reset successfully.`);   
 
-      const fetchData = async() => {
-         // if user is attempting demo, an empty user object is passed in --> no cloze data.
-         // if not, the actual user object is passed in --> cloze data is present if they have attempted the cloze, else no cloze data.
-         const hasUserDoneCloze = user.clozeData.some(cz => cz.qnNum === qnNum);
+            return new Promise(r => setTimeout(r, 1000))
+         })
+         .then(res => window.location.reload());
 
-         if (hasUserDoneCloze) {
-            const userDataForThisCloze = user.clozeData.find(cz => cz.qnNum === qnNum)!;
-            setPrevUserCorrectAns(userDataForThisCloze.correctAns);
-         } else {
-            setPrevUserCorrectAns(null);
-            toast.custom(
-               <span className="border-0 shadow rounded-3 p-3 bg-white fw-bold d-flex align-items-center"> 
-                  <Info color="#009300" className="me-1"/>Get at least 8 out of 15 blanks correct to pass.
-               </span>
-            );
-         }
-
-         // fetch cloze based on qnNum
-         const clozePromise = fetchCloze(qnNum);
-
-         try {
-
-            // wait for cloze data to be fetched
-            const res = await clozePromise;
-
-            // if error, show error message
-            if ( "error" in res ) {
-               toast.error(res.error!);
-               return;
-            }
-
-            // match all pairs of curly braces and extract the words to test (joined by "/")
-            // split the words by "/" and filter out empty strings
-            setWordsToTestArr(
-               res.passage
-                  .match(/\{[^}]*\}/g)!
-                  .map((match) =>
-                     match.slice(1, -1).split("/").filter(Boolean)
-                  )
-            );
-
-            // replace all curly braces with "BLANK"
-            // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
-            // "BLANK" and "||" are included in the split array
-            // filter out empty strings
-            setTextArr(
-               res.passage
-                  .replace(/{.*?}/g, "BLANK")
-                  .split(/(BLANK|\|\|)/)
-                  .filter(Boolean)
-            );
-
-            // set the passage title
-            setPassageTitle(res.title);
-
-         } catch (err) {
-            toast.error(err instanceof Error ? err.message : "An unknown error occurred");
-         }
-
+      } else {
+         window.location.reload();
       }
 
-      fetchData();
-      
-   }, []);
-
-   useEffect(() => {
-      // if all data is loaded, set isLoading to false
-      // prevent loading spinner from showing when data is already loaded
-      if (
-         passageTitle.length > 0 &&
-         textArr.length > 0 &&
-         wordsToTestArr.length > 0
-      )
-         setIsLoading(false);
-   }, [passageTitle, textArr, wordsToTestArr]);
+   }
 
    return (
       <ClozeContext.Provider
          value={{
-            isDemo,
-            prevUserCorrectAns,
-            wordsToTestArr,
-            textArr,
-            qnNum,
-            passageTitle,
-            isLoading,
-            handleCompletion,
-            handleReset,
+            clozeState,
+            clozePassageArray,
+            clozeTitle,
+            score,
+            triesLeft,
+            isClozeSubmitted,
+            handleBlankUpdate,
+            handleResetAllBlanks,
+            submitCloze,
+            resetCloze
          }}
       >
          {children}

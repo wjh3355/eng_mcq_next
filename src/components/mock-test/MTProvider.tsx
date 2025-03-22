@@ -41,7 +41,7 @@ export default function MockTestProvider({
    // GET USER DATA FOR THIS MTEST IF EXISTS
    // ======================================
 
-   const userRecordForThisMT = user.mockTestData?.find(mt => mt.mockTestNumber === MTnum);
+   const userRecordForThisMT = user.mockTestData.find(mt => mt.mockTestNumber === MTnum);
 
    const {
       score: prevUserScore,
@@ -172,7 +172,7 @@ export default function MockTestProvider({
    const [currUserPage, setCurrUserPage] = useState<number>(1);
 
    // if the user has done the mock test
-   const [isMTSubmitted, setIsMTSubmitted] = useState<boolean>(userRecordForThisMT ? true : false);
+   const [isMTSubmitted, setIsMTSubmitted] = useState<boolean>(!!userRecordForThisMT);
 
    // final score (out of num questions + 15 (for the cloze))
    const [finalMTScore, setFinalMTScore] = useState<number>(prevUserScore || 0);
@@ -304,7 +304,7 @@ export default function MockTestProvider({
          return new Promise(r => setTimeout(r, 1000))
       })
       .then(res => window.location.reload());
-      ;
+
    }
 
    return (

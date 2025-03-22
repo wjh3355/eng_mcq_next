@@ -11,6 +11,7 @@ export default async function MockTest({ MTnum, user }: { MTnum: number, user: U
 
    const mockTestData = await fetchMockTestData(MTnum);
 
+   // TODO: make error handling more graceful!!
    if ("error" in mockTestData) return;
 
    const { mockTestNumber, qnNums, clozePassage } = mockTestData;

@@ -5,22 +5,21 @@ export type Cloze = {
 }
 
 export type ClozeContextVal = {
-   isDemo: boolean
-   prevUserCorrectAns: null | number[],
-   wordsToTestArr: string[][],
-   textArr: string[],
-   qnNum: number,
-   passageTitle: string,
-   isLoading: boolean,
-   handleCompletion: (correctAns: number[]) => void,
-   handleReset: () => void
+   clozeState: ClozeBlankState[]
+   clozePassageArray: string[],
+   clozeTitle: string,
+   score: number,
+   triesLeft: number,
+   isClozeSubmitted: boolean,
+   handleBlankUpdate: (idx: number, v: string) => void,
+   handleResetAllBlanks: () => void,
+   submitCloze: () => void,
+   resetCloze: () => void
 }
 
-export type ClozeFormData = Record<
-   number, 
-   {
-      value: string,
-      correctAnswers: string[],
-      isCorrect: boolean | null
-   }
->;
+export type ClozeBlankState = {
+   blankIdx: number;
+   blankCorrectAns: string[];
+   answer: string;
+   status: "not submitted" | "correct" | "incorrect";
+};
