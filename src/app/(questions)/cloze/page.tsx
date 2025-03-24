@@ -40,7 +40,7 @@ async function ClozeTable({ clozeData }: { clozeData: ClozeUserDat[] }) {
          <Col xl={6} lg={8} md={10} className="mx-auto">
             <Table striped className="shadow">
                <tbody>
-                  {ClozeArr.map(({ qnNum, title }) => 
+                  {ClozeArr.sort((a, b) => a.qnNum - b.qnNum).map(({ qnNum, title }) => 
                      <tr key={qnNum}>
                         <td>
                            <Link href={`/cloze/${qnNum}`}>

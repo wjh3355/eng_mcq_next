@@ -54,7 +54,7 @@ export function QuestionProvider({
          // if correct, increment both right correct count and total attempted count
          setNumCorrect(prev => prev + 1);
          setNumAttempted(prev => prev + 1);
-         toast.success("Correct! Well done.");
+         toast.success("Correct!");
       } else {
          // if wrong, increment total attempted count only
          setNumAttempted(prev => prev + 1);

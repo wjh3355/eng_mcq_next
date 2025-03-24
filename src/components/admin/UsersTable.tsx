@@ -48,7 +48,7 @@ export default function UsersTable(
                      const qnDataAsArr = Object.entries(qnData) as [ Collections, QnCollectionUserDat ][];
 
                      return (
-                        <tr key={email}>
+                        <tr key={`user-${email}`}>
                            <td>{idx + 1}</td>
                            <td>{email}</td>
                            <td>{passwordHash.slice(7, 25) + "..."}</td>
@@ -58,21 +58,21 @@ export default function UsersTable(
                            <td>{DateTime.fromISO(dateCreated).toISODate()}</td>
                            <td>
                               {qnDataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) =>
-                                 <div key={cat}>
+                                 <div key={`user-${email}-questions-${cat}`}>
                                     {`${QN_COL_DATA[cat].categoryName}: ${numQnsAttempted - wrongQnNums.length} / ${numQnsAttempted}`}
                                  </div>
                               )}
                            </td>
                            <td>
                               {clozeData.sort((a, b) => a.qnNum - b.qnNum).map(({qnNum, correctAns}) => 
-                                 <div key={qnNum}>
+                                 <div key={`user-${email}-cloze-${qnNum}`}>
                                     {`Cloze ${qnNum}: ${correctAns.length} / 15`}
                                  </div>
                               )}
                            </td>
                            <td>
                               {mockTestData.sort((a, b) => a.mockTestNumber - b.mockTestNumber).map(({mockTestNumber, score}) => 
-                                 <div key={mockTestNumber}>
+                                 <div key={`user-${email}-mocktest-${mockTestNumber}`}>
                                     {`Mock Test ${mockTestNumber}: ${score} / 47`}
                                  </div>
                               )}

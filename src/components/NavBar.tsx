@@ -19,7 +19,7 @@ export default function NavBar() {
 
    // dk why but this is necessary
    function handleProtectedNavigation(e: React.MouseEvent) {
-      if (status === "loading") {
+      if (status !== "authenticated") {
          e.preventDefault();
          return;
       }
@@ -65,7 +65,7 @@ export default function NavBar() {
 
                         <Nav.Link as={Link} href="/questions" onClick={handleProtectedNavigation}>Questions</Nav.Link>
                         <Nav.Link as={Link} href="/cloze" onClick={handleProtectedNavigation}>Cloze Passages</Nav.Link>
-                        {/* <Nav.Link as={Link} href="/mock_test" onClick={handleProtectedNavigation}>Mock Tests</Nav.Link> */}
+                        <Nav.Link as={Link} href="/mock_test" onClick={handleProtectedNavigation}>Mock Tests</Nav.Link>
                         <Nav.Link as={Link} href="/profile" onClick={handleProtectedNavigation}>Your Profile</Nav.Link>
 
                         {session.user.role === "admin" &&

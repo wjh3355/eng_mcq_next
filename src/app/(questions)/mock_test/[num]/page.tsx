@@ -1,10 +1,6 @@
 import MockTest from "@/components/mock-test/MockTest";
 import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { fetchNumMockTests } from "@/lib/mongodb/mt-server-actions";
-import { Suspense } from "react";
-import Skeleton from "react-loading-skeleton";
-
-export const dynamicParams = false;
 
 // export const dynamic = 'force-dynamic';
 
@@ -23,9 +19,5 @@ export default async function IndividualMockTestPage({ params }: { params: Promi
 
    const MTnum = parseInt((await params).num, 10);
 
-   return (
-      <Suspense fallback={<Skeleton height={50}/>}>
-         <MockTest MTnum={MTnum} user={user} />
-      </Suspense>
-   )
+   return <MockTest MTnum={MTnum} user={user} />;
 }
