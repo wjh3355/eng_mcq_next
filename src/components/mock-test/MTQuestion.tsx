@@ -198,8 +198,8 @@ export default function MTQuestion() {
          </Col>
 
          <Col lg={4} md={5}>
-            <Card body className="shadow border-0">
-               <div className="d-flex flex-column justify-content-left">
+            <Card className="shadow border-0">
+               <Card.Body className="d-flex flex-column justify-content-left">
 
                   <MTQuestionAnswer
                      thisQnState={displayedQnState}
@@ -209,16 +209,22 @@ export default function MTQuestion() {
                   />
 
                   {displayedQnState.status === "incorrect" && !displayedQnState.answer &&
-                     <small className="text-danger fw-bold mx-auto d-flex align-items-center mt-2"><CircleX size={17} strokeWidth={3}/>&nbsp;You did not attempt this question.</small>
+                     <small className="text-danger fw-bold mx-auto d-flex align-items-center mt-2"><CircleX size={17} strokeWidth={3}/>&nbsp;Did not attempt</small>
                   }
 
-                  {isMTSubmitted &&
-                     <Button size="sm" className="mx-auto mt-2" variant="outline-info" onClick={() => setIsExplShown(true)}>
+               </Card.Body>
+               
+               {isMTSubmitted &&
+                  <Card.Footer className="d-flex align-items-center justify-content-evenly">
+                     {displayedQnState.status === "incorrect" &&
+                        <small className="text-success">Correct answer: <strong>{displayedQnState.qnObj.correctAns}</strong></small>
+                     }
+                     <Button size="sm" variant="outline-info" onClick={() => setIsExplShown(true)}>
                         Explanation
                      </Button>
-                  }
+                  </Card.Footer>
+               }
 
-               </div>
             </Card>
          </Col>
 

@@ -3,7 +3,7 @@ import Badge from "react-bootstrap/Badge";
 
 export default function QuestionExplanation({ qnObj, num }: { qnObj: Question, num?: number}) {
 
-   const { kindOfQn, sentence, rootWord, wordToTest, def, correctAns, type } = qnObj;
+   const { kindOfQn, sentence, rootWord, def, correctAns, type } = qnObj;
 
    switch (kindOfQn) {
       case "meaning":
@@ -67,7 +67,7 @@ export default function QuestionExplanation({ qnObj, num }: { qnObj: Question, n
                   {def}
                </div>
                <div className="p-2 fst-italic bg-secondary bg-opacity-10">
-                  {sentence.replace(/_+/g, rootWord!)}
+                  {sentence.replace(/_+/g, correctAns)}
                </div>
             </div>
          );
