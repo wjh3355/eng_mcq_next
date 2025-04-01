@@ -38,19 +38,33 @@ async function ClozeTable({ clozeData }: { clozeData: ClozeUserDat[] }) {
    return (
       <Row>
          <Col xl={6} lg={8} md={10} className="mx-auto">
-            <Table striped className="shadow">
-               <tbody>
-                  {ClozeArr.sort((a, b) => a.qnNum - b.qnNum).map(({ qnNum, title }) => 
-                     <tr key={qnNum}>
-                        <td>
-                           <Link href={`/cloze/${qnNum}`}>
-                              {`${qnNum}: ${title} ${clozeData.some(cz => cz.qnNum === qnNum) ? '✅' : ''}`}
-                           </Link>
-                        </td>
-                     </tr>
-                  )}
+            <Table striped="columns" className="shadow">
+               <thead>
                   <tr>
-                     <td>
+                     <th>Cloze</th>
+                     <th>Your score</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {ClozeArr.sort((a, b) => a.qnNum - b.qnNum).map(({ qnNum, title }) => {
+
+                     const cd = clozeData.find(cd => cd.qnNum === qnNum);
+
+                     return (
+                        <tr key={qnNum}>
+                           <td>
+                              <Link href={`/cloze/${qnNum}`}>
+                                 {`${qnNum}: ${title}`}
+                              </Link>
+                           </td>
+                           <td>
+                              {cd ? `${cd.correctAns.length} / 15` : ''}
+                           </td>
+                        </tr>
+                     )
+                  })}
+                  <tr>
+                     <td colSpan={2}>
                         <div className="text-center text-secondary fst-italic">
                            More coming soon
                         </div>

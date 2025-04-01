@@ -38,19 +38,33 @@ async function MockTestsTable({ mockTestData }: { mockTestData: MockTestUserDat[
    return (
       <Row>
          <Col xl={6} lg={8} md={10} className="mx-auto">
-            <Table striped className="shadow">
-               <tbody>
-                  {Array.from({ length: numMT }, (_, i) => (
-                     <tr key={i+1}>
-                        <td>
-                           <Link href={`/mock_test/${i+1}`}>
-                              {`Mock Test ${i+1} ${mockTestData.some(mt => mt.mockTestNumber === i+1) ? '✅' : ''}`}
-                           </Link>
-                        </td>
-                     </tr>
-                  ))}
+            <Table striped="columns" className="shadow">
+               <thead>
                   <tr>
-                     <td>
+                     <th>Number</th>
+                     <th>Your score</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {Array.from({ length: numMT }, (_, i) => {
+
+                     const mtData = mockTestData.find(mtd => mtd.mockTestNumber === i+1);
+
+                     return (
+                        <tr key={i+1}>
+                           <td>
+                              <Link href={`/mock_test/${i+1}`}>
+                                 {`Mock Test ${i+1}`}
+                              </Link>
+                           </td>
+                           <td>
+                              {mtData ? `${mtData.score} / 47` : ''}
+                           </td>
+                        </tr>
+                     );
+                  })}
+                  <tr>
+                     <td colSpan={2}>
                         <div className="text-center text-secondary fst-italic">
                            More coming soon
                         </div>
