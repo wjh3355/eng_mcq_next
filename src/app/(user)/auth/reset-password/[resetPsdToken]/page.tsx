@@ -57,8 +57,11 @@ function ReactHookForm() {
          )
 
          reset();
-         // added chinese for all the fucking PRCs
-         toast.success("Password reset successfully! You may now login with your new password. 成功重置密码！您现在可使用新密码登录。");
+
+         toast.success(
+            "Password reset successfully! You may now login with your new password.", 
+            { style: { width: "1000px" },  duration: 6000 }
+         );
          
       } catch (error) {
          if (error instanceof AxiosError) {
@@ -67,18 +70,19 @@ function ReactHookForm() {
                case "1":
                   toast.error(
                      <div>
-                        <p>Invalid or expired token.</p>
-                        <p>Please check your reset password link or request a new link <Link href="/auth/reset-password">here</Link>.</p>
-                     </div>
+                        <p>Invalid or expired link.</p>
+                        <p>Please check your reset link or <Link href="/auth/reset-password">request a new link</Link>.</p>
+                     </div>, 
+                     { style: { width: "1000px" },  duration: 6000 }
                   );
                   break;
                default:
-                  toast.error(error.response?.data.error || "Request error. Please try again.");
+                  toast.error(error.response?.data.error || "Request error. Please try again.", { duration: 6000 });
                   break;
             }
             
          } else {
-            toast.error("An unknown error occured. Please try again.");
+            toast.error("An unknown error occured. Please try again.", { duration: 6000 });
          }
       }
 

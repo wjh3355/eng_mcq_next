@@ -60,27 +60,26 @@ function ReactHookForm() {
             // remind user to reset password if necessary
             switch (res.code) {
                case "1":
-                  toast.error("Sorry, your email or password was incorrect.");
+                  toast.error("Sorry, your email or password was incorrect.", { style: { width: "1000px" },  duration: 6000 });
                   break;
                case "2":
-                  toast.error("You have been suspended! Contact support for more information.");
+                  toast.error("You have been suspended. Contact support for more information.", { style: { width: "1000px" },  duration: 6000 });
                   break;
                case "3":
                default:
-                  toast.error("An unknown error occured. Please try again.");
+                  toast.error("An unknown error occured. Please try again.", { duration: 6000 });
                   break;
             }
-            toast.error("If you are an existing user, please reset your password.\n\nIf you have already done so, you may log in as usual.");
             return;
          }
 
          // success: redirect to dashboard
          reset();
          router.push("/");
-         toast.success(`Welcome, ${data.email.toLowerCase().trim()}`);
+         toast.success(`Welcome, ${data.email.toLowerCase().trim()}`, { duration: 6000 });
 
       } catch (e) {
-         toast.error("An unknown error occured. Please try again.");
+         toast.error("An unknown error occured. Please try again.", { duration: 6000 });
       }
    };
    

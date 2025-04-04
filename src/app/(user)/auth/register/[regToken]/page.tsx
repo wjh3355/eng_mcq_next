@@ -59,9 +59,22 @@ function ReactHookForm() {
 
          reset();
 
-         toast.success("Your account was succesfully created. You now have access to all features. Logging in...");
+         toast.success(
+            <div>
+               <p>
+                  Your account was succesfully created.
+               </p>
+               <p>
+                  You now have access to all features. 
+               </p>
+               <p>
+                  Logging in...
+               </p>
+            </div>,
+            { style: { width: "1000px" },  duration: 6000 }
+         );
 
-         await new Promise(resolve => setTimeout(resolve, 500));
+         await new Promise(resolve => setTimeout(resolve, 3000));
 
          await signIn("credentials", {
             email: data.email.toLowerCase().trim(),
@@ -78,10 +91,10 @@ function ReactHookForm() {
                   <p>If you have already registered, please <Link href="/auth">Log In</Link>.</p>
                   <p>If you do intend to register, please check your email and registration link. Make sure you have an internet connection.</p>
                </div>,
-               { style: { width: "1000px" } },
+               { style: { width: "1000px" }, duration: 6000 },
             );
          } else {
-            toast.error("An unknown error occured. Please try again.");
+            toast.error("An unknown error occured. Please try again.", { duration: 6000 });
          }
       }
 

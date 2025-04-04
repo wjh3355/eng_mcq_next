@@ -46,9 +46,9 @@ function ReactHookForm() {
          toast.success(
             <div>
                <p>If your email is registered with us, you will receive a password reset link.</p>                  
-               <p>Please check your spam folder too.</p>
-               <p>若您的电邮已注册，您将会收到重设密码专用链接。请检查您的垃圾邮件文件夹。</p>
+               <p>Please also check your spam folder.</p>
             </div>,
+            { style: { width: "1000px" },  duration: 6000 }
          );
 
       } catch (error) {
