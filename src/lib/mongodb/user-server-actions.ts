@@ -220,7 +220,8 @@ export async function updateUserMockTestData({
          await profiles.updateOne({ email }, {
             $addToSet: { 
                mockTestData: newMTUserDat
-            }
+            },
+            $inc: { score: 10*newMTUserDat.score }
          });
       } else {
          await profiles.updateOne({ email }, {
@@ -247,7 +248,7 @@ export async function resetUserData(email: string) {
 
    try {
 
-      throw new Error("This function has been disabled by the administrator.");
+      throw new Error("Sorry, this function has been disabled by the administrator.");
 
       const session = await auth();
 

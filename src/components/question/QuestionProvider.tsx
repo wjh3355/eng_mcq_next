@@ -26,11 +26,13 @@ export function QuestionProvider({
    collection,
    qnNumArray,
    email,
-   children
+   isRedoWrongQns,
+   children,
 }: { 
    collection: Collections,
    qnNumArray: number[],
-   email: string,
+   email: string | null,
+   isRedoWrongQns: boolean,
    children: React.ReactNode
 }): React.ReactNode {
 
@@ -187,6 +189,8 @@ export function QuestionProvider({
                currQnNum: qnNumArray.length - qnSequence.length + 1,
                // whether the user has reached the end of the set
                hasReachedEnd,
+               // whether we are redoing wrong questions
+               isRedoWrongQns,
             },
       
             userInfo: {

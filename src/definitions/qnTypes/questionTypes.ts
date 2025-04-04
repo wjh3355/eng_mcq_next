@@ -117,6 +117,7 @@ export type QuestionContextVal = {
       numQnsInSet: number,
       currQnNum: number,
       hasReachedEnd: boolean,
+      isRedoWrongQns: boolean,
    },
    userInfo: {
       userPoints: number,

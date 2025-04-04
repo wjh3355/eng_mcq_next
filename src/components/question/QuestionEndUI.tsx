@@ -10,9 +10,9 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
 import { useQuestionContext } from './QuestionProvider';
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import QuestionPaginatedExplanation from "./QuestionPaginatedExplanation";
+import { QN_COL_DATA } from "@/definitions";
 
 export default function QuestionEndUI({
    nextSetNum,
@@ -26,14 +26,12 @@ export default function QuestionEndUI({
       collection,
       qnObj: { kindOfQn, qnNum, sentence, wordToTest, options, correctAns, rootWord, type, def },
       isLoading,
-      setInfo: { currQnNum, hasReachedEnd, numQnsInSet },
+      setInfo: { currQnNum, hasReachedEnd, numQnsInSet, isRedoWrongQns },
       userInfo: { userPoints, isCorrect, wronglyAnswered, numCorrect, numAttempted },
       callbacks: { handleNextQnBtnClick, handleAttempt, redoSet }
    } = useQuestionContext();
 
    const [isReviewShown, setIsReviewShown] = useState(false);
-
-   const { push } = useRouter();
 
    if (!hasReachedEnd) return null;
 
@@ -45,7 +43,13 @@ export default function QuestionEndUI({
 
                   <CircleCheckBig size={48} className="text-primary mx-auto"/>
 
-                  <h4 className="text-center">You reached the end of this set</h4>
+                  <h4 className="text-center">
+                     {
+                        collection === "demo" ? "You completed the demo questions" :
+                        isRedoWrongQns ? `You finished a review of wrong questions for ${QN_COL_DATA[collection].categoryName}` :
+                        "You completed this set"
+                     }
+                  </h4>
 
                   <div className="d-flex justify-content-center hstack gap-3">
 
@@ -68,19 +72,34 @@ export default function QuestionEndUI({
                      }
 
                      {
-                        nextSetNum
-                           ?  <Link
-                                 className="btn btn-secondary"
-                                 href={`/questions/${collection}/${nextSetNum}`}
-                              >
-                                 Next Set
-                              </Link>
-                           :  collection !== "demo" && <Link
-                                 className="btn btn-secondary"
-                                 href={`/questions`}
-                              >
-                                 Back to Set List
-                              </Link>
+                        nextSetNum 
+                        ?  
+                        <Link
+                           className="btn btn-secondary"
+                           href={`/questions/${collection}/${nextSetNum}`}
+                        >
+                           Next Set
+                        </Link> 
+                        :
+                        isRedoWrongQns
+                        ?
+                        <Link
+                           className="btn btn-secondary"
+                           href={`/profile`}
+                        >
+                           Back to Your Profile
+                        </Link> 
+                        :
+                        collection !== "demo"
+                        ? 
+                        <Link
+                           className="btn btn-secondary"
+                           href={`/questions`}
+                        >
+                           Back to Set List
+                        </Link> 
+                        :
+                        null
                      }
 
                   </div>

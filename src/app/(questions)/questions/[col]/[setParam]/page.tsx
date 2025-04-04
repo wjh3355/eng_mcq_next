@@ -49,7 +49,7 @@ export async function generateStaticParams() {
    return staticParamsArray;
 }
 
-export default async function TEST_QuestionSetsPage({ params }: { params: Promise<StaticParams> }) {
+export default async function QuestionSetsPage({ params }: { params: Promise<StaticParams> }) {
 
    const user = await checkAuthForRoute();
    const { col, setParam } = await params;
@@ -108,5 +108,6 @@ export default async function TEST_QuestionSetsPage({ params }: { params: Promis
       email={user.email}
       nextSetNum={setAsInteger === numPossibleSets ? null : setAsInteger + 1}
       isThisSetRandom={setParam === "random"}
+      isRedoWrongQns={false}
    />
 }

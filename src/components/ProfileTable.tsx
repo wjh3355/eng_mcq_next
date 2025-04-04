@@ -22,7 +22,7 @@ import {
 import Link from "next/link";
 import { Info, Trash2 } from "lucide-react";
 
-import { sum } from "lodash";
+import { mean, sum } from "lodash";
 import { UserProfileDocument } from "@/definitions";
 import { DateTime } from "luxon";
 import { resetUserData } from "@/lib/mongodb/user-server-actions";
@@ -52,7 +52,7 @@ export default function ProfileTable({ user }: { user: UserProfileDocument }) {
                   overlay={
                      <Popover>
                         <Popover.Body className="fs-6">
-                           Every correct question or cloze blank answered earns you{" "}
+                           Every correct question or cloze blank answered will earn you{" "}
                            <strong>10</strong> points.
                         </Popover.Body>
                      </Popover>
@@ -183,10 +183,10 @@ function McqStats({
    ][];
 
    const totalAttempted = sum(
-      dataAsArr.map(([_, dat]) => dat.numQnsAttempted)
+      dataAsArr.map(([, dat]) => dat.numQnsAttempted)
    );
    const totalWrong = sum(
-      dataAsArr.map(([_, dat]) => dat.wrongQnNums.length)
+      dataAsArr.map(([, dat]) => dat.wrongQnNums.length)
    );
    const totalCorrect = totalAttempted - totalWrong;
    const totalPercentCorrect = Math.round(
@@ -202,41 +202,57 @@ function McqStats({
                   <th>No. Correct</th>
                   <th>No. Attempted</th>
                   <th>View Incorrect</th>
+                  <th>Redo Incorrect</th>
                </tr>
             </thead>
             <tbody>
-               {dataAsArr.map(([cat, { numQnsAttempted, wrongQnNums }]) => {
+               {dataAsArr.map(([col, { numQnsAttempted, wrongQnNums }]) => {
 
                   if (!numQnsAttempted) return;
 
                   return (
-                     <tr key={cat}>
-                        <td>{QN_COL_DATA[cat].categoryName}</td>
-                        <td>{numQnsAttempted - wrongQnNums.length}</td>
-                        <td>{numQnsAttempted}</td>
-                        <td>
-                           <Link
-                              href={`/profile/wrongmcq/${cat}`}
-                              className={
-                                 "fw-bold btn btn-primary btn-sm px-3 " +
-                                 (wrongQnNums.length === 0 ? "disabled" : "")
-                              }
-                           >
-                              View
-                           </Link>
-                        </td>
+                     <tr key={col}>
+                        <td>{QN_COL_DATA[col].categoryName}</td>
+                        <td className="text-center">{numQnsAttempted - wrongQnNums.length}</td>
+                        <td className="text-center">{numQnsAttempted}</td>
+                        {
+                           wrongQnNums.length === 0
+                           ?  <td colSpan={2} className="text-muted text-center fst-italic">
+                                 No incorrect questions
+                              </td>
+                           :  <>
+                                 <td className="text-center">
+                                    <Link
+                                       href={`/profile/wrong_questions/${col}`}
+                                       className="fw-bold btn btn-primary btn-sm px-3 "
+                                    >
+                                       View
+                                    </Link>
+                                 </td>
+                                 <td className="text-center">
+                                    <Link
+                                       href={`/profile/redo_questions/${col}`}
+                                       className="fw-bold btn btn-secondary btn-sm px-3 "
+                                    >
+                                       Redo
+                                    </Link>
+                                 </td>
+                              </>  
+                        }
+
                      </tr>
                   )
                })}
+               <tr>
+                  <td colSpan={5} className="text-center">
+                     Overall score:&nbsp;
+                     <strong>
+                        {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
+                     </strong>
+                  </td>
+               </tr>
             </tbody>
          </Table>
-
-         <div className="text-center">
-            Overall score:&nbsp;
-            <strong>
-               {totalCorrect} / {totalAttempted} ({totalPercentCorrect}%)
-            </strong>
-         </div>
       </>
    );
 }
@@ -250,6 +266,8 @@ function ClozeStats({
       return <p>You have not attempted any Cloze passages yet!</p>;
    }
 
+   const avgScore = mean(clozeData.map(czd => czd.correctAns.length));
+
    return (
       <Table striped>
          <thead>
@@ -262,7 +280,7 @@ function ClozeStats({
          <tbody>
             {clozeData.sort((a, b) => a.qnNum - b.qnNum).map(({ qnNum, correctAns }) => (
                <tr key={qnNum}>
-                  <td>{`Q${qnNum}`}</td>
+                  <td>{qnNum}</td>
                   <td>{`${correctAns.length} / 15`}</td>
                   <td>
                      <Link
@@ -274,6 +292,14 @@ function ClozeStats({
                   </td>
                </tr>
             ))}
+            <tr>
+               <td colSpan={4} className="text-center">
+                  Average score:&nbsp;
+                  <strong>
+                     {avgScore.toFixed(1)} / 15 ({Math.round(avgScore * 100 / 15)}%)
+                  </strong>
+               </td>
+            </tr>
          </tbody>
       </Table>
    );
@@ -287,6 +313,8 @@ function MockTestStats({
    if (mockTestData.length === 0) {
       return <p>You have not attempted any mock tests yet!</p>;
    }
+
+   const avgScore = mean(mockTestData.map(mtd => mtd.score));
 
    return (
       <Table striped>
@@ -312,6 +340,14 @@ function MockTestStats({
                   </td>
                </tr>
             ))}
+            <tr>
+               <td colSpan={4} className="text-center">
+                  Average score:&nbsp;
+                  <strong>
+                     {avgScore.toFixed(1)} / 47 ({Math.round(avgScore * 100 / 47)}%)
+                  </strong>
+               </td>
+            </tr>
          </tbody>
       </Table>
    );

@@ -16,9 +16,10 @@ export default async function DemoQnsPage() {
    return <QuestionApp
       collection='demo'
       qnNumArray={qnNumArray}
-      email=''
+      email={null}
       title={'Demo Questions'}
       nextSetNum={null}
       isThisSetRandom={false}
+      isRedoWrongQns={false}
    />
 }

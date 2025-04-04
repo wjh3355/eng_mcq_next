@@ -17,14 +17,16 @@ export default function QuestionApp({
    collection,
    email,
    nextSetNum,
-   isThisSetRandom
+   isThisSetRandom,
+   isRedoWrongQns,
 }: {
    title: string
    qnNumArray: number[]
    collection: Collections
-   email: string
+   email: string | null
    nextSetNum: number | null
    isThisSetRandom: boolean
+   isRedoWrongQns: boolean
 }) {
 
    return (
@@ -39,6 +41,7 @@ export default function QuestionApp({
                qnNumArray={qnNumArray}
                collection={collection}
                email={email}
+               isRedoWrongQns={isRedoWrongQns}
             >
                <QuestionLeftUI/>
                <QuestionRightUI/>

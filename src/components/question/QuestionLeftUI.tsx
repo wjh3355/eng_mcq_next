@@ -58,10 +58,11 @@ function ScoreComponent() {
 
    const {
       collection,
-      userInfo: { userPoints }
+      userInfo: { userPoints },
+      setInfo: { isRedoWrongQns}
    } = useQuestionContext();
 
-   if (collection === "demo") return null;
+   if (collection === "demo" || isRedoWrongQns) return null;
 
    return (
       <div className="border border-2 border-warning rounded-2 px-2 py-1 fw-bold">
