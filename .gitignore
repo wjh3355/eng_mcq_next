@@ -35,7 +35,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-private/
-
-src/serverFuncs/connectToDB2.ts
-src/serverFuncs/test.ts
+scripts/
