@@ -47,6 +47,7 @@ export type ClozeUserDat = {
 export type MockTestUserDat = {
    mockTestNumber: number;
    score: number;
+   dateAttempted?: Date;
    wrongQuestions: { col: Collections, qnNum: number, userWrongAns: string }[];
    clozeData: {
       blankNum: number,

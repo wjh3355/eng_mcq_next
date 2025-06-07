@@ -8,7 +8,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
-import { RotateCcw, BookText, CircleCheckBig, Lightbulb } from "lucide-react";
+import { BookText, CircleCheckBig, Lightbulb } from "lucide-react";
 import { useQuestionContext } from './QuestionProvider';
 import Link from "next/link";
 import QuestionPaginatedExplanation from "./QuestionPaginatedExplanation";
@@ -24,11 +24,9 @@ export default function QuestionEndUI({
 
    const { 
       collection,
-      qnObj: { kindOfQn, qnNum, sentence, wordToTest, options, correctAns, rootWord, type, def },
-      isLoading,
-      setInfo: { currQnNum, hasReachedEnd, numQnsInSet, isRedoWrongQns },
-      userInfo: { userPoints, isCorrect, wronglyAnswered, numCorrect, numAttempted },
-      callbacks: { handleNextQnBtnClick, handleAttempt, redoSet }
+      setInfo: { hasReachedEnd, isRedoWrongQns },
+      userInfo: { wronglyAnswered, numCorrect, numAttempted },
+      callbacks: { redoSet }
    } = useQuestionContext();
 
    const [isReviewShown, setIsReviewShown] = useState(false);

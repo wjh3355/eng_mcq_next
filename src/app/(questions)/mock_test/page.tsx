@@ -43,6 +43,7 @@ async function MockTestsTable({ mockTestData }: { mockTestData: MockTestUserDat[
                   <tr>
                      <th>Number</th>
                      <th>Your score</th>
+                     <th>Date attempted</th>
                   </tr>
                </thead>
                <tbody>
@@ -60,11 +61,14 @@ async function MockTestsTable({ mockTestData }: { mockTestData: MockTestUserDat[
                            <td>
                               {mtData ? `${mtData.score} / 47` : ''}
                            </td>
+                           <td>
+                              {mtData?.dateAttempted ? mtData.dateAttempted.toLocaleDateString() + " " + mtData.dateAttempted.toLocaleTimeString() : ''}
+                           </td>
                         </tr>
                      );
                   })}
                   <tr>
-                     <td colSpan={2}>
+                     <td colSpan={3}>
                         <div className="text-center text-secondary fst-italic">
                            More coming soon
                         </div>

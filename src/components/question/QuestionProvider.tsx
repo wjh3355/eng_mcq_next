@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext, useCallback } from "react";
 
 import { Question, EMPTY_QUESTION, Collections, QuestionContextVal } from "@/definitions";
 
@@ -47,7 +47,7 @@ export function QuestionProvider({
    const [wronglyAnswered, setWronglyAnswered] = useState<Question[]>([]);
    const [hasReachedEnd, setHasReachedEnd] = useState<boolean>(false);
 
-   function handleAttempt(rw: boolean) {
+   const handleAttempt = useCallback((rw: boolean, currQnObj: Question) => {
       // set isCorrect to whether the user's answer is correct (rw means right/wrong)
       // (if isCorrect is null, user has not clicked any option yet)
       setIsCorrect(rw);
@@ -61,7 +61,7 @@ export function QuestionProvider({
          // if wrong, increment total attempted count only
          setNumAttempted(prev => prev + 1);
          // add the question to wronglyAnswered
-         setWronglyAnswered(prev => [...prev, qnObj]);
+         setWronglyAnswered(prev => [...prev, currQnObj]);
 
          toast.error("Sorry, that was incorrect.");
       }
@@ -75,7 +75,7 @@ export function QuestionProvider({
          updateUserQuestionsData({
             email,
             collection,
-            wrongQnNum: rw ? null : qnObj.qnNum,
+            wrongQnNum: rw ? null : currQnObj.qnNum,
          })
          .then(res => {
             if (res.error!) {
@@ -89,9 +89,9 @@ export function QuestionProvider({
          });
 
       }
-   }
+   }, [collection, email])
 
-   function redoSet() {
+   const redoSet = useCallback(() => {
       // reset all states to initial values
       setWronglyAnswered([]);
       setNumAttempted(0);
@@ -101,16 +101,16 @@ export function QuestionProvider({
       setHasReachedEnd(false);
       setQnSequence(qnNumArray);
       toast.success("Questions reset");
-   }
+   }, [qnNumArray])
    
-   function handleNextQnBtnClick() {
+   const handleNextQnBtnClick = useCallback(() => {
       // reset isCorrect to null, so that the user can click on the options again
       // set isLoading to true, so that the loading spinner is shown
       // remove the first element from qnSequence, so that the next question is fetched
       setIsLoading(true);
       setIsCorrect(null);
       setQnSequence(prev => prev.slice(1));
-   }
+   }, [])
 
    useEffect(() => {
       // if user data has to be used and updated, 
@@ -126,7 +126,7 @@ export function QuestionProvider({
             setUserPoints(res.score);
          });
       }
-   }, [])
+   }, [collection, email])
 
    useEffect(() => {
       // listens to changes in qnSequence,
@@ -160,7 +160,7 @@ export function QuestionProvider({
       };
 
       fetchData();
-   }, [qnSequence])
+   }, [qnSequence, collection])
 
    useEffect(() => {
       // if qnNum is not NaN, it means the qnObj has been set (not the empty one)
@@ -170,51 +170,53 @@ export function QuestionProvider({
       if (!Number.isNaN(qnObj.qnNum)) setIsLoading(false);
    }, [qnObj])
 
+   const contextValue: QuestionContextVal = {
+      // the category of the question set
+      collection,
+
+      // the actual question object
+      qnObj,
+
+      // loading state
+      isLoading,
+
+      setInfo: {
+         // number of questions in the set
+         numQnsInSet: qnNumArray.length,
+         // current question number (whether attempted or not)
+         currQnNum: qnNumArray.length - qnSequence.length + 1,
+         // whether the user has reached the end of the set
+         hasReachedEnd,
+         // whether we are redoing wrong questions
+         isRedoWrongQns,
+      },
+
+      userInfo: {
+         // user's points from db
+         userPoints,
+         // number of questions the user has gotten correct
+         numCorrect,
+         // number of questions the user has attempted
+         numAttempted,
+         // current answer state
+         isCorrect,
+         // array of questions the user has gotten wrong
+         wronglyAnswered,
+      },
+
+      callbacks: {
+         // callback when user clicks an option
+         handleAttempt,
+         // callback when user clicks next question
+         handleNextQnBtnClick,
+         // callback when user clicks on the redo button at the end
+         redoSet
+      }
+   }
+
    return (
       <QuestionContext.Provider
-         value={{
-            // the category of the question set
-            collection,
-      
-            // the actual question object
-            qnObj,
-      
-            // loading state
-            isLoading,
-      
-            setInfo: {
-               // number of questions in the set
-               numQnsInSet: qnNumArray.length,
-               // current question number (whether attempted or not)
-               currQnNum: qnNumArray.length - qnSequence.length + 1,
-               // whether the user has reached the end of the set
-               hasReachedEnd,
-               // whether we are redoing wrong questions
-               isRedoWrongQns,
-            },
-      
-            userInfo: {
-               // user's points from db
-               userPoints,
-               // number of questions the user has gotten correct
-               numCorrect,
-               // number of questions the user has attempted
-               numAttempted,
-               // current answer state
-               isCorrect,
-               // array of questions the user has gotten wrong
-               wronglyAnswered,
-            },
-      
-            callbacks: {
-               // callback when user clicks an option
-               handleAttempt,
-               // callback when user clicks next question
-               handleNextQnBtnClick,
-               // callback when user clicks on the redo button at the end
-               redoSet
-            }
-         }}
+         value={contextValue}
       >
          {children}
       </QuestionContext.Provider>

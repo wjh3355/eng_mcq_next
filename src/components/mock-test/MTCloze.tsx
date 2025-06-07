@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useMemo } from 'react';
 import Col from "react-bootstrap/esm/Col";
 import { useMockTestContext } from "./MTProvider";
 import Button from "react-bootstrap/esm/Button";
@@ -19,14 +20,11 @@ export default function MTCloze() {
       totalNumOfPages
    } = useMockTestContext();
 
-   // cloze is the last page
-   if (currUserPage !== totalNumOfPages) return null;
-
    // get only the cloze states
-   const clozeTestStates = testStates.filter(ts => ts.type === "cloze blank");
+   const clozeTestStates = useMemo(() => testStates.filter(ts => ts.type === "cloze blank"), [testStates]);
 
    // get the paragraph to render
-   const paragraphToRender: React.ReactNode[][] = (() => {
+   const paragraphToRender: React.ReactNode[][] = useMemo(() => {
 
       // 0 to 14 (all 15 blanks)
       let blankCountr = 0;
@@ -124,7 +122,10 @@ export default function MTCloze() {
 
       return formattedParagraphs;
 
-   })();
+   }, [clozePassageArray, clozeTestStates, handleReset, handleTouched, isMTSubmitted]);
+
+   // cloze is the last page
+   if (currUserPage !== totalNumOfPages) return null;
 
    return (
       <Col xs={12}>

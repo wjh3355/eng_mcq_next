@@ -13,7 +13,7 @@ export type ClozeContextVal = {
    isClozeSubmitted: boolean,
    handleBlankUpdate: (idx: number, v: string) => void,
    handleResetAllBlanks: () => void,
-   submitCloze: () => void,
+   submitCloze: (a: ClozeBlankState[], b: number) => void,
    resetCloze: () => void
 }
 

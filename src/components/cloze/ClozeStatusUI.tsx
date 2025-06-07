@@ -10,7 +10,8 @@ export default function ClozeStatusUI() {
       submitCloze,
       resetCloze,
       score,
-      triesLeft
+      triesLeft,
+      clozeState
    } = useClozeContext();
 
    return (
@@ -33,7 +34,7 @@ export default function ClozeStatusUI() {
                   size="lg"
                   variant="danger"
                   className="px-5 fw-bold mx-auto"
-                  onClick={() => submitCloze()}
+                  onClick={() => submitCloze(clozeState, triesLeft)}
                >
                   Submit Cloze ({triesLeft} tries left)
                </Button>

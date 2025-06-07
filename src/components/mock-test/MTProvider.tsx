@@ -2,8 +2,9 @@
 
 import { Cloze, MTContextValue, Question, MTState, UserProfileDocument, Collections, MockTestUserDat } from "@/definitions";
 import { updateUserMockTestData } from "@/lib/mongodb/user-server-actions";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { produce } from "immer";
 
 // create context, fallback is null (which will throw error)
 const MTContext = createContext<MTContextValue | null>(null);
@@ -33,7 +34,10 @@ export default function MockTestProvider({
    children: React.ReactNode;
 }) {
 
-   const flattenedQuestions = (Object.entries(questions) as [ Collections, Question[] ][]).flatMap(([col, qns]) => qns.map(qn => ({ col, qn })));
+   const flattenedQuestions = useMemo(
+      () => (Object.entries(questions) as [Collections, Question[]][]).flatMap(([col, qns]) => qns.map(qn => ({ col, qn }))),
+      [questions]
+   );
 
    const numOfQuestions = flattenedQuestions.length;
 
@@ -41,7 +45,7 @@ export default function MockTestProvider({
    // GET USER DATA FOR THIS MTEST IF EXISTS
    // ======================================
 
-   const userRecordForThisMT = user.mockTestData.find(mt => mt.mockTestNumber === MTnum);
+   const userRecordForThisMT = useMemo(() => user.mockTestData.find(mt => mt.mockTestNumber === MTnum), [MTnum, user.mockTestData]);
 
    const {
       score: prevUserScore,
@@ -55,12 +59,12 @@ export default function MockTestProvider({
 
    // match all pairs of curly braces and extract the words to test (joined by "/")
    // split the words by "/" and filter out empty strings
-   const clozeCorrectAnsArray = cloze.passage
+   const clozeCorrectAnsArray = useMemo(() => cloze.passage
       .match(/\{[^}]*\}/g)!
       .map((match) =>
          match.slice(1, -1).split("/").filter(Boolean)
-      );
-   
+      ), [cloze.passage])
+
    // there MUST be 15 blanks
    if (clozeCorrectAnsArray.length !== 15) throw new Error(`Cloze should have 15 blanks, instead got ${clozeCorrectAnsArray.length}`);
 
@@ -68,11 +72,12 @@ export default function MockTestProvider({
    // split the passage by "BLANK" and "||" ("||" is used to separate paragraphs)
    // "BLANK" and "||" are included in the split array
    // filter out empty strings
-   const clozePassageArray = cloze.passage
+   const clozePassageArray = useMemo(() => cloze.passage
       .replace(/{.*?}/g, "BLANK")
       .split(/(BLANK|\|\|)/)
-      .filter(Boolean);
-   
+      .filter(Boolean)
+      , [cloze.passage])
+
    // =================
    // INITIALISE STATES
    // =================
@@ -80,12 +85,12 @@ export default function MockTestProvider({
    // state for the questions
    // note: qnIndex is 0-indexed
    const [testStates, setTestStates] = useState<MTState[]>((() => {
-      
+
       if (!userRecordForThisMT) {
 
          // user has not done this mock test before
          // initialise all answers as "", and all statuses as "not done"
-         const initQuestionState = flattenedQuestions.map<MTState>(({ col, qn }, idx) => ({ 
+         const initQuestionState = flattenedQuestions.map<MTState>(({ col, qn }, idx) => ({
             qnIndex: idx,
             type: "question",
             collection: col,
@@ -93,15 +98,15 @@ export default function MockTestProvider({
             answer: "",
             status: "not done"
          }));
-   
+
          const initClozeState = clozeCorrectAnsArray.map<MTState>((correctAnsArray, idx) => ({
-            qnIndex: idx+numOfQuestions,
+            qnIndex: idx + numOfQuestions,
             type: "cloze blank",
             clozeBlankCorrectAns: correctAnsArray,
             answer: "",
             status: "not done"
          }));
-   
+
          return [...initQuestionState, ...initClozeState];
 
       } else {
@@ -110,14 +115,14 @@ export default function MockTestProvider({
          // initialise all answers as the user's previous answers, and all statuses as "done"
 
          const initQuestionState = flattenedQuestions.map<MTState>(({ col, qn }, idx) => {
-            
+
             // check if this question is among the wrong questions
             const wrongQnData = prevUserWrongQns?.find(wq => wq.qnNum === qn.qnNum && wq.col === col);
-            
+
             if (wrongQnData) {
                // user got this question wrong
                // status is "incorrect", answer is .userWrongAns
-               return { 
+               return {
                   qnIndex: idx,
                   type: "question",
                   collection: col,
@@ -128,7 +133,7 @@ export default function MockTestProvider({
             } else {
                // user got this question correct
                // status is "correct", answer is .correctAns
-               return { 
+               return {
                   qnIndex: idx,
                   type: "question",
                   collection: col,
@@ -146,7 +151,7 @@ export default function MockTestProvider({
             const wrongClozeBlankData = prevUserClozeData?.find(dat => dat.blankNum === idx)!;
 
             return {
-               qnIndex: idx+numOfQuestions,
+               qnIndex: idx + numOfQuestions,
                type: "cloze blank",
                clozeBlankCorrectAns: correctAnsArray,
                answer: wrongClozeBlankData.ans,
@@ -154,7 +159,7 @@ export default function MockTestProvider({
             }
 
          });
-         
+
          return [...initQuestionState, ...initClozeState];
       }
 
@@ -181,52 +186,71 @@ export default function MockTestProvider({
    // HANDLER FUNCTIONS FOR PAGE CHANGE
    // =================================
 
-   function handleNextPgClick() {
+   const handleNextPgClick = useCallback(() => {
       setCurrUserPage((prev) => Math.min(prev + 1, totalNumOfPages));
-   }
+   }, [totalNumOfPages])
 
-   function handlePrevPgClick() {
+   const handlePrevPgClick = useCallback(() => {
       setCurrUserPage((prev) => Math.max(prev - 1, 1));
-   }
+   }, []);
 
-   function handlePaginationClick(n: number) {
+   const handlePaginationClick = useCallback((n: number) => {
       setCurrUserPage(n);
-   }
+   }, []);
 
    // =========================
    // HANDLER TEST STATE CHANGE
    // =========================
 
-   function handleTouched(n: number, newAnswer: string) {
-      setTestStates(pv => pv.map(st => 
-         st.qnIndex === n ? {...st, answer: newAnswer, status: "done"} : st
-      ));
-   }
+   const handleTouched = useCallback((n: number, newAnswer: string) => {
+      setTestStates(pv =>
+         produce(pv, draft => {
+            const item = draft.find(st => st.qnIndex === n);
+            if (item) {
+               item.answer = newAnswer;
+               item.status = "done";
+            }
+         })
+      );
+   }, []);
 
-   function handleReset(n: number) {
-      setTestStates(pv => pv.map(st => 
-         st.qnIndex === n ? {...st, answer: "", status: "not done"} : st
-      ));
-   }
+   const handleReset = useCallback((n: number) => {
+      setTestStates(pv =>
+         produce(pv, draft => {
+            const item = draft.find(st => st.qnIndex === n);
+            if (item) {
+               item.answer = "";
+               item.status = "not done";
+            }
+         })
+      );
+   }, []);
 
-   function handleResetAllCloze() {
-      setTestStates(pv => pv.map(st => 
-         st.type === "cloze blank" ? {...st, answer: "", status: "not done"} : st
-      ));
-   }
+   const handleResetAllCloze = useCallback(() => {
+      setTestStates(pv =>
+         produce(pv, draft => {
+            draft.forEach(st => {
+               if (st.type === "cloze blank") {
+                  st.answer = "";
+                  st.status = "not done";
+               }
+            });
+         })
+      );
+   }, []);
 
    // ===============================
    // HANDLER FUNCTION FOR SUBMISSION
    // ===============================
 
-   function submitMockTest() {
-      
+   const submitMockTest = useCallback((currTestStates: MTState[]) => {
+
       // calculate the score (each correct is +1)
       // set each question's status from "not done" / "done" to "correct" / "incorrect"
       // handle the questions / cloze blanks one by one
       let mtScore = 0;
 
-      const submittedTestState: MTState[] = testStates.map(st => {
+      const submittedTestState: MTState[] = currTestStates.map(st => {
          let rw: boolean;
          const trimmedAns = st.answer.trim();
 
@@ -255,9 +279,9 @@ export default function MockTestProvider({
       const newMTUserDat: MockTestUserDat = {
          mockTestNumber: MTnum,
          score: mtScore,
+         dateAttempted: new Date(),
          wrongQuestions: submittedTestState
-            .filter(st => st.status === "incorrect")
-            .filter(st => st.type === "question")
+            .filter((st): st is Extract<MTState, { type: "question" }> => st.type === "question" && st.status === "incorrect")
             .map(wqs => ({
                col: wqs.collection,
                qnNum: wqs.qnObj.qnNum,
@@ -273,64 +297,61 @@ export default function MockTestProvider({
       }
 
       updateUserMockTestData({ email: user.email, MTnum, newMTUserDat })
-      .then(res => {
-         if ("error" in res) {
-            toast.error(res.error!);
-            return;
-         }
+         .then(res => {
+            if ("error" in res) {
+               toast.error(res.error!);
+               return;
+            }
 
-         toast.success(
-            `Mock test submitted successfully. You scored ${mtScore} / ${maximumMTScore}`, 
-            { duration: 8000 }
-         );
-         
-      });
-   }
+            toast.success(
+               `Mock test submitted successfully. You scored ${mtScore} / ${maximumMTScore}`,
+               { duration: 8000 }
+            );
+
+         });
+   }, [MTnum, maximumMTScore, user.email])
 
    // ===================================
    // HANDLER FUNCTION TO RESET MOCK TEST
    // ===================================
 
-   function resetMockTest() {
+   const resetMockTest = useCallback(() => {
       updateUserMockTestData({ email: user.email, MTnum, newMTUserDat: null })
-      .then(res => {
-         if ("error" in res) {
-            toast.error(res.error!);
-            return;
-         }
+         .then(res => {
+            if ("error" in res) {
+               toast.error(res.error!);
+               return;
+            }
 
-         toast.success("Mock test reset successfully.");
+            toast.success("Mock test reset successfully.");
 
-         return new Promise(r => setTimeout(r, 1000))
-      })
-      .then(res => window.location.reload());
+            return new Promise(r => setTimeout(r, 1000))
+         })
+         .then(() => window.location.reload());
 
-   }
+   }, [MTnum, user.email]);
+
+   const contextValue: MTContextValue = {
+      testStates,
+      maximumMTScore,
+      clozePassageArray,
+      totalNumOfPages,
+      currUserPage,
+      handleNextPgClick,
+      handlePrevPgClick,
+      handlePaginationClick,
+      isMTSubmitted,
+      finalMTScore,
+      submitMockTest,
+      handleTouched,
+      handleReset,
+      handleResetAllCloze,
+      resetMockTest,
+   };
 
    return (
       <MTContext.Provider
-         value={{
-            testStates,
-            maximumMTScore,
-
-            clozePassageArray,
-            
-            totalNumOfPages,
-            currUserPage,
-            
-            handleNextPgClick,
-            handlePrevPgClick,
-            handlePaginationClick,
-         
-            isMTSubmitted,
-            finalMTScore,
-         
-            submitMockTest,
-            handleTouched,
-            handleReset,
-            handleResetAllCloze,
-            resetMockTest,
-         }}
+         value={contextValue}
       >
          {children}
       </MTContext.Provider>

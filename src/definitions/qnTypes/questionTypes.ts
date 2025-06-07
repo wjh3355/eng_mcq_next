@@ -127,7 +127,7 @@ export type QuestionContextVal = {
       wronglyAnswered: Question[],
    },
    callbacks: {
-      handleAttempt: (param: boolean) => void,
+      handleAttempt: (x: boolean, y: Question) => void,
       handleNextQnBtnClick: () => void,
       redoSet: () => void
    }

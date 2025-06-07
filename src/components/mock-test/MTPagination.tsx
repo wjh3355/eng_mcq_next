@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { useMockTestContext } from "./MTProvider";
 import Button from "react-bootstrap/esm/Button";
 import { ArrowLeftCircle, ArrowRightCircle } from "lucide-react";
@@ -107,8 +107,8 @@ export default function MTPagination() {
       finalMTScore
    } = useMockTestContext();
 
-   const [isPgNumsShow, setIsPgNumsShow] = React.useState<boolean>(false);
-   const [isCfmSubmitShow, setIsCfmSubmitShow] = React.useState<boolean>(false);
+   const [isPgNumsShow, setIsPgNumsShow] = useState<boolean>(false);
+   const [isCfmSubmitShow, setIsCfmSubmitShow] = useState<boolean>(false);
 
    return (
       <>
@@ -193,7 +193,7 @@ export default function MTPagination() {
                      variant="light"
                      onClick={() => {
                         setIsCfmSubmitShow(false);
-                        submitMockTest();
+                        submitMockTest(testStates);
                      }}
                   >
                      Submit

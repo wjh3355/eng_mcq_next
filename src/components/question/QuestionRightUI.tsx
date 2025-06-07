@@ -21,10 +21,12 @@ function MCQOptionsComponent() {
 
    const {
       isLoading,
-      qnObj: { options, correctAns },
+      qnObj,
       setInfo: { hasReachedEnd },
       callbacks: { handleAttempt }
    } = useQuestionContext();
+
+   const { options, correctAns } = qnObj;
 
    const [randomisedOptions, setRandomisedOptions] = useState<string[]>([]);
    const [isAllDisabled, setIsAllDisabled] = useState<boolean>(false);
@@ -64,7 +66,7 @@ function MCQOptionsComponent() {
                      onClick={async () => {
                         setSelectedOption(thisOption);
                         setIsAllDisabled(true);
-                        handleAttempt(isThisCorrectOption);
+                        handleAttempt(isThisCorrectOption, qnObj);
                      }}
                      $isRed={isRed}
                      $isGreen={isGreen}
@@ -83,11 +85,13 @@ function MCQOptionsComponent() {
 function SpellingInputComponent() {
 
    const {
-      qnObj: { correctAns },
+      qnObj,
       isLoading,
       userInfo: { isCorrect },
       callbacks: { handleAttempt }
    } = useQuestionContext();
+
+   const { correctAns } = qnObj;
 
    const { 
       register,
@@ -105,13 +109,13 @@ function SpellingInputComponent() {
          setFocus("correctedWord");
          reset();
       }
-   }, [setFocus, isLoading]);
+   }, [setFocus, isLoading, reset]);
 
    return (
       <form 
          onSubmit={handleSubmit(data => {
             const isCorrect = data.correctedWord.trim() === correctAns;
-            handleAttempt(isCorrect);
+            handleAttempt(isCorrect, qnObj);
          })}
          className="border-0 shadow rounded-2 p-3"
       >

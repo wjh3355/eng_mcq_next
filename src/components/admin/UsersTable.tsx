@@ -71,9 +71,9 @@ export default function UsersTable(
                               )}
                            </td>
                            <td>
-                              {mockTestData.sort((a, b) => a.mockTestNumber - b.mockTestNumber).map(({mockTestNumber, score}) => 
+                              {mockTestData.sort((a, b) => a.mockTestNumber - b.mockTestNumber).map(({mockTestNumber, score, dateAttempted}) => 
                                  <div key={`user-${email}-mocktest-${mockTestNumber}`}>
-                                    {`Mock Test ${mockTestNumber}: ${score} / 47`}
+                                    {`Mock Test ${mockTestNumber}: ${score} / 47 ${dateAttempted ? "(" + dateAttempted.toLocaleDateString() + ")" : ""}`}
                                  </div>
                               )}
                            </td>

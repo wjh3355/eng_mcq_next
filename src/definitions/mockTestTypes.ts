@@ -31,7 +31,7 @@ export type MTContextValue = {
    isMTSubmitted: boolean;
    finalMTScore: number;
 
-   submitMockTest: () => void;
+   submitMockTest: (n: MTState[]) => void;
    handleTouched: (n: number, v: string) => void;
    handleReset: (n: number) => void;
    handleResetAllCloze: () => void;

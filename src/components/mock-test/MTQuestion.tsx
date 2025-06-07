@@ -20,11 +20,10 @@ function SentenceDisp({ thisQnState }: { thisQnState: MTState }) {
 
    switch (kindOfQn) {
       case "meaning":
-      case "spelling":
-
+      case "spelling": {
          const [bef, aft] = sentence.split(new RegExp(`\\b${wordToTest!}\\b`));
          return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{bef}<strong>{wordToTest}</strong>{aft}</>;
-
+      }
       case "definition": return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{def}</>;
 
       case "blank": return <><strong>{`Q${thisQnState.qnIndex+1}. `}</strong>{sentence}</>;

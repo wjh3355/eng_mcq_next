@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import ClozeInput from "./ClozeInput";
 import { useClozeContext } from "./ClozeProvider";
 import Button from "react-bootstrap/esm/Button";
@@ -17,7 +17,7 @@ export default function ClozeAttemptUI() {
    } = useClozeContext();
 
    // get the paragraph to render
-   const paragraphToRender: React.ReactNode[][] = (() => {
+   const paragraphToRender: React.ReactNode[][] = useMemo(() => {
 
       // 0 to 14 (all 15 blanks)
       let blankCountr = 0;
@@ -107,7 +107,7 @@ export default function ClozeAttemptUI() {
 
       return formattedParagraphs;
 
-   })();
+   }, [clozePassageArray, clozeState, handleBlankUpdate, isClozeSubmitted]);
 
    return (
       <section 

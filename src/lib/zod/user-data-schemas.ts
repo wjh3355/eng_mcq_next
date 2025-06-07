@@ -41,6 +41,7 @@ export const UserProfileDataSchema = z.object({
       z.object({
          mockTestNumber: z.number(),
          score: z.number(),
+         dateAttempted: z.date().optional(),
          wrongQuestions: z.array(
             z.object({
                col: CollectionsSchema,
