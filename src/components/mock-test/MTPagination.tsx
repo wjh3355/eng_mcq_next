@@ -16,7 +16,7 @@ const PageNums = memo(function PageNums({
 }: {
    totalNumOfPages: number,
    testStates: MTState[],
-   handlePaginationClick: (n: number) => void,
+   handlePaginationClick: (_: number) => void,
    currUserPage: number
 }) {
 

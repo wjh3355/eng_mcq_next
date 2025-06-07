@@ -6,7 +6,6 @@ import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 import BSForm from "react-bootstrap/Form"
-import Alert from "react-bootstrap/Alert"
 import Spinner from "react-bootstrap/esm/Spinner";
 
 import { LoginFormFields } from "@/definitions";
@@ -79,6 +78,7 @@ function ReactHookForm() {
          toast.success(`Welcome, ${data.email.toLowerCase().trim()}`, { duration: 6000 });
 
       } catch (e) {
+         console.log(e);
          toast.error("An unknown error occured. Please try again.", { duration: 6000 });
       }
    };

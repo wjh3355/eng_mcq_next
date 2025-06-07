@@ -12,7 +12,6 @@ import { checkAuthForRoute } from "@/lib/auth/checkAuthForRoute";
 import { fetchQuestion } from "@/lib/mongodb/question-server-actions";
 import QuestionPaginatedExplanation from "@/components/question/QuestionPaginatedExplanation";
 import Col from "react-bootstrap/esm/Col";
-import Button from "react-bootstrap/esm/Button";
 import Link from "next/link";
 import { RotateCcw } from "lucide-react";
 

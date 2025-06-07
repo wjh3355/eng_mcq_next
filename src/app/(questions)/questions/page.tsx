@@ -16,7 +16,7 @@ import { fetchNumQuestions } from "@/lib/mongodb/question-server-actions";
 export const dynamic = "force-dynamic";
 
 export default async function QuestionsHomepage() {
-   const user = await checkAuthForRoute();
+   await checkAuthForRoute();
 
    return (
       <Container>

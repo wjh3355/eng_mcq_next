@@ -1,12 +1,11 @@
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Alert from "react-bootstrap/Alert";
 import Sunbirds from "@/components/homepg/Sunbirds";
 import { auth } from "@/auth";
 import Advert from "@/components/homepg/Advert";
 import Link from "next/link";
-import { CircleUserRound, FileText, FlaskConical, NotebookPen, SpellCheck2, WholeWord } from "lucide-react";
+import { CircleUserRound, FileText, FlaskConical, NotebookPen } from "lucide-react";
 
 export const revalidate = 3600;
 

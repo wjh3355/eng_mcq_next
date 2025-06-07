@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { CollectionsSchema } from "./qns-cloze-schemas";
-import { questionCategoriesTuple } from "@/definitions";
 
 export const UserAuthDataSchema = z.object({
    email: z.string().email().nonempty(),

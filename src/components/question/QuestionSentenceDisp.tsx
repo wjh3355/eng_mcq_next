@@ -7,7 +7,7 @@ export default function QuestionSentenceDisp({ qnObj, num }: { qnObj: Question, 
 
    switch (kindOfQn) {
       case "meaning":
-      case "spelling":
+      case "spelling": {
 
          const regex = new RegExp(`\\b${wordToTest!}\\b`);
          const matchIdx = regex.exec(sentence)!.index;
@@ -18,6 +18,7 @@ export default function QuestionSentenceDisp({ qnObj, num }: { qnObj: Question, 
             boldRange={indexes}
             num={num}
          />;
+      }
       case "definition":
          return <TypingAnim sentence={def!} boldRange={[]} num={num}/>;
       case "blank":
