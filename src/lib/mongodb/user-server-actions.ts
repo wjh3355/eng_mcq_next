@@ -250,19 +250,19 @@ export async function resetUserData(email: string) {
 
       throw new Error("Sorry, this function has been disabled by the administrator.");
 
-      const session = await auth();
+      // const session = await auth();
 
-      if (!session) throw new Error("Unauthorized");
+      // if (!session) throw new Error("Unauthorized");
 
-      await client.connect();
-      const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
-      const profile = await profileDb.findOne({ email }, { projection: { _id: 0 } });
-      if (!profile) throw new Error(`User profile for ${email} not found`);
+      // await client.connect();
+      // const profileDb = client.db("userDatas").collection<UserProfileDocument>("profile");
+      // const profile = await profileDb.findOne({ email }, { projection: { _id: 0 } });
+      // if (!profile) throw new Error(`User profile for ${email} not found`);
 
-      await profileDb.updateOne({ email }, { $set: { ...RESET_PROFILE_FIELDS_OBJ } });
+      // await profileDb.updateOne({ email }, { $set: { ...RESET_PROFILE_FIELDS_OBJ } });
 
-      console.log(`User ${email} has just reset their data from their profile page.`);
-      return { success: true };
+      // console.log(`User ${email} has just reset their data from their profile page.`);
+      // return { success: true };
 
    } catch (error) {
       if (error instanceof Error) {

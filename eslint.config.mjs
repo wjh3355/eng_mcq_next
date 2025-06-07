@@ -17,5 +17,6 @@ export default defineConfig([{
 
     rules: {
         "react/no-unescaped-entities": "warn",
+        "no-unused-vars": "off"
     },
 }]);
