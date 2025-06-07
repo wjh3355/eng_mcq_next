@@ -102,7 +102,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       session({ session, token }) {
          session.user.email = token.email as string;
-         session.user.role = token.role as string;
+         session.user.role = token.role as 'user' | 'admin';
          session.user.maxAge = token.maxAge as number;
          return session;
       },
